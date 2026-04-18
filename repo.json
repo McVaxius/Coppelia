@@ -6,7 +6,7 @@
     "Punchline": "Healbot Coppelia is here to serve!  Healing from outside of party for n targets.",
     "Description": "Healbot Coppelia is here to serve!  Healing from outside of party for n targets.",
     "InternalName": "Coppelia",
-    "AssemblyVersion": "1.0.0.1",
+    "AssemblyVersion": "1.0.0.2",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 14,
     "Tags": [

@@ -9,6 +9,10 @@ namespace Coppelia.Windows;
 
 public sealed class WatchWindow : Window, IDisposable
 {
+    private const float MinWatchTableHeight = 260f;
+    private const float MaxRetainedTableShare = 0.35f;
+    private const int MaxVisibleRetainedRows = 6;
+
     private readonly Plugin plugin;
     private DateTimeOffset nextWindowPositionSaveUtc = DateTimeOffset.MinValue;
     private Vector2? pendingWindowPosition;
@@ -49,13 +53,24 @@ public sealed class WatchWindow : Window, IDisposable
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(6f, 4f));
         try
         {
+            var retainedTargets = plugin.WatchTargetService.RetainedTargets.ToArray();
+
             DrawHeader();
             ImGui.Separator();
             DrawToolbar();
+
+            if (retainedTargets.Length > 0)
+            {
+                var retainedTableHeight = CalculateRetainedTableHeight(retainedTargets.Length, ImGui.GetContentRegionAvail().Y);
+                if (retainedTableHeight > 0f)
+                {
+                    ImGui.Separator();
+                    DrawRetainedTargets(retainedTargets, retainedTableHeight);
+                }
+            }
+
             ImGui.Separator();
-            DrawRetainedTargets(220f);
-            ImGui.Separator();
-            DrawWatchTable(MathF.Max(260f, ImGui.GetContentRegionAvail().Y));
+            DrawWatchTable(MathF.Max(MinWatchTableHeight, ImGui.GetContentRegionAvail().Y));
             TrackWindowPosition();
         }
         finally
@@ -198,23 +213,16 @@ public sealed class WatchWindow : Window, IDisposable
         ImGui.TextDisabled("Saved target scan range only affects when a saved target can auto-rejoin after it returns; it does not discover new targets.");
     }
 
-    private void DrawRetainedTargets(float height)
+    private void DrawRetainedTargets(ResolvedWatchTarget[] retainedTargets, float tableHeight)
     {
-        var retainedTargets = plugin.WatchTargetService.RetainedTargets.ToArray();
         ImGui.TextUnformatted($"Hidden / absent tracked targets ({retainedTargets.Length})");
         ImGui.TextDisabled("Absent retained rows require Ctrl+untick. Unticking here removes the retained target from Coppelia's tracked set, including any saved copy.");
-
-        if (retainedTargets.Length == 0)
-        {
-            ImGui.TextDisabled("No hidden or retained targets right now.");
-            return;
-        }
 
         if (!ImGui.BeginTable(
                 "CoppeliaRetainedTargets",
                 6,
                 ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY | ImGuiTableFlags.BordersInnerV,
-                new Vector2(-1f, height)))
+                new Vector2(-1f, tableHeight)))
         {
             return;
         }
@@ -326,6 +334,18 @@ public sealed class WatchWindow : Window, IDisposable
         }
 
         ImGui.EndTable();
+    }
+
+    private static float CalculateRetainedTableHeight(int retainedCount, float availableHeight)
+    {
+        var maxHeight = MathF.Min(availableHeight * MaxRetainedTableShare, availableHeight - MinWatchTableHeight);
+        if (maxHeight <= 0f)
+            return 0f;
+
+        var visibleRows = Math.Clamp(retainedCount, 1, MaxVisibleRetainedRows);
+        var rowHeight = ImGui.GetFrameHeightWithSpacing();
+        var desiredHeight = ((visibleRows + 1) * rowHeight) + 6f;
+        return MathF.Min(desiredHeight, maxHeight);
     }
 
     private IEnumerable<WatchTargetSnapshot> FilteredTargets()
