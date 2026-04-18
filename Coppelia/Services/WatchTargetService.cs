@@ -32,6 +32,8 @@ internal sealed class WatchTargetService
 
         nextRefreshUtc = DateTimeOffset.UtcNow.AddMilliseconds(250);
         var changed = NormalizeTrackedCollections(configuration);
+        if (configuration.SaveHealTargets)
+            changed |= SyncSavedTargetsFromActive(configuration);
 
         BuildLiveTargetCaches(configuration);
         if (configuration.SaveHealTargets)
@@ -80,9 +82,12 @@ internal sealed class WatchTargetService
             return false;
         }
 
+        var removedSaved = configuration.SavedHealTargetEntries.RemoveAll(existingTarget => existingTarget.Matches(target));
         configuration.Save();
         Update(configuration, force: true);
-        message = $"Removed {FormatName(configuration, target.Name)} from the watched set.";
+        message = removedSaved > 0
+            ? $"Removed {FormatName(configuration, target.Name)} from the watched and saved targets."
+            : $"Removed {FormatName(configuration, target.Name)} from the watched set.";
         return true;
     }
 
@@ -107,9 +112,12 @@ internal sealed class WatchTargetService
             return false;
         }
 
+        var removedSaved = configuration.SavedHealTargetEntries.RemoveAll(existingTarget => existingTarget.Matches(target.Entry));
         configuration.Save();
         Update(configuration, force: true);
-        message = $"Removed {FormatName(configuration, target.Name)} from the watched set.";
+        message = removedSaved > 0
+            ? $"Removed {FormatName(configuration, target.Name)} from the watched and saved targets."
+            : $"Removed {FormatName(configuration, target.Name)} from the watched set.";
         return true;
     }
 
@@ -130,16 +138,17 @@ internal sealed class WatchTargetService
 
         configuration.Save();
         Update(configuration, force: true);
-        message = $"Forgot saved target {FormatName(configuration, target.Name)}.";
+        message = $"Removed {FormatName(configuration, target.Name)} from the saved targets.";
         return true;
     }
 
     public void ClearWatchedTargets(Configuration configuration)
     {
-        if (configuration.ActiveWatchedTargets.Count == 0)
+        if (configuration.ActiveWatchedTargets.Count == 0 && configuration.SavedHealTargetEntries.Count == 0)
             return;
 
         configuration.ActiveWatchedTargets.Clear();
+        configuration.SavedHealTargetEntries.Clear();
         configuration.Save();
         Update(configuration, force: true);
     }
@@ -382,6 +391,55 @@ internal sealed class WatchTargetService
         var changed = false;
         changed |= NormalizeCollection(configuration.ActiveWatchedTargets);
         changed |= NormalizeCollection(configuration.SavedHealTargetEntries);
+        return changed;
+    }
+
+    private bool SyncSavedTargetsFromActive(Configuration configuration)
+    {
+        var changed = false;
+        foreach (var activeTarget in configuration.ActiveWatchedTargets
+                     .OrderByDescending(static target => target.LastSeenUnixTimeSeconds)
+                     .ThenBy(static target => target.Name, StringComparer.OrdinalIgnoreCase))
+        {
+            var savedTarget = configuration.SavedHealTargetEntries.FirstOrDefault(existingTarget => existingTarget.Matches(activeTarget));
+            if (savedTarget != null)
+            {
+                if (savedTarget.LastSeenUnixTimeSeconds == activeTarget.LastSeenUnixTimeSeconds &&
+                    string.Equals(savedTarget.CategoryLabel, activeTarget.CategoryLabel, StringComparison.Ordinal) &&
+                    string.Equals(savedTarget.JobLabel, activeTarget.JobLabel, StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                savedTarget.GameObjectId = activeTarget.GameObjectId;
+                savedTarget.EntityId = activeTarget.EntityId;
+                savedTarget.Name = activeTarget.Name;
+                savedTarget.Category = activeTarget.Category;
+                savedTarget.CategoryLabel = activeTarget.CategoryLabel;
+                savedTarget.JobLabel = activeTarget.JobLabel;
+                savedTarget.IsExternalSelection = activeTarget.IsExternalSelection;
+                savedTarget.LastSeenUnixTimeSeconds = activeTarget.LastSeenUnixTimeSeconds;
+                changed = true;
+                continue;
+            }
+
+            if (configuration.SavedHealTargetEntries.Count >= MaxTrackedTargets)
+                configuration.SavedHealTargetEntries.RemoveAt(configuration.SavedHealTargetEntries.Count - 1);
+
+            configuration.SavedHealTargetEntries.Insert(0, new PersistedWatchTarget
+            {
+                GameObjectId = activeTarget.GameObjectId,
+                EntityId = activeTarget.EntityId,
+                Name = activeTarget.Name,
+                Category = activeTarget.Category,
+                CategoryLabel = activeTarget.CategoryLabel,
+                JobLabel = activeTarget.JobLabel,
+                IsExternalSelection = activeTarget.IsExternalSelection,
+                LastSeenUnixTimeSeconds = activeTarget.LastSeenUnixTimeSeconds,
+            });
+            changed = true;
+        }
+
         return changed;
     }
 

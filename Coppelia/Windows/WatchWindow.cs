@@ -17,15 +17,15 @@ public sealed class WatchWindow : Window, IDisposable
     private string nameFilter = string.Empty;
 
     public WatchWindow(Plugin plugin)
-        : base($"{PluginInfo.DisplayName} Watch List###CoppeliaWatch")
+        : base($"{PluginInfo.DisplayName} Watch###CoppeliaWatch")
     {
         this.plugin = plugin;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(760f, 560f),
-            MaximumSize = new Vector2(1500f, 1100f),
+            MinimumSize = new Vector2(920f, 660f),
+            MaximumSize = new Vector2(1700f, 1200f),
         };
-        Size = new Vector2(980f, 760f);
+        Size = new Vector2(1200f, 860f);
         SizeCondition = ImGuiCond.FirstUseEver;
     }
 
@@ -53,9 +53,9 @@ public sealed class WatchWindow : Window, IDisposable
             ImGui.Separator();
             DrawToolbar();
             ImGui.Separator();
-            DrawRetainedTargets(180f);
+            DrawRetainedTargets(220f);
             ImGui.Separator();
-            DrawWatchTable(360f);
+            DrawWatchTable(MathF.Max(260f, ImGui.GetContentRegionAvail().Y));
             TrackWindowPosition();
         }
         finally
@@ -126,11 +126,16 @@ public sealed class WatchWindow : Window, IDisposable
         }
 
         ImGui.SameLine();
+        var ctrlHeld = ImGui.GetIO().KeyCtrl;
+        ImGui.BeginDisabled(!ctrlHeld);
         if (ImGui.SmallButton("Clear watched##WatchWindow"))
         {
             plugin.WatchTargetService.ClearWatchedTargets(configuration);
-            plugin.PrintStatus("Cleared the active watched set.");
+            plugin.PrintStatus("Cleared watched and saved targets.");
         }
+        ImGui.EndDisabled();
+        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            ImGui.SetTooltip("Hold Ctrl to clear all watched targets and saved targets.");
 
         ImGui.SameLine();
         var saveHealTargets = configuration.SaveHealTargets;
@@ -188,15 +193,18 @@ public sealed class WatchWindow : Window, IDisposable
             configuration.Save();
             plugin.WatchTargetService.Update(configuration, force: true);
         }
+
+        ImGui.TextDisabled("Save heal targets only persists targets you explicitly check. Unticking a target removes it from the saved set too.");
+        ImGui.TextDisabled("Saved target scan range only affects when a saved target can auto-rejoin after it returns; it does not discover new targets.");
     }
 
     private void DrawRetainedTargets(float height)
     {
-        var retainedTargets = plugin.WatchTargetService.RetainedTargets;
-        ImGui.TextUnformatted($"Retained / saved targets ({retainedTargets.Count})");
-        ImGui.TextDisabled("Absent active targets require Ctrl+untick to remove from the watched set.");
+        var retainedTargets = plugin.WatchTargetService.RetainedTargets.ToArray();
+        ImGui.TextUnformatted($"Hidden / absent tracked targets ({retainedTargets.Length})");
+        ImGui.TextDisabled("Absent retained rows require Ctrl+untick. Unticking here removes the retained target from Coppelia's tracked set, including any saved copy.");
 
-        if (retainedTargets.Count == 0)
+        if (retainedTargets.Length == 0)
         {
             ImGui.TextDisabled("No hidden or retained targets right now.");
             return;
@@ -204,7 +212,7 @@ public sealed class WatchWindow : Window, IDisposable
 
         if (!ImGui.BeginTable(
                 "CoppeliaRetainedTargets",
-                8,
+                6,
                 ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY | ImGuiTableFlags.BordersInnerV,
                 new Vector2(-1f, height)))
         {
@@ -212,13 +220,11 @@ public sealed class WatchWindow : Window, IDisposable
         }
 
         ImGui.TableSetupColumn("Watch", ImGuiTableColumnFlags.WidthFixed, 54f);
-        ImGui.TableSetupColumn("Saved", ImGuiTableColumnFlags.WidthFixed, 48f);
-        ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch, 0.28f);
+        ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch, 0.34f);
         ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 130f);
         ImGui.TableSetupColumn("Job", ImGuiTableColumnFlags.WidthFixed, 70f);
-        ImGui.TableSetupColumn("State", ImGuiTableColumnFlags.WidthFixed, 150f);
+        ImGui.TableSetupColumn("State", ImGuiTableColumnFlags.WidthFixed, 210f);
         ImGui.TableSetupColumn("Dist", ImGuiTableColumnFlags.WidthFixed, 64f);
-        ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.WidthFixed, 100f);
         ImGui.TableHeadersRow();
 
         foreach (var target in retainedTargets)
@@ -226,52 +232,34 @@ public sealed class WatchWindow : Window, IDisposable
             ImGui.TableNextRow();
 
             ImGui.TableSetColumnIndex(0);
-            var watchedState = target.IsActive;
-            var canActivate = target.LiveSnapshot != null;
-            if (!canActivate && !target.IsActive)
-                ImGui.BeginDisabled();
-            if (ImGui.Checkbox($"##RetainedWatch{target.Entry.Name}{target.Entry.GameObjectId}", ref watchedState))
+            var trackedState = target.IsActive || target.IsSaved;
+            if (ImGui.Checkbox($"##RetainedWatch{target.Entry.Name}{target.Entry.GameObjectId}", ref trackedState))
             {
-                if (watchedState && target.LiveSnapshot != null)
+                if (trackedState && target.LiveSnapshot != null)
                 {
                     plugin.WatchTargetService.TryAddWatchedTarget(plugin.Configuration, target.LiveSnapshot, out var addMessage);
                     plugin.PrintStatus(addMessage);
                 }
-                else if (!watchedState)
+                else if (!trackedState)
                 {
-                    plugin.WatchTargetService.TryRemoveRetainedWatchedTarget(plugin.Configuration, target, ImGui.GetIO().KeyCtrl, out var removeMessage);
-                    plugin.PrintStatus(removeMessage);
+                    RemoveRetainedTarget(target);
                 }
             }
-            if (!canActivate && !target.IsActive)
-                ImGui.EndDisabled();
 
             ImGui.TableSetColumnIndex(1);
-            ImGui.TextUnformatted(target.IsSaved ? "Yes" : string.Empty);
-
-            ImGui.TableSetColumnIndex(2);
             ImGui.TextUnformatted(plugin.FormatDisplayName(target.Name));
 
-            ImGui.TableSetColumnIndex(3);
+            ImGui.TableSetColumnIndex(2);
             ImGui.TextUnformatted(target.CategoryLabel);
 
-            ImGui.TableSetColumnIndex(4);
+            ImGui.TableSetColumnIndex(3);
             ImGui.TextUnformatted(target.JobLabel);
 
-            ImGui.TableSetColumnIndex(5);
+            ImGui.TableSetColumnIndex(4);
             ImGui.TextUnformatted(BuildRetainedStateLabel(target));
 
-            ImGui.TableSetColumnIndex(6);
+            ImGui.TableSetColumnIndex(5);
             ImGui.TextUnformatted(float.IsNaN(target.Distance) ? "--" : $"{target.Distance:F1}");
-
-            ImGui.TableSetColumnIndex(7);
-            ImGui.BeginDisabled(!target.IsSaved);
-            if (ImGui.SmallButton($"Forget##Retained{target.Entry.Name}{target.Entry.GameObjectId}"))
-            {
-                plugin.WatchTargetService.TryForgetSavedTarget(plugin.Configuration, target, out var forgetMessage);
-                plugin.PrintStatus(forgetMessage);
-            }
-            ImGui.EndDisabled();
         }
 
         ImGui.EndTable();
@@ -281,7 +269,10 @@ public sealed class WatchWindow : Window, IDisposable
     {
         var targets = FilteredTargets().ToArray();
         ImGui.TextUnformatted($"Visible object table ({targets.Length})");
-        ImGui.TextDisabled($"Watching {plugin.WatchTargetService.ActiveTargets.Count}/{WatchTargetService.MaxTrackedTargets} active targets. Saved targets: {plugin.WatchTargetService.SavedTargetCount}.");
+        var savedText = plugin.Configuration.SaveHealTargets
+            ? plugin.WatchTargetService.SavedTargetCount.ToString()
+            : "Off";
+        ImGui.TextDisabled($"Watching {plugin.WatchTargetService.ActiveTargets.Count}/{WatchTargetService.MaxTrackedTargets} active targets. Saved targets: {savedText}.");
 
         if (targets.Length == 0)
         {
@@ -371,18 +362,42 @@ public sealed class WatchWindow : Window, IDisposable
         plugin.PrintStatus(removeMessage);
     }
 
+    private void RemoveRetainedTarget(ResolvedWatchTarget target)
+    {
+        var ctrlHeld = ImGui.GetIO().KeyCtrl;
+        if (target.IsMissingFromObjectTable && !ctrlHeld)
+        {
+            plugin.PrintStatus($"Hold Ctrl while unticking absent retained target {plugin.FormatDisplayName(target.Name)}.");
+            return;
+        }
+
+        if (target.IsActive)
+        {
+            plugin.WatchTargetService.TryRemoveRetainedWatchedTarget(plugin.Configuration, target, ctrlHeld, out var removeMessage);
+            plugin.PrintStatus(removeMessage);
+            return;
+        }
+
+        if (!target.IsSaved)
+            return;
+
+        plugin.WatchTargetService.TryForgetSavedTarget(plugin.Configuration, target, out var forgetMessage);
+        plugin.PrintStatus(forgetMessage);
+    }
+
     private static string BuildRetainedStateLabel(ResolvedWatchTarget target)
     {
+        var prefix = target.IsActive ? "Watched" : target.IsSaved ? "Saved" : "Tracked";
         if (target.IsMissingFromObjectTable)
-            return "Absent";
+            return $"{prefix} / absent / Ctrl remove";
 
         if (target.IsHiddenByFilters)
-            return "Hidden by filters";
+            return $"{prefix} / hidden by filters";
 
         if (!target.IsVisibleInObjectTable)
-            return "Live / retained";
+            return $"{prefix} / retained";
 
-        return target.IsDead ? "Dead" : $"{target.HpPercent}% HP";
+        return target.IsDead ? $"{prefix} / dead" : $"{prefix} / {target.HpPercent}% HP";
     }
 
     private void TrackWindowPosition()

@@ -220,7 +220,8 @@ public sealed class ConfigWindow : Window, IDisposable
         }
 
         ImGui.TextDisabled($"Multi-target watch cap: {WatchTargetService.MaxTrackedTargets} active and {WatchTargetService.MaxTrackedTargets} saved targets.");
-        ImGui.TextDisabled("Saved targets auto-rejoin the watched set when they return inside range. Absent watched targets require Ctrl+untick from the watch window.");
+        ImGui.TextDisabled("Use the Watch window to add or remove targets. Save heal targets only persists the targets you explicitly keep watched.");
+        ImGui.TextDisabled("Unticking a watched target or Ctrl-clearing the watch set removes it from the saved set too. Scan range only affects saved targets rejoining after they return.");
     }
 
     private void DrawJobTabsContent(Configuration configuration, ref bool changed)

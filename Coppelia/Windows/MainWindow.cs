@@ -56,8 +56,6 @@ public sealed class MainWindow : Window, IDisposable
             DrawDependencyPanel();
             ImGui.Separator();
             DrawWatchedTargetsPanel();
-            ImGui.Separator();
-            DrawWatchList();
             TrackWindowPosition();
         }
         finally
@@ -152,24 +150,11 @@ public sealed class MainWindow : Window, IDisposable
         }
 
         ImGui.SameLine();
-        if (ImGui.SmallButton("Refresh watch list##CoppeliaMain"))
-            plugin.WatchTargetService.Update(configuration, force: true);
-
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Target current##CoppeliaMain"))
-        {
-            plugin.WatchTargetService.TryAddCurrentGameTarget(configuration, out var message);
-            plugin.PrintStatus(message);
-        }
-
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Clear watched##CoppeliaMain"))
-        {
-            plugin.WatchTargetService.ClearWatchedTargets(configuration);
-            plugin.PrintStatus("Cleared the active watched set.");
-        }
+        if (ImGui.SmallButton("Open watch window##CoppeliaMain"))
+            plugin.OpenWatchUi();
 
         ImGui.TextWrapped($"Coppelia now scans up to {WatchTargetService.MaxTrackedTargets} watched targets, healer jobs only, with one action decision per cycle and hard dependency gates before healbot mode can arm.");
+        ImGui.TextDisabled("Manage watched targets only in the Watch window. Ctrl-clearing there removes both active watched targets and saved targets.");
         ImGui.TextColored(new Vector4(0.80f, 0.88f, 1.0f, 1.0f), plugin.HealbotRuntimeService.StatusText);
         ImGui.TextDisabled($"Last action: {plugin.HealbotRuntimeService.LastIssuedAction}");
         ImGui.TextDisabled($"Last rule: {plugin.HealbotRuntimeService.LastMatchedRule}");
@@ -193,7 +178,9 @@ public sealed class MainWindow : Window, IDisposable
 
     private void DrawWatchedTargetsPanel()
     {
-        var activeTargets = plugin.WatchTargetService.ActiveTargets;
+        var activeTargets = plugin.WatchTargetService.ActiveTargets.ToArray();
+        var retainedTargetCount = plugin.WatchTargetService.RetainedTargets.Count;
+        var liveCandidateCount = plugin.WatchTargetService.RuntimeCandidates.Count;
         ImGui.TextUnformatted("Watched targets");
 
         if (!plugin.HealbotRuntimeService.IsSupportedLocalJob(out var profile, out var reason))
@@ -201,9 +188,12 @@ public sealed class MainWindow : Window, IDisposable
         else
             ImGui.TextDisabled($"Local healer: {profile!.JobDisplayName} ({profile.JobAbbreviation})");
 
-        ImGui.TextDisabled($"Active: {activeTargets.Count}/{WatchTargetService.MaxTrackedTargets} | Live: {plugin.WatchTargetService.RuntimeCandidates.Count} | Saved: {plugin.WatchTargetService.SavedTargetCount}");
+        var savedText = plugin.Configuration.SaveHealTargets
+            ? plugin.WatchTargetService.SavedTargetCount.ToString()
+            : "Off";
+        ImGui.TextDisabled($"Active: {activeTargets.Length}/{WatchTargetService.MaxTrackedTargets} | Live: {liveCandidateCount} | Saved: {savedText}");
 
-        if (activeTargets.Count == 0)
+        if (activeTargets.Length == 0)
         {
             ImGui.TextDisabled("No watched targets selected yet.");
             return;
@@ -214,87 +204,11 @@ public sealed class MainWindow : Window, IDisposable
             ImGui.BulletText($"{plugin.FormatDisplayName(target.Name)} [{target.JobLabel}] - {BuildStateLabel(target)}");
         }
 
-        if (activeTargets.Count > 6)
-            ImGui.TextDisabled($"...and {activeTargets.Count - 6} more watched targets.");
+        if (activeTargets.Length > 6)
+            ImGui.TextDisabled($"...and {activeTargets.Length - 6} more watched targets.");
 
-        if (plugin.WatchTargetService.RetainedTargets.Count > 0)
-            ImGui.TextColored(new Vector4(0.95f, 0.78f, 0.42f, 1.0f), $"{plugin.WatchTargetService.RetainedTargets.Count} retained/saved target(s) are hidden or absent. Open the watch window to manage them.");
-    }
-
-    private void DrawWatchList()
-    {
-        var targets = plugin.WatchTargetService.Targets;
-        ImGui.TextUnformatted($"Visible object table ({targets.Count})");
-
-        if (targets.Count == 0)
-        {
-            ImGui.TextDisabled("No eligible targets for the current filters.");
-            return;
-        }
-
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Open watch window##CoppeliaMain"))
-            plugin.OpenWatchUi();
-
-        if (!ImGui.BeginTable("CoppeliaWatchList", 6, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY | ImGuiTableFlags.BordersInnerV, new Vector2(-1f, 170f)))
-            return;
-
-        ImGui.TableSetupColumn("Watch", ImGuiTableColumnFlags.WidthFixed, 54f);
-        ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch, 0.35f);
-        ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 150f);
-        ImGui.TableSetupColumn("Job", ImGuiTableColumnFlags.WidthFixed, 70f);
-        ImGui.TableSetupColumn("HP", ImGuiTableColumnFlags.WidthFixed, 90f);
-        ImGui.TableSetupColumn("Dist", ImGuiTableColumnFlags.WidthFixed, 64f);
-        ImGui.TableHeadersRow();
-
-        foreach (var target in targets)
-        {
-            var isWatched = plugin.WatchTargetService.IsWatched(target);
-            ImGui.TableNextRow();
-
-            ImGui.TableSetColumnIndex(0);
-            var watchedState = isWatched;
-            if (ImGui.Checkbox($"##CompactWatch{target.GameObjectId}", ref watchedState))
-                ToggleLiveTarget(target, watchedState);
-
-            ImGui.TableSetColumnIndex(1);
-            ImGui.TextUnformatted(plugin.FormatDisplayName(target.Name));
-
-            ImGui.TableSetColumnIndex(2);
-            ImGui.TextUnformatted(target.CategoryLabel);
-
-            ImGui.TableSetColumnIndex(3);
-            ImGui.TextUnformatted(target.JobLabel);
-
-            ImGui.TableSetColumnIndex(4);
-            var hpText = target.IsDead
-                ? "Dead"
-                : $"{target.HpPercent}%";
-            var hpColor = target.IsDead
-                ? new Vector4(1.0f, 0.55f, 0.55f, 1.0f)
-                : target.HpPercent <= 50
-                    ? new Vector4(1.0f, 0.80f, 0.40f, 1.0f)
-                    : new Vector4(0.75f, 0.90f, 1.0f, 1.0f);
-            ImGui.TextColored(hpColor, hpText);
-
-            ImGui.TableSetColumnIndex(5);
-            ImGui.TextUnformatted($"{target.Distance:F1}");
-        }
-
-        ImGui.EndTable();
-    }
-
-    private void ToggleLiveTarget(WatchTargetSnapshot target, bool shouldWatch)
-    {
-        if (shouldWatch)
-        {
-            plugin.WatchTargetService.TryAddWatchedTarget(plugin.Configuration, target, out var message);
-            plugin.PrintStatus(message);
-            return;
-        }
-
-        plugin.WatchTargetService.TryRemoveWatchedTarget(plugin.Configuration, target, out var removalMessage);
-        plugin.PrintStatus(removalMessage);
+        if (retainedTargetCount > 0)
+            ImGui.TextColored(new Vector4(0.95f, 0.78f, 0.42f, 1.0f), $"{retainedTargetCount} retained/saved target(s) are hidden or absent. Open the watch window to manage them.");
     }
 
     private static string BuildStateLabel(ResolvedWatchTarget target)

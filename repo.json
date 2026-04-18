@@ -3,10 +3,10 @@
     "$schema": "https://raw.githubusercontent.com/goatcorp/Dalamud/master/Dalamud/Configuration/PluginManifest/pluginmanifest.schema.json",
     "Author": "DhogGPT",
     "Name": "Coppelia",
-  "Punchline": "Healbot Coppelia is here to serve!  Healing from outside of party for n targets.",
-  "Description": "Healbot Coppelia is here to serve!  Healing from outside of party for n targets.",
+    "Punchline": "Healbot Coppelia is here to serve!  Healing from outside of party for n targets.",
+    "Description": "Healbot Coppelia is here to serve!  Healing from outside of party for n targets.",
     "InternalName": "Coppelia",
-    "AssemblyVersion": "1.0.0.0",
+    "AssemblyVersion": "1.0.0.1",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 14,
     "Tags": [
