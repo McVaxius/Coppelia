@@ -10,9 +10,9 @@
   "DownloadLinkUpdate": "https://github.com/McVaxius/Coppelia/releases/latest/download/latest.zip",
   "DownloadLinkTesting": "https://github.com/McVaxius/Coppelia/releases/latest/download/latest.zip",
   "RepoUrl": "https://github.com/McVaxius/Coppelia",
-  "AssemblyVersion": "1.0.0.3",
+  "AssemblyVersion": "1.0.0.4",
   "ApplicableVersion": "any",
-  "DalamudApiLevel": 14,
+  "DalamudApiLevel": 15,
   "Tags": [
     "ffxiv",
     "healbot",
