@@ -564,7 +564,7 @@ internal sealed class WatchTargetService
         {
             switch (battleNpc.BattleNpcKind)
             {
-                case BattleNpcSubKind.Chocobo:
+                case BattleNpcSubKind.Buddy:
                     category = WatchTargetCategory.CompanionChocobo;
                     categoryLabel = "Chocobo";
                     return true;
@@ -574,7 +574,7 @@ internal sealed class WatchTargetService
                     categoryLabel = "NPC Party Member";
                     return true;
 
-                case BattleNpcSubKind.Enemy:
+                case BattleNpcSubKind.Combatant:
                     category = WatchTargetCategory.FriendlyBattleNpc;
                     categoryLabel = "Battle NPC";
                     return true;
