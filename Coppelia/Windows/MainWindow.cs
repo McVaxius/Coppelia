@@ -153,7 +153,7 @@ public sealed class MainWindow : Window, IDisposable
         if (ImGui.SmallButton("Open watch window##CoppeliaMain"))
             plugin.OpenWatchUi();
 
-        ImGui.TextWrapped($"Coppelia now scans up to {WatchTargetService.MaxTrackedTargets} watched targets, healer jobs only, with one action decision per cycle and hard dependency gates before healbot mode can arm.");
+        ImGui.TextWrapped($"Coppelia scans up to {WatchTargetService.MaxTrackedTargets} watched targets, healer jobs only, with one action decision per cycle and required dependency gates before healbot mode can arm.");
         ImGui.TextDisabled("Manage watched targets only in the Watch window. Ctrl-clearing there removes both active watched targets and saved targets.");
         ImGui.TextColored(new Vector4(0.80f, 0.88f, 1.0f, 1.0f), plugin.HealbotRuntimeService.StatusText);
         ImGui.TextDisabled($"Last action: {plugin.HealbotRuntimeService.LastIssuedAction}");
@@ -164,16 +164,19 @@ public sealed class MainWindow : Window, IDisposable
     {
         var snapshot = plugin.DependencyService.Current;
         ImGui.TextUnformatted("Required plugins");
-        DrawDependencyLine("RSR", snapshot.RotationSolverLoaded);
         DrawDependencyLine("FrenRider", snapshot.FrenRiderLoaded);
         DrawDependencyLine("vnavmesh", snapshot.VNavmeshLoaded);
         DrawDependencyLine("BMR", snapshot.BossModRebornLoaded);
         DrawDependencyLine("VBM", snapshot.VbmLoaded);
 
+        ImGui.Spacing();
+        ImGui.TextUnformatted("Recommended plugins");
+        DrawDependencyLine("RSR", snapshot.RotationSolverLoaded, required: false);
+
         if (!snapshot.IsHealbotReady)
             ImGui.TextColored(new Vector4(1.0f, 0.55f, 0.55f, 1.0f), plugin.DependencyService.BuildMissingDependencyMessage());
 
-        ImGui.TextDisabled("RSR seam: dependency gate, offensive suppression, and session restore remain active. Heals now fire through direct ActionManager execution.");
+        ImGui.TextDisabled("RSR isolation/restore is used when loaded. Heals fire through direct ActionManager execution.");
     }
 
     private void DrawWatchedTargetsPanel()
@@ -225,12 +228,19 @@ public sealed class MainWindow : Window, IDisposable
         return $"{target.HpPercent}% HP";
     }
 
-    private void DrawDependencyLine(string label, bool available)
+    private void DrawDependencyLine(string label, bool available, bool required = true)
     {
         var color = available
             ? new Vector4(0.42f, 1.0f, 0.56f, 1.0f)
-            : new Vector4(1.0f, 0.58f, 0.58f, 1.0f);
-        ImGui.TextColored(color, $"{label}: {(available ? "Loaded" : "Missing")}");
+            : required
+                ? new Vector4(1.0f, 0.58f, 0.58f, 1.0f)
+                : new Vector4(0.95f, 0.72f, 0.30f, 1.0f);
+        var state = available
+            ? "Loaded"
+            : required
+                ? "Missing"
+                : "Missing (optional)";
+        ImGui.TextColored(color, $"{label}: {state}");
     }
 
     private void TrackWindowPosition()

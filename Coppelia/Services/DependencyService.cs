@@ -27,7 +27,8 @@ internal sealed class DependencyService
             string.Equals(plugin.InternalName, "BossModReborn", StringComparison.OrdinalIgnoreCase));
         var hasVbm = installed.Any(plugin =>
             plugin.IsLoaded &&
-            string.Equals(plugin.InternalName, "vbm", StringComparison.OrdinalIgnoreCase));
+            (string.Equals(plugin.InternalName, "BossMod", StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(plugin.InternalName, "vbm", StringComparison.OrdinalIgnoreCase)));
 
         Current = new DependencySnapshot
         {
@@ -42,8 +43,6 @@ internal sealed class DependencyService
     public string BuildMissingDependencyMessage()
     {
         var missing = new List<string>();
-        if (!Current.RotationSolverLoaded)
-            missing.Add("RSR");
         if (!Current.FrenRiderLoaded)
             missing.Add("FrenRider");
         if (!Current.VNavmeshLoaded)
@@ -52,7 +51,7 @@ internal sealed class DependencyService
             missing.Add("BMR or VBM");
 
         return missing.Count == 0
-            ? "All Coppelia dependencies are ready."
+            ? "All Coppelia required dependencies are ready."
             : $"Coppelia requires {string.Join(", ", missing)}. Install the missing plugin(s) or disable healbot in settings.";
     }
 }
@@ -66,5 +65,5 @@ internal sealed class DependencySnapshot
     public bool VbmLoaded { get; init; }
 
     public bool HasBossModProvider => BossModRebornLoaded || VbmLoaded;
-    public bool IsHealbotReady => RotationSolverLoaded && FrenRiderLoaded && VNavmeshLoaded && HasBossModProvider;
+    public bool IsHealbotReady => FrenRiderLoaded && VNavmeshLoaded && HasBossModProvider;
 }

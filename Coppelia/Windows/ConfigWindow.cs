@@ -380,6 +380,11 @@ public sealed class ConfigWindow : Window, IDisposable
             ImGui.BulletText(requirement);
 
         ImGui.Spacing();
+        ImGui.TextUnformatted("Recommended plugins");
+        foreach (var recommendation in PluginInfo.RecommendedPlugins)
+            ImGui.BulletText(recommendation);
+
+        ImGui.Spacing();
         ImGui.TextDisabled("Healbot mode expects /healbot, /copellia, /healbot ws, and /healbot j to be available from the standard shell.");
     }
 

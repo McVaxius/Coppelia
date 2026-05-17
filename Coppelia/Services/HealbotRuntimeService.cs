@@ -13,7 +13,8 @@ internal sealed class HealbotRuntimeService : IDisposable
     private readonly ActionExecutionService actionExecutionService;
 
     private DateTimeOffset nextDecisionUtc = DateTimeOffset.MinValue;
-    private bool profileApplied;
+    private bool profileArmed;
+    private bool rsrIsolationApplied;
     private string appliedSignature = string.Empty;
     private ulong previousTargetGameObjectId;
 
@@ -58,7 +59,8 @@ internal sealed class HealbotRuntimeService : IDisposable
     public void Activate()
     {
         nextDecisionUtc = DateTimeOffset.MinValue;
-        profileApplied = false;
+        profileArmed = false;
+        rsrIsolationApplied = false;
         appliedSignature = string.Empty;
         LastIssuedAction = "Idle";
         LastMatchedRule = "No rule matched.";
@@ -66,13 +68,14 @@ internal sealed class HealbotRuntimeService : IDisposable
 
     public void Deactivate(string reason)
     {
-        if (profileApplied)
-        {
+        if (rsrIsolationApplied)
             rsrIpcService.RestoreSessionSnapshot(keepRaiseOutsideDutyEnabled: true);
-            RestorePreviousTarget();
-        }
 
-        profileApplied = false;
+        if (profileArmed)
+            RestorePreviousTarget();
+
+        profileArmed = false;
+        rsrIsolationApplied = false;
         appliedSignature = string.Empty;
         LastIssuedAction = "Idle";
         LastMatchedRule = "No rule matched.";
@@ -90,7 +93,7 @@ internal sealed class HealbotRuntimeService : IDisposable
 
         if (!plugin.Configuration.HealbotEnabled)
         {
-            if (profileApplied)
+            if (profileArmed || rsrIsolationApplied)
                 Deactivate("Healbot mode is off.");
             else
                 StatusText = "Healbot mode is off.";
@@ -117,9 +120,10 @@ internal sealed class HealbotRuntimeService : IDisposable
         }
 
         var jobConfig = plugin.Configuration.GetJobConfigForJob(profile!.JobId);
-        var signature = BuildSignature(profile, jobConfig);
-        if (!profileApplied || !string.Equals(signature, appliedSignature, StringComparison.Ordinal))
-            ApplyProfile(profile, signature);
+        var rsrLoaded = dependencyService.Current.RotationSolverLoaded;
+        var signature = BuildSignature(profile, jobConfig, rsrLoaded);
+        if (!profileArmed || !string.Equals(signature, appliedSignature, StringComparison.Ordinal))
+            ApplyProfile(profile, signature, rsrLoaded);
 
         if (Plugin.ObjectTable.LocalPlayer is IBattleChara localPlayer && localPlayer.IsCasting)
         {
@@ -136,20 +140,40 @@ internal sealed class HealbotRuntimeService : IDisposable
         EvaluateSelectedTarget(profile, jobConfig);
     }
 
-    private void ApplyProfile(HealbotJobProfile profile, string signature)
+    private void ApplyProfile(HealbotJobProfile profile, string signature, bool rsrLoaded)
     {
-        if (!profileApplied)
+        if (!profileArmed)
             CapturePreviousTarget();
 
-        if (rsrIpcService.ApplyHealbotProfile(profile, plugin.Configuration))
+        if (rsrIsolationApplied && !rsrLoaded)
         {
-            profileApplied = true;
+            rsrIpcService.RestoreSessionSnapshot(keepRaiseOutsideDutyEnabled: true);
+            rsrIsolationApplied = false;
+        }
+
+        if (!rsrLoaded)
+        {
+            profileArmed = true;
+            rsrIsolationApplied = false;
             appliedSignature = signature;
-            StatusText = $"Healbot action matrix armed for {profile.JobDisplayName}.";
+            StatusText = $"Healbot action matrix armed for {profile.JobDisplayName}. RSR isolation unavailable.";
             return;
         }
 
-        StatusText = "Failed to apply the RSR isolation profile.";
+        if (rsrIpcService.ApplyHealbotProfile(profile, plugin.Configuration))
+        {
+            profileArmed = true;
+            rsrIsolationApplied = true;
+            appliedSignature = signature;
+            StatusText = $"Healbot action matrix armed for {profile.JobDisplayName}. RSR isolation active.";
+            return;
+        }
+
+        rsrIpcService.RestoreSessionSnapshot(keepRaiseOutsideDutyEnabled: true);
+        profileArmed = true;
+        rsrIsolationApplied = false;
+        appliedSignature = signature;
+        StatusText = $"Healbot action matrix armed for {profile.JobDisplayName}. RSR isolation failed; direct healing remains active.";
     }
 
     private void EvaluateSelectedTarget(HealbotJobProfile profile, HealerJobConfig jobConfig)
@@ -380,11 +404,12 @@ internal sealed class HealbotRuntimeService : IDisposable
         }
     }
 
-    private string BuildSignature(HealbotJobProfile profile, HealerJobConfig jobConfig)
+    private string BuildSignature(HealbotJobProfile profile, HealerJobConfig jobConfig, bool rsrLoaded)
         => string.Join("|",
             profile.JobId,
             jobConfig.BuildSignature(),
             plugin.Configuration.WatchPartyNpcs,
             plugin.Configuration.WatchCompanionChocobos,
-            plugin.Configuration.WatchFriendlyBattleNpcs);
+            plugin.Configuration.WatchFriendlyBattleNpcs,
+            rsrLoaded);
 }
