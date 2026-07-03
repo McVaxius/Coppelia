@@ -6,7 +6,7 @@
     "Punchline": "Healbot Coppelia is here to serve!  Healing from outside of party for n targets.",
     "Description": "Healbot Coppelia is here to serve!  Healing from outside of party for n targets.",
     "InternalName": "Coppelia",
-    "AssemblyVersion": "1.0.0.7",
+    "AssemblyVersion": "1.0.0.8",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 15,
     "Tags": [
@@ -19,8 +19,8 @@
       "utility"
     ],
     "RepoUrl": "https://github.com/McVaxius/Coppelia",
-    "DownloadLinkInstall": "https://github.com/McVaxius/Coppelia/releases/download/v1.0.0.7/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/McVaxius/Coppelia/releases/download/v1.0.0.7/latest.zip",
+    "DownloadLinkInstall": "https://github.com/McVaxius/Coppelia/releases/download/v1.0.0.8/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/McVaxius/Coppelia/releases/download/v1.0.0.8/latest.zip",
     "IconUrl": "https://raw.githubusercontent.com/McVaxius/Coppelia/main/Coppelia/images/icon.png"
   }
 ]

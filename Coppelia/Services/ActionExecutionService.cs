@@ -96,6 +96,127 @@ internal unsafe sealed class ActionExecutionService
         return true;
     }
 
+    public bool CanUseAnyPowerlevelAction(PowerlevelJob job, ICharacter selectedTarget, out string failureReason)
+    {
+        failureReason = string.Empty;
+
+        if (Plugin.ObjectTable.LocalPlayer is not IBattleChara localPlayer)
+        {
+            failureReason = "Local player is unavailable.";
+            return false;
+        }
+
+        if (localPlayer.IsCasting)
+        {
+            failureReason = "Already casting.";
+            return false;
+        }
+
+        return TryFindPowerlevelAction(job, selectedTarget, execute: false, out _, out failureReason);
+    }
+
+    public bool TryExecutePowerlevel(
+        PowerlevelJob job,
+        ICharacter selectedTarget,
+        out string executedAction,
+        out string failureReason)
+    {
+        executedAction = "Idle";
+        failureReason = string.Empty;
+
+        if (Plugin.ObjectTable.LocalPlayer is not IBattleChara localPlayer)
+        {
+            failureReason = "Local player is unavailable.";
+            return false;
+        }
+
+        if (localPlayer.IsCasting)
+        {
+            failureReason = "Already casting.";
+            return false;
+        }
+
+        return TryFindPowerlevelAction(job, selectedTarget, execute: true, out executedAction, out failureReason);
+    }
+
+    private bool TryFindPowerlevelAction(
+        PowerlevelJob job,
+        ICharacter selectedTarget,
+        bool execute,
+        out string actionName,
+        out string failureReason)
+    {
+        actionName = "Idle";
+        failureReason = "No PowerlevelBot action is currently usable.";
+
+        if (ActionManager.Instance() == null)
+        {
+            failureReason = "ActionManager is unavailable.";
+            return false;
+        }
+
+        var actionManager = ActionManager.Instance();
+        var lastFailure = failureReason;
+
+        foreach (var definition in PowerlevelActionCatalog.GetDefinitions(job).OrderBy(definition => definition.Priority))
+        {
+            if (!TryResolveActionId(definition.ActionName, out var actionId))
+                continue;
+
+            var adjustedActionId = ResolveAdjustedPowerlevelActionId(actionId);
+            if (!TryGetActionRow(adjustedActionId, out var actionRow))
+                continue;
+
+            Plugin.TargetManager.Target = selectedTarget;
+
+            var castTimeMs = ActionManager.GetAdjustedCastTime(ActionType.Action, adjustedActionId, true, null);
+            var metadata = new PowerlevelActionMetadata(
+                actionRow.Name.ToString(),
+                Plugin.UnlockState.IsActionUnlocked(actionRow),
+                actionRow.CanTargetHostile,
+                actionRow.CanTargetSelf || actionRow.CanTargetParty,
+                actionRow.TargetArea,
+                actionRow.EffectRange,
+                castTimeMs,
+                actionManager->GetActionStatus(ActionType.Action, adjustedActionId) == 0,
+                actionManager->IsActionOffCooldown(ActionType.Action, adjustedActionId),
+                actionManager->IsActionTargetInRange(ActionType.Action, adjustedActionId));
+
+            if (!PowerlevelActionPolicy.IsAllowed(metadata, out lastFailure))
+                continue;
+
+            if (!execute)
+            {
+                actionName = metadata.Name;
+                failureReason = string.Empty;
+                return true;
+            }
+
+            var queued = false;
+            var executed = actionManager->UseAction(
+                ActionType.Action,
+                adjustedActionId,
+                selectedTarget.GameObjectId,
+                0xFFFF,
+                (ActionManager.UseActionMode)0,
+                0,
+                &queued);
+
+            if (!executed)
+            {
+                lastFailure = $"UseAction rejected {metadata.Name}.";
+                continue;
+            }
+
+            actionName = metadata.Name;
+            failureReason = string.Empty;
+            return true;
+        }
+
+        failureReason = lastFailure;
+        return false;
+    }
+
     public bool HasTrackedStatus(HealbotActionDefinition definition, ICharacter selectedTarget)
     {
         if (string.IsNullOrWhiteSpace(definition.TrackedStatusName))
@@ -146,6 +267,24 @@ internal unsafe sealed class ActionExecutionService
         }
 
         actionId = 0;
+        return false;
+    }
+
+    private static uint ResolveAdjustedPowerlevelActionId(uint actionId)
+    {
+        // Dalamud 15's exposed ActionManager surface in this workspace does not expose a
+        // direct adjusted-action-id helper.  The curated catalog includes upgraded action
+        // rows next to their base rows, and UseAction itself accepts the normal action row.
+        return actionId;
+    }
+
+    private static bool TryGetActionRow(uint actionId, out ActionSheet actionRow)
+    {
+        var actionSheet = Plugin.DataManager.GetExcelSheet<ActionSheet>();
+        if (actionSheet != null && actionSheet.TryGetRow(actionId, out actionRow))
+            return true;
+
+        actionRow = default;
         return false;
     }
 

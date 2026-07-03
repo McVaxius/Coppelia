@@ -128,12 +128,14 @@ public sealed class ConfigWindow : Window, IDisposable
         }
 
         ImGui.SameLine();
-        var healbotEnabled = configuration.HealbotEnabled;
-        if (ImGui.Checkbox("Healbot mode enabled", ref healbotEnabled))
+        var automationEnabled = configuration.AutomationEnabled;
+        if (ImGui.Checkbox("Automation enabled", ref automationEnabled))
         {
-            plugin.SetHealbotEnabled(healbotEnabled, printStatus: false);
+            plugin.SetAutomationEnabled(automationEnabled, printStatus: false);
             changed = true;
         }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Controls the currently selected Coppelia mode. /healbot on and /healbot off use this same switch.");
 
         ImGui.SameLine();
         var krangleEnabled = configuration.KrangleNames;
@@ -169,6 +171,9 @@ public sealed class ConfigWindow : Window, IDisposable
             plugin.UpdateDtrBar();
             changed = true;
         }
+
+        ImGui.Separator();
+        DrawModeSettings(configuration, ref changed);
 
         ImGui.Separator();
         ImGui.TextUnformatted("Watch filters");
@@ -222,6 +227,41 @@ public sealed class ConfigWindow : Window, IDisposable
         ImGui.TextDisabled($"Multi-target watch cap: {WatchTargetService.MaxTrackedTargets} active and {WatchTargetService.MaxTrackedTargets} saved targets.");
         ImGui.TextDisabled("Use the Watch window to add or remove targets. Save heal targets only persists the targets you explicitly keep watched.");
         ImGui.TextDisabled("Unticking a watched target or Ctrl-clearing the watch set removes it from the saved set too. Scan range only affects saved targets rejoining after they return.");
+    }
+
+    private void DrawModeSettings(Configuration configuration, ref bool changed)
+    {
+        ImGui.TextUnformatted("Mode");
+
+        var healSelected = configuration.BotMode == BotMode.HealBot;
+        if (ImGui.RadioButton("HealBot##ConfigModeHeal", healSelected))
+            plugin.SetBotMode(BotMode.HealBot, printStatus: false);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Uses the watched-target list and per-healer action matrix.");
+
+        ImGui.SameLine();
+        var powerlevelSelected = configuration.BotMode == BotMode.PowerlevelBot;
+        if (ImGui.RadioButton("PowerlevelBot##ConfigModePowerlevel", powerlevelSelected))
+            plugin.SetBotMode(BotMode.PowerlevelBot, printStatus: false);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Uses FrenRider's configured Fren as the leader and attacks only damaged enemies already targeting that Fren or you.");
+
+        ImGui.SameLine();
+        ImGui.BeginDisabled(configuration.BotMode != BotMode.PowerlevelBot);
+        var jobs = new[] { PowerlevelJob.None, PowerlevelJob.BRD, PowerlevelJob.MCH };
+        var labels = jobs.Select(job => job.GetLabel()).ToArray();
+        var selectedIndex = Math.Max(0, Array.IndexOf(jobs, configuration.PowerlevelJob));
+        ImGui.SetNextItemWidth(210f);
+        if (ImGui.Combo("Required job##ConfigPowerlevelJob", ref selectedIndex, labels, labels.Length))
+        {
+            configuration.PowerlevelJob = jobs[selectedIndex];
+            changed = true;
+        }
+        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            ImGui.SetTooltip("PowerlevelBot requires this job to be unlocked and currently equipped. It never switches gearsets.");
+        ImGui.EndDisabled();
+
+        ImGui.TextDisabled("Modes are mutually exclusive. HealBot configuration below remains HealBot-only.");
     }
 
     private void DrawJobTabsContent(Configuration configuration, ref bool changed)
@@ -385,7 +425,7 @@ public sealed class ConfigWindow : Window, IDisposable
             ImGui.BulletText(recommendation);
 
         ImGui.Spacing();
-        ImGui.TextDisabled("Healbot mode expects /healbot, /copellia, /healbot ws, and /healbot j to be available from the standard shell.");
+        ImGui.TextDisabled("Coppelia supports /healbot on|off, /healbot heal, /healbot powerlevel, /copellia, /healbot ws, and /healbot j.");
     }
 
     private void TrackWindowPosition()

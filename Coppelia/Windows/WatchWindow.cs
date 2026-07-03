@@ -99,9 +99,25 @@ public sealed class WatchWindow : Window, IDisposable
 
     private void DrawHeader()
     {
-        var healbotEnabled = plugin.Configuration.HealbotEnabled;
-        if (ImGui.Checkbox("Healbot mode##WatchWindow", ref healbotEnabled))
-            plugin.SetHealbotEnabled(healbotEnabled, printStatus: true);
+        var automationEnabled = plugin.Configuration.AutomationEnabled;
+        if (ImGui.Checkbox("Automation##WatchWindow", ref automationEnabled))
+            plugin.SetAutomationEnabled(automationEnabled, printStatus: true);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Controls the currently selected Coppelia mode.");
+
+        ImGui.SameLine();
+        var healSelected = plugin.Configuration.BotMode == BotMode.HealBot;
+        if (ImGui.RadioButton("HealBot##WatchModeHeal", healSelected))
+            plugin.SetBotMode(BotMode.HealBot, printStatus: true);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Watched targets in this window are HealBot-only.");
+
+        ImGui.SameLine();
+        var powerlevelSelected = plugin.Configuration.BotMode == BotMode.PowerlevelBot;
+        if (ImGui.RadioButton("PowerlevelBot##WatchModePowerlevel", powerlevelSelected))
+            plugin.SetBotMode(BotMode.PowerlevelBot, printStatus: true);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("PowerlevelBot ignores this watched-target list and follows FrenRider's configured Fren.");
 
         ImGui.SameLine();
         var krangleEnabled = plugin.Configuration.KrangleNames;

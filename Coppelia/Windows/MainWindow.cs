@@ -114,7 +114,9 @@ public sealed class MainWindow : Window, IDisposable
 
         ImGui.SameLine();
         if (ImGui.SmallButton("Status to chat##CoppeliaMain"))
-            plugin.PrintStatus(plugin.HealbotRuntimeService.StatusText);
+            plugin.PrintStatus(plugin.Configuration.BotMode == BotMode.PowerlevelBot
+                ? plugin.PowerlevelRuntimeService.StatusText
+                : plugin.HealbotRuntimeService.StatusText);
     }
 
     private void DrawStateControls()
@@ -126,9 +128,11 @@ public sealed class MainWindow : Window, IDisposable
             plugin.SetPluginEnabled(pluginEnabled, printStatus: true);
 
         ImGui.SameLine();
-        var healbotEnabled = configuration.HealbotEnabled;
-        if (ImGui.Checkbox("Healbot mode", ref healbotEnabled))
-            plugin.SetHealbotEnabled(healbotEnabled, printStatus: true);
+        var automationEnabled = configuration.AutomationEnabled;
+        if (ImGui.Checkbox("Automation", ref automationEnabled))
+            plugin.SetAutomationEnabled(automationEnabled, printStatus: true);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("/healbot on and /healbot off control the selected Coppelia mode.");
 
         ImGui.SameLine();
         var krangleEnabled = configuration.KrangleNames;
@@ -153,11 +157,56 @@ public sealed class MainWindow : Window, IDisposable
         if (ImGui.SmallButton("Open watch window##CoppeliaMain"))
             plugin.OpenWatchUi();
 
-        ImGui.TextWrapped($"Coppelia scans up to {WatchTargetService.MaxTrackedTargets} watched targets, healer jobs only, with one action decision per cycle and required dependency gates before healbot mode can arm.");
+        DrawModeControls(configuration);
+
+        ImGui.TextWrapped("HealBot watches selected friendly targets. PowerlevelBot tags damaged enemies already targeting FrenRider's Fren or the local player while FrenRider keeps follow/mount behavior.");
         ImGui.TextDisabled("Manage watched targets only in the Watch window. Ctrl-clearing there removes both active watched targets and saved targets.");
-        ImGui.TextColored(new Vector4(0.80f, 0.88f, 1.0f, 1.0f), plugin.HealbotRuntimeService.StatusText);
-        ImGui.TextDisabled($"Last action: {plugin.HealbotRuntimeService.LastIssuedAction}");
-        ImGui.TextDisabled($"Last rule: {plugin.HealbotRuntimeService.LastMatchedRule}");
+        var runtimeStatus = configuration.BotMode == BotMode.PowerlevelBot
+            ? plugin.PowerlevelRuntimeService.StatusText
+            : plugin.HealbotRuntimeService.StatusText;
+        var lastAction = configuration.BotMode == BotMode.PowerlevelBot
+            ? plugin.PowerlevelRuntimeService.LastIssuedAction
+            : plugin.HealbotRuntimeService.LastIssuedAction;
+        var lastRule = configuration.BotMode == BotMode.PowerlevelBot
+            ? plugin.PowerlevelRuntimeService.LastMatchedRule
+            : plugin.HealbotRuntimeService.LastMatchedRule;
+        ImGui.TextColored(new Vector4(0.80f, 0.88f, 1.0f, 1.0f), runtimeStatus);
+        ImGui.TextDisabled($"Last action: {lastAction}");
+        ImGui.TextDisabled($"Last rule: {lastRule}");
+    }
+
+    private void DrawModeControls(Configuration configuration)
+    {
+        ImGui.Spacing();
+        ImGui.TextUnformatted("Mode");
+
+        var healSelected = configuration.BotMode == BotMode.HealBot;
+        if (ImGui.RadioButton("HealBot##MainModeHeal", healSelected))
+            plugin.SetBotMode(BotMode.HealBot, printStatus: true);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Casts configured healer actions on watched friendly targets.");
+
+        ImGui.SameLine();
+        var powerlevelSelected = configuration.BotMode == BotMode.PowerlevelBot;
+        if (ImGui.RadioButton("PowerlevelBot##MainModePowerlevel", powerlevelSelected))
+            plugin.SetBotMode(BotMode.PowerlevelBot, printStatus: true);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Uses BRD/MCH instant ranged single-target actions on enemies already fighting the Fren/local player.");
+
+        ImGui.SameLine();
+        ImGui.BeginDisabled(configuration.BotMode != BotMode.PowerlevelBot);
+        var jobs = new[] { PowerlevelJob.None, PowerlevelJob.BRD, PowerlevelJob.MCH };
+        var labels = jobs.Select(job => job.GetLabel()).ToArray();
+        var selectedIndex = Math.Max(0, Array.IndexOf(jobs, configuration.PowerlevelJob));
+        ImGui.SetNextItemWidth(190f);
+        if (ImGui.Combo("Powerlevel job##Main", ref selectedIndex, labels, labels.Length))
+        {
+            configuration.PowerlevelJob = jobs[selectedIndex];
+            configuration.Save();
+        }
+        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            ImGui.SetTooltip("PowerlevelBot never changes gearsets; your current job must match this selection.");
+        ImGui.EndDisabled();
     }
 
     private void DrawDependencyPanel()
@@ -176,7 +225,8 @@ public sealed class MainWindow : Window, IDisposable
         if (!snapshot.IsHealbotReady)
             ImGui.TextColored(new Vector4(1.0f, 0.55f, 0.55f, 1.0f), plugin.DependencyService.BuildMissingDependencyMessage());
 
-        ImGui.TextDisabled("RSR isolation/restore is used when loaded. Heals fire through direct ActionManager execution.");
+        ImGui.TextDisabled("HealBot also requires vnavmesh plus BMR or VBM. PowerlevelBot requires compatible FrenRider IPC and no battle companion chocobo.");
+        ImGui.TextDisabled("RSR isolation/restore is used when loaded for HealBot. Actions fire through direct ActionManager execution.");
     }
 
     private void DrawWatchedTargetsPanel()
@@ -184,7 +234,19 @@ public sealed class MainWindow : Window, IDisposable
         var activeTargets = plugin.WatchTargetService.ActiveTargets.ToArray();
         var retainedTargetCount = plugin.WatchTargetService.RetainedTargets.Count;
         var liveCandidateCount = plugin.WatchTargetService.RuntimeCandidates.Count;
-        ImGui.TextUnformatted("Watched targets");
+        ImGui.TextUnformatted(configurationModeHeader());
+
+        string configurationModeHeader()
+            => plugin.Configuration.BotMode == BotMode.PowerlevelBot
+                ? "Powerlevel target source"
+                : "Watched targets";
+
+        if (plugin.Configuration.BotMode == BotMode.PowerlevelBot)
+        {
+            ImGui.TextDisabled("PowerlevelBot ignores the HealBot watched-target list and uses FrenRider's configured Fren as the leader.");
+            ImGui.TextDisabled($"Selected job: {plugin.Configuration.PowerlevelJob.GetLabel()}");
+            return;
+        }
 
         if (!plugin.HealbotRuntimeService.IsSupportedLocalJob(out var profile, out var reason))
             ImGui.TextDisabled(reason);

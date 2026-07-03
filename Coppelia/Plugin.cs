@@ -26,6 +26,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IFramework Framework { get; private set; } = null!;
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
+    [PluginService] internal static IUnlockState UnlockState { get; private set; } = null!;
     [PluginService] internal static IDtrBar DtrBar { get; private set; } = null!;
     [PluginService] internal static IToastGui ToastGui { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
@@ -47,7 +48,9 @@ public sealed class Plugin : IDalamudPlugin
         WatchTargetService = new WatchTargetService();
         RsrIpcService = new RsrIpcService();
         ActionExecutionService = new ActionExecutionService();
+        FrenRiderPowerlevelIpcService = new FrenRiderPowerlevelIpcService();
         HealbotRuntimeService = new HealbotRuntimeService(this, DependencyService, WatchTargetService, RsrIpcService, ActionExecutionService);
+        PowerlevelRuntimeService = new PowerlevelRuntimeService(this, FrenRiderPowerlevelIpcService, ActionExecutionService);
 
         mainWindow = new MainWindow(this);
         configWindow = new ConfigWindow(this);
@@ -59,7 +62,7 @@ public sealed class Plugin : IDalamudPlugin
 
         CommandManager.AddHandler(PluginInfo.Command, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Open Coppelia. Use /healbot config, /healbot watch, /healbot on, /healbot off, /healbot ws, or /healbot j.",
+            HelpMessage = "Open Coppelia. Use /healbot config, /healbot watch, /healbot on, /healbot off, /healbot heal, /healbot powerlevel, /healbot ws, or /healbot j.",
         });
 
         CommandManager.AddHandler(PluginInfo.AliasCommand, new CommandInfo(OnCommand)
@@ -85,10 +88,13 @@ public sealed class Plugin : IDalamudPlugin
     internal WatchTargetService WatchTargetService { get; }
     internal RsrIpcService RsrIpcService { get; }
     internal ActionExecutionService ActionExecutionService { get; }
+    internal FrenRiderPowerlevelIpcService FrenRiderPowerlevelIpcService { get; }
     internal HealbotRuntimeService HealbotRuntimeService { get; }
+    internal PowerlevelRuntimeService PowerlevelRuntimeService { get; }
 
     public void Dispose()
     {
+        PowerlevelRuntimeService.Dispose();
         HealbotRuntimeService.Dispose();
         Framework.Update -= OnFrameworkUpdate;
         PluginInterface.UiBuilder.Draw -= WindowSystem.Draw;
@@ -105,20 +111,32 @@ public sealed class Plugin : IDalamudPlugin
     }
 
     public bool SetHealbotEnabled(bool enabled, bool printStatus)
+        => SetAutomationEnabled(enabled, printStatus);
+
+    public bool SetAutomationEnabled(bool enabled, bool printStatus)
     {
         if (enabled)
         {
-            DependencyService.Refresh(force: true);
-            if (!DependencyService.Current.IsHealbotReady)
+            if (Configuration.BotMode == BotMode.HealBot)
             {
-                var message = DependencyService.BuildMissingDependencyMessage();
-                ShowDependencyToast(message);
-                if (printStatus)
-                    PrintStatus(message);
-                return false;
-            }
+                DependencyService.Refresh(force: true);
+                if (!DependencyService.Current.IsHealbotReady)
+                {
+                    var message = DependencyService.BuildMissingDependencyMessage();
+                    ShowDependencyToast(message);
+                    if (printStatus)
+                        PrintStatus(message);
+                    return false;
+                }
 
-            if (!HealbotRuntimeService.IsSupportedLocalJob(out _, out var reason))
+                if (!HealbotRuntimeService.IsSupportedLocalJob(out _, out var reason))
+                {
+                    if (printStatus)
+                        PrintStatus(reason);
+                    return false;
+                }
+            }
+            else if (!PowerlevelRuntimeService.TryValidateActivation(out var reason))
             {
                 if (printStatus)
                     PrintStatus(reason);
@@ -126,37 +144,78 @@ public sealed class Plugin : IDalamudPlugin
             }
 
             Configuration.PluginEnabled = true;
-            Configuration.HealbotEnabled = true;
+            Configuration.AutomationEnabled = true;
+            Configuration.HealbotEnabled = Configuration.BotMode == BotMode.HealBot;
             Configuration.Save();
-            HealbotRuntimeService.Activate();
+            ActivateSelectedMode();
             UpdateDtrBar();
 
             if (printStatus)
-                PrintStatus("Healbot mode enabled.");
+                PrintStatus($"{Configuration.BotMode.GetLabel()} mode enabled.");
 
             return true;
         }
 
+        Configuration.AutomationEnabled = false;
         Configuration.HealbotEnabled = false;
         Configuration.Save();
-        HealbotRuntimeService.Deactivate("Healbot mode is off.");
+        HealbotRuntimeService.Deactivate("Automation is off.");
+        PowerlevelRuntimeService.Deactivate("Automation is off.");
         UpdateDtrBar();
 
         if (printStatus)
-            PrintStatus("Healbot mode disabled.");
+            PrintStatus("Coppelia automation disabled.");
 
         return true;
+    }
+
+    public bool SetBotMode(BotMode mode, bool printStatus)
+    {
+        if (Configuration.BotMode == mode)
+        {
+            if (printStatus)
+                PrintStatus($"{mode.GetLabel()} is already selected.");
+            return true;
+        }
+
+        var wasAutomationEnabled = Configuration.AutomationEnabled;
+        HealbotRuntimeService.Deactivate("Mode switched.");
+        PowerlevelRuntimeService.Deactivate("Mode switched.");
+        AutomationModePolicy.ApplyMode(Configuration, mode);
+        Configuration.Save();
+        UpdateDtrBar();
+
+        if (!wasAutomationEnabled)
+        {
+            if (printStatus)
+                PrintStatus($"Selected {mode.GetLabel()} mode.");
+            return true;
+        }
+
+        var enabled = SetAutomationEnabled(true, printStatus: false);
+        if (printStatus)
+            PrintStatus(enabled
+                ? $"Switched to {mode.GetLabel()} mode."
+                : $"Selected {mode.GetLabel()} mode, but activation is blocked. Use /healbot status for details.");
+
+        return enabled;
     }
 
     public void SetPluginEnabled(bool enabled, bool printStatus)
     {
         Configuration.PluginEnabled = enabled;
         if (!enabled)
+        {
+            Configuration.AutomationEnabled = false;
             Configuration.HealbotEnabled = false;
+        }
 
         Configuration.Save();
         if (!enabled)
+        {
             HealbotRuntimeService.Deactivate("Plugin disabled.");
+            PowerlevelRuntimeService.Deactivate("Plugin disabled.");
+        }
 
         UpdateDtrBar();
         if (printStatus)
@@ -287,18 +346,21 @@ public sealed class Plugin : IDalamudPlugin
 
         var state = !Configuration.PluginEnabled
             ? "Off"
-            : !Configuration.HealbotEnabled
+            : !Configuration.AutomationEnabled
                 ? "Ready"
-                : DependencyService.Current.IsHealbotReady
-                    ? HealbotRuntimeService.LastIssuedAction
-                    : "Blocked";
+                : Configuration.BotMode == BotMode.PowerlevelBot
+                    ? PowerlevelRuntimeService.LastIssuedAction
+                    : DependencyService.Current.IsHealbotReady
+                        ? HealbotRuntimeService.LastIssuedAction
+                        : "Blocked";
 
-        var glyph = Configuration.HealbotEnabled ? Configuration.DtrIconEnabled : Configuration.DtrIconDisabled;
+        var glyph = Configuration.AutomationEnabled ? Configuration.DtrIconEnabled : Configuration.DtrIconDisabled;
+        var modeLabel = Configuration.BotMode.GetDtrLabel();
         dtrEntry.Text = Configuration.DtrBarMode switch
         {
-            1 => new SeString(new TextPayload($"{glyph} HB")),
+            1 => new SeString(new TextPayload($"{glyph} {modeLabel}")),
             2 => new SeString(new TextPayload(glyph)),
-            _ => new SeString(new TextPayload($"HB: {state}")),
+            _ => new SeString(new TextPayload($"{modeLabel}: {state}")),
         };
         dtrEntry.Tooltip = new SeString(new TextPayload($"{PluginInfo.DisplayName} {state}. Click to open the main window."));
     }
@@ -322,6 +384,7 @@ public sealed class Plugin : IDalamudPlugin
         WatchTargetService.Update(Configuration, force: pendingInitialWatchRefresh);
         pendingInitialWatchRefresh = false;
         HealbotRuntimeService.Update();
+        PowerlevelRuntimeService.Update();
         UpdateDtrBar();
     }
 
@@ -337,7 +400,22 @@ public sealed class Plugin : IDalamudPlugin
 
         if (trimmed.Equals("status", StringComparison.OrdinalIgnoreCase))
         {
-            PrintStatus(HealbotRuntimeService.StatusText);
+            PrintStatus(Configuration.BotMode == BotMode.PowerlevelBot
+                ? PowerlevelRuntimeService.StatusText
+                : HealbotRuntimeService.StatusText);
+            return;
+        }
+
+        if (trimmed.Equals("heal", StringComparison.OrdinalIgnoreCase))
+        {
+            SetBotMode(BotMode.HealBot, printStatus: true);
+            return;
+        }
+
+        if (trimmed.Equals("powerlevel", StringComparison.OrdinalIgnoreCase) ||
+            trimmed.Equals("pl", StringComparison.OrdinalIgnoreCase))
+        {
+            SetBotMode(BotMode.PowerlevelBot, printStatus: true);
             return;
         }
 
@@ -361,16 +439,29 @@ public sealed class Plugin : IDalamudPlugin
 
         if (trimmed.Equals("on", StringComparison.OrdinalIgnoreCase))
         {
-            SetHealbotEnabled(true, printStatus: true);
+            SetAutomationEnabled(true, printStatus: true);
             return;
         }
 
         if (trimmed.Equals("off", StringComparison.OrdinalIgnoreCase))
         {
-            SetHealbotEnabled(false, printStatus: true);
+            SetAutomationEnabled(false, printStatus: true);
             return;
         }
 
         ToggleMainUi();
+    }
+
+    private void ActivateSelectedMode()
+    {
+        if (Configuration.BotMode == BotMode.PowerlevelBot)
+        {
+            HealbotRuntimeService.Deactivate("PowerlevelBot mode selected.");
+            PowerlevelRuntimeService.Activate();
+            return;
+        }
+
+        PowerlevelRuntimeService.Deactivate("HealBot mode selected.");
+        HealbotRuntimeService.Activate();
     }
 }

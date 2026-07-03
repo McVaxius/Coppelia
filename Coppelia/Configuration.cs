@@ -6,11 +6,16 @@ namespace Coppelia;
 [Serializable]
 public sealed class Configuration : IPluginConfiguration
 {
-    private const int CurrentConfigurationVersion = 4;
+    private const int CurrentConfigurationVersion = 5;
     private const int MaxTrackedTargets = 20;
 
     public int Version { get; set; } = CurrentConfigurationVersion;
     public bool PluginEnabled { get; set; } = true;
+    public bool AutomationEnabled { get; set; }
+    public BotMode BotMode { get; set; } = BotMode.HealBot;
+    public PowerlevelJob PowerlevelJob { get; set; } = PowerlevelJob.None;
+
+    // Legacy v4 runtime flag kept for migration only.
     public bool HealbotEnabled { get; set; }
     public bool DtrBarEnabled { get; set; } = true;
     public int DtrBarMode { get; set; } = 1;
@@ -85,9 +90,19 @@ public sealed class Configuration : IPluginConfiguration
         changed |= NormalizeTrackedTargets(SavedHealTargetEntries);
 
         SavedTargetScanRangeYalms = Math.Clamp(SavedTargetScanRangeYalms, 1, 200);
+        changed |= NormalizeAutomationMode();
 
         if (Version != CurrentConfigurationVersion)
         {
+            if (Version < 5)
+            {
+                AutomationEnabled = HealbotEnabled;
+                BotMode = BotMode.HealBot;
+                if (!PowerlevelJob.IsSupportedPowerlevelJob())
+                    PowerlevelJob = PowerlevelJob.None;
+                changed = true;
+            }
+
             if (Version < CurrentConfigurationVersion)
             {
                 KrangleNames = true;
@@ -167,6 +182,31 @@ public sealed class Configuration : IPluginConfiguration
         targets.Clear();
         targets.AddRange(normalized);
         return true;
+    }
+
+    private bool NormalizeAutomationMode()
+    {
+        var changed = false;
+
+        if (!Enum.IsDefined(BotMode))
+        {
+            BotMode = BotMode.HealBot;
+            changed = true;
+        }
+
+        if (!Enum.IsDefined(PowerlevelJob))
+        {
+            PowerlevelJob = PowerlevelJob.None;
+            changed = true;
+        }
+
+        if (!PowerlevelJob.IsSupportedPowerlevelJob() && PowerlevelJob != PowerlevelJob.None)
+        {
+            PowerlevelJob = PowerlevelJob.None;
+            changed = true;
+        }
+
+        return changed;
     }
 
     private static string GetDefaultCategoryLabel(WatchTargetCategory category)

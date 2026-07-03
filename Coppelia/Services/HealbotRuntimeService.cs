@@ -91,7 +91,7 @@ internal sealed class HealbotRuntimeService : IDisposable
             return;
         }
 
-        if (!plugin.Configuration.HealbotEnabled)
+        if (!plugin.Configuration.AutomationEnabled || plugin.Configuration.BotMode != BotMode.HealBot)
         {
             if (profileArmed || rsrIsolationApplied)
                 Deactivate("Healbot mode is off.");
