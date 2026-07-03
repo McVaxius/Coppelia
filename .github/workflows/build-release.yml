@@ -13,6 +13,9 @@ env:
   INTERNAL_NAME: Coppelia
   RELEASE_DIR: Coppelia\bin\x64\Release\Coppelia
   DALAMUD_DISTRIB_COMMIT: 4b9175ec411f15a84f4d59dc24881095aef2d999
+  DALAMUD_EXPECTED_VERSION: "15.0.2.2"
+  DALAMUD_EXPECTED_GIT_SHA: 4a6abae25b8a156a102ed3869429ef026a3d7cfe
+  DALAMUD_EXPECTED_REVISION: "7312"
 
 jobs:
   build:
@@ -30,10 +33,24 @@ jobs:
 
       - name: Download Dalamud
         run: |
-          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goatcorp/dalamud-distrib/${{ env.DALAMUD_DISTRIB_COMMIT }}/api15/latest.zip" -OutFile latest.zip
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goatcorp/dalamud-distrib/${{ env.DALAMUD_DISTRIB_COMMIT }}/stg/latest.zip" -OutFile latest.zip
           Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev\"
-          Write-Host "Dalamud commit: $(Get-Content "$env:AppData\XIVLauncher\addon\Hooks\dev\commit_hash.txt" -Raw)"
-          Write-Host "Dalamud revision: $(Get-Content "$env:AppData\XIVLauncher\addon\Hooks\dev\revision.txt" -Raw)"
+          $dalamudDir = "$env:AppData\XIVLauncher\addon\Hooks\dev"
+          $actualVersion = (Get-Item "$dalamudDir\Dalamud.dll").VersionInfo.FileVersion
+          $actualGitSha = (Get-Content "$dalamudDir\commit_hash.txt" -Raw).Trim()
+          $actualRevision = (Get-Content "$dalamudDir\revision.txt" -Raw).Trim()
+          Write-Host "Dalamud version: $actualVersion"
+          Write-Host "Dalamud Git SHA: $actualGitSha"
+          Write-Host "Dalamud revision: $actualRevision"
+          if ($actualVersion -ne $env:DALAMUD_EXPECTED_VERSION) {
+            throw "Unexpected Dalamud version: expected $env:DALAMUD_EXPECTED_VERSION, got $actualVersion"
+          }
+          if ($actualGitSha -ne $env:DALAMUD_EXPECTED_GIT_SHA) {
+            throw "Unexpected Dalamud Git SHA: expected $env:DALAMUD_EXPECTED_GIT_SHA, got $actualGitSha"
+          }
+          if ($actualRevision -ne $env:DALAMUD_EXPECTED_REVISION) {
+            throw "Unexpected Dalamud revision: expected $env:DALAMUD_EXPECTED_REVISION, got $actualRevision"
+          }
 
       - name: Build
         run: |
