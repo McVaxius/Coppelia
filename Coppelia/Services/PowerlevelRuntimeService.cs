@@ -66,15 +66,47 @@ internal sealed class PowerlevelRuntimeService : IDisposable
 
     public bool TryValidateActivation(out string reason)
     {
-        if (!frenRiderIpcService.TryGetStatus(out var status))
-        {
-            reason = frenRiderIpcService.LastFailure;
-            return false;
-        }
+        var readiness = GetSetupReadiness(plugin.Configuration.PowerlevelJob);
+        reason = readiness.Reason;
+        return readiness.Ready;
+    }
 
-        var result = BuildActivationResult(status);
-        reason = result.Reason;
-        return result.Ready;
+    internal PowerlevelSetupReadiness GetSetupReadiness(PowerlevelJob selectedJob)
+    {
+        var ipcSucceeded = frenRiderIpcService.TryGetStatus(out var status);
+        var selectedJobSupported = selectedJob.IsSupportedPowerlevelJob();
+        var selectedJobUnlocked = selectedJobSupported && TryIsPowerlevelJobUnlocked(selectedJob);
+        var currentJobId = Plugin.PlayerState.ClassJob.RowId;
+        var currentJobMatches = selectedJobSupported && currentJobId == selectedJob.ToJobId();
+        var companionActive = status.CompanionActive || HasActiveCompanionChocobo();
+        var ipcAvailable = ipcSucceeded || status.ContractVersion > 0;
+
+        var result = PowerlevelActivationPolicy.Evaluate(new PowerlevelActivationInput(
+            selectedJob,
+            selectedJobUnlocked,
+            currentJobId,
+            ipcAvailable,
+            status.IsCompatible,
+            status.FrenRiderEnabled,
+            status.FrenConfigured,
+            status.FrenVisible,
+            companionActive));
+
+        var reason = ipcSucceeded ? result.Reason : frenRiderIpcService.LastFailure;
+        return new PowerlevelSetupReadiness(
+            selectedJob,
+            selectedJobSupported,
+            selectedJobUnlocked,
+            currentJobId,
+            currentJobMatches,
+            ipcAvailable,
+            status.IsCompatible,
+            status.FrenRiderEnabled,
+            status.FrenConfigured,
+            status.FrenVisible,
+            !companionActive,
+            ipcSucceeded && result.Ready,
+            reason);
     }
 
     public void Update()

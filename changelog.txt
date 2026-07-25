@@ -1,0 +1,10 @@
+# Changelog
+
+## Unreleased
+
+- Added a permanent Quick Setup tab with draft-only HealBot and PowerlevelBot paths, explicit enable-now or leave-off completion, first-install onboarding, migration suppression for existing users, and visible activation blockers.
+- Reorganized Main into a status dashboard and Settings into Quick Setup, General, HealBot Actions, and Requirements / Help tabs.
+- Restyled Watch status, target controls, filters, and retained/live target tables while preserving selection, Ctrl-clear, persistence, filtering, and window placement behavior.
+- Added shared UI helpers for section headings, readiness colors, wrapped help, tooltips, and primary actions.
+- Updated the public plugin description for both automation modes and synchronized the local Aethertek Coppelia page and index sources.
+- Added schema-v6 migration coverage for new-install onboarding, existing-configuration suppression and preservation, and completed-setup persistence.

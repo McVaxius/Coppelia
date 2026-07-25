@@ -6,10 +6,11 @@ namespace Coppelia;
 [Serializable]
 public sealed class Configuration : IPluginConfiguration
 {
-    private const int CurrentConfigurationVersion = 5;
+    private const int CurrentConfigurationVersion = 6;
     private const int MaxTrackedTargets = 20;
 
     public int Version { get; set; } = CurrentConfigurationVersion;
+    public bool SetupWizardCompleted { get; set; }
     public bool PluginEnabled { get; set; } = true;
     public bool AutomationEnabled { get; set; }
     public BotMode BotMode { get; set; } = BotMode.HealBot;
@@ -49,6 +50,9 @@ public sealed class Configuration : IPluginConfiguration
     public HealerJobConfig AstrologianConfig { get; set; } = new();
     public HealerJobConfig SageConfig { get; set; } = new();
 
+    internal bool ShouldAutoOpenSetup()
+        => !SetupWizardCompleted;
+
     public HealerJobConfig GetJobConfigForJob(uint classJobId)
         => classJobId switch
         {
@@ -62,11 +66,12 @@ public sealed class Configuration : IPluginConfiguration
     public bool MigrateIfNeeded()
     {
         var changed = false;
+        var sourceVersion = Version;
 
-        changed |= HealbotActionCatalog.EnsureConfigCoverage(WhiteMageConfig, 24, Version < CurrentConfigurationVersion ? WhiteMage : null);
-        changed |= HealbotActionCatalog.EnsureConfigCoverage(ScholarConfig, 28, Version < CurrentConfigurationVersion ? Scholar : null);
-        changed |= HealbotActionCatalog.EnsureConfigCoverage(AstrologianConfig, 33, Version < CurrentConfigurationVersion ? Astrologian : null);
-        changed |= HealbotActionCatalog.EnsureConfigCoverage(SageConfig, 40, Version < CurrentConfigurationVersion ? Sage : null);
+        changed |= HealbotActionCatalog.EnsureConfigCoverage(WhiteMageConfig, 24, sourceVersion < 5 ? WhiteMage : null);
+        changed |= HealbotActionCatalog.EnsureConfigCoverage(ScholarConfig, 28, sourceVersion < 5 ? Scholar : null);
+        changed |= HealbotActionCatalog.EnsureConfigCoverage(AstrologianConfig, 33, sourceVersion < 5 ? Astrologian : null);
+        changed |= HealbotActionCatalog.EnsureConfigCoverage(SageConfig, 40, sourceVersion < 5 ? Sage : null);
 
         if ((SelectedTargetGameObjectId != 0 || !string.IsNullOrWhiteSpace(SelectedTargetName)) &&
             ActiveWatchedTargets.Count == 0)
@@ -92,9 +97,9 @@ public sealed class Configuration : IPluginConfiguration
         SavedTargetScanRangeYalms = Math.Clamp(SavedTargetScanRangeYalms, 1, 200);
         changed |= NormalizeAutomationMode();
 
-        if (Version != CurrentConfigurationVersion)
+        if (sourceVersion != CurrentConfigurationVersion)
         {
-            if (Version < 5)
+            if (sourceVersion < 5)
             {
                 AutomationEnabled = HealbotEnabled;
                 BotMode = BotMode.HealBot;
@@ -103,11 +108,14 @@ public sealed class Configuration : IPluginConfiguration
                 changed = true;
             }
 
-            if (Version < CurrentConfigurationVersion)
+            if (sourceVersion < 5)
             {
                 KrangleNames = true;
                 SavedTargetScanRangeYalms = 20;
             }
+
+            if (sourceVersion < 6)
+                SetupWizardCompleted = true;
 
             Version = CurrentConfigurationVersion;
             changed = true;

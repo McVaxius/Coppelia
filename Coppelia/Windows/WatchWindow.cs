@@ -56,7 +56,6 @@ public sealed class WatchWindow : Window, IDisposable
             var retainedTargets = plugin.WatchTargetService.RetainedTargets.ToArray();
 
             DrawHeader();
-            ImGui.Separator();
             DrawToolbar();
 
             if (retainedTargets.Length > 0)
@@ -64,12 +63,10 @@ public sealed class WatchWindow : Window, IDisposable
                 var retainedTableHeight = CalculateRetainedTableHeight(retainedTargets.Length, ImGui.GetContentRegionAvail().Y);
                 if (retainedTableHeight > 0f)
                 {
-                    ImGui.Separator();
                     DrawRetainedTargets(retainedTargets, retainedTableHeight);
                 }
             }
 
-            ImGui.Separator();
             DrawWatchTable(MathF.Max(MinWatchTableHeight, ImGui.GetContentRegionAvail().Y));
             TrackWindowPosition();
         }
@@ -99,6 +96,10 @@ public sealed class WatchWindow : Window, IDisposable
 
     private void DrawHeader()
     {
+        CoppeliaUi.SectionHeader(
+            "Watch status",
+            "This window manages the HealBot watch list. PowerlevelBot uses its restricted FrenRider enemy source instead.");
+
         var automationEnabled = plugin.Configuration.AutomationEnabled;
         if (ImGui.Checkbox("Automation##WatchWindow", ref automationEnabled))
             plugin.SetAutomationEnabled(automationEnabled, printStatus: true);
@@ -138,13 +139,34 @@ public sealed class WatchWindow : Window, IDisposable
             plugin.OpenConfigUi();
 
         ImGui.SameLine();
+        if (CoppeliaUi.PrimaryButton("Quick Setup##WatchWindow"))
+            plugin.OpenQuickSetupUi();
+
+        ImGui.SameLine();
         if (ImGui.SmallButton("Ko-fi##WatchWindow"))
             Process.Start(new ProcessStartInfo { FileName = PluginInfo.SupportUrl, UseShellExecute = true });
+
+        var runtimeStatus = plugin.Configuration.BotMode == BotMode.PowerlevelBot
+            ? plugin.PowerlevelRuntimeService.StatusText
+            : plugin.HealbotRuntimeService.StatusText;
+        CoppeliaUi.StatusLine(
+            "Automation",
+            plugin.Configuration.AutomationEnabled,
+            $"{plugin.Configuration.BotMode.GetLabel()} enabled",
+            $"{plugin.Configuration.BotMode.GetLabel()} off",
+            optional: true);
+        ImGui.PushStyleColor(ImGuiCol.Text, CoppeliaUi.Accent);
+        ImGui.TextWrapped(runtimeStatus);
+        ImGui.PopStyleColor();
     }
 
     private void DrawToolbar()
     {
         var configuration = plugin.Configuration;
+
+        CoppeliaUi.SectionHeader(
+            "Target controls",
+            "Add the current target, refresh the object table, or hold Ctrl to clear every active and saved target.");
 
         if (ImGui.SmallButton("Refresh##WatchWindow"))
             plugin.WatchTargetService.Update(configuration, force: true);
@@ -187,8 +209,14 @@ public sealed class WatchWindow : Window, IDisposable
             plugin.WatchTargetService.Update(configuration, force: true);
         }
 
+        CoppeliaUi.SectionHeader(
+            "Filters",
+            "Filters control discovery and visibility. They do not change an already retained target until you explicitly remove it.");
+
         ImGui.SetNextItemWidth(220f);
         ImGui.InputTextWithHint("##WatchFilter", "Filter names...", ref nameFilter, 100);
+        ImGui.SameLine();
+        ImGui.TextDisabled("Filter by name, type, or job");
 
         var watchPlayers = configuration.WatchPlayers;
         if (ImGui.Checkbox("Players##WatchWindow", ref watchPlayers))
@@ -225,19 +253,21 @@ public sealed class WatchWindow : Window, IDisposable
             plugin.WatchTargetService.Update(configuration, force: true);
         }
 
-        ImGui.TextDisabled("Save heal targets only persists targets you explicitly check. Unticking a target removes it from the saved set too.");
-        ImGui.TextDisabled("Saved target scan range only affects when a saved target can auto-rejoin after it returns; it does not discover new targets.");
+        CoppeliaUi.WrappedHelp("Save heal targets only persists targets you explicitly check. Unticking a target removes it from the saved set too.");
+        CoppeliaUi.WrappedHelp("Saved target scan range only affects when a saved target can auto-rejoin after it returns; it does not discover new targets.");
     }
 
     private void DrawRetainedTargets(ResolvedWatchTarget[] retainedTargets, float tableHeight)
     {
-        ImGui.TextUnformatted($"Hidden / absent tracked targets ({retainedTargets.Length})");
-        ImGui.TextDisabled("Absent retained rows require Ctrl+untick. Unticking here removes the retained target from Coppelia's tracked set, including any saved copy.");
+        CoppeliaUi.SectionHeader(
+            $"Retained or absent targets ({retainedTargets.Length})",
+            "Absent rows require Ctrl+untick. Removing one here also removes its saved copy.");
 
         if (!ImGui.BeginTable(
                 "CoppeliaRetainedTargets",
                 6,
-                ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY | ImGuiTableFlags.BordersInnerV,
+                ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY |
+                ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.Resizable,
                 new Vector2(-1f, tableHeight)))
         {
             return;
@@ -292,22 +322,24 @@ public sealed class WatchWindow : Window, IDisposable
     private void DrawWatchTable(float height)
     {
         var targets = FilteredTargets().ToArray();
-        ImGui.TextUnformatted($"Visible object table ({targets.Length})");
         var savedText = plugin.Configuration.SaveHealTargets
             ? plugin.WatchTargetService.SavedTargetCount.ToString()
             : "Off";
-        ImGui.TextDisabled($"Watching {plugin.WatchTargetService.ActiveTargets.Count}/{WatchTargetService.MaxTrackedTargets} active targets. Saved targets: {savedText}.");
+        CoppeliaUi.SectionHeader(
+            $"Live eligible targets ({targets.Length})",
+            $"Watching {plugin.WatchTargetService.ActiveTargets.Count}/{WatchTargetService.MaxTrackedTargets} active targets. Saved targets: {savedText}.");
 
         if (targets.Length == 0)
         {
-            ImGui.TextDisabled("No eligible targets for the current filters.");
+            CoppeliaUi.WrappedHelp("No eligible targets match the current filters.");
             return;
         }
 
         if (!ImGui.BeginTable(
                 "CoppeliaWatchWindowTable",
                 6,
-                ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY | ImGuiTableFlags.BordersInnerV,
+                ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY |
+                ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.Resizable,
                 new Vector2(-1f, height)))
         {
             return;

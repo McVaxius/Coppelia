@@ -24,6 +24,14 @@ public sealed class ConfigWindow : Window, IDisposable
     private Vector2? pendingWindowPosition;
     private Vector2? lastSavedWindowPosition;
     private bool pendingSavedPositionApply;
+    private bool selectQuickSetupTab;
+    private bool selectGeneralTab;
+    private QuickSetupDraft? setupDraft;
+    private QuickSetupStep setupStep;
+    private QuickSetupCompletionChoice setupCompletionChoice;
+    private string setupMessage = string.Empty;
+    private PowerlevelSetupReadiness? powerlevelReadiness;
+    private DateTimeOffset nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
 
     public ConfigWindow(Plugin plugin)
         : base($"{PluginInfo.DisplayName} Settings###CoppeliaConfig")
@@ -62,12 +70,7 @@ public sealed class ConfigWindow : Window, IDisposable
         try
         {
             DrawHeader();
-            ImGui.Separator();
-            DrawGeneralSettings(configuration, ref changed);
-            ImGui.Separator();
-            DrawJobTabsContent(configuration, ref changed);
-            ImGui.Separator();
-            DrawRequirements();
+            DrawSettingsTabs(configuration, ref changed);
         }
         finally
         {
@@ -102,8 +105,16 @@ public sealed class ConfigWindow : Window, IDisposable
         pendingWindowPosition = new Vector2(1f, 1f);
     }
 
+    internal void OpenQuickSetup()
+    {
+        StartQuickSetup();
+        selectQuickSetupTab = true;
+    }
+
     private void DrawHeader()
     {
+        ImGui.TextColored(CoppeliaUi.Accent, $"{PluginInfo.DisplayName} Settings");
+        ImGui.SameLine();
         if (ImGui.SmallButton("Ko-fi##CoppeliaConfig"))
             Process.Start(new ProcessStartInfo { FileName = PluginInfo.SupportUrl, UseShellExecute = true });
 
@@ -116,6 +127,362 @@ public sealed class ConfigWindow : Window, IDisposable
             plugin.ToggleWatchUi();
 
         ImGui.TextDisabled(PluginInfo.DiscordFeedbackNote);
+    }
+
+    private void DrawSettingsTabs(Configuration configuration, ref bool changed)
+    {
+        var quickSetupFlags = selectQuickSetupTab ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
+        var generalFlags = selectGeneralTab ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
+        selectQuickSetupTab = false;
+        selectGeneralTab = false;
+
+        if (!ImGui.BeginTabBar("CoppeliaSettingsTabs"))
+            return;
+
+        if (ImGui.BeginTabItem("Quick Setup", quickSetupFlags))
+        {
+            DrawQuickSetup(configuration);
+            ImGui.EndTabItem();
+        }
+
+        if (ImGui.BeginTabItem("General", generalFlags))
+        {
+            CoppeliaUi.SectionHeader(
+                "General",
+                "These controls are applied immediately. Quick Setup uses a separate draft and changes nothing until Finish.");
+            DrawGeneralSettings(configuration, ref changed);
+            ImGui.EndTabItem();
+        }
+
+        if (ImGui.BeginTabItem("HealBot Actions"))
+        {
+            CoppeliaUi.SectionHeader(
+                "HealBot Actions",
+                "The existing per-job action matrix is preserved here. PowerlevelBot does not use these rules.");
+            DrawJobTabsContent(configuration, ref changed);
+            ImGui.EndTabItem();
+        }
+
+        if (ImGui.BeginTabItem("Requirements / Help"))
+        {
+            CoppeliaUi.SectionHeader("Requirements and help");
+            DrawRequirements();
+            ImGui.EndTabItem();
+        }
+
+        ImGui.EndTabBar();
+    }
+
+    private void DrawQuickSetup(Configuration configuration)
+    {
+        setupDraft ??= QuickSetupDraft.FromConfiguration(configuration);
+
+        CoppeliaUi.SectionHeader(
+            "Quick Setup",
+            "Choose one mutually exclusive automation mode. Settings stay in this draft until Finish; Cancel discards the draft.");
+
+        if (setupStep == QuickSetupStep.Complete)
+        {
+            CoppeliaUi.StatusText(setupMessage, ready: true);
+            CoppeliaUi.WrappedHelp("Quick Setup is complete. You can run it again at any time from this permanent tab.");
+            if (CoppeliaUi.PrimaryButton("Run Quick Setup again"))
+                StartQuickSetup();
+            return;
+        }
+
+        var visibleStep = setupStep switch
+        {
+            QuickSetupStep.ChooseMode => 1,
+            QuickSetupStep.Configure => 2,
+            _ => 3,
+        };
+        ImGui.TextDisabled($"Step {visibleStep} of 3");
+
+        switch (setupStep)
+        {
+            case QuickSetupStep.ChooseMode:
+                DrawSetupModeChoice();
+                break;
+            case QuickSetupStep.Configure:
+                if (setupDraft.Mode == BotMode.PowerlevelBot)
+                    DrawPowerlevelSetup();
+                else
+                    DrawHealbotSetup();
+                break;
+            case QuickSetupStep.Finish:
+                DrawSetupFinish(configuration);
+                break;
+        }
+    }
+
+    private void DrawSetupModeChoice()
+    {
+        CoppeliaUi.WrappedHelp(
+            "HealBot heals, raises, buffs, and pre-buffs friendly watched targets. PowerlevelBot uses an equipped BRD or MCH to tag a deliberately restricted set of enemies while FrenRider handles the Fren.");
+        ImGui.Spacing();
+
+        if (CoppeliaUi.PrimaryButton("Set up HealBot", new Vector2(220f, 38f)))
+        {
+            setupDraft!.Mode = BotMode.HealBot;
+            setupStep = QuickSetupStep.Configure;
+            setupMessage = string.Empty;
+        }
+        CoppeliaUi.Tooltip("Configure friendly target filters, optional persistence, and HealBot readiness.");
+
+        ImGui.SameLine();
+        if (CoppeliaUi.PrimaryButton("Set up PowerlevelBot", new Vector2(220f, 38f)))
+        {
+            setupDraft!.Mode = BotMode.PowerlevelBot;
+            setupStep = QuickSetupStep.Configure;
+            setupMessage = string.Empty;
+            nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
+        }
+        CoppeliaUi.Tooltip("Choose BRD or MCH and verify FrenRider, job, visibility, and companion readiness.");
+
+        ImGui.Spacing();
+        if (ImGui.Button("Cancel##QuickSetupChoose"))
+            CancelQuickSetup();
+    }
+
+    private void DrawHealbotSetup()
+    {
+        var draft = setupDraft!;
+        CoppeliaUi.SectionHeader(
+            "HealBot path",
+            $"Coppelia evaluates the configured {WatchTargetService.MaxTrackedTargets}-target watch list and uses the existing WHM, SCH, AST, or SGE action matrix. Targets may be friendly players outside your party.");
+
+        var dependencies = plugin.DependencyService.Current;
+        plugin.HealbotRuntimeService.IsSupportedLocalJob(out var healerProfile, out var healerReason);
+        CoppeliaUi.StatusLine("FrenRider", dependencies.FrenRiderLoaded, "Loaded", "Missing");
+        CoppeliaUi.StatusLine("vnavmesh", dependencies.VNavmeshLoaded, "Loaded", "Missing");
+        CoppeliaUi.StatusLine("BMR or VBM", dependencies.HasBossModProvider, "Loaded", "Missing");
+        CoppeliaUi.StatusLine(
+            "Supported healer",
+            healerProfile != null,
+            healerProfile == null ? "Ready" : $"{healerProfile.JobDisplayName} equipped",
+            healerReason);
+
+        CoppeliaUi.SectionHeader(
+            "Target discovery and persistence",
+            "Choose which friendly objects appear in Watch. Only targets you explicitly check are healed or saved.");
+
+        var watchPlayers = draft.WatchPlayers;
+        if (ImGui.Checkbox("Players##Setup", ref watchPlayers))
+            draft.WatchPlayers = watchPlayers;
+
+        ImGui.SameLine();
+        var watchChocobos = draft.WatchCompanionChocobos;
+        if (ImGui.Checkbox("Companion chocobos##Setup", ref watchChocobos))
+            draft.WatchCompanionChocobos = watchChocobos;
+
+        var watchPartyNpcs = draft.WatchPartyNpcs;
+        if (ImGui.Checkbox("NPC party members##Setup", ref watchPartyNpcs))
+            draft.WatchPartyNpcs = watchPartyNpcs;
+
+        ImGui.SameLine();
+        var watchBattleNpcs = draft.WatchFriendlyBattleNpcs;
+        if (ImGui.Checkbox("Friendly battle NPCs##Setup", ref watchBattleNpcs))
+            draft.WatchFriendlyBattleNpcs = watchBattleNpcs;
+
+        var saveTargets = draft.SaveHealTargets;
+        if (ImGui.Checkbox("Save explicitly watched heal targets##Setup", ref saveTargets))
+            draft.SaveHealTargets = saveTargets;
+
+        ImGui.SameLine();
+        ImGui.BeginDisabled(!draft.SaveHealTargets);
+        ImGui.SetNextItemWidth(170f);
+        var scanRange = draft.SavedTargetScanRangeYalms;
+        if (ImGui.SliderInt("Rejoin scan range##Setup", ref scanRange, 1, 200, "%d y"))
+            draft.SavedTargetScanRangeYalms = scanRange;
+        ImGui.EndDisabled();
+
+        CoppeliaUi.WrappedHelp(
+            "The scan range only lets a previously saved target rejoin after it returns. It never discovers or auto-selects a new target.");
+        if (ImGui.Button("Open Watch window##QuickSetup"))
+            plugin.OpenWatchUi();
+        CoppeliaUi.Tooltip("Open the existing Watch window now. Draft filter changes apply only after Finish.");
+
+        DrawSetupNavigation(allowContinue: true);
+    }
+
+    private void DrawPowerlevelSetup()
+    {
+        var draft = setupDraft!;
+        CoppeliaUi.SectionHeader(
+            "PowerlevelBot path",
+            "Choose the ranged job that is already equipped. Coppelia never switches gearsets and will not use the HealBot watch list.");
+
+        var brdSelected = draft.PowerlevelJob == PowerlevelJob.BRD;
+        if (ImGui.RadioButton("Bard (BRD)##SetupPowerlevel", brdSelected))
+        {
+            draft.PowerlevelJob = PowerlevelJob.BRD;
+            nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
+        }
+
+        ImGui.SameLine();
+        var mchSelected = draft.PowerlevelJob == PowerlevelJob.MCH;
+        if (ImGui.RadioButton("Machinist (MCH)##SetupPowerlevel", mchSelected))
+        {
+            draft.PowerlevelJob = PowerlevelJob.MCH;
+            nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
+        }
+
+        RefreshPowerlevelReadiness();
+        if (powerlevelReadiness != null)
+        {
+            var readiness = powerlevelReadiness;
+            CoppeliaUi.StatusLine(
+                "Selected job",
+                readiness.SelectedJobSupported,
+                readiness.SelectedJob.GetLabel(),
+                "Select BRD or MCH");
+            CoppeliaUi.StatusLine(
+                "Job unlocked",
+                readiness.SelectedJobUnlocked,
+                "Unlocked",
+                $"{readiness.SelectedJob.GetLabel()} is not unlocked");
+            CoppeliaUi.StatusLine(
+                "Job equipped",
+                readiness.CurrentJobMatches,
+                $"{readiness.SelectedJob.GetLabel()} equipped",
+                $"Current job ID {readiness.CurrentJobId} does not match");
+            CoppeliaUi.StatusLine(
+                "FrenRider IPC",
+                readiness.FrenRiderIpcAvailable && readiness.FrenRiderCompatible,
+                "Available and compatible",
+                readiness.FrenRiderIpcAvailable ? "Incompatible" : "Unavailable");
+            CoppeliaUi.StatusLine("FrenRider", readiness.FrenRiderEnabled, "Enabled", "Disabled");
+            CoppeliaUi.StatusLine("Configured Fren", readiness.FrenConfigured, "Configured", "Not configured");
+            CoppeliaUi.StatusLine("Fren visibility", readiness.FrenVisible, "Visible", "Not visible");
+            CoppeliaUi.StatusLine("Companion chocobo", readiness.CompanionClear, "Dismissed", "Active - dismiss it");
+            CoppeliaUi.StatusText(readiness.Reason, readiness.Ready);
+        }
+
+        if (ImGui.SmallButton("Refresh readiness##QuickSetupPowerlevel"))
+        {
+            nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
+            RefreshPowerlevelReadiness();
+        }
+
+        CoppeliaUi.SectionHeader("Restricted enemy policy");
+        CoppeliaUi.WrappedHelp(
+            "PowerlevelBot considers only living, targetable, damaged combatant enemies already targeting FrenRider's configured visible Fren or the local player. It uses instant, hostile-only, single-target BRD/MCH actions and does not pull untouched enemies.");
+
+        DrawSetupNavigation(allowContinue: draft.PowerlevelJob.IsSupportedPowerlevelJob());
+    }
+
+    private void DrawSetupFinish(Configuration configuration)
+    {
+        var draft = setupDraft!;
+        CoppeliaUi.SectionHeader("Review and finish");
+        ImGui.TextUnformatted($"Mode: {draft.Mode.GetLabel()}");
+        if (draft.Mode == BotMode.HealBot)
+        {
+            ImGui.TextDisabled(
+                $"Filters: players {(draft.WatchPlayers ? "on" : "off")}, chocobos {(draft.WatchCompanionChocobos ? "on" : "off")}, NPC party {(draft.WatchPartyNpcs ? "on" : "off")}, friendly battle NPCs {(draft.WatchFriendlyBattleNpcs ? "on" : "off")}.");
+            ImGui.TextDisabled(draft.SaveHealTargets
+                ? $"Saved targets on; {draft.SavedTargetScanRangeYalms} y rejoin scan."
+                : "Saved targets off.");
+        }
+        else
+        {
+            ImGui.TextDisabled($"Powerlevel job: {draft.PowerlevelJob.GetLabel()}.");
+            ImGui.TextDisabled("Enemy selection remains restricted to damaged enemies already engaging the Fren or local player.");
+        }
+
+        CoppeliaUi.WrappedHelp(
+            "Finish must either enable the selected mode now or save it with automation off. If activation is blocked, setup stays incomplete and the same activation blocker is shown here.");
+
+        var enableNow = setupCompletionChoice == QuickSetupCompletionChoice.EnableNow;
+        if (ImGui.RadioButton("Enable this mode now##QuickSetupFinish", enableNow))
+            setupCompletionChoice = QuickSetupCompletionChoice.EnableNow;
+
+        var leaveOff = setupCompletionChoice == QuickSetupCompletionChoice.LeaveAutomationOff;
+        if (ImGui.RadioButton("Save setup and leave automation off##QuickSetupFinish", leaveOff))
+            setupCompletionChoice = QuickSetupCompletionChoice.LeaveAutomationOff;
+
+        if (!string.IsNullOrWhiteSpace(setupMessage))
+            CoppeliaUi.StatusText(setupMessage, ready: false);
+
+        if (ImGui.Button("Back##QuickSetupFinish"))
+        {
+            setupStep = QuickSetupStep.Configure;
+            setupMessage = string.Empty;
+        }
+
+        ImGui.SameLine();
+        if (ImGui.Button("Cancel##QuickSetupFinish"))
+            CancelQuickSetup();
+
+        ImGui.SameLine();
+        ImGui.BeginDisabled(setupCompletionChoice == QuickSetupCompletionChoice.None);
+        if (CoppeliaUi.PrimaryButton("Finish setup"))
+        {
+            if (plugin.FinishQuickSetup(draft, setupCompletionChoice, out var resultMessage))
+            {
+                setupMessage = resultMessage;
+                setupStep = QuickSetupStep.Complete;
+                setupDraft = QuickSetupDraft.FromConfiguration(configuration);
+            }
+            else
+            {
+                setupMessage = resultMessage;
+            }
+        }
+        ImGui.EndDisabled();
+    }
+
+    private void DrawSetupNavigation(bool allowContinue)
+    {
+        ImGui.Spacing();
+        if (ImGui.Button("Back##QuickSetupConfigure"))
+        {
+            setupStep = QuickSetupStep.ChooseMode;
+            setupMessage = string.Empty;
+        }
+
+        ImGui.SameLine();
+        if (ImGui.Button("Cancel##QuickSetupConfigure"))
+            CancelQuickSetup();
+
+        ImGui.SameLine();
+        ImGui.BeginDisabled(!allowContinue);
+        if (CoppeliaUi.PrimaryButton("Continue"))
+        {
+            setupCompletionChoice = QuickSetupCompletionChoice.None;
+            setupMessage = string.Empty;
+            setupStep = QuickSetupStep.Finish;
+        }
+        ImGui.EndDisabled();
+    }
+
+    private void RefreshPowerlevelReadiness()
+    {
+        if (setupDraft == null || DateTimeOffset.UtcNow < nextPowerlevelReadinessUtc)
+            return;
+
+        nextPowerlevelReadinessUtc = DateTimeOffset.UtcNow.AddSeconds(2);
+        powerlevelReadiness = plugin.PowerlevelRuntimeService.GetSetupReadiness(setupDraft.PowerlevelJob);
+    }
+
+    private void StartQuickSetup()
+    {
+        setupDraft = QuickSetupDraft.FromConfiguration(plugin.Configuration);
+        setupStep = QuickSetupStep.ChooseMode;
+        setupCompletionChoice = QuickSetupCompletionChoice.None;
+        setupMessage = string.Empty;
+        powerlevelReadiness = null;
+        nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
+    }
+
+    private void CancelQuickSetup()
+    {
+        setupDraft = null;
+        setupStep = QuickSetupStep.ChooseMode;
+        setupCompletionChoice = QuickSetupCompletionChoice.None;
+        setupMessage = string.Empty;
+        powerlevelReadiness = null;
+        selectGeneralTab = true;
     }
 
     private void DrawGeneralSettings(Configuration configuration, ref bool changed)
@@ -172,11 +539,12 @@ public sealed class ConfigWindow : Window, IDisposable
             changed = true;
         }
 
-        ImGui.Separator();
+        CoppeliaUi.SectionHeader("Mode");
         DrawModeSettings(configuration, ref changed);
 
-        ImGui.Separator();
-        ImGui.TextUnformatted("Watch filters");
+        CoppeliaUi.SectionHeader(
+            "Watch filters",
+            "These filters control which friendly objects appear in the HealBot Watch window.");
 
         var watchPlayers = configuration.WatchPlayers;
         if (ImGui.Checkbox("Players", ref watchPlayers))
@@ -231,8 +599,6 @@ public sealed class ConfigWindow : Window, IDisposable
 
     private void DrawModeSettings(Configuration configuration, ref bool changed)
     {
-        ImGui.TextUnformatted("Mode");
-
         var healSelected = configuration.BotMode == BotMode.HealBot;
         if (ImGui.RadioButton("HealBot##ConfigModeHeal", healSelected))
             plugin.SetBotMode(BotMode.HealBot, printStatus: false);
@@ -266,7 +632,6 @@ public sealed class ConfigWindow : Window, IDisposable
 
     private void DrawJobTabsContent(Configuration configuration, ref bool changed)
     {
-        ImGui.TextUnformatted("Per-healer action matrix");
         ImGui.TextDisabled("Alive order: Instant BUFF -> Instant oGCD -> Casted BUFF -> Casted GCD. Dead-target prep checks instant buffs before raise.");
 
         if (!ImGui.BeginTabBar("CoppeliaJobTabs"))
@@ -413,19 +778,31 @@ public sealed class ConfigWindow : Window, IDisposable
         ImGui.EndTable();
     }
 
-    private static void DrawRequirements()
+    private void DrawRequirements()
     {
-        ImGui.TextUnformatted("Plugin requirements");
+        CoppeliaUi.SectionHeader("HealBot requirements");
         foreach (var requirement in PluginInfo.RequiredPlugins)
             ImGui.BulletText(requirement);
 
-        ImGui.Spacing();
-        ImGui.TextUnformatted("Recommended plugins");
+        CoppeliaUi.SectionHeader("HealBot optional integration");
         foreach (var recommendation in PluginInfo.RecommendedPlugins)
             ImGui.BulletText(recommendation);
 
-        ImGui.Spacing();
+        CoppeliaUi.SectionHeader("PowerlevelBot requirements");
+        ImGui.BulletText("A currently equipped and unlocked BRD or MCH.");
+        ImGui.BulletText("Compatible FrenRider Powerlevel IPC with FrenRider enabled.");
+        ImGui.BulletText("A configured, visible Fren and no active companion chocobo.");
+
+        CoppeliaUi.SectionHeader("Commands and windows");
         ImGui.TextDisabled("Coppelia supports /healbot on|off, /healbot heal, /healbot powerlevel, /copellia, /healbot ws, and /healbot j.");
+        if (ImGui.Button("Open Main##Requirements"))
+            plugin.OpenMainUi();
+        ImGui.SameLine();
+        if (ImGui.Button("Open Watch##Requirements"))
+            plugin.OpenWatchUi();
+        ImGui.SameLine();
+        if (CoppeliaUi.PrimaryButton("Run Quick Setup##Requirements"))
+            OpenQuickSetup();
     }
 
     private void TrackWindowPosition()

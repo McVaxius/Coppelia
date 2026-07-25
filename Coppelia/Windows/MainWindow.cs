@@ -15,6 +15,8 @@ public sealed class MainWindow : Window, IDisposable
     private Vector2? pendingWindowPosition;
     private Vector2? lastSavedWindowPosition;
     private bool pendingSavedPositionApply;
+    private PowerlevelSetupReadiness? powerlevelReadiness;
+    private DateTimeOffset nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
 
     public MainWindow(Plugin plugin)
         : base($"{PluginInfo.DisplayName}###CoppeliaMain")
@@ -50,11 +52,14 @@ public sealed class MainWindow : Window, IDisposable
         try
         {
             DrawHeader();
-            ImGui.Separator();
+            CoppeliaUi.SectionHeader("Status dashboard");
             DrawStateControls();
-            ImGui.Separator();
+            CoppeliaUi.SectionHeader("Readiness");
             DrawDependencyPanel();
-            ImGui.Separator();
+            CoppeliaUi.SectionHeader(
+                plugin.Configuration.BotMode == BotMode.PowerlevelBot
+                    ? "Powerlevel target source"
+                    : "HealBot target status");
             DrawWatchedTargetsPanel();
             TrackWindowPosition();
         }
@@ -101,22 +106,27 @@ public sealed class MainWindow : Window, IDisposable
         ImGui.SameLine();
         ImGui.TextDisabled($"Commands: {PluginInfo.Command}, {PluginInfo.AliasCommand}, {PluginInfo.Command} ws, {PluginInfo.Command} j");
 
-        if (ImGui.SmallButton("Ko-fi##CoppeliaMain"))
-            Process.Start(new ProcessStartInfo { FileName = PluginInfo.SupportUrl, UseShellExecute = true });
-
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Settings##CoppeliaMain"))
-            plugin.ToggleConfigUi();
+        if (CoppeliaUi.PrimaryButton("Quick Setup##CoppeliaMain"))
+            plugin.OpenQuickSetupUi();
+        CoppeliaUi.Tooltip("Run the guided HealBot or PowerlevelBot setup without changing anything until Finish.");
 
         ImGui.SameLine();
         if (ImGui.SmallButton("Watch##CoppeliaMain"))
             plugin.ToggleWatchUi();
 
         ImGui.SameLine();
+        if (ImGui.SmallButton("Settings##CoppeliaMain"))
+            plugin.ToggleConfigUi();
+
+        ImGui.SameLine();
         if (ImGui.SmallButton("Status to chat##CoppeliaMain"))
             plugin.PrintStatus(plugin.Configuration.BotMode == BotMode.PowerlevelBot
                 ? plugin.PowerlevelRuntimeService.StatusText
                 : plugin.HealbotRuntimeService.StatusText);
+
+        ImGui.SameLine();
+        if (ImGui.SmallButton("Ko-fi##CoppeliaMain"))
+            Process.Start(new ProcessStartInfo { FileName = PluginInfo.SupportUrl, UseShellExecute = true });
     }
 
     private void DrawStateControls()
@@ -159,8 +169,10 @@ public sealed class MainWindow : Window, IDisposable
 
         DrawModeControls(configuration);
 
-        ImGui.TextWrapped("HealBot watches selected friendly targets. PowerlevelBot tags damaged enemies already targeting FrenRider's Fren or the local player while FrenRider keeps follow/mount behavior.");
-        ImGui.TextDisabled("Manage watched targets only in the Watch window. Ctrl-clearing there removes both active watched targets and saved targets.");
+        CoppeliaUi.WrappedHelp(
+            "HealBot watches selected friendly targets. PowerlevelBot tags damaged enemies already targeting FrenRider's Fren or the local player while FrenRider keeps follow and mount behavior.");
+        CoppeliaUi.WrappedHelp(
+            "Manage watched targets only in the Watch window. Ctrl-clearing there removes both active watched targets and saved targets.");
         var runtimeStatus = configuration.BotMode == BotMode.PowerlevelBot
             ? plugin.PowerlevelRuntimeService.StatusText
             : plugin.HealbotRuntimeService.StatusText;
@@ -170,7 +182,16 @@ public sealed class MainWindow : Window, IDisposable
         var lastRule = configuration.BotMode == BotMode.PowerlevelBot
             ? plugin.PowerlevelRuntimeService.LastMatchedRule
             : plugin.HealbotRuntimeService.LastMatchedRule;
-        ImGui.TextColored(new Vector4(0.80f, 0.88f, 1.0f, 1.0f), runtimeStatus);
+        CoppeliaUi.StatusLine("Plugin", configuration.PluginEnabled, "Enabled", "Disabled");
+        CoppeliaUi.StatusLine(
+            "Automation",
+            configuration.AutomationEnabled,
+            $"{configuration.BotMode.GetLabel()} enabled",
+            $"{configuration.BotMode.GetLabel()} ready but off",
+            optional: true);
+        ImGui.PushStyleColor(ImGuiCol.Text, CoppeliaUi.Accent);
+        ImGui.TextWrapped(runtimeStatus);
+        ImGui.PopStyleColor();
         ImGui.TextDisabled($"Last action: {lastAction}");
         ImGui.TextDisabled($"Last rule: {lastRule}");
     }
@@ -182,14 +203,20 @@ public sealed class MainWindow : Window, IDisposable
 
         var healSelected = configuration.BotMode == BotMode.HealBot;
         if (ImGui.RadioButton("HealBot##MainModeHeal", healSelected))
+        {
             plugin.SetBotMode(BotMode.HealBot, printStatus: true);
+            nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
+        }
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Casts configured healer actions on watched friendly targets.");
 
         ImGui.SameLine();
         var powerlevelSelected = configuration.BotMode == BotMode.PowerlevelBot;
         if (ImGui.RadioButton("PowerlevelBot##MainModePowerlevel", powerlevelSelected))
+        {
             plugin.SetBotMode(BotMode.PowerlevelBot, printStatus: true);
+            nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
+        }
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Uses BRD/MCH instant ranged single-target actions on enemies already fighting the Fren/local player.");
 
@@ -203,6 +230,7 @@ public sealed class MainWindow : Window, IDisposable
         {
             configuration.PowerlevelJob = jobs[selectedIndex];
             configuration.Save();
+            nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
         }
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip("PowerlevelBot never changes gearsets; your current job must match this selection.");
@@ -211,22 +239,29 @@ public sealed class MainWindow : Window, IDisposable
 
     private void DrawDependencyPanel()
     {
+        if (plugin.Configuration.BotMode == BotMode.PowerlevelBot)
+        {
+            DrawPowerlevelReadiness();
+            return;
+        }
+
         var snapshot = plugin.DependencyService.Current;
-        ImGui.TextUnformatted("Required plugins");
         DrawDependencyLine("FrenRider", snapshot.FrenRiderLoaded);
         DrawDependencyLine("vnavmesh", snapshot.VNavmeshLoaded);
-        DrawDependencyLine("BMR", snapshot.BossModRebornLoaded);
-        DrawDependencyLine("VBM", snapshot.VbmLoaded);
-
-        ImGui.Spacing();
-        ImGui.TextUnformatted("Recommended plugins");
+        DrawDependencyLine("BMR or VBM", snapshot.HasBossModProvider);
         DrawDependencyLine("RSR", snapshot.RotationSolverLoaded, required: false);
 
-        if (!snapshot.IsHealbotReady)
-            ImGui.TextColored(new Vector4(1.0f, 0.55f, 0.55f, 1.0f), plugin.DependencyService.BuildMissingDependencyMessage());
+        var healerReady = plugin.HealbotRuntimeService.IsSupportedLocalJob(out var profile, out var reason);
+        CoppeliaUi.StatusLine(
+            "Supported healer",
+            healerReady,
+            profile == null ? "Ready" : $"{profile.JobDisplayName} equipped",
+            reason);
 
-        ImGui.TextDisabled("HealBot also requires vnavmesh plus BMR or VBM. PowerlevelBot requires compatible FrenRider IPC and no battle companion chocobo.");
-        ImGui.TextDisabled("RSR isolation/restore is used when loaded for HealBot. Actions fire through direct ActionManager execution.");
+        if (!snapshot.IsHealbotReady)
+            CoppeliaUi.StatusText(plugin.DependencyService.BuildMissingDependencyMessage(), ready: false);
+
+        CoppeliaUi.WrappedHelp("RSR isolation and restore is used when loaded. HealBot actions still fire through direct ActionManager execution.");
     }
 
     private void DrawWatchedTargetsPanel()
@@ -234,17 +269,11 @@ public sealed class MainWindow : Window, IDisposable
         var activeTargets = plugin.WatchTargetService.ActiveTargets.ToArray();
         var retainedTargetCount = plugin.WatchTargetService.RetainedTargets.Count;
         var liveCandidateCount = plugin.WatchTargetService.RuntimeCandidates.Count;
-        ImGui.TextUnformatted(configurationModeHeader());
-
-        string configurationModeHeader()
-            => plugin.Configuration.BotMode == BotMode.PowerlevelBot
-                ? "Powerlevel target source"
-                : "Watched targets";
-
         if (plugin.Configuration.BotMode == BotMode.PowerlevelBot)
         {
             ImGui.TextDisabled("PowerlevelBot ignores the HealBot watched-target list and uses FrenRider's configured Fren as the leader.");
             ImGui.TextDisabled($"Selected job: {plugin.Configuration.PowerlevelJob.GetLabel()}");
+            CoppeliaUi.WrappedHelp("Only damaged enemies already targeting the configured visible Fren or the local player are eligible.");
             return;
         }
 
@@ -292,17 +321,37 @@ public sealed class MainWindow : Window, IDisposable
 
     private void DrawDependencyLine(string label, bool available, bool required = true)
     {
-        var color = available
-            ? new Vector4(0.42f, 1.0f, 0.56f, 1.0f)
-            : required
-                ? new Vector4(1.0f, 0.58f, 0.58f, 1.0f)
-                : new Vector4(0.95f, 0.72f, 0.30f, 1.0f);
-        var state = available
-            ? "Loaded"
-            : required
-                ? "Missing"
-                : "Missing (optional)";
-        ImGui.TextColored(color, $"{label}: {state}");
+        CoppeliaUi.StatusLine(label, available, "Loaded", required ? "Missing" : "Missing (optional)", optional: !required);
+    }
+
+    private void DrawPowerlevelReadiness()
+    {
+        if (DateTimeOffset.UtcNow >= nextPowerlevelReadinessUtc)
+        {
+            nextPowerlevelReadinessUtc = DateTimeOffset.UtcNow.AddSeconds(2);
+            powerlevelReadiness = plugin.PowerlevelRuntimeService.GetSetupReadiness(plugin.Configuration.PowerlevelJob);
+        }
+
+        if (powerlevelReadiness == null)
+        {
+            ImGui.TextDisabled("Powerlevel readiness has not been checked yet.");
+            return;
+        }
+
+        var readiness = powerlevelReadiness;
+        CoppeliaUi.StatusLine("Selected job", readiness.SelectedJobSupported, readiness.SelectedJob.GetLabel(), "Select BRD or MCH");
+        CoppeliaUi.StatusLine("Job unlocked", readiness.SelectedJobUnlocked, "Unlocked", "Not unlocked");
+        CoppeliaUi.StatusLine("Job equipped", readiness.CurrentJobMatches, "Equipped", $"Current job ID {readiness.CurrentJobId} does not match");
+        CoppeliaUi.StatusLine(
+            "FrenRider IPC",
+            readiness.FrenRiderIpcAvailable && readiness.FrenRiderCompatible,
+            "Available and compatible",
+            readiness.FrenRiderIpcAvailable ? "Incompatible" : "Unavailable");
+        CoppeliaUi.StatusLine("FrenRider", readiness.FrenRiderEnabled, "Enabled", "Disabled");
+        CoppeliaUi.StatusLine("Configured Fren", readiness.FrenConfigured, "Configured", "Not configured");
+        CoppeliaUi.StatusLine("Fren visibility", readiness.FrenVisible, "Visible", "Not visible");
+        CoppeliaUi.StatusLine("Companion chocobo", readiness.CompanionClear, "Dismissed", "Active - dismiss it");
+        CoppeliaUi.StatusText(readiness.Reason, readiness.Ready);
     }
 
     private void TrackWindowPosition()

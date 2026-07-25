@@ -78,6 +78,8 @@ public sealed class Plugin : IDalamudPlugin
         DependencyService.Refresh(force: true);
         SetupDtrBar();
         UpdateDtrBar();
+        if (Configuration.ShouldAutoOpenSetup())
+            OpenQuickSetupUi();
 
         Log.Information("[Coppelia] Plugin loaded.");
     }
@@ -91,6 +93,7 @@ public sealed class Plugin : IDalamudPlugin
     internal FrenRiderPowerlevelIpcService FrenRiderPowerlevelIpcService { get; }
     internal HealbotRuntimeService HealbotRuntimeService { get; }
     internal PowerlevelRuntimeService PowerlevelRuntimeService { get; }
+    internal string LastAutomationBlocker { get; private set; } = string.Empty;
 
     public void Dispose()
     {
@@ -123,6 +126,7 @@ public sealed class Plugin : IDalamudPlugin
                 if (!DependencyService.Current.IsHealbotReady)
                 {
                     var message = DependencyService.BuildMissingDependencyMessage();
+                    LastAutomationBlocker = message;
                     ShowDependencyToast(message);
                     if (printStatus)
                         PrintStatus(message);
@@ -131,6 +135,7 @@ public sealed class Plugin : IDalamudPlugin
 
                 if (!HealbotRuntimeService.IsSupportedLocalJob(out _, out var reason))
                 {
+                    LastAutomationBlocker = reason;
                     if (printStatus)
                         PrintStatus(reason);
                     return false;
@@ -138,6 +143,7 @@ public sealed class Plugin : IDalamudPlugin
             }
             else if (!PowerlevelRuntimeService.TryValidateActivation(out var reason))
             {
+                LastAutomationBlocker = reason;
                 if (printStatus)
                     PrintStatus(reason);
                 return false;
@@ -146,6 +152,7 @@ public sealed class Plugin : IDalamudPlugin
             Configuration.PluginEnabled = true;
             Configuration.AutomationEnabled = true;
             Configuration.HealbotEnabled = Configuration.BotMode == BotMode.HealBot;
+            LastAutomationBlocker = string.Empty;
             Configuration.Save();
             ActivateSelectedMode();
             UpdateDtrBar();
@@ -158,6 +165,7 @@ public sealed class Plugin : IDalamudPlugin
 
         Configuration.AutomationEnabled = false;
         Configuration.HealbotEnabled = false;
+        LastAutomationBlocker = string.Empty;
         Configuration.Save();
         HealbotRuntimeService.Deactivate("Automation is off.");
         PowerlevelRuntimeService.Deactivate("Automation is off.");
@@ -254,6 +262,12 @@ public sealed class Plugin : IDalamudPlugin
         configWindow.IsOpen = true;
     }
 
+    internal void OpenQuickSetupUi()
+    {
+        configWindow.OpenQuickSetup();
+        OpenConfigUi();
+    }
+
     public void ToggleWatchUi()
     {
         if (!watchWindow.IsOpen)
@@ -277,6 +291,47 @@ public sealed class Plugin : IDalamudPlugin
 
     public string FormatDisplayName(string rawName)
         => Configuration.KrangleNames ? KrangleService.KrangleName(rawName) : rawName;
+
+    internal bool FinishQuickSetup(
+        QuickSetupDraft draft,
+        QuickSetupCompletionChoice completionChoice,
+        out string message)
+    {
+        SetAutomationEnabled(false, printStatus: false);
+        draft.ApplyTo(Configuration);
+        Configuration.SetupWizardCompleted = false;
+        Configuration.Save();
+        DependencyService.Refresh(force: true);
+        WatchTargetService.Update(Configuration, force: true);
+        UpdateDtrBar();
+
+        if (completionChoice == QuickSetupCompletionChoice.LeaveAutomationOff)
+        {
+            Configuration.SetupWizardCompleted = true;
+            Configuration.Save();
+            message = $"{Configuration.BotMode.GetLabel()} setup saved. Automation remains off.";
+            return true;
+        }
+
+        if (completionChoice != QuickSetupCompletionChoice.EnableNow)
+        {
+            message = "Choose whether to enable automation now or leave it off.";
+            return false;
+        }
+
+        if (!SetAutomationEnabled(true, printStatus: true))
+        {
+            message = string.IsNullOrWhiteSpace(LastAutomationBlocker)
+                ? "Coppelia could not enable the selected mode."
+                : LastAutomationBlocker;
+            return false;
+        }
+
+        Configuration.SetupWizardCompleted = true;
+        Configuration.Save();
+        message = $"{Configuration.BotMode.GetLabel()} setup saved and enabled.";
+        return true;
+    }
 
     public bool TryGetSavedWindowPosition(bool settingsWindow, out SavedWindowPosition position)
     {
