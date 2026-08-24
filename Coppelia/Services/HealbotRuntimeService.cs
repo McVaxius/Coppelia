@@ -35,6 +35,8 @@ internal sealed class HealbotRuntimeService : IDisposable
     public string StatusText { get; private set; } = "Healbot mode is off.";
     public string LastIssuedAction { get; private set; } = "Idle";
     public string LastMatchedRule { get; private set; } = "No rule matched.";
+    public bool IsRsrDamageIsolationReady
+        => !dependencyService.Current.RotationSolverLoaded || rsrIsolationApplied;
 
     public void Dispose()
     {
@@ -83,21 +85,22 @@ internal sealed class HealbotRuntimeService : IDisposable
         previousTargetGameObjectId = 0;
     }
 
-    public void Update()
+    public HealbotDecisionOutcome Update()
     {
         if (!plugin.Configuration.PluginEnabled)
         {
             Deactivate("Plugin disabled.");
-            return;
+            return HealbotDecisionOutcome.Unavailable;
         }
 
-        if (!plugin.Configuration.AutomationEnabled || plugin.Configuration.BotMode != BotMode.HealBot)
+        if (!plugin.Configuration.AutomationEnabled ||
+            plugin.Configuration.BotMode is not (BotMode.HealBot or BotMode.Jot))
         {
             if (profileArmed || rsrIsolationApplied)
                 Deactivate("Healbot mode is off.");
             else
                 StatusText = "Healbot mode is off.";
-            return;
+            return HealbotDecisionOutcome.Unavailable;
         }
 
         dependencyService.Refresh();
@@ -108,7 +111,7 @@ internal sealed class HealbotRuntimeService : IDisposable
             LastMatchedRule = "Dependencies missing.";
             if (plugin.Configuration.ShowDependencyToasts)
                 plugin.ShowDependencyToast(dependencyService.BuildMissingDependencyMessage());
-            return;
+            return HealbotDecisionOutcome.Unavailable;
         }
 
         if (!IsSupportedLocalJob(out var profile, out var reason))
@@ -116,7 +119,7 @@ internal sealed class HealbotRuntimeService : IDisposable
             StatusText = $"Blocked: {reason}";
             LastIssuedAction = "Blocked";
             LastMatchedRule = "Unsupported local job.";
-            return;
+            return HealbotDecisionOutcome.Unavailable;
         }
 
         var jobConfig = plugin.Configuration.GetJobConfigForJob(profile!.JobId);
@@ -130,14 +133,14 @@ internal sealed class HealbotRuntimeService : IDisposable
             StatusText = $"Holding while casting action {localPlayer.CastActionId}.";
             LastIssuedAction = "Casting";
             LastMatchedRule = "Waiting for the current cast to finish.";
-            return;
+            return HealbotDecisionOutcome.Blocked;
         }
 
         if (DateTimeOffset.UtcNow < nextDecisionUtc)
-            return;
+            return HealbotDecisionOutcome.None;
 
         nextDecisionUtc = DateTimeOffset.UtcNow.AddMilliseconds(900);
-        EvaluateSelectedTarget(profile, jobConfig);
+        return EvaluateSelectedTarget(profile, jobConfig);
     }
 
     private void ApplyProfile(HealbotJobProfile profile, string signature, bool rsrLoaded)
@@ -176,7 +179,7 @@ internal sealed class HealbotRuntimeService : IDisposable
         StatusText = $"Healbot action matrix armed for {profile.JobDisplayName}. RSR isolation failed; direct healing remains active.";
     }
 
-    private void EvaluateSelectedTarget(HealbotJobProfile profile, HealerJobConfig jobConfig)
+    private HealbotDecisionOutcome EvaluateSelectedTarget(HealbotJobProfile profile, HealerJobConfig jobConfig)
     {
         var activeTargetCount = watchTargetService.ActiveTargets.Count;
         if (activeTargetCount == 0)
@@ -184,7 +187,7 @@ internal sealed class HealbotRuntimeService : IDisposable
             StatusText = "No watched targets are active.";
             LastIssuedAction = "Idle";
             LastMatchedRule = "No watched targets.";
-            return;
+            return HealbotDecisionOutcome.Unavailable;
         }
 
         if (!jobConfig.Enabled)
@@ -192,7 +195,7 @@ internal sealed class HealbotRuntimeService : IDisposable
             StatusText = $"{profile.JobAbbreviation} automation is disabled in Coppelia settings.";
             LastIssuedAction = "Idle";
             LastMatchedRule = $"{profile.JobAbbreviation} tab disabled.";
-            return;
+            return HealbotDecisionOutcome.Unavailable;
         }
 
         var orderedCandidates = watchTargetService.RuntimeCandidates
@@ -207,7 +210,7 @@ internal sealed class HealbotRuntimeService : IDisposable
             StatusText = $"Watching {activeTargetCount} targets. No live watched target is currently available.";
             LastIssuedAction = "Idle";
             LastMatchedRule = "No live watched targets.";
-            return;
+            return HealbotDecisionOutcome.Unavailable;
         }
 
         string? blockedStatus = null;
@@ -226,7 +229,7 @@ internal sealed class HealbotRuntimeService : IDisposable
                 StatusText = $"Watching {activeTargetCount} targets. {executedStatus}";
                 LastIssuedAction = executedAction;
                 LastMatchedRule = $"{plugin.FormatDisplayName(candidate.Snapshot.Name)} - {matchedRule}";
-                return;
+                return HealbotDecisionOutcome.Queued;
             }
 
             if (executedAction == "Blocked" && blockedStatus == null)
@@ -241,7 +244,7 @@ internal sealed class HealbotRuntimeService : IDisposable
             StatusText = $"Watching {activeTargetCount} targets. {blockedStatus}";
             LastIssuedAction = "Blocked";
             LastMatchedRule = blockedRule;
-            return;
+            return HealbotDecisionOutcome.Blocked;
         }
 
         var topCandidate = orderedCandidates[0];
@@ -250,12 +253,13 @@ internal sealed class HealbotRuntimeService : IDisposable
             StatusText = $"Watching {activeTargetCount} targets. No enabled dead-target rule can act on {plugin.FormatDisplayName(topCandidate.Snapshot.Name)}.";
             LastIssuedAction = "Idle";
             LastMatchedRule = $"{plugin.FormatDisplayName(topCandidate.Snapshot.Name)} - No dead-target rule matched.";
-            return;
+            return HealbotDecisionOutcome.Idle;
         }
 
         StatusText = $"Watching {activeTargetCount} targets. Lowest-HP watched target is {plugin.FormatDisplayName(topCandidate.Snapshot.Name)} at {topCandidate.Snapshot.HpPercent}% HP.";
         LastIssuedAction = "Idle";
         LastMatchedRule = $"{plugin.FormatDisplayName(topCandidate.Snapshot.Name)} - No alive-target rule matched.";
+        return HealbotDecisionOutcome.Idle;
     }
 
     private bool TryExecuteRule(
@@ -412,4 +416,13 @@ internal sealed class HealbotRuntimeService : IDisposable
             plugin.Configuration.WatchCompanionChocobos,
             plugin.Configuration.WatchFriendlyBattleNpcs,
             rsrLoaded);
+}
+
+internal enum HealbotDecisionOutcome
+{
+    None,
+    Idle,
+    Queued,
+    Blocked,
+    Unavailable,
 }

@@ -32,6 +32,8 @@ public sealed class ConfigWindow : Window, IDisposable
     private string setupMessage = string.Empty;
     private PowerlevelSetupReadiness? powerlevelReadiness;
     private DateTimeOffset nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
+    private JotSetupReadiness? jotReadiness;
+    private DateTimeOffset nextJotReadinessUtc = DateTimeOffset.MinValue;
 
     public ConfigWindow(Plugin plugin)
         : base($"{PluginInfo.DisplayName} Settings###CoppeliaConfig")
@@ -158,7 +160,7 @@ public sealed class ConfigWindow : Window, IDisposable
         {
             CoppeliaUi.SectionHeader(
                 "HealBot Actions",
-                "The existing per-job action matrix is preserved here. PowerlevelBot does not use these rules.");
+                "HealBot and JOT share this per-job healing action matrix. PowerlevelBot does not use these rules.");
             DrawJobTabsContent(configuration, ref changed);
             ImGui.EndTabItem();
         }
@@ -206,6 +208,8 @@ public sealed class ConfigWindow : Window, IDisposable
             case QuickSetupStep.Configure:
                 if (setupDraft.Mode == BotMode.PowerlevelBot)
                     DrawPowerlevelSetup();
+                else if (setupDraft.Mode == BotMode.Jot)
+                    DrawHealbotSetup(jot: true);
                 else
                     DrawHealbotSetup();
                 break;
@@ -218,7 +222,7 @@ public sealed class ConfigWindow : Window, IDisposable
     private void DrawSetupModeChoice()
     {
         CoppeliaUi.WrappedHelp(
-            "HealBot heals, raises, buffs, and pre-buffs friendly watched targets. PowerlevelBot uses an equipped BRD or MCH to tag a deliberately restricted set of enemies while FrenRider handles the Fren.");
+            "HealBot is healing-only. JOT gives the same healing absolute priority, then uses the equipped healer's filler spell only when healing is genuinely idle. PowerlevelBot remains the BRD/MCH instant-action mode.");
         ImGui.Spacing();
 
         if (CoppeliaUi.PrimaryButton("Set up HealBot", new Vector2(220f, 38f)))
@@ -228,6 +232,16 @@ public sealed class ConfigWindow : Window, IDisposable
             setupMessage = string.Empty;
         }
         CoppeliaUi.Tooltip("Configure friendly target filters, optional persistence, and HealBot readiness.");
+
+        ImGui.SameLine();
+        if (CoppeliaUi.PrimaryButton("Set up JOT", new Vector2(220f, 38f)))
+        {
+            setupDraft!.Mode = BotMode.Jot;
+            setupStep = QuickSetupStep.Configure;
+            setupMessage = string.Empty;
+            nextJotReadinessUtc = DateTimeOffset.MinValue;
+        }
+        CoppeliaUi.Tooltip("Configure the HealBot watch path plus restricted healer-filler attacking during genuinely idle healing cycles.");
 
         ImGui.SameLine();
         if (CoppeliaUi.PrimaryButton("Set up PowerlevelBot", new Vector2(220f, 38f)))
@@ -244,11 +258,11 @@ public sealed class ConfigWindow : Window, IDisposable
             CancelQuickSetup();
     }
 
-    private void DrawHealbotSetup()
+    private void DrawHealbotSetup(bool jot = false)
     {
         var draft = setupDraft!;
         CoppeliaUi.SectionHeader(
-            "HealBot path",
+            jot ? "JOT healing path" : "HealBot path",
             $"Coppelia evaluates the configured {WatchTargetService.MaxTrackedTargets}-target watch list and uses the existing WHM, SCH, AST, or SGE action matrix. Targets may be friendly players outside your party.");
 
         var dependencies = plugin.DependencyService.Current;
@@ -301,6 +315,41 @@ public sealed class ConfigWindow : Window, IDisposable
         if (ImGui.Button("Open Watch window##QuickSetup"))
             plugin.OpenWatchUi();
         CoppeliaUi.Tooltip("Open the existing Watch window now. Draft filter changes apply only after Finish.");
+
+        if (jot)
+        {
+            CoppeliaUi.SectionHeader(
+                "JOT attacking readiness",
+                "JOT never adds FrenRider's Fren to Watch. Explicitly select the Fren there so healing can protect it; attacks remain limited to enemies already targeting that visible Fren or the local healer.");
+            RefreshJotReadiness();
+            if (jotReadiness != null)
+            {
+                var readiness = jotReadiness;
+                CoppeliaUi.StatusLine("Healing dependencies", readiness.HealingDependenciesReady, "Ready", "Missing");
+                CoppeliaUi.StatusLine("Supported healer", readiness.SupportedHealer, readiness.HealerLabel, readiness.HealerLabel);
+                CoppeliaUi.StatusLine("Healer action matrix", readiness.HealerConfigurationEnabled, "Enabled", "Disabled");
+                CoppeliaUi.StatusLine("Watched targets", readiness.WatchedTargetsAvailable, "Selected", "None selected");
+                CoppeliaUi.StatusLine("Healing gate", readiness.HealingReady, "Ready", readiness.HealingReason);
+                CoppeliaUi.StatusLine(
+                    "FrenRider IPC",
+                    readiness.FrenRiderIpcAvailable && readiness.FrenRiderCompatible,
+                    "Available and compatible",
+                    readiness.FrenRiderIpcAvailable ? "Incompatible" : "Unavailable");
+                CoppeliaUi.StatusLine("FrenRider", readiness.FrenRiderEnabled, "Enabled", "Disabled");
+                CoppeliaUi.StatusLine("Configured Fren", readiness.FrenConfigured, "Configured", "Not configured");
+                CoppeliaUi.StatusLine("Fren visibility", readiness.FrenVisible, "Visible", "Not visible");
+                CoppeliaUi.StatusText(readiness.AttackingReason, readiness.AttackingReady);
+            }
+
+            if (ImGui.SmallButton("Refresh readiness##QuickSetupJot"))
+            {
+                nextJotReadinessUtc = DateTimeOffset.MinValue;
+                RefreshJotReadiness();
+            }
+
+            CoppeliaUi.WrappedHelp(
+                "Healing wins every 900-ms decision cycle. JOT attacks only after no healing action was queued or blocked, using the highest available single-target filler spell for the equipped healer. It never uses DoTs, AoE, or oGCD attacks.");
+        }
 
         DrawSetupNavigation(allowContinue: true);
     }
@@ -376,13 +425,15 @@ public sealed class ConfigWindow : Window, IDisposable
         var draft = setupDraft!;
         CoppeliaUi.SectionHeader("Review and finish");
         ImGui.TextUnformatted($"Mode: {draft.Mode.GetLabel()}");
-        if (draft.Mode == BotMode.HealBot)
+        if (draft.Mode != BotMode.PowerlevelBot)
         {
             ImGui.TextDisabled(
                 $"Filters: players {(draft.WatchPlayers ? "on" : "off")}, chocobos {(draft.WatchCompanionChocobos ? "on" : "off")}, NPC party {(draft.WatchPartyNpcs ? "on" : "off")}, friendly battle NPCs {(draft.WatchFriendlyBattleNpcs ? "on" : "off")}.");
             ImGui.TextDisabled(draft.SaveHealTargets
                 ? $"Saved targets on; {draft.SavedTargetScanRangeYalms} y rejoin scan."
                 : "Saved targets off.");
+            if (draft.Mode == BotMode.Jot)
+                ImGui.TextDisabled("JOT attacks only during genuinely idle healing cycles and ignores the Powerlevel job selection.");
         }
         else
         {
@@ -465,6 +516,15 @@ public sealed class ConfigWindow : Window, IDisposable
         powerlevelReadiness = plugin.PowerlevelRuntimeService.GetSetupReadiness(setupDraft.PowerlevelJob);
     }
 
+    private void RefreshJotReadiness()
+    {
+        if (DateTimeOffset.UtcNow < nextJotReadinessUtc)
+            return;
+
+        nextJotReadinessUtc = DateTimeOffset.UtcNow.AddSeconds(2);
+        jotReadiness = plugin.JotRuntimeService.GetSetupReadiness();
+    }
+
     private void StartQuickSetup()
     {
         setupDraft = QuickSetupDraft.FromConfiguration(plugin.Configuration);
@@ -473,6 +533,8 @@ public sealed class ConfigWindow : Window, IDisposable
         setupMessage = string.Empty;
         powerlevelReadiness = null;
         nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
+        jotReadiness = null;
+        nextJotReadinessUtc = DateTimeOffset.MinValue;
     }
 
     private void CancelQuickSetup()
@@ -482,6 +544,7 @@ public sealed class ConfigWindow : Window, IDisposable
         setupCompletionChoice = QuickSetupCompletionChoice.None;
         setupMessage = string.Empty;
         powerlevelReadiness = null;
+        jotReadiness = null;
         selectGeneralTab = true;
     }
 
@@ -544,7 +607,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
         CoppeliaUi.SectionHeader(
             "Watch filters",
-            "These filters control which friendly objects appear in the HealBot Watch window.");
+            "These filters control which friendly objects appear in the HealBot/JOT Watch window.");
 
         var watchPlayers = configuration.WatchPlayers;
         if (ImGui.Checkbox("Players", ref watchPlayers))
@@ -606,28 +669,48 @@ public sealed class ConfigWindow : Window, IDisposable
             ImGui.SetTooltip("Uses the watched-target list and per-healer action matrix.");
 
         ImGui.SameLine();
+        var jotSelected = configuration.BotMode == BotMode.Jot;
+        if (ImGui.RadioButton("Jacqueline of All Trades (JOT)##ConfigModeJot", jotSelected))
+            plugin.SetBotMode(BotMode.Jot, printStatus: false);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Gives watched-target healing priority, then casts a healer filler spell only when healing is idle.");
+
+        ImGui.SameLine();
         var powerlevelSelected = configuration.BotMode == BotMode.PowerlevelBot;
         if (ImGui.RadioButton("PowerlevelBot##ConfigModePowerlevel", powerlevelSelected))
             plugin.SetBotMode(BotMode.PowerlevelBot, printStatus: false);
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Uses FrenRider's configured Fren as the leader and attacks only damaged enemies already targeting that Fren or you.");
 
-        ImGui.SameLine();
-        ImGui.BeginDisabled(configuration.BotMode != BotMode.PowerlevelBot);
-        var jobs = new[] { PowerlevelJob.None, PowerlevelJob.BRD, PowerlevelJob.MCH };
-        var labels = jobs.Select(job => job.GetLabel()).ToArray();
-        var selectedIndex = Math.Max(0, Array.IndexOf(jobs, configuration.PowerlevelJob));
-        ImGui.SetNextItemWidth(210f);
-        if (ImGui.Combo("Required job##ConfigPowerlevelJob", ref selectedIndex, labels, labels.Length))
+        if (configuration.BotMode == BotMode.PowerlevelBot)
         {
-            configuration.PowerlevelJob = jobs[selectedIndex];
-            changed = true;
+            var jobs = new[] { PowerlevelJob.None, PowerlevelJob.BRD, PowerlevelJob.MCH };
+            var labels = jobs.Select(job => job.GetLabel()).ToArray();
+            var selectedIndex = Math.Max(0, Array.IndexOf(jobs, configuration.PowerlevelJob));
+            ImGui.SetNextItemWidth(210f);
+            if (ImGui.Combo("Required job##ConfigPowerlevelJob", ref selectedIndex, labels, labels.Length))
+            {
+                configuration.PowerlevelJob = jobs[selectedIndex];
+                changed = true;
+            }
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip("PowerlevelBot requires this job to be unlocked and currently equipped. It never switches gearsets.");
         }
-        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGui.SetTooltip("PowerlevelBot requires this job to be unlocked and currently equipped. It never switches gearsets.");
-        ImGui.EndDisabled();
 
-        ImGui.TextDisabled("Modes are mutually exclusive. HealBot configuration below remains HealBot-only.");
+        if (configuration.BotMode == BotMode.Jot)
+        {
+            RefreshJotReadiness();
+            if (jotReadiness != null)
+            {
+                CoppeliaUi.StatusLine("JOT healing readiness", jotReadiness.HealingReady, "Ready", jotReadiness.HealingReason);
+                CoppeliaUi.StatusLine("JOT attacking readiness", jotReadiness.AttackingReady, "Ready when healing is idle", jotReadiness.AttackingReason);
+            }
+
+            ImGui.TextDisabled($"Healing: {plugin.HealbotRuntimeService.StatusText}");
+            ImGui.TextDisabled($"Attacking: {plugin.JotRuntimeService.StatusText}");
+        }
+
+        ImGui.TextDisabled("Modes are mutually exclusive. HealBot and JOT share the healing configuration below; only PowerlevelBot uses the BRD/MCH selector.");
     }
 
     private void DrawJobTabsContent(Configuration configuration, ref bool changed)
@@ -793,8 +876,13 @@ public sealed class ConfigWindow : Window, IDisposable
         ImGui.BulletText("Compatible FrenRider Powerlevel IPC with FrenRider enabled.");
         ImGui.BulletText("A configured, visible Fren and no active companion chocobo.");
 
+        CoppeliaUi.SectionHeader("Jacqueline of All Trades (JOT) requirements");
+        ImGui.BulletText("The HealBot dependencies, a supported equipped healer, an enabled healer action matrix, and an explicitly watched target.");
+        ImGui.BulletText("Compatible FrenRider Powerlevel IPC with FrenRider enabled and its configured Fren visible.");
+        ImGui.BulletText("The Fren is never auto-added to Watch; select it explicitly when it is the low-level heal target.");
+
         CoppeliaUi.SectionHeader("Commands and windows");
-        ImGui.TextDisabled("Coppelia supports /healbot on|off, /healbot heal, /healbot powerlevel, /copellia, /healbot ws, and /healbot j.");
+        ImGui.TextDisabled("Coppelia supports /healbot on|off, /healbot heal, /healbot powerlevel, /healbot jot, /copellia, /healbot ws, and /healbot j.");
         if (ImGui.Button("Open Main##Requirements"))
             plugin.OpenMainUi();
         ImGui.SameLine();

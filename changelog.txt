@@ -1,10 +1,9 @@
 # Changelog
 
-## Unreleased
-
-- Added a permanent Quick Setup tab with draft-only HealBot and PowerlevelBot paths, explicit enable-now or leave-off completion, first-install onboarding, migration suppression for existing users, and visible activation blockers.
+- Added Jacqueline of All Trades (JOT) as a serialized third mode with `/healbot jot`, DTR/UI selection and separate healing/attacking status. JOT reuses the HealBot watch list and action matrix, gives every 900-ms healing decision absolute priority, and only then directly casts the equipped healer's highest available single-target filler spell on an eligible damaged enemy already targeting the configured visible Fren or local healer; DoTs, AoE, oGCD attacks, untouched enemies, and the Powerlevel job selector are excluded.
+- Added a permanent Quick Setup tab with draft-only HealBot, JOT, and PowerlevelBot paths, explicit enable-now or leave-off completion, first-install onboarding, migration suppression for existing users, and visible activation blockers.
 - Reorganized Main into a status dashboard and Settings into Quick Setup, General, HealBot Actions, and Requirements / Help tabs.
 - Restyled Watch status, target controls, filters, and retained/live target tables while preserving selection, Ctrl-clear, persistence, filtering, and window placement behavior.
 - Added shared UI helpers for section headings, readiness colors, wrapped help, tooltips, and primary actions.
-- Updated the public plugin description for both automation modes and synchronized the local Aethertek Coppelia page and index sources.
+- Updated the public plugin description for all three automation modes and synchronized the repository manifests and README.
 - Added schema-v6 migration coverage for new-install onboarding, existing-configuration suppression and preservation, and completed-setup persistence.

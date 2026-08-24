@@ -139,6 +139,49 @@ internal unsafe sealed class ActionExecutionService
         return TryFindPowerlevelAction(job, selectedTarget, execute: true, out executedAction, out failureReason);
     }
 
+    public bool CanUseAnyJotFiller(HealbotJobProfile profile, ICharacter selectedTarget, out string failureReason)
+    {
+        failureReason = string.Empty;
+
+        if (Plugin.ObjectTable.LocalPlayer is not IBattleChara localPlayer)
+        {
+            failureReason = "Local player is unavailable.";
+            return false;
+        }
+
+        if (localPlayer.IsCasting)
+        {
+            failureReason = "Already casting.";
+            return false;
+        }
+
+        return TryFindJotFiller(profile, selectedTarget, execute: false, out _, out failureReason);
+    }
+
+    public bool TryExecuteJotFiller(
+        HealbotJobProfile profile,
+        ICharacter selectedTarget,
+        out string executedAction,
+        out string failureReason)
+    {
+        executedAction = "Idle";
+        failureReason = string.Empty;
+
+        if (Plugin.ObjectTable.LocalPlayer is not IBattleChara localPlayer)
+        {
+            failureReason = "Local player is unavailable.";
+            return false;
+        }
+
+        if (localPlayer.IsCasting)
+        {
+            failureReason = "Already casting.";
+            return false;
+        }
+
+        return TryFindJotFiller(profile, selectedTarget, execute: true, out executedAction, out failureReason);
+    }
+
     private bool TryFindPowerlevelAction(
         PowerlevelJob job,
         ICharacter selectedTarget,
@@ -209,6 +252,96 @@ internal unsafe sealed class ActionExecutionService
             }
 
             actionName = metadata.Name;
+            failureReason = string.Empty;
+            return true;
+        }
+
+        failureReason = lastFailure;
+        return false;
+    }
+
+    private bool TryFindJotFiller(
+        HealbotJobProfile profile,
+        ICharacter selectedTarget,
+        bool execute,
+        out string actionName,
+        out string failureReason)
+    {
+        actionName = "Idle";
+        failureReason = "No JOT filler spell is currently usable.";
+
+        if (ActionManager.Instance() == null)
+        {
+            failureReason = "ActionManager is unavailable.";
+            return false;
+        }
+
+        var actionManager = ActionManager.Instance();
+        var lastFailure = failureReason;
+
+        // The profile order is strongest to weakest and contains only single-target
+        // filler spells. DoTs, AoE spells, and oGCD attacks are deliberately absent.
+        foreach (var fillerName in profile.SingleTargetFillerActionNames)
+        {
+            if (!TryResolveActionId(fillerName, out var actionId) ||
+                !TryGetActionRow(actionId, out var actionRow))
+            {
+                continue;
+            }
+
+            if (!Plugin.UnlockState.IsActionUnlocked(actionRow))
+            {
+                lastFailure = $"{fillerName} is not unlocked.";
+                continue;
+            }
+
+            if (!actionRow.CanTargetHostile || actionRow.TargetArea || actionRow.EffectRange > 0)
+            {
+                lastFailure = $"{fillerName} is not a hostile single-target spell.";
+                continue;
+            }
+
+            Plugin.TargetManager.Target = selectedTarget;
+            if (actionManager->GetActionStatus(ActionType.Action, actionId) != 0)
+            {
+                lastFailure = $"{fillerName} is unavailable.";
+                continue;
+            }
+
+            if (!actionManager->IsActionOffCooldown(ActionType.Action, actionId))
+            {
+                lastFailure = $"{fillerName} is cooling down.";
+                continue;
+            }
+
+            if (!actionManager->IsActionTargetInRange(ActionType.Action, actionId))
+            {
+                lastFailure = $"{fillerName} is out of range.";
+                continue;
+            }
+
+            if (!execute)
+            {
+                actionName = fillerName;
+                failureReason = string.Empty;
+                return true;
+            }
+
+            var queued = false;
+            if (!actionManager->UseAction(
+                    ActionType.Action,
+                    actionId,
+                    selectedTarget.GameObjectId,
+                    0xFFFF,
+                    (ActionManager.UseActionMode)0,
+                    0,
+                    &queued))
+            {
+                lastFailure = $"UseAction rejected {fillerName}.";
+                continue;
+            }
+
+            actionName = fillerName;
             failureReason = string.Empty;
             return true;
         }

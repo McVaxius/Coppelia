@@ -1,14 +1,14 @@
 # Coppelia
 
-Guided healing for up to 20 watched targets, plus Fren-assisted powerleveling.
+Guided watched-target healing, healer-first JOT support, and Fren-assisted powerleveling.
 
-Coppelia provides guided setup for two mutually exclusive automation modes. HealBot runs configurable WHM, SCH, AST, or SGE healing, raises, buffs, and pre-buffs for up to 20 watched friendly targets, including targets outside the party. PowerlevelBot uses a currently equipped BRD or MCH to attack damaged enemies already engaging FrenRider's configured Fren or the local player. Includes dependency/readiness checks, optional saved targets, and optional Rotation Solver Reborn isolation for HealBot. Use `/healbot` to open.
+Coppelia provides guided setup for three mutually exclusive automation modes. HealBot runs configurable WHM, SCH, AST, or SGE healing, raises, buffs, and pre-buffs for up to 20 watched friendly targets. Jacqueline of All Trades (JOT) gives that healing absolute priority, then uses the equipped healer's highest available single-target filler spell only when the healing decision is idle and an eligible damaged enemy is already targeting FrenRider's configured visible Fren or the local healer. PowerlevelBot retains its BRD/MCH instant-action policy. Includes dependency/readiness checks, optional saved targets, and optional Rotation Solver Reborn isolation for HealBot and JOT. Use `/healbot` to open.
 
 ## Quick Setup
 
 Open Main and choose **Quick Setup**, or open Settings and select its permanent **Quick Setup** tab.
 
-- Choose HealBot or PowerlevelBot. The modes are mutually exclusive.
+- Choose HealBot, Jacqueline of All Trades (JOT), or PowerlevelBot. The modes are mutually exclusive.
 - Changes remain in a draft until **Finish**. **Cancel** discards that draft.
 - Finish requires either **Enable this mode now** or **Save setup and leave automation off**.
 - If activation fails, the wizard stays incomplete and shows the same blocker used by normal activation.
@@ -29,6 +29,17 @@ HealBot uses the Watch window and the existing per-healer action matrix.
 
 Use the separate Watch window to add or remove targets. Unticking a target also removes its saved copy. Hold Ctrl while clearing the full set or removing an absent retained target.
 
+## Jacqueline of All Trades (JOT)
+
+JOT shares HealBot's dependencies, watch list, per-healer action matrix, 900-ms decision cycle, and optional Rotation Solver Reborn isolation. Healing always wins: JOT attacks only after the current healing decision queued nothing and found no blocked matching healing action.
+
+- Requires an equipped WHM, SCH, AST, or SGE with that healer's action matrix enabled and at least one active watched target.
+- Uses the existing FrenRider lease and restricted enemy selector, but ignores the BRD/MCH Powerlevel job selection.
+- Considers only living, damaged, targetable enemies already targeting FrenRider's configured visible Fren or the local healer. Untouched enemies and enemies fighting anyone else are excluded.
+- Uses only the highest currently available single-target filler spell for the equipped healer. DoTs, AoE, and oGCD attacks are excluded.
+- Issues damage directly through Coppelia's action executor while Rotation Solver Reborn remains isolated.
+- Never auto-adds the Fren to Watch. When the Fren is the low-level character, select it explicitly so JOT healing protects it.
+
 ## PowerlevelBot
 
 PowerlevelBot requires an unlocked BRD or MCH that is already equipped. It never changes gearsets and does not use the HealBot watch list.
@@ -41,7 +52,7 @@ Coppelia retains three separate windows:
 
 - **Main** is the status dashboard for mode, automation, readiness, runtime state, and mode-specific target information.
 - **Settings** contains Quick Setup, General, HealBot Actions, and Requirements / Help tabs.
-- **Watch** manages HealBot filters, persistence, retained targets, and the live eligible-target table.
+- **Watch** manages the shared HealBot/JOT filters, persistence, retained targets, and the live eligible-target table.
 
 Window positions are saved independently. `/healbot ws` resets all three positions and `/healbot j` moves Main to a random visible location.
 
@@ -53,6 +64,7 @@ Commands:
 - `/healbot on` or `/healbot off` - control automation for the selected mode
 - `/healbot heal` - select HealBot
 - `/healbot powerlevel` or `/healbot pl` - select PowerlevelBot
+- `/healbot jot` - select Jacqueline of All Trades (JOT)
 - `/healbot status` - print the selected mode status
 
 ## Build

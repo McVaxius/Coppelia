@@ -19,6 +19,8 @@ public sealed class WatchWindow : Window, IDisposable
     private Vector2? lastSavedWindowPosition;
     private bool pendingSavedPositionApply;
     private string nameFilter = string.Empty;
+    private JotSetupReadiness? jotReadiness;
+    private DateTimeOffset nextJotReadinessUtc = DateTimeOffset.MinValue;
 
     public WatchWindow(Plugin plugin)
         : base($"{PluginInfo.DisplayName} Watch###CoppeliaWatch")
@@ -98,7 +100,7 @@ public sealed class WatchWindow : Window, IDisposable
     {
         CoppeliaUi.SectionHeader(
             "Watch status",
-            "This window manages the HealBot watch list. PowerlevelBot uses its restricted FrenRider enemy source instead.");
+            "This window manages the shared HealBot/JOT watch list. JOT never auto-adds FrenRider's Fren; PowerlevelBot uses its restricted enemy source instead.");
 
         var automationEnabled = plugin.Configuration.AutomationEnabled;
         if (ImGui.Checkbox("Automation##WatchWindow", ref automationEnabled))
@@ -111,7 +113,14 @@ public sealed class WatchWindow : Window, IDisposable
         if (ImGui.RadioButton("HealBot##WatchModeHeal", healSelected))
             plugin.SetBotMode(BotMode.HealBot, printStatus: true);
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Watched targets in this window are HealBot-only.");
+            ImGui.SetTooltip("Watched targets in this window are used by HealBot and JOT healing.");
+
+        ImGui.SameLine();
+        var jotSelected = plugin.Configuration.BotMode == BotMode.Jot;
+        if (ImGui.RadioButton("JOT##WatchModeJot", jotSelected))
+            plugin.SetBotMode(BotMode.Jot, printStatus: true);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("JOT heals this watch list first, then attacks only when that healing decision is idle.");
 
         ImGui.SameLine();
         var powerlevelSelected = plugin.Configuration.BotMode == BotMode.PowerlevelBot;
@@ -146,18 +155,46 @@ public sealed class WatchWindow : Window, IDisposable
         if (ImGui.SmallButton("Ko-fi##WatchWindow"))
             Process.Start(new ProcessStartInfo { FileName = PluginInfo.SupportUrl, UseShellExecute = true });
 
-        var runtimeStatus = plugin.Configuration.BotMode == BotMode.PowerlevelBot
-            ? plugin.PowerlevelRuntimeService.StatusText
-            : plugin.HealbotRuntimeService.StatusText;
         CoppeliaUi.StatusLine(
             "Automation",
             plugin.Configuration.AutomationEnabled,
             $"{plugin.Configuration.BotMode.GetLabel()} enabled",
             $"{plugin.Configuration.BotMode.GetLabel()} off",
             optional: true);
+
+        if (plugin.Configuration.BotMode == BotMode.Jot)
+        {
+            RefreshJotReadiness();
+            if (jotReadiness != null)
+            {
+                CoppeliaUi.StatusLine("Healing readiness", jotReadiness.HealingReady, "Ready", jotReadiness.HealingReason);
+                CoppeliaUi.StatusLine("Attacking readiness", jotReadiness.AttackingReady, "Ready when healing is idle", jotReadiness.AttackingReason);
+            }
+
+            ImGui.PushStyleColor(ImGuiCol.Text, CoppeliaUi.Accent);
+            ImGui.TextWrapped($"Healing: {plugin.HealbotRuntimeService.StatusText}");
+            ImGui.TextWrapped($"Attacking: {plugin.JotRuntimeService.StatusText}");
+            ImGui.PopStyleColor();
+            ImGui.TextDisabled($"Healing action: {plugin.HealbotRuntimeService.LastIssuedAction} | Attack action: {plugin.JotRuntimeService.LastIssuedAction}");
+            CoppeliaUi.WrappedHelp("Select FrenRider's configured Fren explicitly when it is the low-level target to heal. JOT never inserts it into this list.");
+            return;
+        }
+
+        var runtimeStatus = plugin.Configuration.BotMode == BotMode.PowerlevelBot
+            ? plugin.PowerlevelRuntimeService.StatusText
+            : plugin.HealbotRuntimeService.StatusText;
         ImGui.PushStyleColor(ImGuiCol.Text, CoppeliaUi.Accent);
         ImGui.TextWrapped(runtimeStatus);
         ImGui.PopStyleColor();
+    }
+
+    private void RefreshJotReadiness()
+    {
+        if (DateTimeOffset.UtcNow < nextJotReadinessUtc)
+            return;
+
+        nextJotReadinessUtc = DateTimeOffset.UtcNow.AddSeconds(2);
+        jotReadiness = plugin.JotRuntimeService.GetSetupReadiness();
     }
 
     private void DrawToolbar()

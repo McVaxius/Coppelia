@@ -66,3 +66,19 @@ internal sealed record PowerlevelSetupReadiness(
     bool CompanionClear,
     bool Ready,
     string Reason);
+
+internal sealed record JotSetupReadiness(
+    bool HealingDependenciesReady,
+    bool SupportedHealer,
+    string HealerLabel,
+    bool HealerConfigurationEnabled,
+    bool WatchedTargetsAvailable,
+    bool HealingReady,
+    string HealingReason,
+    bool FrenRiderIpcAvailable,
+    bool FrenRiderCompatible,
+    bool FrenRiderEnabled,
+    bool FrenConfigured,
+    bool FrenVisible,
+    bool AttackingReady,
+    string AttackingReason);

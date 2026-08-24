@@ -49,8 +49,10 @@ public sealed class Plugin : IDalamudPlugin
         RsrIpcService = new RsrIpcService();
         ActionExecutionService = new ActionExecutionService();
         FrenRiderPowerlevelIpcService = new FrenRiderPowerlevelIpcService();
+        var jotFrenRiderIpcService = new FrenRiderPowerlevelIpcService();
         HealbotRuntimeService = new HealbotRuntimeService(this, DependencyService, WatchTargetService, RsrIpcService, ActionExecutionService);
         PowerlevelRuntimeService = new PowerlevelRuntimeService(this, FrenRiderPowerlevelIpcService, ActionExecutionService);
+        JotRuntimeService = new JotRuntimeService(this, jotFrenRiderIpcService, ActionExecutionService);
 
         mainWindow = new MainWindow(this);
         configWindow = new ConfigWindow(this);
@@ -62,7 +64,7 @@ public sealed class Plugin : IDalamudPlugin
 
         CommandManager.AddHandler(PluginInfo.Command, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Open Coppelia. Use /healbot config, /healbot watch, /healbot on, /healbot off, /healbot heal, /healbot powerlevel, /healbot ws, or /healbot j.",
+            HelpMessage = "Open Coppelia. Use /healbot config, /healbot watch, /healbot on, /healbot off, /healbot heal, /healbot powerlevel, /healbot jot, /healbot ws, or /healbot j.",
         });
 
         CommandManager.AddHandler(PluginInfo.AliasCommand, new CommandInfo(OnCommand)
@@ -93,10 +95,12 @@ public sealed class Plugin : IDalamudPlugin
     internal FrenRiderPowerlevelIpcService FrenRiderPowerlevelIpcService { get; }
     internal HealbotRuntimeService HealbotRuntimeService { get; }
     internal PowerlevelRuntimeService PowerlevelRuntimeService { get; }
+    internal JotRuntimeService JotRuntimeService { get; }
     internal string LastAutomationBlocker { get; private set; } = string.Empty;
 
     public void Dispose()
     {
+        JotRuntimeService.Dispose();
         PowerlevelRuntimeService.Dispose();
         HealbotRuntimeService.Dispose();
         Framework.Update -= OnFrameworkUpdate;
@@ -120,7 +124,7 @@ public sealed class Plugin : IDalamudPlugin
     {
         if (enabled)
         {
-            if (Configuration.BotMode == BotMode.HealBot)
+            if (Configuration.BotMode is BotMode.HealBot or BotMode.Jot)
             {
                 DependencyService.Refresh(force: true);
                 if (!DependencyService.Current.IsHealbotReady)
@@ -169,6 +173,7 @@ public sealed class Plugin : IDalamudPlugin
         Configuration.Save();
         HealbotRuntimeService.Deactivate("Automation is off.");
         PowerlevelRuntimeService.Deactivate("Automation is off.");
+        JotRuntimeService.Deactivate("Automation is off.");
         UpdateDtrBar();
 
         if (printStatus)
@@ -189,6 +194,7 @@ public sealed class Plugin : IDalamudPlugin
         var wasAutomationEnabled = Configuration.AutomationEnabled;
         HealbotRuntimeService.Deactivate("Mode switched.");
         PowerlevelRuntimeService.Deactivate("Mode switched.");
+        JotRuntimeService.Deactivate("Mode switched.");
         AutomationModePolicy.ApplyMode(Configuration, mode);
         Configuration.Save();
         UpdateDtrBar();
@@ -223,6 +229,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             HealbotRuntimeService.Deactivate("Plugin disabled.");
             PowerlevelRuntimeService.Deactivate("Plugin disabled.");
+            JotRuntimeService.Deactivate("Plugin disabled.");
         }
 
         UpdateDtrBar();
@@ -405,6 +412,10 @@ public sealed class Plugin : IDalamudPlugin
                 ? "Ready"
                 : Configuration.BotMode == BotMode.PowerlevelBot
                     ? PowerlevelRuntimeService.LastIssuedAction
+                    : Configuration.BotMode == BotMode.Jot
+                        ? DependencyService.Current.IsHealbotReady
+                            ? $"Heal {HealbotRuntimeService.LastIssuedAction}; attack {JotRuntimeService.LastIssuedAction}"
+                            : "Blocked"
                     : DependencyService.Current.IsHealbotReady
                         ? HealbotRuntimeService.LastIssuedAction
                         : "Blocked";
@@ -417,7 +428,7 @@ public sealed class Plugin : IDalamudPlugin
             2 => new SeString(new TextPayload(glyph)),
             _ => new SeString(new TextPayload($"{modeLabel}: {state}")),
         };
-        dtrEntry.Tooltip = new SeString(new TextPayload($"{PluginInfo.DisplayName} {state}. Click to open the main window."));
+        dtrEntry.Tooltip = new SeString(new TextPayload($"{PluginInfo.DisplayName}: {GetSelectedModeStatus()} Click to open the main window."));
     }
 
     private void SetupDtrBar()
@@ -438,7 +449,8 @@ public sealed class Plugin : IDalamudPlugin
         DependencyService.Refresh();
         WatchTargetService.Update(Configuration, force: pendingInitialWatchRefresh);
         pendingInitialWatchRefresh = false;
-        HealbotRuntimeService.Update();
+        var healingDecision = HealbotRuntimeService.Update();
+        JotRuntimeService.Update(healingDecision);
         PowerlevelRuntimeService.Update();
         UpdateDtrBar();
     }
@@ -455,9 +467,7 @@ public sealed class Plugin : IDalamudPlugin
 
         if (trimmed.Equals("status", StringComparison.OrdinalIgnoreCase))
         {
-            PrintStatus(Configuration.BotMode == BotMode.PowerlevelBot
-                ? PowerlevelRuntimeService.StatusText
-                : HealbotRuntimeService.StatusText);
+            PrintStatus(GetSelectedModeStatus());
             return;
         }
 
@@ -471,6 +481,12 @@ public sealed class Plugin : IDalamudPlugin
             trimmed.Equals("pl", StringComparison.OrdinalIgnoreCase))
         {
             SetBotMode(BotMode.PowerlevelBot, printStatus: true);
+            return;
+        }
+
+        if (trimmed.Equals("jot", StringComparison.OrdinalIgnoreCase))
+        {
+            SetBotMode(BotMode.Jot, printStatus: true);
             return;
         }
 
@@ -512,11 +528,24 @@ public sealed class Plugin : IDalamudPlugin
         if (Configuration.BotMode == BotMode.PowerlevelBot)
         {
             HealbotRuntimeService.Deactivate("PowerlevelBot mode selected.");
+            JotRuntimeService.Deactivate("PowerlevelBot mode selected.");
             PowerlevelRuntimeService.Activate();
             return;
         }
 
-        PowerlevelRuntimeService.Deactivate("HealBot mode selected.");
+        PowerlevelRuntimeService.Deactivate($"{Configuration.BotMode.GetLabel()} mode selected.");
         HealbotRuntimeService.Activate();
+        if (Configuration.BotMode == BotMode.Jot)
+            JotRuntimeService.Activate();
+        else
+            JotRuntimeService.Deactivate("HealBot mode selected.");
     }
+
+    internal string GetSelectedModeStatus()
+        => Configuration.BotMode switch
+        {
+            BotMode.PowerlevelBot => PowerlevelRuntimeService.StatusText,
+            BotMode.Jot => $"Healing: {HealbotRuntimeService.StatusText} Attacking: {JotRuntimeService.StatusText}",
+            _ => HealbotRuntimeService.StatusText,
+        };
 }
