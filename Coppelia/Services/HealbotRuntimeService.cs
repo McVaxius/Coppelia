@@ -128,6 +128,17 @@ internal sealed class HealbotRuntimeService : IDisposable
         if (!profileArmed || !string.Equals(signature, appliedSignature, StringComparison.Ordinal))
             ApplyProfile(profile, signature, rsrLoaded);
 
+        if (CoppeliaPairedActionPolicy.ShouldHold(
+                watchTargetService.HasEphemeralQstTarget,
+                Plugin.Condition[ConditionFlag.Mounted],
+                Plugin.Condition[ConditionFlag.Mounting71]))
+        {
+            StatusText = "Holding paired healing while the helper is mounted or mounting.";
+            LastIssuedAction = "Travel";
+            LastMatchedRule = "Paired helper is mounted or mounting.";
+            return HealbotDecisionOutcome.Blocked;
+        }
+
         if (Plugin.ObjectTable.LocalPlayer is IBattleChara localPlayer && localPlayer.IsCasting)
         {
             StatusText = $"Holding while casting action {localPlayer.CastActionId}.";
@@ -181,7 +192,7 @@ internal sealed class HealbotRuntimeService : IDisposable
 
     private HealbotDecisionOutcome EvaluateSelectedTarget(HealbotJobProfile profile, HealerJobConfig jobConfig)
     {
-        var activeTargetCount = watchTargetService.ActiveTargets.Count;
+        var activeTargetCount = watchTargetService.SelectedTargetCount;
         if (activeTargetCount == 0)
         {
             StatusText = "No watched targets are active.";
@@ -207,9 +218,13 @@ internal sealed class HealbotRuntimeService : IDisposable
 
         if (orderedCandidates.Length == 0)
         {
-            StatusText = $"Watching {activeTargetCount} targets. No live watched target is currently available.";
+            StatusText = watchTargetService.HasEphemeralQstTarget
+                ? $"QST target {watchTargetService.EphemeralQstTargetName} is selected but remote."
+                : $"Watching {activeTargetCount} targets. No live watched target is currently available.";
             LastIssuedAction = "Idle";
-            LastMatchedRule = "No live watched targets.";
+            LastMatchedRule = watchTargetService.HasEphemeralQstTarget
+                ? "The exact QST target is remote."
+                : "No live watched targets.";
             return HealbotDecisionOutcome.Unavailable;
         }
 

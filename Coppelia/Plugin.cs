@@ -46,8 +46,12 @@ public sealed class Plugin : IDalamudPlugin
 
         DependencyService = new DependencyService();
         WatchTargetService = new WatchTargetService();
-        RsrIpcService = new RsrIpcService();
         ActionExecutionService = new ActionExecutionService();
+        CoppeliaTravelService = new CoppeliaTravelService();
+        ActionExecutionService.SetOwnedNavigationPause(CoppeliaTravelService.PauseForAction);
+        CoppeliaCompanionService = new CoppeliaCompanionService(CoppeliaTravelService);
+        CoppeliaQstIpcService = new CoppeliaQstIpcService(this, CoppeliaTravelService, CoppeliaCompanionService);
+        RsrIpcService = new RsrIpcService();
         FrenRiderPowerlevelIpcService = new FrenRiderPowerlevelIpcService();
         var jotFrenRiderIpcService = new FrenRiderPowerlevelIpcService();
         HealbotRuntimeService = new HealbotRuntimeService(this, DependencyService, WatchTargetService, RsrIpcService, ActionExecutionService);
@@ -64,7 +68,7 @@ public sealed class Plugin : IDalamudPlugin
 
         CommandManager.AddHandler(PluginInfo.Command, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Open Coppelia. Use /healbot config, /healbot watch, /healbot on, /healbot off, /healbot heal, /healbot powerlevel, /healbot jot, /healbot ws, or /healbot j.",
+            HelpMessage = "Open Coppelia. Use /healbot config, /healbot watch, /healbot on, /healbot off, /healbot heal, /healbot powerlevel, /healbot joat, /healbot ws, or /healbot j. /healbot jot remains an alias.",
         });
 
         CommandManager.AddHandler(PluginInfo.AliasCommand, new CommandInfo(OnCommand)
@@ -90,6 +94,9 @@ public sealed class Plugin : IDalamudPlugin
     public WindowSystem WindowSystem { get; } = new(PluginInfo.InternalName);
     internal DependencyService DependencyService { get; }
     internal WatchTargetService WatchTargetService { get; }
+    internal CoppeliaQstIpcService CoppeliaQstIpcService { get; }
+    internal CoppeliaTravelService CoppeliaTravelService { get; }
+    internal CoppeliaCompanionService CoppeliaCompanionService { get; }
     internal RsrIpcService RsrIpcService { get; }
     internal ActionExecutionService ActionExecutionService { get; }
     internal FrenRiderPowerlevelIpcService FrenRiderPowerlevelIpcService { get; }
@@ -100,6 +107,7 @@ public sealed class Plugin : IDalamudPlugin
 
     public void Dispose()
     {
+        CoppeliaQstIpcService.Dispose();
         JotRuntimeService.Dispose();
         PowerlevelRuntimeService.Dispose();
         HealbotRuntimeService.Dispose();
@@ -170,6 +178,7 @@ public sealed class Plugin : IDalamudPlugin
         Configuration.AutomationEnabled = false;
         Configuration.HealbotEnabled = false;
         LastAutomationBlocker = string.Empty;
+        CoppeliaQstIpcService.ReleaseForDeactivation("Coppelia automation was disabled.");
         Configuration.Save();
         HealbotRuntimeService.Deactivate("Automation is off.");
         PowerlevelRuntimeService.Deactivate("Automation is off.");
@@ -192,6 +201,8 @@ public sealed class Plugin : IDalamudPlugin
         }
 
         var wasAutomationEnabled = Configuration.AutomationEnabled;
+        if (mode == BotMode.PowerlevelBot)
+            CoppeliaQstIpcService.ReleaseForDeactivation("PowerlevelBot mode was selected.");
         HealbotRuntimeService.Deactivate("Mode switched.");
         PowerlevelRuntimeService.Deactivate("Mode switched.");
         JotRuntimeService.Deactivate("Mode switched.");
@@ -227,6 +238,7 @@ public sealed class Plugin : IDalamudPlugin
         Configuration.Save();
         if (!enabled)
         {
+            CoppeliaQstIpcService.ReleaseForDeactivation("Coppelia was disabled.");
             HealbotRuntimeService.Deactivate("Plugin disabled.");
             PowerlevelRuntimeService.Deactivate("Plugin disabled.");
             JotRuntimeService.Deactivate("Plugin disabled.");
@@ -446,6 +458,7 @@ public sealed class Plugin : IDalamudPlugin
 
     private void OnFrameworkUpdate(IFramework framework)
     {
+        CoppeliaQstIpcService.Update();
         DependencyService.Refresh();
         WatchTargetService.Update(Configuration, force: pendingInitialWatchRefresh);
         pendingInitialWatchRefresh = false;
@@ -484,7 +497,8 @@ public sealed class Plugin : IDalamudPlugin
             return;
         }
 
-        if (trimmed.Equals("jot", StringComparison.OrdinalIgnoreCase))
+        if (trimmed.Equals("joat", StringComparison.OrdinalIgnoreCase) ||
+            trimmed.Equals("jot", StringComparison.OrdinalIgnoreCase))
         {
             SetBotMode(BotMode.Jot, printStatus: true);
             return;

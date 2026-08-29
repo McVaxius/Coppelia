@@ -11,6 +11,11 @@ internal unsafe sealed class ActionExecutionService
 {
     private readonly Dictionary<string, uint> actionIdByName = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, uint> statusIdByName = new(StringComparer.OrdinalIgnoreCase);
+    private Action? pauseOwnedNavigation;
+
+    public void SetOwnedNavigationPause(Action pause) => pauseOwnedNavigation = pause;
+
+    private void PauseOwnedNavigation() => pauseOwnedNavigation?.Invoke();
 
     public bool TryExecute(HealbotActionDefinition definition, ICharacter selectedTarget, int minimumMpPercent, out string failureReason)
     {
@@ -77,6 +82,7 @@ internal unsafe sealed class ActionExecutionService
             Plugin.TargetManager.Target = localPlayer;
         }
 
+        PauseOwnedNavigation();
         var queued = false;
         var executed = actionManager->UseAction(
             ActionType.Action,
@@ -235,6 +241,7 @@ internal unsafe sealed class ActionExecutionService
                 return true;
             }
 
+            PauseOwnedNavigation();
             var queued = false;
             var executed = actionManager->UseAction(
                 ActionType.Action,
@@ -268,7 +275,7 @@ internal unsafe sealed class ActionExecutionService
         out string failureReason)
     {
         actionName = "Idle";
-        failureReason = "No JOT filler spell is currently usable.";
+        failureReason = "No JOAT filler spell is currently usable.";
 
         if (ActionManager.Instance() == null)
         {
@@ -327,6 +334,7 @@ internal unsafe sealed class ActionExecutionService
                 return true;
             }
 
+            PauseOwnedNavigation();
             var queued = false;
             if (!actionManager->UseAction(
                     ActionType.Action,

@@ -18,12 +18,38 @@ internal sealed class WatchTargetService
     private readonly Dictionary<string, ICharacter> liveCharactersByName = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<ulong, WatchTargetSnapshot> liveSnapshotsById = new();
     private DateTimeOffset nextRefreshUtc = DateTimeOffset.MinValue;
+    private string ephemeralQstTargetName = string.Empty;
+    private ushort ephemeralQstTargetWorldId;
+    private IPlayerCharacter? ephemeralQstTargetCharacter;
 
     public IReadOnlyList<WatchTargetSnapshot> Targets => targets;
     public IReadOnlyList<ResolvedWatchTarget> ActiveTargets => activeTargets;
     public IReadOnlyList<ResolvedWatchTarget> RetainedTargets => retainedTargets;
     public IReadOnlyList<WatchTargetCandidate> RuntimeCandidates => runtimeCandidates;
     public int SavedTargetCount { get; private set; }
+    public int RuntimeTargetCount => runtimeCandidates.Count;
+    public int SelectedTargetCount => HasEphemeralQstTarget ? 1 : activeTargets.Count;
+    public bool HasEphemeralQstTarget =>
+        !string.IsNullOrWhiteSpace(ephemeralQstTargetName) && ephemeralQstTargetWorldId != 0;
+    public bool IsEphemeralQstTargetVisible => ephemeralQstTargetCharacter != null;
+    public string EphemeralQstTargetName => ephemeralQstTargetName;
+    public ushort EphemeralQstTargetWorldId => ephemeralQstTargetWorldId;
+    public ulong EphemeralQstTargetObjectId => ephemeralQstTargetCharacter?.GameObjectId ?? 0;
+
+    public void SetEphemeralQstTarget(string name, ushort worldId)
+    {
+        ephemeralQstTargetName = name;
+        ephemeralQstTargetWorldId = worldId;
+        nextRefreshUtc = DateTimeOffset.MinValue;
+    }
+
+    public void ClearEphemeralQstTarget()
+    {
+        ephemeralQstTargetName = string.Empty;
+        ephemeralQstTargetWorldId = 0;
+        ephemeralQstTargetCharacter = null;
+        nextRefreshUtc = DateTimeOffset.MinValue;
+    }
 
     public void Update(Configuration configuration, bool force = false)
     {
@@ -40,6 +66,7 @@ internal sealed class WatchTargetService
             changed |= PromoteSavedTargets(configuration);
 
         ResolveTrackedTargets(configuration);
+        ResolveEphemeralQstTarget();
         SavedTargetCount = configuration.SavedHealTargetEntries.Count;
 
         if (changed)
@@ -47,7 +74,8 @@ internal sealed class WatchTargetService
     }
 
     public bool IsWatched(WatchTargetSnapshot target)
-        => activeTargets.Any(activeTarget => activeTarget.Entry.Matches(target));
+        => (ephemeralQstTargetCharacter?.GameObjectId == target.GameObjectId && target.GameObjectId != 0) ||
+           (!HasEphemeralQstTarget && activeTargets.Any(activeTarget => activeTarget.Entry.Matches(target)));
 
     public bool TryAddWatchedTarget(Configuration configuration, WatchTargetSnapshot target, out string message)
     {
@@ -231,7 +259,7 @@ internal sealed class WatchTargetService
             var resolved = ResolveTrackedTarget(activeEntry, configuration, isActive: true, isSaved, out var liveCharacter);
             activeTargets.Add(resolved);
 
-            if (liveCharacter != null && resolved.LiveSnapshot != null)
+            if (!HasEphemeralQstTarget && liveCharacter != null && resolved.LiveSnapshot != null)
             {
                 runtimeCandidates.Add(new WatchTargetCandidate
                 {
@@ -265,6 +293,40 @@ internal sealed class WatchTargetService
                 return left.LiveSnapshot is not null ? -1 : 1;
 
             return string.Compare(left.Name, right.Name, StringComparison.OrdinalIgnoreCase);
+        });
+    }
+
+    private void ResolveEphemeralQstTarget()
+    {
+        ephemeralQstTargetCharacter = null;
+        if (string.IsNullOrWhiteSpace(ephemeralQstTargetName) || ephemeralQstTargetWorldId == 0)
+            return;
+
+        var character = Plugin.ObjectTable
+            .OfType<IPlayerCharacter>()
+            .FirstOrDefault(player =>
+                string.Equals(player.Name.TextValue.Trim(), ephemeralQstTargetName, StringComparison.OrdinalIgnoreCase) &&
+                player.HomeWorld.RowId == ephemeralQstTargetWorldId);
+        if (character == null)
+            return;
+
+        ephemeralQstTargetCharacter = character;
+
+        var snapshot = BuildSnapshot(character, WatchTargetCategory.ManualSelection, "QST Assignment", isExternalSelection: true);
+        var entry = PersistedWatchTarget.FromSnapshot(snapshot);
+        runtimeCandidates.Add(new WatchTargetCandidate
+        {
+            Character = character,
+            Snapshot = snapshot,
+            Target = new ResolvedWatchTarget
+            {
+                Entry = entry,
+                LiveSnapshot = snapshot,
+                IsActive = false,
+                IsSaved = false,
+                IsVisibleInObjectTable = true,
+                IsWithinScanRange = true,
+            },
         });
     }
 

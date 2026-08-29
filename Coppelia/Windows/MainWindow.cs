@@ -62,7 +62,7 @@ public sealed class MainWindow : Window, IDisposable
                 plugin.Configuration.BotMode == BotMode.PowerlevelBot
                     ? "Powerlevel target source"
                     : plugin.Configuration.BotMode == BotMode.Jot
-                        ? "JOT healing and target status"
+                        ? "JOAT healing and target status"
                         : "HealBot target status");
             DrawWatchedTargetsPanel();
             TrackWindowPosition();
@@ -108,11 +108,11 @@ public sealed class MainWindow : Window, IDisposable
         var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0.0";
         ImGui.Text($"{PluginInfo.DisplayName} v{version}");
         ImGui.SameLine();
-        ImGui.TextDisabled($"Commands: {PluginInfo.Command}, {PluginInfo.AliasCommand}, {PluginInfo.Command} jot, {PluginInfo.Command} ws, {PluginInfo.Command} j");
+        ImGui.TextDisabled($"Commands: {PluginInfo.Command}, {PluginInfo.AliasCommand}, {PluginInfo.Command} joat (or jot), {PluginInfo.Command} ws, {PluginInfo.Command} j");
 
         if (CoppeliaUi.PrimaryButton("Quick Setup##CoppeliaMain"))
             plugin.OpenQuickSetupUi();
-        CoppeliaUi.Tooltip("Run the guided HealBot, JOT, or PowerlevelBot setup without changing anything until Finish.");
+        CoppeliaUi.Tooltip("Run the guided HealBot, JOAT, or PowerlevelBot setup without changing anything until Finish.");
 
         ImGui.SameLine();
         if (ImGui.SmallButton("Watch##CoppeliaMain"))
@@ -172,7 +172,7 @@ public sealed class MainWindow : Window, IDisposable
         DrawModeControls(configuration);
 
         CoppeliaUi.WrappedHelp(
-            "HealBot watches selected friendly targets. JOT uses the same healing first, then attacks eligible tagged enemies only when healing is idle. PowerlevelBot remains the BRD/MCH instant-action mode.");
+            "HealBot watches selected friendly targets. JOAT uses the same healing first, then attacks eligible tagged enemies only when healing is idle. PowerlevelBot remains the BRD/MCH instant-action mode.");
         CoppeliaUi.WrappedHelp(
             "Manage watched targets only in the Watch window. Ctrl-clearing there removes both active watched targets and saved targets.");
         CoppeliaUi.StatusLine("Plugin", configuration.PluginEnabled, "Enabled", "Disabled");
@@ -230,7 +230,7 @@ public sealed class MainWindow : Window, IDisposable
 
         ImGui.SameLine();
         var jotSelected = configuration.BotMode == BotMode.Jot;
-        if (ImGui.RadioButton("Jacqueline of All Trades (JOT)##MainModeJot", jotSelected))
+        if (ImGui.RadioButton("Jacqueline of All Trades (JOAT)##MainModeJot", jotSelected))
         {
             plugin.SetBotMode(BotMode.Jot, printStatus: true);
             nextJotReadinessUtc = DateTimeOffset.MinValue;
@@ -289,7 +289,7 @@ public sealed class MainWindow : Window, IDisposable
         if (!snapshot.IsHealbotReady)
             CoppeliaUi.StatusText(plugin.DependencyService.BuildMissingDependencyMessage(), ready: false);
 
-        CoppeliaUi.WrappedHelp("RSR isolation and restore is used when loaded. HealBot and JOT actions still fire through direct ActionManager execution.");
+        CoppeliaUi.WrappedHelp("RSR isolation and restore is used when loaded. HealBot and JOAT actions still fire through direct ActionManager execution.");
 
         if (plugin.Configuration.BotMode == BotMode.Jot)
             DrawJotReadiness();
@@ -313,8 +313,20 @@ public sealed class MainWindow : Window, IDisposable
         else
             ImGui.TextDisabled($"Local healer: {profile!.JobDisplayName} ({profile.JobAbbreviation})");
 
-        if (plugin.Configuration.BotMode == BotMode.Jot)
-            CoppeliaUi.WrappedHelp("JOT does not auto-add FrenRider's Fren. Select that Fren explicitly in Watch when it is the low-level target that healing must protect.");
+        if (plugin.Configuration.BotMode == BotMode.Jot &&
+            !plugin.WatchTargetService.HasEphemeralQstTarget)
+            CoppeliaUi.WrappedHelp("JOAT does not auto-add FrenRider's Fren. Select that Fren explicitly in Watch when it is the low-level target that healing must protect.");
+
+        if (plugin.WatchTargetService.HasEphemeralQstTarget)
+        {
+            var remoteState = plugin.WatchTargetService.IsEphemeralQstTargetVisible
+                ? "Visible - native HealBot target"
+                : "Selected - remote";
+            ImGui.TextDisabled($"Active: 1/{WatchTargetService.MaxTrackedTargets} | Live: {(plugin.WatchTargetService.IsEphemeralQstTargetVisible ? 1 : 0)} | Saved: unchanged");
+            ImGui.BulletText($"{plugin.FormatDisplayName(plugin.WatchTargetService.EphemeralQstTargetName)} [QST Assignment] - {remoteState}");
+            CoppeliaUi.WrappedHelp("The active QST session exclusively owns this in-memory target. Saved watched targets are unchanged and resume after release.");
+            return;
+        }
 
         var savedText = plugin.Configuration.SaveHealTargets
             ? plugin.WatchTargetService.SavedTargetCount.ToString()
@@ -398,13 +410,13 @@ public sealed class MainWindow : Window, IDisposable
 
         if (jotReadiness == null)
         {
-            ImGui.TextDisabled("JOT readiness has not been checked yet.");
+            ImGui.TextDisabled("JOAT readiness has not been checked yet.");
             return;
         }
 
         var readiness = jotReadiness;
-        CoppeliaUi.StatusLine("JOT healer action matrix", readiness.HealerConfigurationEnabled, "Enabled", "Disabled");
-        CoppeliaUi.StatusLine("JOT watched targets", readiness.WatchedTargetsAvailable, "Selected", "None selected");
+        CoppeliaUi.StatusLine("JOAT healer action matrix", readiness.HealerConfigurationEnabled, "Enabled", "Disabled");
+        CoppeliaUi.StatusLine("JOAT watched targets", readiness.WatchedTargetsAvailable, "Selected", "None selected");
         CoppeliaUi.StatusLine("Healing configuration", readiness.HealingReady, "Ready", readiness.HealingReason);
         CoppeliaUi.StatusLine(
             "FrenRider attack IPC",

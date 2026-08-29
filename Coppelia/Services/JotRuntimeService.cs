@@ -26,7 +26,7 @@ internal sealed class JotRuntimeService : IDisposable
         this.actionExecutionService = actionExecutionService;
     }
 
-    public string StatusText { get; private set; } = "JOT attacking is off.";
+    public string StatusText { get; private set; } = "JOAT attacking is off.";
     public string LastIssuedAction { get; private set; } = "Idle";
     public string LastMatchedRule { get; private set; } = "Waiting for an idle healing decision.";
 
@@ -38,7 +38,7 @@ internal sealed class JotRuntimeService : IDisposable
         armed = true;
         targetSelector.Clear();
         frenRiderIpcService.ResetSession();
-        StatusText = "JOT attacking is waiting for healing to be idle.";
+        StatusText = "JOAT attacking is waiting for healing to be idle.";
         LastIssuedAction = "Idle";
         LastMatchedRule = "Waiting for an idle healing decision.";
     }
@@ -60,9 +60,9 @@ internal sealed class JotRuntimeService : IDisposable
             plugin.Configuration.BotMode != BotMode.Jot)
         {
             if (armed || frenRiderIpcService.LeaseAcquired)
-                Deactivate("JOT attacking is off.");
+                Deactivate("JOAT attacking is off.");
             else
-                StatusText = "JOT attacking is off.";
+                StatusText = "JOAT attacking is off.";
             return;
         }
 
@@ -113,7 +113,7 @@ internal sealed class JotRuntimeService : IDisposable
         var dependenciesReady = plugin.DependencyService.Current.IsHealbotReady;
         var supportedHealer = plugin.HealbotRuntimeService.IsSupportedLocalJob(out var profile, out var healerReason);
         var healerConfigEnabled = supportedHealer && plugin.Configuration.GetJobConfigForJob(profile!.JobId).Enabled;
-        var watchedTargetsAvailable = plugin.WatchTargetService.ActiveTargets.Count > 0;
+        var watchedTargetsAvailable = plugin.WatchTargetService.SelectedTargetCount > 0;
         var healingReady = dependenciesReady && supportedHealer && healerConfigEnabled && watchedTargetsAvailable;
         var healingReason = BuildHealingReadinessReason(
             dependenciesReady,
@@ -124,16 +124,20 @@ internal sealed class JotRuntimeService : IDisposable
 
         var ipcSucceeded = frenRiderIpcService.TryGetStatus(out var status);
         var ipcAvailable = ipcSucceeded || status.ContractVersion > 0;
+        var pairedAssignment = plugin.WatchTargetService.HasEphemeralQstTarget;
+        var pairedLeaderVisible = plugin.WatchTargetService.IsEphemeralQstTargetVisible;
         var attackingReady = healingReady &&
                              ipcSucceeded &&
-                             status.FrenRiderEnabled &&
-                             status.FrenConfigured &&
-                             status.FrenVisible;
+                             (pairedAssignment
+                                 ? pairedLeaderVisible
+                                 : status.FrenRiderEnabled && status.FrenConfigured && status.FrenVisible);
         var attackingReason = BuildAttackingReadinessReason(
             healingReady,
             healingReason,
             ipcSucceeded,
-            status);
+            status,
+            pairedAssignment,
+            pairedLeaderVisible);
 
         return new JotSetupReadiness(
             dependenciesReady,
@@ -156,7 +160,7 @@ internal sealed class JotRuntimeService : IDisposable
     {
         if (!plugin.HealbotRuntimeService.IsRsrDamageIsolationReady)
         {
-            StatusText = "Blocked: Rotation Solver isolation is not active, so JOT attacking will not compete with it.";
+            StatusText = "Blocked: Rotation Solver isolation is not active, so JOAT attacking will not compete with it.";
             LastIssuedAction = "Blocked";
             LastMatchedRule = "Rotation Solver isolation failed.";
             return;
@@ -178,7 +182,9 @@ internal sealed class JotRuntimeService : IDisposable
             return;
         }
 
-        if (!status.FrenRiderEnabled || !status.FrenConfigured || !status.FrenVisible)
+        var pairedLeaderObjectId = plugin.WatchTargetService.EphemeralQstTargetObjectId;
+        var pairedAssignment = plugin.WatchTargetService.HasEphemeralQstTarget;
+        if (!pairedAssignment && (!status.FrenRiderEnabled || !status.FrenConfigured || !status.FrenVisible))
         {
             StatusText = $"Blocked: {BuildFrenReadinessReason(status)}";
             LastIssuedAction = "Blocked";
@@ -218,16 +224,29 @@ internal sealed class JotRuntimeService : IDisposable
             return;
         }
 
-        var candidates = BuildTargetCandidates(localPlayer, status.VisibleFrenObjectId, profile!);
+        if (pairedAssignment && pairedLeaderObjectId == 0)
+        {
+            StatusText = "Idle: the exact QST target is selected but remote.";
+            LastIssuedAction = "Idle";
+            LastMatchedRule = "The exact QST target is remote.";
+            return;
+        }
+
+        var protectedLeaderObjectId = pairedAssignment
+            ? pairedLeaderObjectId
+            : status.VisibleFrenObjectId;
+        var candidates = BuildTargetCandidates(localPlayer, protectedLeaderObjectId, profile!);
         var selection = targetSelector.Select(
             candidates,
-            status.VisibleFrenObjectId,
+            protectedLeaderObjectId,
             localPlayer.GameObjectId,
             DateTimeOffset.UtcNow);
 
         if (selection.Target == null)
         {
-            StatusText = "Idle: healing is clear, but no damaged enemy is targeting the Fren or local healer.";
+            StatusText = pairedAssignment
+                ? "Idle: healing is clear, but no damaged enemy is targeting the exact QST target or local healer."
+                : "Idle: healing is clear, but no damaged enemy is targeting the Fren or local healer.";
             LastIssuedAction = "Idle";
             LastMatchedRule = "No eligible tagged enemy.";
             return;
@@ -372,21 +391,27 @@ internal sealed class JotRuntimeService : IDisposable
         if (!healerConfigEnabled)
             return "The equipped healer's action matrix is disabled.";
         if (!watchedTargetsAvailable)
-            return "Select at least one target in Watch; the Fren is never added automatically.";
+            return "Select at least one target in Watch or wait for a QST assignment.";
 
-        return "JOT healing is ready.";
+        return "JOAT healing is ready.";
     }
 
     private string BuildAttackingReadinessReason(
         bool healingReady,
         string healingReason,
         bool ipcSucceeded,
-        FrenRiderPowerlevelStatus status)
+        FrenRiderPowerlevelStatus status,
+        bool pairedAssignment,
+        bool pairedLeaderVisible)
     {
         if (!healingReady)
             return $"Attacking waits for healing readiness: {healingReason}";
         if (!ipcSucceeded)
             return frenRiderIpcService.LastFailure;
+        if (pairedAssignment)
+            return pairedLeaderVisible
+                ? "JOAT attacking is ready when healing is idle."
+                : "The exact QST target is selected but remote.";
 
         return BuildFrenReadinessReason(status);
     }
@@ -400,6 +425,6 @@ internal sealed class JotRuntimeService : IDisposable
         if (!status.FrenVisible)
             return "FrenRider's configured Fren must be visible.";
 
-        return "JOT attacking is ready when healing is idle.";
+        return "JOAT attacking is ready when healing is idle.";
     }
 }

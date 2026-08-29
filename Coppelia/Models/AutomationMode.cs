@@ -21,7 +21,7 @@ internal static class AutomationModeText
         {
             BotMode.HealBot => "HealBot",
             BotMode.PowerlevelBot => "PowerlevelBot",
-            BotMode.Jot => "Jacqueline of All Trades (JOT)",
+            BotMode.Jot => "Jacqueline of All Trades (JOAT)",
             _ => mode.ToString(),
         };
 
@@ -29,7 +29,7 @@ internal static class AutomationModeText
         => mode switch
         {
             BotMode.PowerlevelBot => "PL",
-            BotMode.Jot => "JOT",
+            BotMode.Jot => "JOAT",
             _ => "HB",
         };
 

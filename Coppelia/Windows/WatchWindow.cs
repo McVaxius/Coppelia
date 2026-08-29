@@ -100,7 +100,18 @@ public sealed class WatchWindow : Window, IDisposable
     {
         CoppeliaUi.SectionHeader(
             "Watch status",
-            "This window manages the shared HealBot/JOT watch list. JOT never auto-adds FrenRider's Fren; PowerlevelBot uses its restricted enemy source instead.");
+            "This window manages the shared HealBot/JOAT watch list. JOAT never auto-adds FrenRider's Fren; PowerlevelBot uses its restricted enemy source instead.");
+
+        if (plugin.WatchTargetService.HasEphemeralQstTarget)
+        {
+            var state = plugin.WatchTargetService.IsEphemeralQstTargetVisible
+                ? "visible and resolved into the native HealBot candidate"
+                : "selected but remote";
+            CoppeliaUi.StatusText(
+                $"QST assignment: {plugin.FormatDisplayName(plugin.WatchTargetService.EphemeralQstTargetName)} is {state}.",
+                ready: plugin.WatchTargetService.IsEphemeralQstTargetVisible);
+            CoppeliaUi.WrappedHelp("This session-only exact target overrides saved watched targets for automation without changing or saving them.");
+        }
 
         var automationEnabled = plugin.Configuration.AutomationEnabled;
         if (ImGui.Checkbox("Automation##WatchWindow", ref automationEnabled))
@@ -113,14 +124,14 @@ public sealed class WatchWindow : Window, IDisposable
         if (ImGui.RadioButton("HealBot##WatchModeHeal", healSelected))
             plugin.SetBotMode(BotMode.HealBot, printStatus: true);
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Watched targets in this window are used by HealBot and JOT healing.");
+            ImGui.SetTooltip("Watched targets in this window are used by HealBot and JOAT healing.");
 
         ImGui.SameLine();
         var jotSelected = plugin.Configuration.BotMode == BotMode.Jot;
-        if (ImGui.RadioButton("JOT##WatchModeJot", jotSelected))
+        if (ImGui.RadioButton("JOAT##WatchModeJot", jotSelected))
             plugin.SetBotMode(BotMode.Jot, printStatus: true);
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("JOT heals this watch list first, then attacks only when that healing decision is idle.");
+            ImGui.SetTooltip("JOAT heals this watch list first, then attacks only when that healing decision is idle.");
 
         ImGui.SameLine();
         var powerlevelSelected = plugin.Configuration.BotMode == BotMode.PowerlevelBot;
@@ -176,7 +187,7 @@ public sealed class WatchWindow : Window, IDisposable
             ImGui.TextWrapped($"Attacking: {plugin.JotRuntimeService.StatusText}");
             ImGui.PopStyleColor();
             ImGui.TextDisabled($"Healing action: {plugin.HealbotRuntimeService.LastIssuedAction} | Attack action: {plugin.JotRuntimeService.LastIssuedAction}");
-            CoppeliaUi.WrappedHelp("Select FrenRider's configured Fren explicitly when it is the low-level target to heal. JOT never inserts it into this list.");
+            CoppeliaUi.WrappedHelp("Select FrenRider's configured Fren explicitly when it is the low-level target to heal. JOAT never inserts it into this list.");
             return;
         }
 
