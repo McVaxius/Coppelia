@@ -17,7 +17,25 @@ internal unsafe sealed class ActionExecutionService
 
     private void PauseOwnedNavigation() => pauseOwnedNavigation?.Invoke();
 
-    public bool TryExecute(HealbotActionDefinition definition, ICharacter selectedTarget, int minimumMpPercent, out string failureReason)
+    internal static IBattleChara? ResolveLiveHealTarget(ulong gameObjectId)
+    {
+        if (gameObjectId == 0)
+            return null;
+
+        foreach (var gameObject in Plugin.ObjectTable)
+        {
+            if (gameObject.GameObjectId == gameObjectId &&
+                gameObject is IBattleChara target &&
+                target.Address != 0)
+            {
+                return target;
+            }
+        }
+
+        return null;
+    }
+
+    public bool TryExecute(HealbotActionDefinition definition, ulong selectedTargetGameObjectId, int minimumMpPercent, out string failureReason)
     {
         failureReason = string.Empty;
 
@@ -45,16 +63,6 @@ internal unsafe sealed class ActionExecutionService
             return false;
         }
 
-        var targetObject = definition.TargetKind == HealbotTargetKind.Self
-            ? localPlayer
-            : selectedTarget;
-
-        if (definition.TargetKind == HealbotTargetKind.SelectedTarget && !selectedTarget.IsTargetable && !selectedTarget.IsDead)
-        {
-            failureReason = $"{selectedTarget.Name.TextValue} is not targetable.";
-            return false;
-        }
-
         if (ActionManager.Instance() == null)
         {
             failureReason = "ActionManager is unavailable.";
@@ -68,8 +76,23 @@ internal unsafe sealed class ActionExecutionService
             return false;
         }
 
+        ulong targetGameObjectId;
         if (definition.TargetKind == HealbotTargetKind.SelectedTarget)
         {
+            var selectedTarget = ResolveLiveHealTarget(selectedTargetGameObjectId);
+            if (selectedTarget == null)
+            {
+                failureReason = "Selected target is unavailable.";
+                return false;
+            }
+
+            targetGameObjectId = selectedTarget.GameObjectId;
+            if (!selectedTarget.IsTargetable && !selectedTarget.IsDead)
+            {
+                failureReason = $"{selectedTarget.Name.TextValue} is not targetable.";
+                return false;
+            }
+
             Plugin.TargetManager.Target = selectedTarget;
             if (!actionManager->IsActionTargetInRange(ActionType.Action, actionId))
             {
@@ -79,6 +102,7 @@ internal unsafe sealed class ActionExecutionService
         }
         else
         {
+            targetGameObjectId = localPlayer.GameObjectId;
             Plugin.TargetManager.Target = localPlayer;
         }
 
@@ -86,7 +110,7 @@ internal unsafe sealed class ActionExecutionService
         var executed = actionManager->UseAction(
             ActionType.Action,
             actionId,
-            targetObject.GameObjectId,
+            targetGameObjectId,
             0xFFFF,
             (ActionManager.UseActionMode)0,
             0,
@@ -371,22 +395,9 @@ internal unsafe sealed class ActionExecutionService
         if (!TryResolveStatusId(definition.TrackedStatusName, out var statusId))
             return false;
 
-        IBattleChara? target = null;
-        if (definition.TargetKind == HealbotTargetKind.Self)
-        {
-            target = Plugin.ObjectTable.LocalPlayer as IBattleChara;
-        }
-        else if (selectedTargetGameObjectId != 0)
-        {
-            foreach (var gameObject in Plugin.ObjectTable)
-            {
-                if (gameObject?.GameObjectId != selectedTargetGameObjectId)
-                    continue;
-
-                target = gameObject as IBattleChara;
-                break;
-            }
-        }
+        var target = definition.TargetKind == HealbotTargetKind.Self
+            ? Plugin.ObjectTable.LocalPlayer as IBattleChara
+            : ResolveLiveHealTarget(selectedTargetGameObjectId);
 
         if (target == null || target.Address == 0)
             return false;

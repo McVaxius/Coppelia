@@ -233,13 +233,17 @@ internal sealed class HealbotRuntimeService : IDisposable
 
         foreach (var candidate in orderedCandidates)
         {
-            Plugin.TargetManager.Target = candidate.Character;
+            var selectedCharacter = ActionExecutionService.ResolveLiveHealTarget(candidate.Snapshot.GameObjectId);
+            if (selectedCharacter == null)
+                continue;
+
+            Plugin.TargetManager.Target = selectedCharacter;
 
             var evaluationOrder = candidate.Snapshot.IsDead
                 ? HealbotActionCatalog.DeadTargetEvaluationOrder
                 : HealbotActionCatalog.AliveEvaluationOrder;
 
-            if (TryExecuteRule(profile, jobConfig, candidate.Character, candidate.Snapshot, evaluationOrder, out var executedStatus, out var executedAction, out var matchedRule))
+            if (TryExecuteRule(profile, jobConfig, candidate.Snapshot, evaluationOrder, out var executedStatus, out var executedAction, out var matchedRule))
             {
                 StatusText = $"Watching {activeTargetCount} targets. {executedStatus}";
                 LastIssuedAction = executedAction;
@@ -280,7 +284,6 @@ internal sealed class HealbotRuntimeService : IDisposable
     private bool TryExecuteRule(
         HealbotJobProfile profile,
         HealerJobConfig jobConfig,
-        ICharacter selectedCharacter,
         WatchTargetSnapshot selectedSnapshot,
         IReadOnlyList<HealbotActionGroup> groupOrder,
         out string statusText,
@@ -314,7 +317,7 @@ internal sealed class HealbotRuntimeService : IDisposable
                 matchingRuleFound = true;
                 matchedRule = BuildRuleLabel(definition, rule);
 
-                if (actionExecutionService.TryExecute(definition, selectedCharacter, rule.MinimumMpPercent, out var failureReason))
+                if (actionExecutionService.TryExecute(definition, selectedSnapshot.GameObjectId, rule.MinimumMpPercent, out var failureReason))
                 {
                     statusText = BuildSuccessMessage(definition, selectedSnapshot);
                     executedAction = definition.ActionName;

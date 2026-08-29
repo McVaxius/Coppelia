@@ -1,5 +1,6 @@
 # Changelog
 
+- Prevented stale watched targets from reaching native targeting or heal action calls by resolving exact live battle characters at each boundary.
 - Prevented HealBot status-list crashes by re-resolving live targets and skipping actions when tracked status cannot be read safely.
 - Replaced Coppelia's QST aetheryte discovery with LootGoblin parity: every exact and fallback decision now uses one refreshed helper teleport-list snapshot with ID/sub-index/cost, territory and optional Tamamizu filtering, stored/default positions (including Hawthorne Hut ID 4), complete Level and MapMarker fallbacks, community map overrides/RealXYZ, XYZ-or-XZ distance selection, and cheapest-cost fallback; successful teleports also passively validate and record arrival positions.
 - Added deterministic QST territory handoff: an observed physical crossing gets one non-resetting five-second forward move before nearest-aetheryte fallback from the helper's refreshed teleport list in the latest destination territory, while initial/reload mismatches and explicit world or teleport travel bypass the blind probe; newer snapshots re-arm blocked destinations and stale exact intent cannot override a newer different destination.
