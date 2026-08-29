@@ -602,6 +602,25 @@ public sealed class ConfigWindow : Window, IDisposable
             changed = true;
         }
 
+        CoppeliaUi.SectionHeader("QST travel");
+        var avoidTamamizu = configuration.AvoidTamamizuAetheryte;
+        if (ImGui.Checkbox("Do not use Tamamizu aetheryte", ref avoidTamamizu))
+        {
+            configuration.AvoidTamamizuAetheryte = avoidTamamizu;
+            changed = true;
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Skips Tamamizu when choosing a QST teleport destination.");
+
+        var autoUpdateMapLocations = configuration.AutoUpdateMapLocationsOnLogin;
+        if (ImGui.Checkbox("Auto-update map locations on login", ref autoUpdateMapLocations))
+        {
+            configuration.AutoUpdateMapLocationsOnLogin = autoUpdateMapLocations;
+            changed = true;
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Refreshes LootGoblin's community map-location data once per Coppelia version for nearest-aetheryte selection.");
+
         CoppeliaUi.SectionHeader("Mode");
         DrawModeSettings(configuration, ref changed);
 

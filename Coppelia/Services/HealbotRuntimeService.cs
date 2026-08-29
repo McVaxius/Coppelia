@@ -308,7 +308,7 @@ internal sealed class HealbotRuntimeService : IDisposable
                 if (!rule.Enabled)
                     continue;
 
-                if (!RuleMatches(definition, rule, selectedCharacter, selectedSnapshot))
+                if (!RuleMatches(definition, rule, selectedSnapshot))
                     continue;
 
                 matchingRuleFound = true;
@@ -338,7 +338,6 @@ internal sealed class HealbotRuntimeService : IDisposable
     private bool RuleMatches(
         HealbotActionDefinition definition,
         HealerActionRule rule,
-        ICharacter selectedCharacter,
         WatchTargetSnapshot selectedSnapshot)
     {
         if (!rule.AllowOutOfCombat && !Plugin.Condition[ConditionFlag.InCombat])
@@ -365,14 +364,26 @@ internal sealed class HealbotRuntimeService : IDisposable
         if (definition.TargetKind == HealbotTargetKind.SelectedTarget && !selectedSnapshot.IsTargetable)
             return false;
 
-        if (rule.RequireMissingTrackedStatus && actionExecutionService.HasTrackedStatus(definition, selectedCharacter))
+        var checksTrackedStatus =
+            rule.RequireMissingTrackedStatus || rule.TriggerKind == HealbotTriggerKind.MissingBuff;
+        var hasTrackedStatus = false;
+        if (checksTrackedStatus &&
+            !actionExecutionService.TryHasTrackedStatus(
+                definition,
+                selectedSnapshot.GameObjectId,
+                out hasTrackedStatus))
+        {
+            return false;
+        }
+
+        if (rule.RequireMissingTrackedStatus && hasTrackedStatus)
             return false;
 
         return rule.TriggerKind switch
         {
             HealbotTriggerKind.HpBelow => selectedSnapshot.HpPercent <= rule.HpThresholdPercent,
             HealbotTriggerKind.DeadTarget => false,
-            HealbotTriggerKind.MissingBuff => !actionExecutionService.HasTrackedStatus(definition, selectedCharacter),
+            HealbotTriggerKind.MissingBuff => !hasTrackedStatus,
             HealbotTriggerKind.Always => true,
             _ => false,
         };

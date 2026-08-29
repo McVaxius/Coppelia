@@ -6,7 +6,7 @@ namespace Coppelia;
 [Serializable]
 public sealed class Configuration : IPluginConfiguration
 {
-    private const int CurrentConfigurationVersion = 6;
+    private const int CurrentConfigurationVersion = 7;
     private const int MaxTrackedTargets = 20;
 
     public int Version { get; set; } = CurrentConfigurationVersion;
@@ -30,6 +30,9 @@ public sealed class Configuration : IPluginConfiguration
     public bool KrangleNames { get; set; } = true;
     public bool SaveHealTargets { get; set; }
     public int SavedTargetScanRangeYalms { get; set; } = 20;
+    public bool AvoidTamamizuAetheryte { get; set; } = true;
+    public bool AutoUpdateMapLocationsOnLogin { get; set; } = true;
+    public string LastCommunityLocationsRefreshPluginVersion { get; set; } = string.Empty;
 
     // Legacy v3 single-target model kept for migration only.
     public ulong SelectedTargetGameObjectId { get; set; }
@@ -116,6 +119,12 @@ public sealed class Configuration : IPluginConfiguration
 
             if (sourceVersion < 6)
                 SetupWizardCompleted = true;
+
+            if (sourceVersion < 7)
+            {
+                AvoidTamamizuAetheryte = true;
+                AutoUpdateMapLocationsOnLogin = true;
+            }
 
             Version = CurrentConfigurationVersion;
             changed = true;

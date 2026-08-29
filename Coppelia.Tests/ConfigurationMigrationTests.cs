@@ -19,7 +19,7 @@ public sealed class ConfigurationMigrationTests
         var changed = configuration.MigrateIfNeeded();
 
         Assert.True(changed);
-        Assert.Equal(6, configuration.Version);
+        Assert.Equal(7, configuration.Version);
         Assert.True(configuration.SetupWizardCompleted);
         Assert.False(configuration.ShouldAutoOpenSetup());
         Assert.True(configuration.AutomationEnabled);
@@ -33,7 +33,7 @@ public sealed class ConfigurationMigrationTests
 
         configuration.MigrateIfNeeded();
 
-        Assert.Equal(6, configuration.Version);
+        Assert.Equal(7, configuration.Version);
         Assert.False(configuration.SetupWizardCompleted);
         Assert.True(configuration.ShouldAutoOpenSetup());
     }
@@ -69,7 +69,7 @@ public sealed class ConfigurationMigrationTests
         var changed = configuration.MigrateIfNeeded();
 
         Assert.True(changed);
-        Assert.Equal(6, configuration.Version);
+        Assert.Equal(7, configuration.Version);
         Assert.True(configuration.SetupWizardCompleted);
         Assert.False(configuration.ShouldAutoOpenSetup());
         Assert.True(configuration.AutomationEnabled);
@@ -100,11 +100,27 @@ public sealed class ConfigurationMigrationTests
 
         configuration.MigrateIfNeeded();
 
-        Assert.Equal(6, configuration.Version);
+        Assert.Equal(7, configuration.Version);
         Assert.True(configuration.SetupWizardCompleted);
         Assert.False(configuration.ShouldAutoOpenSetup());
         Assert.Equal(BotMode.PowerlevelBot, configuration.BotMode);
         Assert.Equal(PowerlevelJob.MCH, configuration.PowerlevelJob);
+    }
+
+    [Fact]
+    public void VersionSixMigrationEnablesLootGoblinTravelDefaults()
+    {
+        var configuration = new Configuration
+        {
+            Version = 6,
+            AvoidTamamizuAetheryte = false,
+            AutoUpdateMapLocationsOnLogin = false,
+        };
+
+        Assert.True(configuration.MigrateIfNeeded());
+        Assert.Equal(7, configuration.Version);
+        Assert.True(configuration.AvoidTamamizuAetheryte);
+        Assert.True(configuration.AutoUpdateMapLocationsOnLogin);
     }
 
     [Fact]

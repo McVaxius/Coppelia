@@ -1,5 +1,6 @@
 using System.Numerics;
 using Coppelia.Models;
+using Coppelia.Services;
 
 namespace Coppelia.Tests;
 
@@ -66,20 +67,144 @@ public sealed class CoppeliaTravelHandoffPolicyTests
     }
 
     [Fact]
-    public void NearestUnlockedAetheryteUsesNewestTerritoryCoordinates()
+    public void HawthorneHutInAuthoritativeTeleportListIsSelectedForEastShroud()
     {
-        var destination = new Vector3(100, 0, 100);
-        var candidates = new[]
+        const uint eastShroudTerritoryId = 152;
+        var newestQuesterPosition = new Vector3(-180, 2, 275);
+        var defaults = DefaultAetheryteData.GetDefaults();
+        Assert.Equal(107, defaults.Count);
+        Assert.Equal(new Vector3(-188.9f, 2f, 283.5f), new Vector3(defaults[4].X, defaults[4].Y, defaults[4].Z));
+        var teleportList = new[]
         {
-            new CoppeliaAetheryteCandidate(1, new Vector3(95, 0, 95), Unlocked: false),
-            new CoppeliaAetheryteCandidate(2, new Vector3(40, 0, 40), Unlocked: true),
-            new CoppeliaAetheryteCandidate(3, new Vector3(110, 0, 110), Unlocked: true),
+            Candidate(2, 0, 132, defaults[2]),
+            Candidate(4, 0, eastShroudTerritoryId, defaults[4]),
+            Candidate(5, 0, 153, defaults[5]),
         };
 
-        var nearest = CoppeliaAetherytePolicy.SelectNearest(destination, candidates);
+        var nearest = CoppeliaAetherytePolicy.Resolve(
+            eastShroudTerritoryId,
+            newestQuesterPosition,
+            teleportList,
+            avoidTamamizu: true);
 
         Assert.NotNull(nearest);
-        Assert.Equal((uint)3, nearest.Id);
+        Assert.Equal((uint)4, nearest.Candidate.Id);
+        Assert.Equal((byte)0, nearest.Candidate.SubIndex);
+        Assert.Equal("The Hawthorne Hut", nearest.Candidate.Name);
+    }
+
+    [Fact]
+    public void NonTeleportTerritoryFallbackRearmsFromNewerPostArrivalSnapshot()
+    {
+        var sequencePolicy = new CoppeliaTravelSequencePolicy();
+        var destinationTerritoryAetherytes = new[]
+        {
+            new CoppeliaAetheryteCandidate(10, 0, 200, "Near", 0, 100, new Vector3(5, 0, 5), true),
+            new CoppeliaAetheryteCandidate(20, 0, 200, "Far", 0, 100, new Vector3(95, 0, 95), true),
+        };
+
+        Assert.True(sequencePolicy.TryAccept(40));
+        sequencePolicy.Block(40, "Waiting for a newer destination snapshot");
+        Assert.True(sequencePolicy.IsBlocked(40));
+        Assert.Equal(
+            (uint)10,
+            CoppeliaAetherytePolicy.Resolve(
+                200,
+                new Vector3(10, 0, 10),
+                destinationTerritoryAetherytes,
+                avoidTamamizu: true)!.Candidate.Id);
+
+        Assert.True(sequencePolicy.TryAccept(41));
+        Assert.False(sequencePolicy.IsBlocked(41));
+        Assert.Equal(
+            (uint)20,
+            CoppeliaAetherytePolicy.Resolve(
+                200,
+                new Vector3(90, 0, 90),
+                destinationTerritoryAetherytes,
+                avoidTamamizu: true)!.Candidate.Id);
+        Assert.False(CoppeliaTeleportIntentPolicy.IsStale(40, 100, 200, 41, 100));
+        Assert.True(CoppeliaTeleportIntentPolicy.IsStale(40, 100, 200, 41, 300));
+    }
+
+    [Fact]
+    public void ForwardProbeKeepsOneFiveSecondWindowAcrossNewerSnapshots()
+    {
+        var policy = new CoppeliaTerritoryHandoffPolicy();
+
+        Assert.True(policy.TryArm(true, false, false, true, 100, 100, 200));
+        Assert.Equal(
+            CoppeliaTerritoryHandoffDecision.StartForwardProbe,
+            policy.Evaluate(100, 200, betweenAreas: false, helperLoaded: true, Started));
+        Assert.False(policy.TryArm(true, false, false, true, 100, 100, 300));
+        Assert.Equal(Started, policy.ProbeStartedUtc);
+        Assert.Equal(
+            CoppeliaTerritoryHandoffDecision.ContinueForwardProbe,
+            policy.Evaluate(100, 300, betweenAreas: false, helperLoaded: true, Started.AddMilliseconds(4999)));
+        Assert.Equal(
+            CoppeliaTerritoryHandoffDecision.UseTeleportFallback,
+            policy.Evaluate(100, 300, betweenAreas: false, helperLoaded: true, Started.AddSeconds(5)));
+    }
+
+    [Fact]
+    public void ObservedTransitionWaitsForLoadAndCompletesInLatestTerritory()
+    {
+        var policy = new CoppeliaTerritoryHandoffPolicy();
+        Assert.True(policy.TryArm(true, false, false, true, 100, 100, 200));
+        Assert.Equal(
+            CoppeliaTerritoryHandoffDecision.StartForwardProbe,
+            policy.Evaluate(100, 200, betweenAreas: false, helperLoaded: true, Started));
+
+        Assert.Equal(
+            CoppeliaTerritoryHandoffDecision.WaitForLoad,
+            policy.Evaluate(100, 200, betweenAreas: true, helperLoaded: false, Started.AddSeconds(1)));
+        Assert.Equal(
+            CoppeliaTerritoryHandoffDecision.DestinationReached,
+            policy.Evaluate(200, 200, betweenAreas: false, helperLoaded: true, Started.AddSeconds(2)));
+        Assert.False(policy.IsActive);
+    }
+
+    [Fact]
+    public void WrongIntermediateTerritoryUsesLatestDestinationFallback()
+    {
+        var policy = new CoppeliaTerritoryHandoffPolicy();
+        Assert.True(policy.TryArm(true, false, false, true, 100, 100, 200));
+        Assert.Equal(
+            CoppeliaTerritoryHandoffDecision.StartForwardProbe,
+            policy.Evaluate(100, 200, betweenAreas: false, helperLoaded: true, Started));
+        Assert.Equal(
+            CoppeliaTerritoryHandoffDecision.WaitForLoad,
+            policy.Evaluate(150, 300, betweenAreas: true, helperLoaded: false, Started.AddSeconds(1)));
+        Assert.Equal(
+            CoppeliaTerritoryHandoffDecision.UseTeleportFallback,
+            policy.Evaluate(150, 300, betweenAreas: false, helperLoaded: true, Started.AddSeconds(2)));
+    }
+
+    [Theory]
+    [InlineData(false, false, false, true, 100, 100, 200)]
+    [InlineData(true, false, false, true, 999, 100, 200)]
+    [InlineData(true, true, false, true, 100, 100, 200)]
+    [InlineData(true, false, true, true, 100, 100, 200)]
+    public void InitialReloadExactAndWorldMismatchesDoNotArmBlindProbe(
+        bool hasPreviousSnapshot,
+        bool explicitTeleport,
+        bool worldChanged,
+        bool helperLoaded,
+        uint observedTerritory,
+        uint previousTerritory,
+        uint destinationTerritory)
+    {
+        var policy = new CoppeliaTerritoryHandoffPolicy();
+
+        Assert.False(policy.TryArm(
+            hasPreviousSnapshot,
+            explicitTeleport,
+            worldChanged,
+            helperLoaded,
+            observedTerritory,
+            previousTerritory,
+            destinationTerritory));
+        Assert.False(policy.IsActive);
     }
 
     [Fact]
@@ -122,4 +247,19 @@ public sealed class CoppeliaTravelHandoffPolicyTests
             CoppeliaLifestreamActivity.Completed,
             policy.Observe(busy: false, targetReached: true, utcNow: Started.AddMilliseconds(10)));
     }
+
+    private static CoppeliaAetheryteCandidate Candidate(
+        uint id,
+        byte subIndex,
+        uint territoryId,
+        AetherytePosition position) =>
+        new(
+            id,
+            subIndex,
+            territoryId,
+            position.Name,
+            0,
+            100,
+            new Vector3(position.X, position.Y, position.Z),
+            true);
 }

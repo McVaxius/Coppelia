@@ -82,7 +82,6 @@ internal unsafe sealed class ActionExecutionService
             Plugin.TargetManager.Target = localPlayer;
         }
 
-        PauseOwnedNavigation();
         var queued = false;
         var executed = actionManager->UseAction(
             ActionType.Action,
@@ -99,6 +98,7 @@ internal unsafe sealed class ActionExecutionService
             return false;
         }
 
+        PauseOwnedNavigation();
         return true;
     }
 
@@ -241,7 +241,6 @@ internal unsafe sealed class ActionExecutionService
                 return true;
             }
 
-            PauseOwnedNavigation();
             var queued = false;
             var executed = actionManager->UseAction(
                 ActionType.Action,
@@ -258,6 +257,7 @@ internal unsafe sealed class ActionExecutionService
                 continue;
             }
 
+            PauseOwnedNavigation();
             actionName = metadata.Name;
             failureReason = string.Empty;
             return true;
@@ -334,7 +334,6 @@ internal unsafe sealed class ActionExecutionService
                 return true;
             }
 
-            PauseOwnedNavigation();
             var queued = false;
             if (!actionManager->UseAction(
                     ActionType.Action,
@@ -349,6 +348,7 @@ internal unsafe sealed class ActionExecutionService
                 continue;
             }
 
+            PauseOwnedNavigation();
             actionName = fillerName;
             failureReason = string.Empty;
             return true;
@@ -358,28 +358,56 @@ internal unsafe sealed class ActionExecutionService
         return false;
     }
 
-    public bool HasTrackedStatus(HealbotActionDefinition definition, ICharacter selectedTarget)
+    public bool TryHasTrackedStatus(
+        HealbotActionDefinition definition,
+        ulong selectedTargetGameObjectId,
+        out bool hasTrackedStatus)
     {
+        hasTrackedStatus = false;
+
         if (string.IsNullOrWhiteSpace(definition.TrackedStatusName))
             return false;
 
         if (!TryResolveStatusId(definition.TrackedStatusName, out var statusId))
             return false;
 
-        var target = definition.TargetKind == HealbotTargetKind.Self
-            ? Plugin.ObjectTable.LocalPlayer as IBattleChara
-            : selectedTarget as IBattleChara;
-
-        if (target == null)
-            return false;
-
-        foreach (var status in target.StatusList)
+        IBattleChara? target = null;
+        if (definition.TargetKind == HealbotTargetKind.Self)
         {
-            if (status.StatusId == statusId)
-                return true;
+            target = Plugin.ObjectTable.LocalPlayer as IBattleChara;
+        }
+        else if (selectedTargetGameObjectId != 0)
+        {
+            foreach (var gameObject in Plugin.ObjectTable)
+            {
+                if (gameObject?.GameObjectId != selectedTargetGameObjectId)
+                    continue;
+
+                target = gameObject as IBattleChara;
+                break;
+            }
         }
 
-        return false;
+        if (target == null || target.Address == 0)
+            return false;
+
+        try
+        {
+            foreach (var status in target.StatusList)
+            {
+                if (status.StatusId != statusId)
+                    continue;
+
+                hasTrackedStatus = true;
+                break;
+            }
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     private bool TryResolveActionId(string actionName, out uint actionId)

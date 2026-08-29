@@ -47,7 +47,10 @@ public sealed class Plugin : IDalamudPlugin
         DependencyService = new DependencyService();
         WatchTargetService = new WatchTargetService();
         ActionExecutionService = new ActionExecutionService();
-        CoppeliaTravelService = new CoppeliaTravelService();
+        MapLocationDatabase = new MapLocationDatabase(this, Log);
+        MapLocationDatabase.PopulateFromTreasureSpot(DataManager);
+        AetherytePositionDatabase = new AetherytePositionDatabase(this, Log);
+        CoppeliaTravelService = new CoppeliaTravelService(Configuration, AetherytePositionDatabase, MapLocationDatabase);
         ActionExecutionService.SetOwnedNavigationPause(CoppeliaTravelService.PauseForAction);
         CoppeliaCompanionService = new CoppeliaCompanionService(CoppeliaTravelService);
         CoppeliaQstIpcService = new CoppeliaQstIpcService(this, CoppeliaTravelService, CoppeliaCompanionService);
@@ -80,12 +83,15 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.OpenConfigUi += OpenConfigUi;
         PluginInterface.UiBuilder.OpenMainUi += OpenMainUi;
         Framework.Update += OnFrameworkUpdate;
+        ClientState.Login += OnLogin;
 
         DependencyService.Refresh(force: true);
         SetupDtrBar();
         UpdateDtrBar();
         if (Configuration.ShouldAutoOpenSetup())
             OpenQuickSetupUi();
+        if (ClientState.IsLoggedIn)
+            QueueCommunityLocationRefresh("plugin load while already logged in");
 
         Log.Information("[Coppelia] Plugin loaded.");
     }
@@ -99,6 +105,8 @@ public sealed class Plugin : IDalamudPlugin
     internal CoppeliaCompanionService CoppeliaCompanionService { get; }
     internal RsrIpcService RsrIpcService { get; }
     internal ActionExecutionService ActionExecutionService { get; }
+    internal AetherytePositionDatabase AetherytePositionDatabase { get; }
+    internal MapLocationDatabase MapLocationDatabase { get; }
     internal FrenRiderPowerlevelIpcService FrenRiderPowerlevelIpcService { get; }
     internal HealbotRuntimeService HealbotRuntimeService { get; }
     internal PowerlevelRuntimeService PowerlevelRuntimeService { get; }
@@ -107,6 +115,7 @@ public sealed class Plugin : IDalamudPlugin
 
     public void Dispose()
     {
+        ClientState.Login -= OnLogin;
         CoppeliaQstIpcService.Dispose();
         JotRuntimeService.Dispose();
         PowerlevelRuntimeService.Dispose();
@@ -466,6 +475,44 @@ public sealed class Plugin : IDalamudPlugin
         JotRuntimeService.Update(healingDecision);
         PowerlevelRuntimeService.Update();
         UpdateDtrBar();
+    }
+
+    private void OnLogin()
+        => QueueCommunityLocationRefresh("login");
+
+    private void QueueCommunityLocationRefresh(string reason)
+    {
+        if (!Configuration.AutoUpdateMapLocationsOnLogin)
+            return;
+
+        var currentVersion = typeof(Plugin).Assembly.GetName().Version?.ToString() ?? "0.0.0.0";
+        if (string.Equals(
+                Configuration.LastCommunityLocationsRefreshPluginVersion,
+                currentVersion,
+                StringComparison.Ordinal))
+        {
+            Log.Debug($"[Coppelia][MapLocDB] Community data already refreshed for plugin v{currentVersion}.");
+            return;
+        }
+
+        _ = ObserveCommunityLocationsRefreshAsync(currentVersion, reason);
+    }
+
+    private async Task ObserveCommunityLocationsRefreshAsync(string currentVersion, string reason)
+    {
+        try
+        {
+            if (!await MapLocationDatabase.DownloadCommunityDataAsync())
+                return;
+
+            Configuration.LastCommunityLocationsRefreshPluginVersion = currentVersion;
+            Configuration.Save();
+            Log.Information($"[Coppelia][MapLocDB] Refreshed community data for plugin v{currentVersion} ({reason}).");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, $"[Coppelia][MapLocDB] Community refresh failed during {reason}.");
+        }
     }
 
     private void OnCommand(string command, string arguments)

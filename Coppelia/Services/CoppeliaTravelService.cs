@@ -22,24 +22,38 @@ internal sealed class CoppeliaTravelService
     private readonly ICallGateSubscriber<bool> pathRunning;
     private readonly ICallGateSubscriber<bool> pathfindInProgress;
     private readonly ICallGateSubscriber<Vector3, bool, float, bool> moveCloseTo;
+    private readonly ICallGateSubscriber<List<Vector3>, bool, object> moveDirect;
     private readonly ICallGateSubscriber<object> pathStop;
     private readonly ICallGateSubscriber<object> cancelAll;
+    private readonly Configuration configuration;
+    private readonly AetherytePositionDatabase aetherytePositionDatabase;
+    private readonly MapLocationDatabase mapLocationDatabase;
     private readonly CoppeliaFollowPolicy followPolicy = new();
     private readonly CoppeliaRoutePolicy routePolicy = new();
     private readonly CoppeliaFlightPolicy flightPolicy = new();
     private readonly CoppeliaLifestreamRequestPolicy lifestreamPolicy = new();
+    private readonly CoppeliaTerritoryHandoffPolicy territoryHandoffPolicy = new();
+    private readonly CoppeliaTravelSequencePolicy travelSequencePolicy = new();
 
     private CoppeliaQstCommand? latestTravel;
     private CoppeliaQstCommand? pendingExactTravel;
     private LifestreamRequest? lifestreamRequest;
-    private long lastTravelSequence;
-    private long blockedTravelSequence;
-    private string blockedTravelState = string.Empty;
     private DateTime actionHoldUntilUtc = DateTime.MinValue;
     private DateTime nextMountActionUtc = DateTime.MinValue;
+    private bool forwardProbeOwnsPath;
+    private long pendingPriorityDestinationSequence;
+    private long lastExistingLifestreamBusySequence;
+    private bool lifestreamObservedLoading;
+    private PendingAetheryteArrival? pendingAetheryteArrival;
 
-    public CoppeliaTravelService()
+    public CoppeliaTravelService(
+        Configuration configuration,
+        AetherytePositionDatabase aetherytePositionDatabase,
+        MapLocationDatabase mapLocationDatabase)
     {
+        this.configuration = configuration;
+        this.aetherytePositionDatabase = aetherytePositionDatabase;
+        this.mapLocationDatabase = mapLocationDatabase;
         lifestreamBusy = Plugin.PluginInterface.GetIpcSubscriber<bool>("Lifestream.IsBusy");
         changeWorld = Plugin.PluginInterface.GetIpcSubscriber<uint, bool>("Lifestream.ChangeWorldById");
         teleport = Plugin.PluginInterface.GetIpcSubscriber<uint, byte, bool>("Lifestream.Teleport");
@@ -47,6 +61,7 @@ internal sealed class CoppeliaTravelService
         pathRunning = Plugin.PluginInterface.GetIpcSubscriber<bool>("vnavmesh.Path.IsRunning");
         pathfindInProgress = Plugin.PluginInterface.GetIpcSubscriber<bool>("vnavmesh.SimpleMove.PathfindInProgress");
         moveCloseTo = Plugin.PluginInterface.GetIpcSubscriber<Vector3, bool, float, bool>("vnavmesh.SimpleMove.PathfindAndMoveCloseTo");
+        moveDirect = Plugin.PluginInterface.GetIpcSubscriber<List<Vector3>, bool, object>("vnavmesh.Path.MoveTo");
         pathStop = Plugin.PluginInterface.GetIpcSubscriber<object>("vnavmesh.Path.Stop");
         cancelAll = Plugin.PluginInterface.GetIpcSubscriber<object>("vnavmesh.Nav.PathfindCancelAll");
     }
@@ -57,7 +72,9 @@ internal sealed class CoppeliaTravelService
     {
         actionHoldUntilUtc = DateTime.UtcNow.AddSeconds(2);
         PauseOwnedRoute();
+        StopForwardProbePath();
         State = "Paused for a Coppelia action";
+        Plugin.Log.Information("[Coppelia][QST] Accepted action entered the two-second travel hold.");
     }
 
     public (bool Ready, string Blocker) EvaluateReadiness()
@@ -65,6 +82,7 @@ internal sealed class CoppeliaTravelService
         if (!lifestreamBusy.HasFunction || !changeWorld.HasFunction || !teleport.HasFunction)
             return (false, "Required Lifestream travel IPC is unavailable.");
         if (!navReady.HasFunction || !pathRunning.HasFunction || !pathfindInProgress.HasFunction || !moveCloseTo.HasFunction ||
+            !moveDirect.HasAction ||
             !pathStop.HasAction || !cancelAll.HasAction)
             return (false, "Required vnavmesh travel IPC is unavailable.");
 
@@ -91,19 +109,53 @@ internal sealed class CoppeliaTravelService
 
     public CoppeliaQstCommandResponse Apply(CoppeliaQstCommand command)
     {
-        if (command.TravelSequence <= lastTravelSequence)
-            return new CoppeliaQstCommandResponse(true, "Travel update was already applied.");
+        if (command.TravelSequence <= travelSequencePolicy.LastAcceptedSequence)
+            return new CoppeliaQstCommandResponse(true, "Travel snapshot was already accepted; arrival is not implied.");
         if (command.QuesterCurrentWorldId == 0 || command.TerritoryId == 0)
             return new CoppeliaQstCommandResponse(false, "Travel update is missing world or territory metadata.");
 
-        lastTravelSequence = command.TravelSequence;
+        var previousTravel = latestTravel;
+        var worldChanged = previousTravel != null &&
+                           command.QuesterCurrentWorldId != previousTravel.QuesterCurrentWorldId;
+        if (command.AetheryteId.HasValue || worldChanged)
+            ResetTerritoryHandoff();
+
+        travelSequencePolicy.TryAccept(command.TravelSequence);
+
         latestTravel = command;
-        blockedTravelSequence = 0;
-        blockedTravelState = string.Empty;
         routePolicy.AcceptSnapshot(command.TravelSequence, new Vector3(command.X, command.Y, command.Z));
         if (command.AetheryteId.HasValue)
             pendingExactTravel = command;
-        return new CoppeliaQstCommandResponse(true, "Travel update accepted.");
+
+        var localPlayer = Plugin.ObjectTable.LocalPlayer;
+        var helperLoaded = Plugin.ClientState.IsLoggedIn &&
+                           localPlayer != null &&
+                           !IsBetweenAreas() &&
+                           !Plugin.Condition[ConditionFlag.BoundByDuty];
+        territoryHandoffPolicy.TryArm(
+            previousTravel != null,
+            command.AetheryteId.HasValue || pendingExactTravel != null || lifestreamRequest != null,
+            worldChanged || localPlayer?.CurrentWorld.RowId != command.QuesterCurrentWorldId,
+            helperLoaded,
+            Plugin.ClientState.TerritoryType,
+            previousTravel?.TerritoryId ?? 0,
+            command.TerritoryId);
+
+        var prioritySnapshot = previousTravel == null ||
+                               command.AetheryteId.HasValue ||
+                               worldChanged ||
+                               command.TerritoryId != previousTravel.TerritoryId;
+        if (prioritySnapshot)
+        {
+            pendingPriorityDestinationSequence = command.TravelSequence;
+            Plugin.Log.Information(
+                $"[Coppelia][QST] Destination snapshot {command.TravelSequence} is pending " +
+                $"(world {command.QuesterCurrentWorldId}, territory {command.TerritoryId}" +
+                (command.AetheryteId.HasValue ? $", exact aetheryte {command.AetheryteId.Value}" : string.Empty) +
+                ").");
+        }
+
+        return new CoppeliaQstCommandResponse(true, "Travel snapshot accepted; destination remains pending.");
     }
 
     public void Update()
@@ -113,13 +165,25 @@ internal sealed class CoppeliaTravelService
 
         if (Plugin.Condition[ConditionFlag.BoundByDuty])
         {
+            ResetTerritoryHandoff();
             Stop("Suspended inside duty");
             return;
         }
 
+        var travel = latestTravel;
+        if (lifestreamRequest != null && IsBetweenAreas())
+            lifestreamObservedLoading = true;
+
         var localPlayer = Plugin.ObjectTable.LocalPlayer;
         if (localPlayer == null)
         {
+            if (territoryHandoffPolicy.IsActive &&
+                (IsBetweenAreas() || Plugin.ClientState.TerritoryType != territoryHandoffPolicy.SourceTerritoryId))
+            {
+                HandleTerritoryHandoff(null, travel);
+                return;
+            }
+
             State = "Waiting for the helper character";
             return;
         }
@@ -128,29 +192,26 @@ internal sealed class CoppeliaTravelService
         {
             actionHoldUntilUtc = DateTime.UtcNow.AddMilliseconds(250);
             PauseOwnedRoute();
+            StopForwardProbePath();
             State = $"Paused for cast {battleChara.CastActionId}";
             return;
         }
-        if (DateTime.UtcNow < actionHoldUntilUtc)
-        {
-            PauseOwnedRoute();
-            State = "Paused for a Coppelia action";
-            return;
-        }
 
-        var travel = latestTravel;
+        TryRecordPendingAetheryteArrival(localPlayer);
+
         var currentWorld = (ushort)localPlayer.CurrentWorld.RowId;
         if (ObserveLifestreamRequest(localPlayer, travel))
             return;
 
-        if (blockedTravelSequence == travel.TravelSequence)
+        if (travelSequencePolicy.IsBlocked(travel.TravelSequence))
         {
-            State = blockedTravelState;
+            State = travelSequencePolicy.BlockedState;
             return;
         }
 
         if (currentWorld != travel.QuesterCurrentWorldId)
         {
+            ResetTerritoryHandoff();
             BeginLifestreamRequest(
                 travel.TravelSequence,
                 new LifestreamRequest(
@@ -165,6 +226,7 @@ internal sealed class CoppeliaTravelService
 
         if (pendingExactTravel != null)
         {
+            ResetTerritoryHandoff();
             PauseOwnedRoute();
             if (!TryResolvePendingExactTeleport(
                     pendingExactTravel,
@@ -173,43 +235,104 @@ internal sealed class CoppeliaTravelService
                     out var exactAetheryteId,
                     out var exactSubIndex,
                     out var exactName,
+                    out var exactUsedFallback,
+                    out var staleExactIntent,
+                    out var exactTeleportListUnavailable,
                     out var exactBlocker))
             {
-                BlockTravel(travel.TravelSequence, exactBlocker);
+                if (staleExactIntent)
+                {
+                    Plugin.Log.Information(
+                        $"[Coppelia][QST] Discarded exact teleport snapshot {pendingExactTravel.TravelSequence}; " +
+                        $"newer snapshot {travel.TravelSequence} targets territory {travel.TerritoryId}.");
+                    pendingExactTravel = null;
+                }
+                else if (exactTeleportListUnavailable)
+                {
+                    State = exactBlocker;
+                    return;
+                }
+                else
+                {
+                    BlockTravel(travel.TravelSequence, exactBlocker);
+                    return;
+                }
+            }
+            else
+            {
+                var startResult = BeginLifestreamRequest(
+                    travel.TravelSequence,
+                    new LifestreamRequest(
+                        IsWorld: false,
+                        WorldId: 0,
+                        TerritoryId: exactTerritory,
+                        ActiveState: $"Teleporting to {exactName}",
+                        FailureState: $"Teleport to {exactName} did not reach territory {exactTerritory}",
+                        RequireBusyCompletion: Plugin.ClientState.TerritoryType == exactTerritory,
+                        AetheryteId: exactAetheryteId,
+                        AetheryteName: exactName),
+                    () => teleport.InvokeFunc(exactAetheryteId, exactSubIndex));
+                if (startResult == LifestreamStartResult.Attempted)
+                {
+                    pendingExactTravel = null;
+                    Plugin.Log.Information(
+                        exactUsedFallback
+                            ? $"[Coppelia][QST] Selected fallback aetheryte {exactName} ({exactAetheryteId}) in territory {exactTerritory} for the accepted exact teleport."
+                            : $"[Coppelia][QST] Selected exact aetheryte {exactName} ({exactAetheryteId}) in territory {exactTerritory}.");
+                }
                 return;
             }
-
-            pendingExactTravel = null;
-            BeginLifestreamRequest(
-                travel.TravelSequence,
-                new LifestreamRequest(
-                    IsWorld: false,
-                    WorldId: 0,
-                    TerritoryId: exactTerritory,
-                    ActiveState: $"Teleporting to {exactName}",
-                    FailureState: $"Teleport to {exactName} did not reach territory {exactTerritory}"),
-                () => teleport.InvokeFunc(exactAetheryteId, exactSubIndex));
-            return;
         }
+
+        if (territoryHandoffPolicy.IsActive && HandleTerritoryHandoff(localPlayer, travel))
+            return;
 
         if (Plugin.ClientState.TerritoryType != travel.TerritoryId)
         {
             PauseOwnedRoute();
-            if (!TryResolveTeleport(travel, out var aetheryteId, out var subIndex, out var name, out var blocker))
+            if (!TryResolveTeleport(
+                    travel,
+                    out var aetheryteId,
+                    out var subIndex,
+                    out var name,
+                    out var teleportListUnavailable,
+                    out var blocker))
             {
+                if (teleportListUnavailable)
+                {
+                    State = blocker;
+                    return;
+                }
+
                 BlockTravel(travel.TravelSequence, blocker);
                 return;
             }
 
-            BeginLifestreamRequest(
+            var startResult = BeginLifestreamRequest(
                 travel.TravelSequence,
                 new LifestreamRequest(
                     IsWorld: false,
                     WorldId: 0,
                     TerritoryId: travel.TerritoryId,
                     ActiveState: $"Teleporting to {name}",
-                    FailureState: $"Teleport to {name} did not reach territory {travel.TerritoryId}"),
+                    FailureState: $"Teleport to {name} did not reach territory {travel.TerritoryId}",
+                    AetheryteId: aetheryteId,
+                    AetheryteName: name),
                 () => teleport.InvokeFunc(aetheryteId, subIndex));
+            if (startResult == LifestreamStartResult.Attempted)
+            {
+                Plugin.Log.Information(
+                    $"[Coppelia][QST] Selected fallback aetheryte {name} ({aetheryteId}) in latest destination territory {travel.TerritoryId}.");
+            }
+            return;
+        }
+
+        MarkPriorityDestinationReached(travel, "the helper is loaded in the requested world and territory");
+
+        if (DateTime.UtcNow < actionHoldUntilUtc)
+        {
+            PauseOwnedRoute();
+            State = "Paused for a Coppelia action";
             return;
         }
 
@@ -249,9 +372,9 @@ internal sealed class CoppeliaTravelService
             else
             {
                 nextMountActionUtc = DateTime.UtcNow.AddSeconds(2);
-                PauseOwnedRoute();
                 if (TryUseGeneralAction(MountRouletteGeneralActionId, out mountFailure))
                 {
+                    PauseForAction();
                     State = travel.QuesterMounted
                         ? "Mirroring the Quester with Mount Roulette"
                         : $"Mounting for catch-up beyond {CoppeliaFollowPolicy.MountCatchUpDistance:F0} yalms";
@@ -283,7 +406,6 @@ internal sealed class CoppeliaTravelService
 
         if (decision.Phase == CoppeliaFollowPhase.Land)
         {
-            PauseOwnedRoute();
             if (DateTime.UtcNow < nextMountActionUtc)
             {
                 State = travel.QuesterMounted
@@ -295,6 +417,7 @@ internal sealed class CoppeliaTravelService
             nextMountActionUtc = DateTime.UtcNow.AddSeconds(2);
             if (TryUseGeneralAction(DismountGeneralActionId, out var landingFailure))
             {
+                PauseForAction();
                 State = travel.QuesterMounted
                     ? "Landing while remaining mounted"
                     : $"Landing within {CoppeliaFollowPolicy.OnFootResumeDistance:F0} yalms before dismounting";
@@ -307,7 +430,6 @@ internal sealed class CoppeliaTravelService
 
         if (decision.Phase == CoppeliaFollowPhase.Dismount)
         {
-            PauseOwnedRoute();
             if (DateTime.UtcNow < nextMountActionUtc)
             {
                 State = $"Waiting to dismount within {CoppeliaFollowPolicy.OnFootResumeDistance:F0} yalms";
@@ -317,6 +439,7 @@ internal sealed class CoppeliaTravelService
             nextMountActionUtc = DateTime.UtcNow.AddSeconds(2);
             if (TryUseGeneralAction(DismountGeneralActionId, out var dismountFailure))
             {
+                PauseForAction();
                 State = $"Dismounting within {CoppeliaFollowPolicy.OnFootResumeDistance:F0} yalms";
                 return;
             }
@@ -415,16 +538,19 @@ internal sealed class CoppeliaTravelService
 
     public void Release()
     {
+        ResetTerritoryHandoff();
         ReleaseOwnedRoute();
         latestTravel = null;
         pendingExactTravel = null;
         lifestreamRequest = null;
         lifestreamPolicy.Reset();
-        lastTravelSequence = 0;
-        blockedTravelSequence = 0;
-        blockedTravelState = string.Empty;
+        travelSequencePolicy.Reset();
         actionHoldUntilUtc = DateTime.MinValue;
         nextMountActionUtc = DateTime.MinValue;
+        pendingPriorityDestinationSequence = 0;
+        lastExistingLifestreamBusySequence = 0;
+        lifestreamObservedLoading = false;
+        pendingAetheryteArrival = null;
         followPolicy.Reset();
         flightPolicy.Reset();
         State = "Idle";
@@ -432,6 +558,134 @@ internal sealed class CoppeliaTravelService
 
     private static string BuildFollowState(string state, string blocker) =>
         string.IsNullOrWhiteSpace(blocker) ? state : $"{state}; safe ground fallback ({blocker})";
+
+    private bool HandleTerritoryHandoff(IPlayerCharacter? localPlayer, CoppeliaQstCommand travel)
+    {
+        var betweenAreas = IsBetweenAreas();
+        var helperLoaded = Plugin.ClientState.IsLoggedIn && localPlayer != null && !betweenAreas;
+        var previousPhase = territoryHandoffPolicy.Phase;
+        var decision = territoryHandoffPolicy.Evaluate(
+            Plugin.ClientState.TerritoryType,
+            travel.TerritoryId,
+            betweenAreas,
+            helperLoaded,
+            DateTime.UtcNow);
+
+        switch (decision)
+        {
+            case CoppeliaTerritoryHandoffDecision.StartForwardProbe:
+                if (localPlayer == null ||
+                    !TryGetRouteActivity(out var isPathfinding, out var isPathRunning))
+                {
+                    territoryHandoffPolicy.FailProbe();
+                    Plugin.Log.Warning(
+                        "[Coppelia][QST] Forward probe could not inspect vnavmesh ownership; using teleport fallback.");
+                    return false;
+                }
+
+                if ((isPathfinding || isPathRunning) && !routePolicy.OwnsRoute)
+                {
+                    territoryHandoffPolicy.FailProbe();
+                    Plugin.Log.Warning(
+                        "[Coppelia][QST] Forward probe found non-Coppelia vnavmesh activity and left it untouched; using teleport fallback.");
+                    return false;
+                }
+
+                ReleaseOwnedRoute();
+                routePolicy.AcceptSnapshot(
+                    travel.TravelSequence,
+                    new Vector3(travel.X, travel.Y, travel.Z));
+
+                var direction = new Vector3(MathF.Sin(localPlayer.Rotation), 0f, MathF.Cos(localPlayer.Rotation));
+                var forwardDestination = localPlayer.Position + direction * 200f;
+                try
+                {
+                    moveDirect.InvokeAction(new List<Vector3> { forwardDestination }, false);
+                    forwardProbeOwnsPath = true;
+                    State = "Probing forward for the observed territory crossing";
+                    Plugin.Log.Information(
+                        $"[Coppelia][QST] Started one five-second forward probe from territory " +
+                        $"{territoryHandoffPolicy.SourceTerritoryId} toward latest destination territory {travel.TerritoryId}.");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    territoryHandoffPolicy.FailProbe();
+                    Plugin.Log.Warning(
+                        ex,
+                        "[Coppelia][QST] vnavmesh rejected the forward probe; using teleport fallback.");
+                    return false;
+                }
+
+            case CoppeliaTerritoryHandoffDecision.ContinueForwardProbe:
+                State = "Probing forward for the observed territory crossing";
+                return true;
+
+            case CoppeliaTerritoryHandoffDecision.WaitForLoad:
+                StopForwardProbePath();
+                State = "Territory transition observed; waiting for the helper to load safely";
+                if (previousPhase != CoppeliaTerritoryHandoffPhase.WaitingForLoad)
+                {
+                    Plugin.Log.Information(
+                        $"[Coppelia][QST] Forward probe observed a territory transition from " +
+                        $"{territoryHandoffPolicy.SourceTerritoryId}; waiting for a safe loaded result.");
+                }
+                return true;
+
+            case CoppeliaTerritoryHandoffDecision.DestinationReached:
+                StopForwardProbePath();
+                MarkPriorityDestinationReached(travel, "the forward probe reached the latest territory");
+                Plugin.Log.Information(
+                    $"[Coppelia][QST] Forward probe reached latest destination territory {travel.TerritoryId}; teleport fallback was skipped.");
+                return false;
+
+            case CoppeliaTerritoryHandoffDecision.UseTeleportFallback:
+                StopForwardProbePath();
+                if (previousPhase != CoppeliaTerritoryHandoffPhase.Fallback)
+                {
+                    var result = previousPhase == CoppeliaTerritoryHandoffPhase.Probing
+                        ? "ended after five seconds without a territory transition"
+                        : $"settled in territory {Plugin.ClientState.TerritoryType} instead of latest territory {travel.TerritoryId}";
+                    Plugin.Log.Information($"[Coppelia][QST] Forward probe {result}; selecting teleport fallback.");
+                }
+                return false;
+
+            default:
+                return false;
+        }
+    }
+
+    private void MarkPriorityDestinationReached(CoppeliaQstCommand travel, string evidence)
+    {
+        if (pendingPriorityDestinationSequence == 0 ||
+            travel.TravelSequence < pendingPriorityDestinationSequence)
+        {
+            return;
+        }
+
+        Plugin.Log.Information(
+            $"[Coppelia][QST] Reached pending destination snapshot {pendingPriorityDestinationSequence}: {evidence}.");
+        pendingPriorityDestinationSequence = 0;
+    }
+
+    private void ResetTerritoryHandoff()
+    {
+        StopForwardProbePath();
+        territoryHandoffPolicy.Reset();
+    }
+
+    private void StopForwardProbePath()
+    {
+        if (!forwardProbeOwnsPath)
+            return;
+
+        forwardProbeOwnsPath = false;
+        InvokePathStop();
+    }
+
+    private static bool IsBetweenAreas() =>
+        Plugin.Condition[ConditionFlag.BetweenAreas] ||
+        Plugin.Condition[ConditionFlag.BetweenAreas51];
 
     private static bool IsMountingAllowed(out string blocker)
     {
@@ -537,18 +791,50 @@ internal sealed class CoppeliaTravelService
         if (lifestreamRequest == null)
             return false;
 
-        var targetReached = lifestreamRequest.IsWorld
-            ? localPlayer.CurrentWorld.RowId == lifestreamRequest.WorldId
-            : Plugin.ClientState.TerritoryType == lifestreamRequest.TerritoryId;
+        var targetMatches = !IsBetweenAreas() &&
+                            (lifestreamRequest.IsWorld
+                                ? localPlayer.CurrentWorld.RowId == lifestreamRequest.WorldId
+                                : Plugin.ClientState.TerritoryType == lifestreamRequest.TerritoryId);
+        var previousActivity = lifestreamPolicy.Activity;
+        var busyAvailable = TryGetLifestreamBusy(out var busy);
+        var targetReached = targetMatches &&
+                            (!lifestreamRequest.RequireBusyCompletion ||
+                             previousActivity == CoppeliaLifestreamActivity.Busy && busyAvailable && !busy);
         if (targetReached)
         {
             lifestreamPolicy.Observe(busy: false, targetReached: true, utcNow: DateTime.UtcNow);
+            if (!lifestreamRequest.IsWorld &&
+                lifestreamRequest.AetheryteId > 0 &&
+                lifestreamObservedLoading)
+            {
+                pendingAetheryteArrival = new PendingAetheryteArrival(
+                    lifestreamRequest.TerritoryId,
+                    lifestreamRequest.AetheryteId,
+                    lifestreamRequest.AetheryteName,
+                    DateTime.UtcNow);
+            }
+            Plugin.Log.Information(
+                $"[Coppelia][QST] Lifestream reached the accepted destination for travel snapshot {lifestreamPolicy.Sequence}.");
             lifestreamPolicy.Reset();
             lifestreamRequest = null;
+            lifestreamObservedLoading = false;
+            if (localPlayer.CurrentWorld.RowId == travel.QuesterCurrentWorldId &&
+                Plugin.ClientState.TerritoryType == travel.TerritoryId &&
+                pendingExactTravel == null)
+            {
+                MarkPriorityDestinationReached(travel, "Lifestream reached the requested destination");
+            }
             return false;
         }
 
-        if (!TryGetLifestreamBusy(out var busy))
+        if (busyAvailable && IsBetweenAreas() &&
+            previousActivity == CoppeliaLifestreamActivity.Busy && !busy)
+        {
+            State = lifestreamRequest.ActiveState;
+            return true;
+        }
+
+        if (!busyAvailable)
         {
             lifestreamPolicy.Fail();
             lifestreamRequest = lifestreamRequest with
@@ -559,6 +845,21 @@ internal sealed class CoppeliaTravelService
         else
         {
             lifestreamPolicy.Observe(busy, targetReached: false, utcNow: DateTime.UtcNow);
+        }
+
+        if (previousActivity != lifestreamPolicy.Activity)
+        {
+            if (lifestreamPolicy.Activity == CoppeliaLifestreamActivity.Busy)
+            {
+                Plugin.Log.Information(
+                    $"[Coppelia][QST] Lifestream became busy for travel snapshot {lifestreamPolicy.Sequence}.");
+            }
+            else if (lifestreamPolicy.Activity == CoppeliaLifestreamActivity.Failed)
+            {
+                Plugin.Log.Warning(
+                    $"[Coppelia][QST] Lifestream did not reach the accepted destination for travel snapshot {lifestreamPolicy.Sequence}: " +
+                    $"{lifestreamRequest.FailureState}.");
+            }
         }
 
         if (lifestreamPolicy.Activity is CoppeliaLifestreamActivity.WaitingForBusy or
@@ -586,18 +887,97 @@ internal sealed class CoppeliaTravelService
         return false;
     }
 
-    private void BeginLifestreamRequest(long sequence, LifestreamRequest request, Func<bool> start)
+    private void TryRecordPendingAetheryteArrival(IPlayerCharacter localPlayer)
+    {
+        if (pendingAetheryteArrival == null ||
+            DateTime.UtcNow - pendingAetheryteArrival.LoadedAtUtc < TimeSpan.FromSeconds(1))
+        {
+            return;
+        }
+
+        var arrival = pendingAetheryteArrival;
+        pendingAetheryteArrival = null;
+        if (Plugin.ClientState.TerritoryType != arrival.TerritoryId ||
+            localPlayer.Position == Vector3.Zero)
+        {
+            return;
+        }
+
+        var estimatedPosition = GetEstimatedAetherytePosition(arrival.AetheryteId);
+        if (estimatedPosition == Vector3.Zero)
+        {
+            Plugin.Log.Debug(
+                $"[Coppelia][Aetheryte] No MapMarker estimate was available for {arrival.AetheryteName} ({arrival.AetheryteId}); arrival was not recorded.");
+            return;
+        }
+
+        var dx = localPlayer.Position.X - estimatedPosition.X;
+        var dz = localPlayer.Position.Z - estimatedPosition.Z;
+        var xzDistance = Math.Sqrt(dx * dx + dz * dz);
+        Plugin.Log.Debug(
+            $"[Coppelia][Aetheryte] Arrival validation for {arrival.AetheryteName} ({arrival.AetheryteId}) was {xzDistance:F1}y XZ from its MapMarker estimate.");
+        if (!CoppeliaAetherytePolicy.IsArrivalWithinRecordingRange(
+                localPlayer.Position,
+                estimatedPosition))
+            return;
+
+        aetherytePositionDatabase.RecordPosition(
+            arrival.AetheryteId,
+            arrival.AetheryteName,
+            localPlayer.Position.X,
+            localPlayer.Position.Y,
+            localPlayer.Position.Z);
+    }
+
+    private static Vector3 GetEstimatedAetherytePosition(uint aetheryteId)
+    {
+        try
+        {
+            if (!Plugin.DataManager.GetExcelSheet<Aetheryte>().TryGetRow(aetheryteId, out var aetheryte))
+                return Vector3.Zero;
+
+            var mapTransform = TryGetMapMarkerData(aetheryte.Territory.RowId, out var mapMarkers);
+            if (mapTransform == null)
+                return Vector3.Zero;
+
+            foreach (var marker in mapMarkers)
+            {
+                if (marker.DataType is not (3 or 4) ||
+                    marker.DataKeyId != aetheryteId && marker.DataKeyId != aetheryte.PlaceName.RowId)
+                {
+                    continue;
+                }
+
+                return CoppeliaAetherytePolicy.ConvertMapMarker(marker, mapTransform);
+            }
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Debug(ex, $"[Coppelia][Aetheryte] Arrival estimate failed for aetheryte {aetheryteId}.");
+        }
+
+        return Vector3.Zero;
+    }
+
+    private LifestreamStartResult BeginLifestreamRequest(long sequence, LifestreamRequest request, Func<bool> start)
     {
         PauseOwnedRoute();
         if (!TryGetLifestreamBusy(out var busy))
         {
+            ResetTerritoryHandoff();
             BlockTravel(sequence, "Lifestream travel status IPC failed; waiting for a newer travel snapshot");
-            return;
+            return LifestreamStartResult.Blocked;
         }
         if (busy)
         {
             State = "Waiting for existing Lifestream travel to finish";
-            return;
+            if (lastExistingLifestreamBusySequence != sequence)
+            {
+                lastExistingLifestreamBusySequence = sequence;
+                Plugin.Log.Information(
+                    $"[Coppelia][QST] Lifestream is already busy; destination snapshot {sequence} remains pending.");
+            }
+            return LifestreamStartResult.WaitingForExisting;
         }
 
         bool accepted;
@@ -615,10 +995,23 @@ internal sealed class CoppeliaTravelService
             request = request with { FailureState = $"Lifestream rejected the request: {request.FailureState}" };
 
         lifestreamRequest = request;
+        lifestreamObservedLoading = false;
+        if (accepted)
+            pendingAetheryteArrival = null;
         lifestreamPolicy.Begin(sequence, accepted, DateTime.UtcNow);
+        ResetTerritoryHandoff();
         State = accepted
             ? request.ActiveState
             : $"{request.FailureState}; waiting for a newer travel snapshot";
+        if (accepted)
+        {
+            Plugin.Log.Information($"[Coppelia][QST] Lifestream accepted travel snapshot {sequence}: {request.ActiveState}.");
+        }
+        else
+        {
+            Plugin.Log.Warning($"[Coppelia][QST] Lifestream rejected travel snapshot {sequence}: {request.FailureState}.");
+        }
+        return LifestreamStartResult.Attempted;
     }
 
     private bool TryGetLifestreamBusy(out bool busy)
@@ -637,13 +1030,37 @@ internal sealed class CoppeliaTravelService
 
     private void BlockTravel(long sequence, string state)
     {
-        blockedTravelSequence = sequence;
-        blockedTravelState = state;
+        travelSequencePolicy.Block(sequence, state);
         State = state;
+        Plugin.Log.Warning($"[Coppelia][QST] Travel snapshot {sequence} is visibly blocked: {state}");
     }
 
-    private static unsafe bool TryResolveTeleport(
+    private unsafe bool TryResolveTeleport(
         CoppeliaQstCommand travel,
+        out uint aetheryteId,
+        out byte subIndex,
+        out string name,
+        out bool teleportListUnavailable,
+        out string blocker)
+    {
+        aetheryteId = 0;
+        subIndex = 0;
+        name = string.Empty;
+        teleportListUnavailable = false;
+        blocker = string.Empty;
+
+        if (!TryGetTeleportListSnapshot(out var teleportList, out blocker))
+        {
+            teleportListUnavailable = true;
+            return false;
+        }
+
+        return TryResolveTeleport(travel, teleportList, out aetheryteId, out subIndex, out name, out blocker);
+    }
+
+    private bool TryResolveTeleport(
+        CoppeliaQstCommand travel,
+        IReadOnlyList<CoppeliaTeleportListEntry> teleportList,
         out uint aetheryteId,
         out byte subIndex,
         out string name,
@@ -656,75 +1073,206 @@ internal sealed class CoppeliaTravelService
 
         if (travel.AetheryteId is { } exactId)
         {
-            if (UIState.Instance() == null || !UIState.Instance()->IsAetheryteUnlocked(exactId))
+            var requestedSubIndex = travel.AetheryteSubIndex ?? 0;
+            if (!CoppeliaTeleportIntentPolicy.TryFindExact(
+                    teleportList,
+                    exactId,
+                    requestedSubIndex,
+                    out var exactEntry))
             {
-                blocker = "The exact Quester teleport destination is not unlocked on this helper.";
+                blocker = "The exact Quester teleport destination is not available in this helper's teleport list.";
                 return false;
             }
 
-            aetheryteId = exactId;
-            subIndex = travel.AetheryteSubIndex ?? 0;
+            aetheryteId = exactEntry.AetheryteId;
+            subIndex = exactEntry.SubIndex;
             name = string.IsNullOrWhiteSpace(travel.AetheryteName) ? $"aetheryte {exactId}" : travel.AetheryteName;
             return true;
         }
 
-        if (UIState.Instance() == null)
+        try
         {
-            blocker = "Aetheryte unlock state is unavailable.";
-            return false;
-        }
-
-        var target = new Vector3(travel.X, travel.Y, travel.Z);
-        var candidates = Plugin.DataManager.GetExcelSheet<Aetheryte>()
-            .Where(aetheryte => aetheryte.IsAetheryte &&
-                                aetheryte.Territory.RowId == travel.TerritoryId)
-            .Select(aetheryte =>
+            var target = new Vector3(travel.X, travel.Y, travel.Z);
+            var aetheryteSheet = Plugin.DataManager.GetExcelSheet<Aetheryte>();
+            var levelSheet = Plugin.DataManager.GetExcelSheet<Level>();
+            var candidates = new List<CoppeliaAetheryteCandidate>();
+            foreach (var destination in teleportList)
             {
-                var level = aetheryte.Level[0].ValueNullable;
-                var position = level == null
-                    ? Vector3.Zero
-                    : new Vector3(level.Value.X, level.Value.Y, level.Value.Z);
-                return new
+                if (configuration.AvoidTamamizuAetheryte &&
+                    destination.AetheryteId == CoppeliaAetherytePolicy.TamamizuAetheryteId)
                 {
-                    Aetheryte = aetheryte,
-                    Position = position,
-                    HasPosition = level != null,
-                    Unlocked = UIState.Instance()->IsAetheryteUnlocked(aetheryte.RowId),
-                };
-            })
-            .Where(candidate => candidate.HasPosition)
-            .ToArray();
-        var nearestCandidate = CoppeliaAetherytePolicy.SelectNearest(
-            target,
-            candidates.Select(candidate => new CoppeliaAetheryteCandidate(
-                candidate.Aetheryte.RowId,
-                candidate.Position,
-                candidate.Unlocked)));
-        if (nearestCandidate == null)
+                    continue;
+                }
+
+                if (!aetheryteSheet.TryGetRow(destination.AetheryteId, out var aetheryte) ||
+                    aetheryte.Territory.RowId != travel.TerritoryId)
+                {
+                    continue;
+                }
+
+                var storedPosition = aetherytePositionDatabase.GetPosition(destination.AetheryteId);
+                var worldPosition = storedPosition == null
+                    ? Vector3.Zero
+                    : new Vector3(storedPosition.X, storedPosition.Y, storedPosition.Z);
+
+                if (worldPosition == Vector3.Zero)
+                {
+                    try
+                    {
+                        var levelReferences = new List<CoppeliaAetheryteLevelReference>();
+                        foreach (var levelReference in aetheryte.Level)
+                        {
+                            var embedded = levelReference.ValueNullable;
+                            levelReferences.Add(new CoppeliaAetheryteLevelReference(
+                                levelReference.RowId,
+                                embedded == null
+                                    ? null
+                                    : new Vector3(embedded.Value.X, embedded.Value.Y, embedded.Value.Z)));
+                        }
+
+                        worldPosition = CoppeliaAetherytePolicy.ResolveLevelPosition(
+                            levelReferences,
+                            levelRowId =>
+                            {
+                                try
+                                {
+                                    var directLevel = levelSheet.GetRow(levelRowId);
+                                    return new Vector3(directLevel.X, directLevel.Y, directLevel.Z);
+                                }
+                                catch (Exception)
+                                {
+                                    return null;
+                                }
+                            });
+                    }
+                    catch (Exception ex)
+                    {
+                        Plugin.Log.Debug(
+                            ex,
+                            $"[Coppelia][Aetheryte] Level traversal failed for aetheryte {destination.AetheryteId}; continuing with MapMarker fallback.");
+                    }
+                }
+
+                candidates.Add(new CoppeliaAetheryteCandidate(
+                    destination.AetheryteId,
+                    destination.SubIndex,
+                    aetheryte.Territory.RowId,
+                    aetheryte.PlaceName.ValueNullable?.Name.ExtractText() ?? $"ID {destination.AetheryteId}",
+                    aetheryte.PlaceName.RowId,
+                    destination.GilCost,
+                    worldPosition,
+                    aetherytePositionDatabase.HasPosition(destination.AetheryteId)));
+            }
+
+            CoppeliaAetheryteMapTransform? mapTransform = null;
+            IReadOnlyList<CoppeliaAetheryteMapMarker> mapMarkers = Array.Empty<CoppeliaAetheryteMapMarker>();
+            if (candidates.Any(candidate => candidate.Position == Vector3.Zero))
+            {
+                mapTransform = TryGetMapMarkerData(
+                    travel.TerritoryId,
+                    out mapMarkers);
+            }
+            var mapLocationEntry = target == default
+                ? null
+                : mapLocationDatabase.FindEntry(travel.TerritoryId, target.X, target.Z);
+            var mapLocation = mapLocationEntry == null
+                ? null
+                : new CoppeliaMapLocationSelection(
+                    mapLocationEntry.AetheryteName,
+                    mapLocationEntry.HasRealXYZ,
+                    new Vector3(mapLocationEntry.RealX, mapLocationEntry.RealY, mapLocationEntry.RealZ));
+
+            var selection = CoppeliaAetherytePolicy.Resolve(
+                travel.TerritoryId,
+                target,
+                candidates,
+                configuration.AvoidTamamizuAetheryte,
+                mapTransform,
+                mapMarkers,
+                mapLocation);
+            if (selection == null)
+            {
+                blocker = "No aetheryte in the Quester's territory is available in this helper's teleport list.";
+                return false;
+            }
+
+            aetheryteId = selection.Candidate.Id;
+            subIndex = selection.Candidate.SubIndex;
+            name = selection.Candidate.Name;
+            Plugin.Log.Debug(
+                $"[Coppelia][Aetheryte] Selected {name} ({aetheryteId}, sub-index {subIndex}) " +
+                (selection.Distance == double.MaxValue
+                    ? $"by map override or cheapest {selection.Candidate.GilCost} gil fallback."
+                    : $"at {selection.Distance:F0}y using {(selection.WinnerUsedXyz ? "XYZ" : "XZ")} distance."));
+            return true;
+        }
+        catch (Exception ex)
         {
-            blocker = "No unlocked aetheryte is available in the Quester's territory.";
+            blocker = $"Aetheryte resolution failed: {ex.Message}";
+            Plugin.Log.Warning(ex, "[Coppelia][Aetheryte] Resolver failed.");
             return false;
         }
-
-        var nearest = candidates.First(candidate => candidate.Aetheryte.RowId == nearestCandidate.Id).Aetheryte;
-        aetheryteId = nearest.RowId;
-        name = nearest.PlaceName.ValueNullable?.Name.ExtractText() ?? $"aetheryte {nearest.RowId}";
-        return true;
     }
 
-    private static unsafe bool TryResolvePendingExactTeleport(
+    private static CoppeliaAetheryteMapTransform? TryGetMapMarkerData(
+        uint territoryId,
+        out IReadOnlyList<CoppeliaAetheryteMapMarker> mapMarkers)
+    {
+        mapMarkers = Array.Empty<CoppeliaAetheryteMapMarker>();
+        try
+        {
+            if (!Plugin.DataManager.GetExcelSheet<TerritoryType>().TryGetRow(territoryId, out var territory) ||
+                territory.Map.RowId == 0)
+            {
+                return null;
+            }
+
+            var map = territory.Map.Value;
+            var transform = new CoppeliaAetheryteMapTransform(map.SizeFactor, map.OffsetX, map.OffsetY);
+            var markerSheet = Plugin.DataManager.GetSubrowExcelSheet<MapMarker>();
+            var markers = new List<CoppeliaAetheryteMapMarker>();
+            for (ushort subIndex = 0; subIndex < 500; subIndex++)
+            {
+                var marker = markerSheet.GetSubrowOrDefault(territory.Map.RowId, subIndex);
+                if (marker == null)
+                    break;
+
+                markers.Add(new CoppeliaAetheryteMapMarker(
+                    marker.Value.X,
+                    marker.Value.Y,
+                    marker.Value.DataType,
+                    marker.Value.DataKey.RowId));
+            }
+
+            mapMarkers = markers;
+            return transform;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Debug(ex, $"[Coppelia][Aetheryte] MapMarker lookup failed for territory {territoryId}.");
+            return null;
+        }
+    }
+
+    private unsafe bool TryResolvePendingExactTeleport(
         CoppeliaQstCommand exactTravel,
         CoppeliaQstCommand latestTravel,
         out uint territoryId,
         out uint aetheryteId,
         out byte subIndex,
         out string name,
+        out bool usedFallback,
+        out bool staleExactIntent,
+        out bool teleportListUnavailable,
         out string blocker)
     {
         territoryId = 0;
         aetheryteId = 0;
         subIndex = 0;
         name = string.Empty;
+        usedFallback = false;
+        staleExactIntent = false;
+        teleportListUnavailable = false;
         blocker = string.Empty;
 
         if (exactTravel.AetheryteId is not { } exactId ||
@@ -735,18 +1283,43 @@ internal sealed class CoppeliaTravelService
         }
 
         territoryId = exactAetheryte.Territory.RowId;
-        if (UIState.Instance() != null && UIState.Instance()->IsAetheryteUnlocked(exactId))
+        if (CoppeliaTeleportIntentPolicy.IsStale(
+                exactTravel.TravelSequence,
+                exactTravel.TerritoryId,
+                territoryId,
+                latestTravel.TravelSequence,
+                latestTravel.TerritoryId))
         {
-            aetheryteId = exactId;
-            subIndex = exactTravel.AetheryteSubIndex ?? 0;
+            staleExactIntent = true;
+            return false;
+        }
+
+        if (!TryGetTeleportListSnapshot(out var teleportList, out blocker))
+        {
+            teleportListUnavailable = true;
+            return false;
+        }
+
+        var requestedSubIndex = exactTravel.AetheryteSubIndex ?? 0;
+        if (CoppeliaTeleportIntentPolicy.TryFindExact(
+                teleportList,
+                exactId,
+                requestedSubIndex,
+                out var exactEntry))
+        {
+            aetheryteId = exactEntry.AetheryteId;
+            subIndex = exactEntry.SubIndex;
             name = string.IsNullOrWhiteSpace(exactTravel.AetheryteName)
                 ? exactAetheryte.PlaceName.ValueNullable?.Name.ExtractText() ?? $"aetheryte {exactId}"
                 : exactTravel.AetheryteName;
             return true;
         }
 
-        if (latestTravel.TravelSequence <= exactTravel.TravelSequence ||
-            latestTravel.TerritoryId != territoryId)
+        if (!CoppeliaTeleportIntentPolicy.CanUseFallback(
+                exactTravel.TravelSequence,
+                territoryId,
+                latestTravel.TravelSequence,
+                latestTravel.TerritoryId))
         {
             blocker = "Waiting for the Quester's destination-territory position for nearest-aetheryte fallback.";
             return false;
@@ -758,7 +1331,59 @@ internal sealed class CoppeliaTravelService
             AetheryteSubIndex = null,
             AetheryteName = null,
         };
-        return TryResolveTeleport(fallbackTravel, out aetheryteId, out subIndex, out name, out blocker);
+        usedFallback = true;
+        return TryResolveTeleport(fallbackTravel, teleportList, out aetheryteId, out subIndex, out name, out blocker);
+    }
+
+    private static unsafe bool TryGetTeleportListSnapshot(
+        out IReadOnlyList<CoppeliaTeleportListEntry> teleportList,
+        out string blocker)
+    {
+        teleportList = Array.Empty<CoppeliaTeleportListEntry>();
+        blocker = string.Empty;
+
+        try
+        {
+            var telepo = Telepo.Instance();
+            if (telepo == null)
+            {
+                blocker = "The helper's teleport list is unavailable or still loading.";
+                return false;
+            }
+
+            telepo->UpdateAetheryteList();
+            var rawEntryCount = telepo->TeleportList.Count;
+            var snapshot = new List<CoppeliaTeleportListEntry>();
+            for (var i = 0; i < rawEntryCount; i++)
+            {
+                var entry = telepo->TeleportList[i];
+                if (entry.AetheryteId != 0)
+                {
+                    snapshot.Add(new CoppeliaTeleportListEntry(
+                        entry.AetheryteId,
+                        entry.SubIndex,
+                        entry.GilCost));
+                }
+            }
+
+            if (!CoppeliaTeleportListPolicy.IsAvailable(
+                    hasTelepoInstance: true,
+                    rawEntryCount,
+                    snapshot.Count))
+            {
+                blocker = "The helper's teleport list is unavailable or still loading.";
+                return false;
+            }
+
+            teleportList = snapshot;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            blocker = "The helper's teleport list is unavailable or still loading.";
+            Plugin.Log.Debug(ex, "[Coppelia][Aetheryte] Teleport list refresh failed while loading.");
+            return false;
+        }
     }
 
     private void Stop(string state)
@@ -835,5 +1460,21 @@ internal sealed class CoppeliaTravelService
         ushort WorldId,
         uint TerritoryId,
         string ActiveState,
-        string FailureState);
+        string FailureState,
+        bool RequireBusyCompletion = false,
+        uint AetheryteId = 0,
+        string AetheryteName = "");
+
+    private sealed record PendingAetheryteArrival(
+        uint TerritoryId,
+        uint AetheryteId,
+        string AetheryteName,
+        DateTime LoadedAtUtc);
+
+    private enum LifestreamStartResult
+    {
+        WaitingForExisting,
+        Blocked,
+        Attempted,
+    }
 }

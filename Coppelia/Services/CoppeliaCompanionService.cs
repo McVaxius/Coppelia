@@ -57,9 +57,11 @@ internal unsafe sealed class CoppeliaCompanionService
             return;
         }
 
-        travelService.PauseForAction();
         if (actionManager->UseAction(ActionType.Item, GysahlGreensItemId, extraParam: 65535))
+        {
+            travelService.PauseForAction();
             Plugin.Log.Information("[Coppelia][QST] Summoning the companion chocobo with Gysahl Greens.");
+        }
     }
 
     private static bool IsOccupied() =>

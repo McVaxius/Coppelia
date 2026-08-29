@@ -416,15 +416,407 @@ internal sealed class CoppeliaLifestreamRequestPolicy
     }
 }
 
-internal sealed record CoppeliaAetheryteCandidate(uint Id, Vector3 Position, bool Unlocked);
+internal enum CoppeliaTerritoryHandoffPhase
+{
+    Idle,
+    Armed,
+    Probing,
+    WaitingForLoad,
+    Fallback,
+}
+
+internal enum CoppeliaTerritoryHandoffDecision
+{
+    None,
+    StartForwardProbe,
+    ContinueForwardProbe,
+    WaitForLoad,
+    DestinationReached,
+    UseTeleportFallback,
+}
+
+internal sealed class CoppeliaTerritoryHandoffPolicy
+{
+    public static readonly TimeSpan ForwardProbeDuration = TimeSpan.FromSeconds(5);
+
+    private DateTime probeStartedUtc;
+
+    public CoppeliaTerritoryHandoffPhase Phase { get; private set; }
+    public uint SourceTerritoryId { get; private set; }
+    public bool IsActive => Phase != CoppeliaTerritoryHandoffPhase.Idle;
+    public DateTime ProbeStartedUtc => probeStartedUtc;
+
+    public bool TryArm(
+        bool hasPreviousSnapshot,
+        bool explicitTeleport,
+        bool worldChanged,
+        bool helperLoaded,
+        uint observedTerritoryId,
+        uint previousTerritoryId,
+        uint destinationTerritoryId)
+    {
+        if (IsActive ||
+            !hasPreviousSnapshot ||
+            explicitTeleport ||
+            worldChanged ||
+            !helperLoaded ||
+            observedTerritoryId == 0 ||
+            observedTerritoryId != previousTerritoryId ||
+            destinationTerritoryId == previousTerritoryId)
+        {
+            return false;
+        }
+
+        SourceTerritoryId = observedTerritoryId;
+        Phase = CoppeliaTerritoryHandoffPhase.Armed;
+        return true;
+    }
+
+    public CoppeliaTerritoryHandoffDecision Evaluate(
+        uint currentTerritoryId,
+        uint latestDestinationTerritoryId,
+        bool betweenAreas,
+        bool helperLoaded,
+        DateTime utcNow)
+    {
+        if (!IsActive)
+            return CoppeliaTerritoryHandoffDecision.None;
+
+        if (helperLoaded && !betweenAreas && currentTerritoryId == latestDestinationTerritoryId)
+        {
+            Reset();
+            return CoppeliaTerritoryHandoffDecision.DestinationReached;
+        }
+
+        if (Phase == CoppeliaTerritoryHandoffPhase.Armed)
+        {
+            if (betweenAreas || currentTerritoryId != SourceTerritoryId)
+            {
+                Phase = CoppeliaTerritoryHandoffPhase.WaitingForLoad;
+                return CoppeliaTerritoryHandoffDecision.WaitForLoad;
+            }
+
+            if (!helperLoaded)
+                return CoppeliaTerritoryHandoffDecision.None;
+
+            probeStartedUtc = utcNow;
+            Phase = CoppeliaTerritoryHandoffPhase.Probing;
+            return CoppeliaTerritoryHandoffDecision.StartForwardProbe;
+        }
+
+        if (Phase == CoppeliaTerritoryHandoffPhase.Probing)
+        {
+            if (betweenAreas || currentTerritoryId != SourceTerritoryId)
+            {
+                Phase = CoppeliaTerritoryHandoffPhase.WaitingForLoad;
+                return CoppeliaTerritoryHandoffDecision.WaitForLoad;
+            }
+
+            if (utcNow - probeStartedUtc >= ForwardProbeDuration)
+            {
+                Phase = CoppeliaTerritoryHandoffPhase.Fallback;
+                return CoppeliaTerritoryHandoffDecision.UseTeleportFallback;
+            }
+
+            return CoppeliaTerritoryHandoffDecision.ContinueForwardProbe;
+        }
+
+        if (Phase == CoppeliaTerritoryHandoffPhase.WaitingForLoad)
+        {
+            if (betweenAreas || !helperLoaded)
+                return CoppeliaTerritoryHandoffDecision.WaitForLoad;
+
+            Phase = CoppeliaTerritoryHandoffPhase.Fallback;
+            return CoppeliaTerritoryHandoffDecision.UseTeleportFallback;
+        }
+
+        return CoppeliaTerritoryHandoffDecision.UseTeleportFallback;
+    }
+
+    public void FailProbe() => Phase = CoppeliaTerritoryHandoffPhase.Fallback;
+
+    public void Reset()
+    {
+        Phase = CoppeliaTerritoryHandoffPhase.Idle;
+        SourceTerritoryId = 0;
+        probeStartedUtc = default;
+    }
+}
+
+internal sealed class CoppeliaTravelSequencePolicy
+{
+    public long LastAcceptedSequence { get; private set; }
+    public long BlockedSequence { get; private set; }
+    public string BlockedState { get; private set; } = string.Empty;
+
+    public bool TryAccept(long sequence)
+    {
+        if (sequence <= LastAcceptedSequence)
+            return false;
+
+        LastAcceptedSequence = sequence;
+        BlockedSequence = 0;
+        BlockedState = string.Empty;
+        return true;
+    }
+
+    public bool IsBlocked(long sequence) => BlockedSequence == sequence;
+
+    public void Block(long sequence, string state)
+    {
+        BlockedSequence = sequence;
+        BlockedState = state;
+    }
+
+    public void Reset()
+    {
+        LastAcceptedSequence = 0;
+        BlockedSequence = 0;
+        BlockedState = string.Empty;
+    }
+}
+
+internal static class CoppeliaTeleportIntentPolicy
+{
+    public static bool IsStale(
+        long exactSequence,
+        uint exactSourceTerritory,
+        uint exactDestinationTerritory,
+        long latestSequence,
+        uint latestDestinationTerritory) =>
+        latestSequence > exactSequence &&
+        latestDestinationTerritory != exactSourceTerritory &&
+        latestDestinationTerritory != exactDestinationTerritory;
+
+    public static bool CanUseFallback(
+        long exactSequence,
+        uint exactDestinationTerritory,
+        long latestSequence,
+        uint latestDestinationTerritory) =>
+        latestSequence > exactSequence &&
+        latestDestinationTerritory == exactDestinationTerritory;
+
+    public static bool TryFindExact(
+        IReadOnlyList<CoppeliaTeleportListEntry> teleportList,
+        uint aetheryteId,
+        byte subIndex,
+        out CoppeliaTeleportListEntry selected)
+    {
+        selected = teleportList.FirstOrDefault(entry =>
+            entry.AetheryteId == aetheryteId &&
+            entry.SubIndex == subIndex)!;
+        return selected != null;
+    }
+}
+
+internal sealed record CoppeliaTeleportListEntry(uint AetheryteId, byte SubIndex, uint GilCost);
+
+internal static class CoppeliaTeleportListPolicy
+{
+    public static bool IsAvailable(bool hasTelepoInstance, int rawEntryCount, int validEntryCount) =>
+        hasTelepoInstance && rawEntryCount > 0 && validEntryCount > 0;
+}
+
+internal sealed record CoppeliaAetheryteLevelReference(uint RowId, Vector3? EmbeddedPosition);
+
+internal sealed record CoppeliaAetheryteMapMarker(float X, float Y, byte DataType, uint DataKeyId);
+
+internal sealed record CoppeliaAetheryteMapTransform(float SizeFactor, float OffsetX, float OffsetY);
+
+internal sealed record CoppeliaMapLocationSelection(
+    string AetheryteName,
+    bool HasRealXYZ,
+    Vector3 RealPosition);
+
+internal sealed record CoppeliaAetheryteCandidate(
+    uint Id,
+    byte SubIndex,
+    uint TerritoryId,
+    string Name,
+    uint PlaceNameId,
+    uint GilCost,
+    Vector3 Position,
+    bool HasStoredPosition);
+
+internal sealed record CoppeliaAetheryteSelection(
+    CoppeliaAetheryteCandidate Candidate,
+    double Distance,
+    bool UsedXyzComparison,
+    bool WinnerUsedXyz);
 
 internal static class CoppeliaAetherytePolicy
 {
-    public static CoppeliaAetheryteCandidate? SelectNearest(
-        Vector3 destination,
-        IEnumerable<CoppeliaAetheryteCandidate> candidates) =>
-        candidates
-            .Where(candidate => candidate.Unlocked)
-            .OrderBy(candidate => Vector3.DistanceSquared(candidate.Position, destination))
-            .FirstOrDefault();
+    public const uint TamamizuAetheryteId = 105;
+
+    public static Vector3 ResolveLevelPosition(
+        IEnumerable<CoppeliaAetheryteLevelReference> levelReferences,
+        Func<uint, Vector3?> directLevelLookup)
+    {
+        foreach (var levelReference in levelReferences)
+        {
+            if (levelReference.EmbeddedPosition is { } embeddedPosition)
+            {
+                if (embeddedPosition.X != 0 || embeddedPosition.Z != 0)
+                    return embeddedPosition;
+            }
+            else if (levelReference.RowId > 0 && directLevelLookup(levelReference.RowId) is { } directPosition)
+            {
+                if (directPosition.X != 0 || directPosition.Z != 0)
+                    return directPosition;
+            }
+        }
+
+        return Vector3.Zero;
+    }
+
+    public static CoppeliaAetheryteSelection? Resolve(
+        uint territoryId,
+        Vector3 targetPosition,
+        IEnumerable<CoppeliaAetheryteCandidate> sourceCandidates,
+        bool avoidTamamizu,
+        CoppeliaAetheryteMapTransform? mapTransform = null,
+        IEnumerable<CoppeliaAetheryteMapMarker>? mapMarkers = null,
+        CoppeliaMapLocationSelection? mapLocation = null)
+    {
+        var candidates = sourceCandidates
+            .Where(candidate => candidate.TerritoryId == territoryId)
+            .Where(candidate => !avoidTamamizu || candidate.Id != TamamizuAetheryteId)
+            .ToList();
+        if (candidates.Count == 0)
+            return null;
+
+        if (mapTransform != null && candidates.Any(candidate => candidate.Position == Vector3.Zero))
+            ApplyMapMarkerFallback(candidates, targetPosition, mapTransform, mapMarkers ?? []);
+
+        if (targetPosition != default && !string.IsNullOrEmpty(mapLocation?.AetheryteName))
+        {
+            var overrideCandidate = candidates.FirstOrDefault(candidate =>
+                string.Equals(candidate.Name, mapLocation.AetheryteName, StringComparison.OrdinalIgnoreCase));
+            if (overrideCandidate != null)
+                return new CoppeliaAetheryteSelection(overrideCandidate, double.MaxValue, false, false);
+        }
+
+        var hasRealDestination = targetPosition != default && mapLocation?.HasRealXYZ == true;
+        var comparisonTarget = hasRealDestination ? mapLocation!.RealPosition : targetPosition;
+        var candidatesWithPositions = candidates
+            .Where(candidate => candidate.Position != Vector3.Zero)
+            .ToList();
+
+        if (targetPosition != default && candidatesWithPositions.Count > 0)
+        {
+            var closest = candidatesWithPositions
+                .OrderBy(candidate => DistanceSquared(candidate, comparisonTarget, hasRealDestination))
+                .First();
+            var useXyz = hasRealDestination && closest.HasStoredPosition;
+            return new CoppeliaAetheryteSelection(
+                closest,
+                Math.Sqrt(DistanceSquared(closest, comparisonTarget, hasRealDestination)),
+                hasRealDestination,
+                useXyz);
+        }
+
+        var cheapest = candidates.OrderBy(candidate => candidate.GilCost).First();
+        return new CoppeliaAetheryteSelection(cheapest, double.MaxValue, hasRealDestination, false);
+    }
+
+    public static Vector3 ConvertMapMarker(
+        CoppeliaAetheryteMapMarker marker,
+        CoppeliaAetheryteMapTransform mapTransform)
+    {
+        var scaleFactor = mapTransform.SizeFactor / 100f;
+        return new Vector3(
+            (marker.X / scaleFactor - 1024f) / scaleFactor + mapTransform.OffsetX,
+            0f,
+            (marker.Y / scaleFactor - 1024f) / scaleFactor + mapTransform.OffsetY);
+    }
+
+    public static bool IsArrivalWithinRecordingRange(
+        Vector3 playerPosition,
+        Vector3 estimatedAetherytePosition)
+    {
+        if (playerPosition == Vector3.Zero || estimatedAetherytePosition == Vector3.Zero)
+            return false;
+
+        var dx = playerPosition.X - estimatedAetherytePosition.X;
+        var dz = playerPosition.Z - estimatedAetherytePosition.Z;
+        return dx * dx + dz * dz <= 20f * 20f;
+    }
+
+    private static double DistanceSquared(
+        CoppeliaAetheryteCandidate candidate,
+        Vector3 comparisonTarget,
+        bool hasRealDestination)
+    {
+        var dx = candidate.Position.X - comparisonTarget.X;
+        var dz = candidate.Position.Z - comparisonTarget.Z;
+        if (!hasRealDestination || !candidate.HasStoredPosition)
+            return dx * dx + dz * dz;
+
+        var dy = candidate.Position.Y - comparisonTarget.Y;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    private static void ApplyMapMarkerFallback(
+        List<CoppeliaAetheryteCandidate> candidates,
+        Vector3 targetPosition,
+        CoppeliaAetheryteMapTransform mapTransform,
+        IEnumerable<CoppeliaAetheryteMapMarker> sourceMarkers)
+    {
+        var markers = sourceMarkers
+            .Where(marker => marker.DataType is 3 or 4)
+            .ToList();
+        if (markers.Count == 0)
+            return;
+
+        var markerWorldPositions = markers
+            .Select(marker => ConvertMapMarker(marker, mapTransform))
+            .ToList();
+
+        var dataKeyToCandidateIndex = new Dictionary<uint, int>();
+        for (var candidateIndex = 0; candidateIndex < candidates.Count; candidateIndex++)
+        {
+            var candidate = candidates[candidateIndex];
+            if (candidate.Position != Vector3.Zero)
+                continue;
+
+            dataKeyToCandidateIndex[candidate.Id] = candidateIndex;
+            if (candidate.PlaceNameId > 0 && !dataKeyToCandidateIndex.ContainsKey(candidate.PlaceNameId))
+                dataKeyToCandidateIndex[candidate.PlaceNameId] = candidateIndex;
+        }
+
+        var matchedCount = 0;
+        for (var markerIndex = 0; markerIndex < markers.Count; markerIndex++)
+        {
+            if (!dataKeyToCandidateIndex.TryGetValue(markers[markerIndex].DataKeyId, out var candidateIndex) ||
+                candidates[candidateIndex].Position != Vector3.Zero)
+            {
+                continue;
+            }
+
+            candidates[candidateIndex] = candidates[candidateIndex] with
+            {
+                Position = markerWorldPositions[markerIndex],
+            };
+            matchedCount++;
+        }
+
+        if (matchedCount != 0 || targetPosition == default)
+            return;
+
+        var unassignedCandidateIndexes = candidates
+            .Select((candidate, index) => (candidate, index))
+            .Where(item => item.candidate.Position == Vector3.Zero)
+            .Select(item => item.index)
+            .ToList();
+        for (var markerIndex = 0;
+             markerIndex < markerWorldPositions.Count && markerIndex < unassignedCandidateIndexes.Count;
+             markerIndex++)
+        {
+            var candidateIndex = unassignedCandidateIndexes[markerIndex];
+            candidates[candidateIndex] = candidates[candidateIndex] with
+            {
+                Position = markerWorldPositions[markerIndex],
+            };
+        }
+    }
 }
