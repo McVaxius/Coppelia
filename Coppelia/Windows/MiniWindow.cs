@@ -1,7 +1,10 @@
 using System.Numerics;
 using Coppelia.Models;
+using Coppelia.Services;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface.Windowing;
+using Lumina.Excel.Sheets;
 
 namespace Coppelia.Windows;
 
@@ -33,6 +36,7 @@ public sealed class MiniWindow : Window, IDisposable
     public override void Draw()
     {
         DrawRoles();
+        DrawKrangleToggle();
         if (plugin.Configuration.OperatingRole == OperatingRole.StandAlone)
             DrawStandaloneBehavior();
 
@@ -40,12 +44,12 @@ public sealed class MiniWindow : Window, IDisposable
             DrawJoatAttackMode();
 
         DrawCompanion();
+        DrawHealingContext();
 
         CoppeliaUi.SectionHeader("Operational status");
         var status = plugin.GetOperationalStatus();
         ImGui.TextWrapped($"Primary state: {status.PrimaryState}");
         ImGui.TextWrapped($"Next action: {status.NextAction}");
-        ImGui.TextWrapped($"Active / paired identity: {status.Identity}");
 
         if (plugin.Configuration.OperatingRole is OperatingRole.Helper or OperatingRole.Newb)
         {
@@ -70,6 +74,94 @@ public sealed class MiniWindow : Window, IDisposable
         if (ImGui.Button("Main##Mini"))
             plugin.OpenMainUi();
     }
+
+    private void DrawKrangleToggle()
+    {
+        var configuration = plugin.Configuration;
+        var label = configuration.KrangleNames ? "Krangle names: ON" : "Krangle names: OFF";
+        if (!ImGui.Button($"{label}##MiniKrangle"))
+            return;
+
+        configuration.KrangleNames = !configuration.KrangleNames;
+        configuration.Save();
+        if (!configuration.KrangleNames)
+            KrangleService.ClearCache();
+    }
+
+    private void DrawHealingContext()
+    {
+        CoppeliaUi.SectionHeader("Healing context");
+        var assignment = plugin.CoppeliaQstIpcService.GetAssignmentSnapshot();
+        if (!string.IsNullOrWhiteSpace(assignment.Source))
+        {
+            var targetLabel = assignment.Source == "Newb" ? "Watched Newb" : "Watched Quester";
+            ImGui.TextWrapped($"{targetLabel}: {FormatIdentity(assignment.Name, assignment.WorldId)}");
+            var snapshot = plugin.WatchTargetService.EphemeralQstTargetSnapshot;
+            ImGui.TextUnformatted($"HP: {(snapshot == null ? "Target not visible" : FormatHp(snapshot.CurrentHp, snapshot.MaxHp))}");
+            ImGui.TextUnformatted($"LOS: {(snapshot == null ? "Target not visible" : plugin.HealbotRuntimeService.CurrentTargetLineOfSightState)}");
+            ImGui.TextWrapped($"Rescue: {plugin.CoppeliaTravelService.LineOfSightRescueState}");
+            return;
+        }
+
+        if (plugin.Configuration.OperatingRole == OperatingRole.Helper)
+        {
+            ImGui.TextDisabled("No active helper/quester");
+            ImGui.TextUnformatted("HP: Target not visible");
+            ImGui.TextUnformatted("LOS: Target not visible");
+            ImGui.TextUnformatted("Rescue: Inactive");
+            return;
+        }
+
+        if (plugin.Configuration.OperatingRole == OperatingRole.Newb)
+        {
+            var pairing = plugin.HealBotPairingService.Snapshot;
+            ImGui.TextWrapped(pairing.Identity == "None"
+                ? "No active helper/quester"
+                : $"Paired Helper: {FormatIdentity(pairing.Identity)}");
+            var local = Plugin.ObjectTable.LocalPlayer as ICharacter;
+            ImGui.TextUnformatted($"Local Newb HP: {(local == null ? "HP unavailable" : FormatHp(local.CurrentHp, local.MaxHp))}");
+            return;
+        }
+
+        if (plugin.Configuration.OperatingRole == OperatingRole.StandAlone &&
+            plugin.Configuration.BotMode is BotMode.HealBot or BotMode.Jot)
+        {
+            var targetName = plugin.HealbotRuntimeService.CurrentWatchedTargetName;
+            if (string.IsNullOrWhiteSpace(targetName))
+            {
+                ImGui.TextDisabled("No active watched target");
+                ImGui.TextUnformatted("HP: HP unavailable");
+                ImGui.TextUnformatted("LOS: Target not visible");
+            }
+            else
+            {
+                ImGui.TextWrapped($"Watched target: {FormatIdentity(targetName)}");
+                ImGui.TextUnformatted($"HP: {plugin.HealbotRuntimeService.CurrentWatchedTargetHpText}");
+                ImGui.TextUnformatted($"LOS: {plugin.HealbotRuntimeService.CurrentTargetLineOfSightState}");
+            }
+            ImGui.TextWrapped($"Rescue: {plugin.CoppeliaTravelService.LineOfSightRescueState}");
+            return;
+        }
+
+        ImGui.TextDisabled("No active helper/quester");
+    }
+
+    private string FormatIdentity(string rawIdentity)
+        => plugin.FormatDisplayName(rawIdentity);
+
+    private string FormatIdentity(string name, ushort worldId)
+    {
+        var worldSheet = Plugin.DataManager.GetExcelSheet<World>();
+        var world = worldSheet.TryGetRow(worldId, out var row) && !row.Name.IsEmpty
+            ? row.Name.ExtractText()
+            : worldId.ToString();
+        return FormatIdentity($"{name}@{world}");
+    }
+
+    private static string FormatHp(uint currentHp, uint maxHp)
+        => maxHp == 0
+            ? "HP unavailable"
+            : $"{Math.Clamp((int)MathF.Round(currentHp * 100f / maxHp), 0, 100)}%";
 
     private void DrawRoles()
     {

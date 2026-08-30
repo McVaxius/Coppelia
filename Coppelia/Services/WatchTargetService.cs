@@ -36,6 +36,10 @@ internal sealed class WatchTargetService
     public string EphemeralQstTargetName => ephemeralQstTargetName;
     public ushort EphemeralQstTargetWorldId => ephemeralQstTargetWorldId;
     public ulong EphemeralQstTargetObjectId => ephemeralQstTargetCharacter?.GameObjectId ?? 0;
+    public WatchTargetSnapshot? EphemeralQstTargetSnapshot => ephemeralQstTargetCharacter == null
+        ? null
+        : runtimeCandidates.FirstOrDefault(candidate =>
+            candidate.Character.GameObjectId == ephemeralQstTargetCharacter.GameObjectId)?.Snapshot;
     public string EphemeralAssignmentLabel => ephemeralAssignmentLabel;
 
     public void SetEphemeralQstTarget(string name, ushort worldId)

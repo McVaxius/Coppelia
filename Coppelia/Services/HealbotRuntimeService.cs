@@ -1,6 +1,7 @@
 using Coppelia.Models;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.Types;
+using System.Numerics;
 
 namespace Coppelia.Services;
 
@@ -35,6 +36,9 @@ internal sealed class HealbotRuntimeService : IDisposable
     public string StatusText { get; private set; } = "Healbot mode is off.";
     public string LastIssuedAction { get; private set; } = "Idle";
     public string LastMatchedRule { get; private set; } = "No rule matched.";
+    public string CurrentWatchedTargetName { get; private set; } = string.Empty;
+    public string CurrentWatchedTargetHpText { get; private set; } = "HP unavailable";
+    public string CurrentTargetLineOfSightState { get; private set; } = "Target not visible";
     public bool IsRsrControlReady
         => dependencyService.Current.RotationSolverLoaded && rsrIsolationApplied;
 
@@ -70,6 +74,7 @@ internal sealed class HealbotRuntimeService : IDisposable
 
     public void Deactivate(string reason)
     {
+        plugin.CoppeliaTravelService.ClearLineOfSightRescue();
         if (rsrIpcService.HasSessionSnapshot)
             rsrIpcService.RestoreSessionSnapshot();
 
@@ -83,10 +88,23 @@ internal sealed class HealbotRuntimeService : IDisposable
         LastMatchedRule = "No rule matched.";
         StatusText = reason;
         previousTargetGameObjectId = 0;
+        ClearCurrentTargetContext();
     }
 
     public HealbotDecisionOutcome Update()
     {
+        if (Plugin.Condition[ConditionFlag.BetweenAreas] ||
+            Plugin.Condition[ConditionFlag.BetweenAreas51] ||
+            Plugin.ObjectTable.LocalPlayer == null)
+        {
+            plugin.CoppeliaTravelService.ClearLineOfSightRescue();
+            ClearCurrentTargetContext();
+            StatusText = "Holding during the area transition.";
+            LastIssuedAction = "Travel";
+            LastMatchedRule = "Area transition in progress.";
+            return HealbotDecisionOutcome.Blocked;
+        }
+
         if (!plugin.Configuration.PluginEnabled)
         {
             Deactivate("Plugin disabled.");
@@ -145,6 +163,12 @@ internal sealed class HealbotRuntimeService : IDisposable
             LastIssuedAction = "Casting";
             LastMatchedRule = "Waiting for the current cast to finish.";
             return HealbotDecisionOutcome.Blocked;
+        }
+
+        if (watchTargetService.SelectedTargetCount == 0 || watchTargetService.RuntimeCandidates.Count == 0)
+        {
+            plugin.CoppeliaTravelService.ClearLineOfSightRescue();
+            ClearCurrentTargetContext();
         }
 
         if (DateTimeOffset.UtcNow < nextDecisionUtc)
@@ -221,6 +245,8 @@ internal sealed class HealbotRuntimeService : IDisposable
         var activeTargetCount = watchTargetService.SelectedTargetCount;
         if (activeTargetCount == 0)
         {
+            plugin.CoppeliaTravelService.ClearLineOfSightRescue();
+            ClearCurrentTargetContext();
             StatusText = "No watched targets are active.";
             LastIssuedAction = "Idle";
             LastMatchedRule = "No watched targets.";
@@ -244,6 +270,8 @@ internal sealed class HealbotRuntimeService : IDisposable
 
         if (orderedCandidates.Length == 0)
         {
+            plugin.CoppeliaTravelService.ClearLineOfSightRescue();
+            ClearCurrentTargetContext();
             StatusText = watchTargetService.HasEphemeralQstTarget
                 ? $"{watchTargetService.EphemeralAssignmentLabel} target {watchTargetService.EphemeralQstTargetName} is selected but remote."
                 : $"Watching {activeTargetCount} targets. No live watched target is currently available.";
@@ -256,12 +284,45 @@ internal sealed class HealbotRuntimeService : IDisposable
 
         string? blockedStatus = null;
         string? blockedRule = null;
+        ClearCurrentTargetContext();
 
         foreach (var candidate in orderedCandidates)
         {
             var selectedCharacter = ActionExecutionService.ResolveLiveHealTarget(candidate.Snapshot.GameObjectId);
             if (selectedCharacter == null)
                 continue;
+
+            CurrentWatchedTargetName = candidate.Snapshot.Name;
+            CurrentWatchedTargetHpText = candidate.Snapshot.MaxHp == 0
+                ? "HP unavailable"
+                : $"{candidate.Snapshot.HpPercent}%";
+
+            var localCharacter = Plugin.ObjectTable.LocalPlayer as ICharacter;
+            var distance = localCharacter == null
+                ? float.PositiveInfinity
+                : Vector3.Distance(localCharacter.Position, selectedCharacter.Position);
+            var hasLineOfSight = true;
+            var lineOfSightKnown = localCharacter != null &&
+                                   LineOfSightService.TryHasLineOfSight(localCharacter, selectedCharacter, out hasLineOfSight);
+            CurrentTargetLineOfSightState = !lineOfSightKnown
+                ? "LOS unavailable"
+                : hasLineOfSight ? "LOS clear" : "LOS blocked";
+
+            if (LineOfSightService.ShouldRescue(
+                    targetVisible: true,
+                    distance,
+                    lineOfSightBlocked: lineOfSightKnown && !hasLineOfSight))
+            {
+                var rescueState = plugin.CoppeliaTravelService.UpdateLineOfSightRescue(
+                    selectedCharacter.GameObjectId,
+                    selectedCharacter.Position);
+                StatusText = rescueState;
+                LastIssuedAction = "Movement";
+                LastMatchedRule = $"{plugin.FormatDisplayName(candidate.Snapshot.Name)} - LOS blocked.";
+                return HealbotDecisionOutcome.Blocked;
+            }
+
+            plugin.CoppeliaTravelService.ClearLineOfSightRescue();
 
             Plugin.TargetManager.Target = selectedCharacter;
 
@@ -284,6 +345,9 @@ internal sealed class HealbotRuntimeService : IDisposable
             }
         }
 
+        if (string.IsNullOrWhiteSpace(CurrentWatchedTargetName))
+            plugin.CoppeliaTravelService.ClearLineOfSightRescue();
+
         if (blockedStatus != null && blockedRule != null)
         {
             StatusText = $"Watching {activeTargetCount} targets. {blockedStatus}";
@@ -305,6 +369,13 @@ internal sealed class HealbotRuntimeService : IDisposable
         LastIssuedAction = "Idle";
         LastMatchedRule = $"{plugin.FormatDisplayName(topCandidate.Snapshot.Name)} - No alive-target rule matched.";
         return HealbotDecisionOutcome.Idle;
+    }
+
+    private void ClearCurrentTargetContext()
+    {
+        CurrentWatchedTargetName = string.Empty;
+        CurrentWatchedTargetHpText = "HP unavailable";
+        CurrentTargetLineOfSightState = "Target not visible";
     }
 
     private bool TryExecuteRule(

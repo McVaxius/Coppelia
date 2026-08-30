@@ -19,7 +19,7 @@ public sealed class ConfigurationMigrationTests
         var changed = configuration.MigrateIfNeeded();
 
         Assert.True(changed);
-        Assert.Equal(7, configuration.Version);
+        Assert.Equal(9, configuration.Version);
         Assert.True(configuration.SetupWizardCompleted);
         Assert.False(configuration.ShouldAutoOpenSetup());
         Assert.True(configuration.AutomationEnabled);
@@ -33,7 +33,7 @@ public sealed class ConfigurationMigrationTests
 
         configuration.MigrateIfNeeded();
 
-        Assert.Equal(7, configuration.Version);
+        Assert.Equal(9, configuration.Version);
         Assert.False(configuration.SetupWizardCompleted);
         Assert.True(configuration.ShouldAutoOpenSetup());
     }
@@ -69,7 +69,7 @@ public sealed class ConfigurationMigrationTests
         var changed = configuration.MigrateIfNeeded();
 
         Assert.True(changed);
-        Assert.Equal(7, configuration.Version);
+        Assert.Equal(9, configuration.Version);
         Assert.True(configuration.SetupWizardCompleted);
         Assert.False(configuration.ShouldAutoOpenSetup());
         Assert.True(configuration.AutomationEnabled);
@@ -100,7 +100,7 @@ public sealed class ConfigurationMigrationTests
 
         configuration.MigrateIfNeeded();
 
-        Assert.Equal(7, configuration.Version);
+        Assert.Equal(9, configuration.Version);
         Assert.True(configuration.SetupWizardCompleted);
         Assert.False(configuration.ShouldAutoOpenSetup());
         Assert.Equal(BotMode.PowerlevelBot, configuration.BotMode);
@@ -118,7 +118,7 @@ public sealed class ConfigurationMigrationTests
         };
 
         Assert.True(configuration.MigrateIfNeeded());
-        Assert.Equal(7, configuration.Version);
+        Assert.Equal(9, configuration.Version);
         Assert.True(configuration.AvoidTamamizuAetheryte);
         Assert.True(configuration.AutoUpdateMapLocationsOnLogin);
     }

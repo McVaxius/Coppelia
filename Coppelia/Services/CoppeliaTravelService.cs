@@ -30,6 +30,7 @@ internal sealed class CoppeliaTravelService
     private readonly MapLocationDatabase mapLocationDatabase;
     private readonly CoppeliaFollowPolicy followPolicy = new();
     private readonly CoppeliaRoutePolicy routePolicy = new();
+    private readonly CoppeliaRoutePolicy lineOfSightRescueRoutePolicy = new();
     private readonly CoppeliaFlightPolicy flightPolicy = new();
     private readonly CoppeliaLifestreamRequestPolicy lifestreamPolicy = new();
     private readonly CoppeliaTerritoryHandoffPolicy territoryHandoffPolicy = new();
@@ -45,6 +46,11 @@ internal sealed class CoppeliaTravelService
     private long lastExistingLifestreamBusySequence;
     private bool lifestreamObservedLoading;
     private PendingAetheryteArrival? pendingAetheryteArrival;
+    private long lineOfSightRescueSequence;
+    private ulong lineOfSightRescueTargetId;
+    private Vector3 lineOfSightRescueDestination;
+    private bool lineOfSightRescueHasDestination;
+    private bool lineOfSightRescueOwnStopPending;
 
     public CoppeliaTravelService(
         Configuration configuration,
@@ -67,6 +73,96 @@ internal sealed class CoppeliaTravelService
     }
 
     public string State { get; private set; } = "Idle";
+    public string LineOfSightRescueState { get; private set; } = "Inactive";
+
+    public string UpdateLineOfSightRescue(ulong targetGameObjectId, Vector3 liveDestination)
+    {
+        var destinationChanged = targetGameObjectId != lineOfSightRescueTargetId ||
+                                 !lineOfSightRescueHasDestination ||
+                                 Vector3.DistanceSquared(liveDestination, lineOfSightRescueDestination) > 1f;
+        if (destinationChanged)
+        {
+            StopLineOfSightRescueRoute();
+            lineOfSightRescueTargetId = targetGameObjectId;
+            lineOfSightRescueDestination = liveDestination;
+            lineOfSightRescueHasDestination = true;
+            lineOfSightRescueRoutePolicy.AcceptSnapshot(++lineOfSightRescueSequence, liveDestination);
+        }
+
+        if (!TryGetRouteActivity(out var isPathfinding, out var isPathRunning))
+            return SetLineOfSightRescueState("LOS blocked; moving to 1y");
+
+        if (lineOfSightRescueRoutePolicy.OwnsRoute)
+        {
+            var rescueActivity = lineOfSightRescueRoutePolicy.Observe(isPathfinding, isPathRunning, DateTime.UtcNow);
+            if (rescueActivity == CoppeliaRouteActivity.Owned)
+                return SetLineOfSightRescueState("LOS blocked; moving to 1y");
+        }
+
+        if (routePolicy.OwnsRoute)
+        {
+            routePolicy.Observe(isPathfinding, isPathRunning, DateTime.UtcNow);
+            if (routePolicy.OwnsRoute)
+            {
+                ReleaseOwnedRoute();
+                RearmLatestTravelRoute();
+                lineOfSightRescueOwnStopPending = true;
+                return SetLineOfSightRescueState("LOS blocked; moving to 1y");
+            }
+        }
+
+        if (isPathfinding || isPathRunning)
+        {
+            if (lineOfSightRescueOwnStopPending)
+                return SetLineOfSightRescueState("LOS blocked; moving to 1y");
+
+            return SetLineOfSightRescueState("LOS blocked; waiting for current movement owner");
+        }
+
+        lineOfSightRescueOwnStopPending = false;
+        try
+        {
+            if (!navReady.HasFunction || !moveCloseTo.HasFunction || !navReady.InvokeFunc())
+                return SetLineOfSightRescueState("LOS blocked; moving to 1y");
+
+            if (!lineOfSightRescueRoutePolicy.CanStart(isPathfinding, isPathRunning))
+                return SetLineOfSightRescueState("LOS blocked; moving to 1y");
+
+            if (moveCloseTo.InvokeFunc(lineOfSightRescueDestination, false, 1f))
+            {
+                lineOfSightRescueRoutePolicy.MarkStartupAccepted(DateTime.UtcNow);
+                Plugin.Log.Information(
+                    "[Coppelia][HealBot] Queueing owned LOS rescue to target {TargetId} with 1-yalm tolerance.",
+                    targetGameObjectId);
+                return SetLineOfSightRescueState("LOS blocked; moving to 1y");
+            }
+
+            if (!TryGetRouteActivity(out isPathfinding, out isPathRunning))
+            {
+                isPathfinding = false;
+                isPathRunning = false;
+            }
+            lineOfSightRescueRoutePolicy.MarkStartupRejected(isPathfinding, isPathRunning);
+        }
+        catch (Exception ex)
+        {
+            lineOfSightRescueRoutePolicy.MarkStartupRejected(pathfindInProgress: false, pathRunning: false);
+            Plugin.Log.Warning(ex, "[Coppelia][HealBot] LOS rescue vnavmesh IPC failed.");
+        }
+
+        return SetLineOfSightRescueState("LOS blocked; moving to 1y");
+    }
+
+    public void ClearLineOfSightRescue()
+    {
+        StopLineOfSightRescueRoute();
+        lineOfSightRescueTargetId = 0;
+        lineOfSightRescueDestination = default;
+        lineOfSightRescueHasDestination = false;
+        lineOfSightRescueOwnStopPending = false;
+        LineOfSightRescueState = "Inactive";
+        RearmLatestTravelRoute();
+    }
 
     public void PauseForAction()
     {
@@ -538,6 +634,7 @@ internal sealed class CoppeliaTravelService
 
     public void Release()
     {
+        ClearLineOfSightRescue();
         ResetTerritoryHandoff();
         ReleaseOwnedRoute();
         latestTravel = null;
@@ -1442,6 +1539,47 @@ internal sealed class CoppeliaTravelService
         catch (Exception)
         {
         }
+    }
+
+    private void StopLineOfSightRescueRoute()
+    {
+        var activityKnown = TryGetRouteActivity(out var isPathfinding, out var isPathRunning);
+        if (activityKnown && lineOfSightRescueRoutePolicy.OwnsRoute)
+            lineOfSightRescueRoutePolicy.Observe(isPathfinding, isPathRunning, DateTime.UtcNow);
+        var interruption = lineOfSightRescueRoutePolicy.Release(
+            activityKnown && isPathfinding,
+            activityKnown ? isPathRunning : lineOfSightRescueRoutePolicy.OwnsRoute);
+        if (interruption == CoppeliaRouteInterruption.None)
+            return;
+
+        lineOfSightRescueOwnStopPending = true;
+        InvokePathStop();
+        if (interruption != CoppeliaRouteInterruption.StopPathAndCancelPending)
+            return;
+
+        try
+        {
+            cancelAll.InvokeAction();
+        }
+        catch (Exception)
+        {
+        }
+    }
+
+    private void RearmLatestTravelRoute()
+    {
+        if (latestTravel == null)
+            return;
+
+        routePolicy.AcceptSnapshot(
+            latestTravel.TravelSequence,
+            new Vector3(latestTravel.X, latestTravel.Y, latestTravel.Z));
+    }
+
+    private string SetLineOfSightRescueState(string state)
+    {
+        LineOfSightRescueState = state;
+        return state;
     }
 
     private void InvokePathStop()

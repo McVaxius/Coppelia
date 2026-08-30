@@ -213,14 +213,16 @@ public sealed class CoppeliaRoutePolicyTests
     }
 
     [Fact]
-    public void TravelServiceUsesOneGuardedSimpleMoveStartup()
+    public void TravelAndLosRescueUseGuardedSimpleMoveStartups()
     {
         var source = ReadTravelServiceSource();
 
         Assert.Contains("vnavmesh.SimpleMove.PathfindInProgress", source, StringComparison.Ordinal);
         Assert.Contains("routePolicy.Observe(isPathfinding, isPathRunning, DateTime.UtcNow)", source, StringComparison.Ordinal);
         Assert.Contains("routePolicy.CanStart(isPathfinding, isPathRunning)", source, StringComparison.Ordinal);
-        Assert.Equal(1, Count(source, "moveCloseTo.InvokeFunc("));
+        Assert.Contains("lineOfSightRescueRoutePolicy.CanStart(isPathfinding, isPathRunning)", source, StringComparison.Ordinal);
+        Assert.Equal(2, Count(source, "moveCloseTo.InvokeFunc("));
+        Assert.Contains("LOS blocked; waiting for current movement owner", source, StringComparison.Ordinal);
         Assert.DoesNotContain("lastMoveDestination", source, StringComparison.Ordinal);
     }
 
@@ -238,7 +240,7 @@ public sealed class CoppeliaRoutePolicyTests
         Assert.DoesNotContain("cancelAll", source[pauseStart..releaseStart], StringComparison.Ordinal);
         Assert.Contains("InvokePathStop", source[pauseStart..releaseStart], StringComparison.Ordinal);
         Assert.Contains("cancelAll.InvokeAction()", source[releaseStart..stopStart], StringComparison.Ordinal);
-        Assert.Equal(1, Count(source, "cancelAll.InvokeAction()"));
+        Assert.Equal(2, Count(source, "cancelAll.InvokeAction()"));
     }
 
     private static CoppeliaRoutePolicy ReadyPolicy(Vector3 destination)
