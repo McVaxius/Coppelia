@@ -38,6 +38,7 @@ public sealed class Plugin : IDalamudPlugin
     private readonly MiniWindow miniWindow;
     private IDtrBarEntry? dtrEntry;
     private DateTimeOffset nextDependencyToastUtc = DateTimeOffset.MinValue;
+    private bool pendingInitialRoleRestore = true;
     private bool pendingInitialWatchRefresh = true;
     private bool constructionComplete;
 
@@ -64,7 +65,6 @@ public sealed class Plugin : IDalamudPlugin
         HealbotRuntimeService = new HealbotRuntimeService(this, DependencyService, WatchTargetService, RsrIpcService, ActionExecutionService);
         PowerlevelRuntimeService = new PowerlevelRuntimeService(this, FrenRiderPowerlevelIpcService, ActionExecutionService);
         JotRuntimeService = new JotRuntimeService(this, jotFrenRiderIpcService, ActionExecutionService);
-        SetOperatingRole(Configuration.OperatingRole, printStatus: false);
 
         mainWindow = new MainWindow(this);
         configWindow = new ConfigWindow(this);
@@ -561,6 +561,12 @@ public sealed class Plugin : IDalamudPlugin
 
     private void OnFrameworkUpdate(IFramework framework)
     {
+        if (pendingInitialRoleRestore)
+        {
+            pendingInitialRoleRestore = false;
+            SetOperatingRole(Configuration.OperatingRole, printStatus: false);
+        }
+
         CoppeliaQstIpcService.Update();
         HealBotPairingService.Update();
         DependencyService.Refresh();
