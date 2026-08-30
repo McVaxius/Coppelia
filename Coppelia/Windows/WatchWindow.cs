@@ -100,7 +100,7 @@ public sealed class WatchWindow : Window, IDisposable
     {
         CoppeliaUi.SectionHeader(
             "Watch status",
-            "This window manages the shared HealBot/JOAT watch list. JOAT never auto-adds FrenRider's Fren; PowerlevelBot uses its restricted enemy source instead.");
+            "This window manages the shared HealBot/JOAT watch list. PowerlevelBot uses its restricted enemy source; Newb sends identity/travel and ignores this local list.");
 
         if (plugin.WatchTargetService.HasEphemeralQstTarget)
         {
@@ -108,7 +108,7 @@ public sealed class WatchWindow : Window, IDisposable
                 ? "visible and resolved into the native HealBot candidate"
                 : "selected but remote";
             CoppeliaUi.StatusText(
-                $"QST assignment: {plugin.FormatDisplayName(plugin.WatchTargetService.EphemeralQstTargetName)} is {state}.",
+                $"{plugin.WatchTargetService.EphemeralAssignmentLabel}: {plugin.FormatDisplayName(plugin.WatchTargetService.EphemeralQstTargetName)} is {state}.",
                 ready: plugin.WatchTargetService.IsEphemeralQstTargetVisible);
             CoppeliaUi.WrappedHelp("This session-only exact target overrides saved watched targets for automation without changing or saving them.");
         }
@@ -117,7 +117,7 @@ public sealed class WatchWindow : Window, IDisposable
         if (ImGui.Checkbox("Automation##WatchWindow", ref automationEnabled))
             plugin.SetAutomationEnabled(automationEnabled, printStatus: true);
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Controls the currently selected Coppelia mode.");
+            ImGui.SetTooltip("Controls the currently selected HealBot mode.");
 
         ImGui.SameLine();
         var healSelected = plugin.Configuration.BotMode == BotMode.HealBot;
@@ -141,6 +141,13 @@ public sealed class WatchWindow : Window, IDisposable
             ImGui.SetTooltip("PowerlevelBot ignores this watched-target list and follows FrenRider's configured Fren.");
 
         ImGui.SameLine();
+        var newbSelected = plugin.Configuration.BotMode == BotMode.Newb;
+        if (ImGui.RadioButton("Newb##WatchModeNewb", newbSelected))
+            plugin.SetBotMode(BotMode.Newb, printStatus: true);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Newb ignores this local list and pairs to one remote HealBot.");
+
+        ImGui.SameLine();
         var krangleEnabled = plugin.Configuration.KrangleNames;
         if (ImGui.Checkbox("Krangle names##WatchWindow", ref krangleEnabled))
         {
@@ -157,6 +164,10 @@ public sealed class WatchWindow : Window, IDisposable
         ImGui.SameLine();
         if (ImGui.SmallButton("Settings##WatchWindow"))
             plugin.OpenConfigUi();
+
+        ImGui.SameLine();
+        if (ImGui.SmallButton("Mini##WatchWindow"))
+            plugin.OpenMiniUi();
 
         ImGui.SameLine();
         if (CoppeliaUi.PrimaryButton("Quick Setup##WatchWindow"))
@@ -188,6 +199,17 @@ public sealed class WatchWindow : Window, IDisposable
             ImGui.PopStyleColor();
             ImGui.TextDisabled($"Healing action: {plugin.HealbotRuntimeService.LastIssuedAction} | Attack action: {plugin.JotRuntimeService.LastIssuedAction}");
             CoppeliaUi.WrappedHelp("Select FrenRider's configured Fren explicitly when it is the low-level target to heal. JOAT never inserts it into this list.");
+            return;
+        }
+
+        if (plugin.Configuration.BotMode == BotMode.Newb)
+        {
+            ImGui.PushStyleColor(ImGuiCol.Text, CoppeliaUi.Accent);
+            ImGui.TextWrapped($"Pairing: {plugin.HealBotPairingService.ConnectionStatus} - {plugin.HealBotPairingService.PairingIdentity}");
+            ImGui.TextWrapped($"Remote healing: {plugin.HealBotPairingService.HealingStatus}");
+            ImGui.TextWrapped($"Remote chase: {plugin.HealBotPairingService.ChaseStatus}");
+            ImGui.PopStyleColor();
+            CoppeliaUi.WrappedHelp("Newb performs no local healing or attacking. This watched-target list remains unchanged for later HealBot or JOAT use.");
             return;
         }
 

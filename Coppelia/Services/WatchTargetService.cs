@@ -20,6 +20,7 @@ internal sealed class WatchTargetService
     private DateTimeOffset nextRefreshUtc = DateTimeOffset.MinValue;
     private string ephemeralQstTargetName = string.Empty;
     private ushort ephemeralQstTargetWorldId;
+    private string ephemeralAssignmentLabel = "QST Assignment";
     private IPlayerCharacter? ephemeralQstTargetCharacter;
 
     public IReadOnlyList<WatchTargetSnapshot> Targets => targets;
@@ -35,11 +36,21 @@ internal sealed class WatchTargetService
     public string EphemeralQstTargetName => ephemeralQstTargetName;
     public ushort EphemeralQstTargetWorldId => ephemeralQstTargetWorldId;
     public ulong EphemeralQstTargetObjectId => ephemeralQstTargetCharacter?.GameObjectId ?? 0;
+    public string EphemeralAssignmentLabel => ephemeralAssignmentLabel;
 
     public void SetEphemeralQstTarget(string name, ushort worldId)
     {
         ephemeralQstTargetName = name;
         ephemeralQstTargetWorldId = worldId;
+        ephemeralAssignmentLabel = "QST Assignment";
+        nextRefreshUtc = DateTimeOffset.MinValue;
+    }
+
+    public void SetEphemeralNewbTarget(string name, ushort worldId)
+    {
+        ephemeralQstTargetName = name;
+        ephemeralQstTargetWorldId = worldId;
+        ephemeralAssignmentLabel = "Newb Pair";
         nextRefreshUtc = DateTimeOffset.MinValue;
     }
 
@@ -47,6 +58,7 @@ internal sealed class WatchTargetService
     {
         ephemeralQstTargetName = string.Empty;
         ephemeralQstTargetWorldId = 0;
+        ephemeralAssignmentLabel = "QST Assignment";
         ephemeralQstTargetCharacter = null;
         nextRefreshUtc = DateTimeOffset.MinValue;
     }
@@ -312,7 +324,7 @@ internal sealed class WatchTargetService
 
         ephemeralQstTargetCharacter = character;
 
-        var snapshot = BuildSnapshot(character, WatchTargetCategory.ManualSelection, "QST Assignment", isExternalSelection: true);
+        var snapshot = BuildSnapshot(character, WatchTargetCategory.ManualSelection, ephemeralAssignmentLabel, isExternalSelection: true);
         var entry = PersistedWatchTarget.FromSnapshot(snapshot);
         runtimeCandidates.Add(new WatchTargetCandidate
         {

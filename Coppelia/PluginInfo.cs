@@ -2,13 +2,14 @@ namespace Coppelia;
 
 internal static class PluginInfo
 {
-    public const string DisplayName = "Coppelia";
+    public const string DisplayName = "HealBot";
     public const string InternalName = "Coppelia";
     public const string Command = "/healbot";
-    public const string AliasCommand = "/copellia";
+    public const string ShortAliasCommand = "/hb";
+    public const string LegacyAliasCommand = "/copellia";
     public const string WatchCommand = "watch";
-    public const string Summary = "Guided watched-target healing, healer-first JOAT support, and Fren-assisted powerleveling.";
-    public const string Description = "Coppelia provides guided setup for three mutually exclusive automation modes. HealBot runs configurable WHM, SCH, AST, or SGE healing, raises, buffs, and pre-buffs for up to 20 watched friendly targets. Jacqueline of All Trades (JOAT) gives that healing absolute priority, then uses the equipped healer's highest available single-target filler spell only when the healing decision is idle and an eligible damaged enemy is already targeting FrenRider's configured visible Fren or the local healer. PowerlevelBot retains its BRD/MCH instant-action policy. Includes dependency/readiness checks, optional saved targets, and optional Rotation Solver Reborn isolation for HealBot and JOAT. Use /healbot to open.";
+    public const string Summary = "Guided healing, healer-first JOAT, Fren-assisted powerleveling, and paired Newb travel.";
+    public const string Description = "HealBot provides four mutually exclusive automation modes. HealBot heals watched friendly targets; Jacqueline of All Trades (JOAT) heals first and attacks only while healing is idle; PowerlevelBot retains its BRD/MCH instant-action policy; and Newb securely pairs one client to a HealBot over direct authenticated TCP for healing and travel. LAN traffic is authenticated but not encrypted, so names and coordinates remain visible on the network. Use /healbot, /hb, or /copellia to open.";
     public const string SupportUrl = "https://ko-fi.com/mcvaxius";
     public const string DiscordUrl = "https://discord.gg/VsXqydsvpu";
     public const string DiscordFeedbackNote = "Scroll down to \"The Dumpster Fire\" channel to discuss issues / suggestions for specific plugins.";

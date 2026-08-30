@@ -1,12 +1,17 @@
 using Coppelia.Models;
 using Dalamud.Configuration;
+using System.Net;
+using System.Net.Sockets;
 
 namespace Coppelia;
 
 [Serializable]
 public sealed class Configuration : IPluginConfiguration
 {
-    private const int CurrentConfigurationVersion = 7;
+    public const int DefaultLanPairingPort = 47790;
+    public const int ReservedLanDiscoveryPort = 47789;
+
+    private const int CurrentConfigurationVersion = 8;
     private const int MaxTrackedTargets = 20;
 
     public int Version { get; set; } = CurrentConfigurationVersion;
@@ -33,6 +38,10 @@ public sealed class Configuration : IPluginConfiguration
     public bool AvoidTamamizuAetheryte { get; set; } = true;
     public bool AutoUpdateMapLocationsOnLogin { get; set; } = true;
     public string LastCommunityLocationsRefreshPluginVersion { get; set; } = string.Empty;
+    public bool EnableLanPairing { get; set; }
+    public string LanHealBotAddress { get; set; } = "127.0.0.1";
+    public int LanPairingPort { get; set; } = DefaultLanPairingPort;
+    public string LanPairingSecret { get; set; } = string.Empty;
 
     // Legacy v3 single-target model kept for migration only.
     public ulong SelectedTargetGameObjectId { get; set; }
@@ -99,6 +108,17 @@ public sealed class Configuration : IPluginConfiguration
 
         SavedTargetScanRangeYalms = Math.Clamp(SavedTargetScanRangeYalms, 1, 200);
         changed |= NormalizeAutomationMode();
+        var normalizedAddress = LanHealBotAddress?.Trim() ?? string.Empty;
+        if (!string.Equals(LanHealBotAddress, normalizedAddress, StringComparison.Ordinal))
+        {
+            LanHealBotAddress = normalizedAddress;
+            changed = true;
+        }
+        if (LanPairingSecret == null)
+        {
+            LanPairingSecret = string.Empty;
+            changed = true;
+        }
 
         if (sourceVersion != CurrentConfigurationVersion)
         {
@@ -126,6 +146,14 @@ public sealed class Configuration : IPluginConfiguration
                 AutoUpdateMapLocationsOnLogin = true;
             }
 
+            if (sourceVersion < 8)
+            {
+                if (string.IsNullOrWhiteSpace(LanHealBotAddress))
+                    LanHealBotAddress = "127.0.0.1";
+                if (LanPairingPort == 0)
+                    LanPairingPort = DefaultLanPairingPort;
+            }
+
             Version = CurrentConfigurationVersion;
             changed = true;
         }
@@ -135,6 +163,40 @@ public sealed class Configuration : IPluginConfiguration
 
     public void Save()
         => Plugin.PluginInterface.SavePluginConfig(this);
+
+    public string GetLanPairingBlocker(BotMode role)
+    {
+        if (!EnableLanPairing)
+            return "LAN pairing is disabled.";
+        if (!IsValidLanPairingPort(LanPairingPort))
+        {
+            return LanPairingPort == ReservedLanDiscoveryPort
+                ? "Port 47789 is reserved. Choose another pairing port."
+                : "The pairing port must be between 1024 and 65535.";
+        }
+        if (LanPairingSecret.Length < 16)
+            return "The pair secret must contain at least 16 characters.";
+        if (role == BotMode.Newb && !TryParseLanHealBotAddress(LanHealBotAddress, out _))
+            return "Enter one valid IPv4 HealBot address, such as 127.0.0.1 or 192.168.1.25.";
+
+        return string.Empty;
+    }
+
+    public static bool IsValidLanPairingPort(int port)
+        => port is >= 1024 and <= 65535 && port != ReservedLanDiscoveryPort;
+
+    public static bool TryParseLanHealBotAddress(string? address, out IPAddress parsed)
+    {
+        if (IPAddress.TryParse(address?.Trim(), out var candidate) &&
+            candidate.AddressFamily == AddressFamily.InterNetwork)
+        {
+            parsed = candidate;
+            return true;
+        }
+
+        parsed = IPAddress.None;
+        return false;
+    }
 
     private static bool NormalizeTrackedTargets(List<PersistedWatchTarget> targets)
     {

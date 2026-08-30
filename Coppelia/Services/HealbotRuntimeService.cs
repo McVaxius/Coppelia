@@ -54,7 +54,7 @@ internal sealed class HealbotRuntimeService : IDisposable
         }
 
         profile = null;
-        reason = "Coppelia only supports WHM, SCH, AST, and SGE.";
+        reason = "HealBot only supports WHM, SCH, AST, and SGE.";
         return false;
     }
 
@@ -203,7 +203,7 @@ internal sealed class HealbotRuntimeService : IDisposable
 
         if (!jobConfig.Enabled)
         {
-            StatusText = $"{profile.JobAbbreviation} automation is disabled in Coppelia settings.";
+            StatusText = $"{profile.JobAbbreviation} automation is disabled in HealBot settings.";
             LastIssuedAction = "Idle";
             LastMatchedRule = $"{profile.JobAbbreviation} tab disabled.";
             return HealbotDecisionOutcome.Unavailable;
@@ -219,11 +219,11 @@ internal sealed class HealbotRuntimeService : IDisposable
         if (orderedCandidates.Length == 0)
         {
             StatusText = watchTargetService.HasEphemeralQstTarget
-                ? $"QST target {watchTargetService.EphemeralQstTargetName} is selected but remote."
+                ? $"{watchTargetService.EphemeralAssignmentLabel} target {watchTargetService.EphemeralQstTargetName} is selected but remote."
                 : $"Watching {activeTargetCount} targets. No live watched target is currently available.";
             LastIssuedAction = "Idle";
             LastMatchedRule = watchTargetService.HasEphemeralQstTarget
-                ? "The exact QST target is remote."
+                ? $"The exact {watchTargetService.EphemeralAssignmentLabel} target is remote."
                 : "No live watched targets.";
             return HealbotDecisionOutcome.Unavailable;
         }

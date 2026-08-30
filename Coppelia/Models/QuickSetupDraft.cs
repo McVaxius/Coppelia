@@ -25,6 +25,10 @@ internal sealed class QuickSetupDraft
     public bool WatchFriendlyBattleNpcs { get; set; }
     public bool SaveHealTargets { get; set; }
     public int SavedTargetScanRangeYalms { get; set; }
+    public bool EnableLanPairing { get; set; }
+    public string LanHealBotAddress { get; set; } = "127.0.0.1";
+    public int LanPairingPort { get; set; }
+    public string LanPairingSecret { get; set; } = string.Empty;
 
     public static QuickSetupDraft FromConfiguration(Configuration configuration)
         => new()
@@ -37,6 +41,10 @@ internal sealed class QuickSetupDraft
             WatchFriendlyBattleNpcs = configuration.WatchFriendlyBattleNpcs,
             SaveHealTargets = configuration.SaveHealTargets,
             SavedTargetScanRangeYalms = configuration.SavedTargetScanRangeYalms,
+            EnableLanPairing = configuration.EnableLanPairing,
+            LanHealBotAddress = configuration.LanHealBotAddress,
+            LanPairingPort = configuration.LanPairingPort,
+            LanPairingSecret = configuration.LanPairingSecret,
         };
 
     public void ApplyTo(Configuration configuration)
@@ -49,6 +57,10 @@ internal sealed class QuickSetupDraft
         configuration.WatchFriendlyBattleNpcs = WatchFriendlyBattleNpcs;
         configuration.SaveHealTargets = SaveHealTargets;
         configuration.SavedTargetScanRangeYalms = Math.Clamp(SavedTargetScanRangeYalms, 1, 200);
+        configuration.EnableLanPairing = EnableLanPairing;
+        configuration.LanHealBotAddress = LanHealBotAddress.Trim();
+        configuration.LanPairingPort = LanPairingPort;
+        configuration.LanPairingSecret = LanPairingSecret;
     }
 }
 

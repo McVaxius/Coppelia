@@ -90,13 +90,146 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         companionService.ClearQstOwnership();
     }
 
+    public (bool Ready, string Blocker) EvaluateNewbReadiness()
+    {
+        lock (gate)
+        {
+            if (disposed)
+                return (false, "HealBot pairing is unloading.");
+            if (!plugin.Configuration.PluginEnabled)
+                return (false, "HealBot is disabled.");
+            if (!plugin.Configuration.AutomationEnabled)
+                return (false, "HealBot automation is disabled.");
+            if (plugin.Configuration.BotMode != BotMode.HealBot)
+                return (false, "Select HealBot mode on the healing client.");
+            if (assignment?.Source == AssignmentSource.Qst)
+                return (false, "HealBot already has an active QST assignment.");
+
+            plugin.DependencyService.Refresh(force: true);
+            if (!plugin.DependencyService.Current.IsHealbotReady)
+                return (false, plugin.DependencyService.BuildMissingDependencyMessage());
+            if (!plugin.HealbotRuntimeService.IsSupportedLocalJob(out _, out var jobFailure))
+                return (false, jobFailure);
+
+            return travelService.EvaluateReadiness();
+        }
+    }
+
+    public CoppeliaAssignmentSnapshot GetAssignmentSnapshot()
+    {
+        lock (gate)
+        {
+            return assignment == null
+                ? CoppeliaAssignmentSnapshot.Empty
+                : new CoppeliaAssignmentSnapshot(
+                    assignment.Source == AssignmentSource.Newb ? "Newb" : "QST",
+                    assignment.SessionId,
+                    assignment.QuesterName,
+                    assignment.QuesterWorldId);
+        }
+    }
+
+    public CoppeliaQstCommandResponse AssignNewb(HealBotLanCommand command)
+    {
+        lock (gate)
+        {
+            if (!IsValidSessionId(command.SessionId))
+                return Failed("Invalid Newb session ID.");
+
+            if (assignment != null)
+            {
+                var sameAssignment = assignment.Source == AssignmentSource.Newb &&
+                                     assignment.SessionId == command.SessionId &&
+                                     string.Equals(assignment.QuesterName, command.NewbName, StringComparison.Ordinal) &&
+                                     assignment.QuesterWorldId == command.NewbWorldId;
+                return sameAssignment
+                    ? Accepted("Newb assignment is already active.")
+                    : Failed("HealBot already has an active QST or Newb assignment.");
+            }
+
+            if (!IsValidQuester(command.NewbName, command.NewbWorldId))
+                return Failed("Invalid Newb identity.");
+
+            var readiness = EvaluateNewbReadiness();
+            if (!readiness.Ready)
+                return Failed(readiness.Blocker);
+
+            assignment = new Assignment(
+                AssignmentSource.Newb,
+                command.SessionId,
+                command.NewbName,
+                command.NewbWorldId,
+                dutyOptIn: false,
+                dutyInviter: string.Empty);
+            plugin.WatchTargetService.SetEphemeralNewbTarget(command.NewbName, command.NewbWorldId);
+            Plugin.Log.Information("[Coppelia][Pairing] Accepted an ephemeral exact-target Newb assignment.");
+            return Accepted("Newb assignment accepted.");
+        }
+    }
+
+    public CoppeliaQstCommandResponse ApplyNewbTravel(HealBotLanCommand command)
+    {
+        lock (gate)
+        {
+            if (assignment == null ||
+                assignment.Source != AssignmentSource.Newb ||
+                assignment.SessionId != command.SessionId)
+            {
+                return Failed("Newb session does not own the active assignment.");
+            }
+            if (!string.Equals(command.NewbName, assignment.QuesterName, StringComparison.Ordinal) ||
+                command.NewbWorldId != assignment.QuesterWorldId)
+            {
+                return Failed("Travel update does not match the exact assigned Newb.");
+            }
+
+            return travelService.Apply(new CoppeliaQstCommand(
+                "TravelUpdate",
+                command.SessionId,
+                command.NewbName,
+                command.NewbWorldId,
+                command.NewbCurrentWorldId,
+                command.TerritoryId,
+                command.X,
+                command.Y,
+                command.Z,
+                command.TravelSequence,
+                command.AetheryteId,
+                command.AetheryteSubIndex,
+                command.AetheryteName,
+                command.NewbMounted,
+                command.NewbFlying,
+                false,
+                string.Empty,
+                0,
+                0,
+                0));
+        }
+    }
+
+    public CoppeliaQstCommandResponse ReleaseNewb(string sessionId, string reason)
+    {
+        lock (gate)
+        {
+            if (assignment == null)
+                return lastReleasedSessionId == sessionId
+                    ? Accepted("Newb session was already released.")
+                    : Failed("Newb session does not own an active assignment.");
+            if (assignment.Source != AssignmentSource.Newb || assignment.SessionId != sessionId)
+                return Failed("Newb session does not own the active assignment.");
+
+            ReleaseActive(reason);
+            return Accepted("Newb assignment released.");
+        }
+    }
+
     public void Dispose()
     {
         if (disposed)
             return;
 
         disposed = true;
-        ReleaseActive("Coppelia is unloading.");
+        ReleaseActive("HealBot is unloading.");
         companionService.ClearQstOwnership();
         RestoreActivationSnapshot();
         companionSummoningProvider.UnregisterFunc();
@@ -152,7 +285,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         catch (Exception ex)
         {
             Plugin.Log.Error(ex, "[Coppelia][QST] Command failed.");
-            response = Failed("Coppelia could not process the QST command.");
+            response = Failed("HealBot could not process the QST command.");
         }
 
         return JsonSerializer.Serialize(response, CoppeliaQstContract.JsonOptions);
@@ -166,7 +299,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             {
                 return command.ContractVersion < CoppeliaQstContract.Version
                     ? Failed("Coppelia.QST v3 is required. Update QST before pairing this helper.")
-                    : Failed("This Coppelia build does not support the QST contract. Update Coppelia before pairing this helper.");
+                    : Failed("This HealBot build does not support the QST contract. Update HealBot before pairing this helper.");
             }
 
             if (command.Action is "Activate" or "Deactivate")
@@ -198,7 +331,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             plugin.Configuration.AutomationEnabled &&
             plugin.Configuration.BotMode == BotMode.Jot)
         {
-            return Accepted("Coppelia JOAT is already active for QST.");
+            return Accepted("HealBot JOAT is already active for QST.");
         }
 
         plugin.SetPluginEnabled(true, printStatus: false);
@@ -206,21 +339,22 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             !plugin.SetAutomationEnabled(true, printStatus: false))
         {
             var blocker = string.IsNullOrWhiteSpace(plugin.LastAutomationBlocker)
-                ? "Coppelia could not activate JOAT."
+                ? "HealBot could not activate JOAT."
                 : plugin.LastAutomationBlocker;
             RestoreActivationSnapshot();
             return Failed(blocker);
         }
 
-        return Accepted("Coppelia JOAT is active for QST.");
+        return Accepted("HealBot JOAT is active for QST.");
     }
 
     private CoppeliaQstCommandResponse Deactivate()
     {
-        ReleaseActive("QST deactivated Coppelia.");
+        if (assignment?.Source == AssignmentSource.Qst)
+            ReleaseActive("QST deactivated HealBot.");
         companionService.ClearQstOwnership();
         RestoreActivationSnapshot();
-        return Accepted("QST-owned Coppelia activation was restored.");
+        return Accepted("QST-owned HealBot activation was restored.");
     }
 
     private bool SetCompanionSummoning(bool enabled)
@@ -243,13 +377,14 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     {
         if (assignment != null)
         {
-            var sameAssignment = assignment.SessionId == command.SessionId &&
+            var sameAssignment = assignment.Source == AssignmentSource.Qst &&
+                                 assignment.SessionId == command.SessionId &&
                                  string.Equals(assignment.QuesterName, command.QuesterName, StringComparison.Ordinal) &&
                                  assignment.QuesterWorldId == command.QuesterWorldId &&
                                  assignment.DutyOptIn == command.DutyOptIn &&
                                  string.Equals(assignment.DutyInviter, command.DutyInviter, StringComparison.Ordinal);
             if (!sameAssignment)
-                return Failed("Coppelia already has an active QST assignment.");
+                return Failed("HealBot already has an active QST or Newb assignment.");
 
             if (command.DutyOptIn)
             {
@@ -274,6 +409,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             return Failed(travel.Blocker);
 
         assignment = new Assignment(
+            AssignmentSource.Qst,
             command.SessionId,
             command.QuesterName,
             command.QuesterWorldId,
@@ -428,7 +564,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
     private CoppeliaQstCommandResponse? ValidateOwnedAssignment(CoppeliaQstCommand command)
     {
-        if (assignment == null || assignment.SessionId != command.SessionId)
+        if (assignment == null || assignment.Source != AssignmentSource.Qst || assignment.SessionId != command.SessionId)
             return Failed("QST session does not own the active assignment.");
         return null;
     }
@@ -453,7 +589,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             return lastReleasedSessionId == sessionId
                 ? Accepted("QST session was already released.")
                 : Failed("QST session does not own an active assignment.");
-        if (assignment.SessionId != sessionId)
+        if (assignment.Source != AssignmentSource.Qst || assignment.SessionId != sessionId)
             return Failed("QST session does not own the active assignment.");
 
         ReleaseActive("QST released the assignment.");
@@ -541,9 +677,9 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     private (bool Ready, string Blocker) EvaluateJoatReadiness()
     {
         if (!plugin.Configuration.PluginEnabled)
-            return (false, "Coppelia is disabled.");
+            return (false, "HealBot is disabled.");
         if (!plugin.Configuration.AutomationEnabled)
-            return (false, "Coppelia automation is disabled.");
+            return (false, "HealBot automation is disabled.");
         if (plugin.Configuration.BotMode != BotMode.Jot)
             return (false, "Select Jacqueline of All Trades (JOAT).");
 
@@ -758,8 +894,15 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
     private sealed class Assignment
     {
-        public Assignment(string sessionId, string questerName, ushort questerWorldId, bool dutyOptIn, string dutyInviter)
+        public Assignment(
+            AssignmentSource source,
+            string sessionId,
+            string questerName,
+            ushort questerWorldId,
+            bool dutyOptIn,
+            string dutyInviter)
         {
+            Source = source;
             SessionId = sessionId;
             QuesterName = questerName;
             QuesterWorldId = questerWorldId;
@@ -767,6 +910,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             DutyInviter = dutyInviter;
         }
 
+        public AssignmentSource Source { get; }
         public string SessionId { get; }
         public string QuesterName { get; }
         public ushort QuesterWorldId { get; }
@@ -782,4 +926,19 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
     private sealed record FrenSnapshot(bool Enabled, string ConfiguredTarget);
     private sealed record ActivationSnapshot(bool PluginEnabled, bool AutomationEnabled, BotMode Mode);
+
+    private enum AssignmentSource
+    {
+        Qst,
+        Newb,
+    }
+}
+
+internal sealed record CoppeliaAssignmentSnapshot(
+    string Source,
+    string SessionId,
+    string Name,
+    ushort WorldId)
+{
+    public static readonly CoppeliaAssignmentSnapshot Empty = new(string.Empty, string.Empty, string.Empty, 0);
 }

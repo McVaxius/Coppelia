@@ -29,11 +29,13 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IUnlockState UnlockState { get; private set; } = null!;
     [PluginService] internal static IDtrBar DtrBar { get; private set; } = null!;
     [PluginService] internal static IToastGui ToastGui { get; private set; } = null!;
+    [PluginService] internal static IGameInteropProvider GameInteropProvider { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
 
     private readonly MainWindow mainWindow;
     private readonly ConfigWindow configWindow;
     private readonly WatchWindow watchWindow;
+    private readonly MiniWindow miniWindow;
     private IDtrBarEntry? dtrEntry;
     private DateTimeOffset nextDependencyToastUtc = DateTimeOffset.MinValue;
     private bool pendingInitialWatchRefresh = true;
@@ -54,6 +56,7 @@ public sealed class Plugin : IDalamudPlugin
         ActionExecutionService.SetOwnedNavigationPause(CoppeliaTravelService.PauseForAction);
         CoppeliaCompanionService = new CoppeliaCompanionService(CoppeliaTravelService);
         CoppeliaQstIpcService = new CoppeliaQstIpcService(this, CoppeliaTravelService, CoppeliaCompanionService);
+        HealBotPairingService = new HealBotPairingService(this);
         RsrIpcService = new RsrIpcService();
         FrenRiderPowerlevelIpcService = new FrenRiderPowerlevelIpcService();
         var jotFrenRiderIpcService = new FrenRiderPowerlevelIpcService();
@@ -64,19 +67,26 @@ public sealed class Plugin : IDalamudPlugin
         mainWindow = new MainWindow(this);
         configWindow = new ConfigWindow(this);
         watchWindow = new WatchWindow(this);
+        miniWindow = new MiniWindow(this);
 
         WindowSystem.AddWindow(mainWindow);
         WindowSystem.AddWindow(configWindow);
         WindowSystem.AddWindow(watchWindow);
+        WindowSystem.AddWindow(miniWindow);
 
         CommandManager.AddHandler(PluginInfo.Command, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Open Coppelia. Use /healbot config, /healbot watch, /healbot on, /healbot off, /healbot heal, /healbot powerlevel, /healbot joat, /healbot ws, or /healbot j. /healbot jot remains an alias.",
+            HelpMessage = "Open HealBot. Use /healbot mini, config, watch, on, off, heal, joat, powerlevel, newb, status, ws, or j. /healbot jot remains an alias.",
         });
 
-        CommandManager.AddHandler(PluginInfo.AliasCommand, new CommandInfo(OnCommand)
+        CommandManager.AddHandler(PluginInfo.ShortAliasCommand, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Alias for /healbot.",
+            HelpMessage = "Short alias for /healbot.",
+        });
+
+        CommandManager.AddHandler(PluginInfo.LegacyAliasCommand, new CommandInfo(OnCommand)
+        {
+            HelpMessage = "Compatibility alias for /healbot.",
         });
 
         PluginInterface.UiBuilder.Draw += WindowSystem.Draw;
@@ -93,7 +103,7 @@ public sealed class Plugin : IDalamudPlugin
         if (ClientState.IsLoggedIn)
             QueueCommunityLocationRefresh("plugin load while already logged in");
 
-        Log.Information("[Coppelia] Plugin loaded.");
+        Log.Information("[Coppelia] HealBot plugin loaded.");
     }
 
     public Configuration Configuration { get; }
@@ -103,6 +113,7 @@ public sealed class Plugin : IDalamudPlugin
     internal CoppeliaQstIpcService CoppeliaQstIpcService { get; }
     internal CoppeliaTravelService CoppeliaTravelService { get; }
     internal CoppeliaCompanionService CoppeliaCompanionService { get; }
+    internal HealBotPairingService HealBotPairingService { get; }
     internal RsrIpcService RsrIpcService { get; }
     internal ActionExecutionService ActionExecutionService { get; }
     internal AetherytePositionDatabase AetherytePositionDatabase { get; }
@@ -116,6 +127,7 @@ public sealed class Plugin : IDalamudPlugin
     public void Dispose()
     {
         ClientState.Login -= OnLogin;
+        HealBotPairingService.Dispose();
         CoppeliaQstIpcService.Dispose();
         JotRuntimeService.Dispose();
         PowerlevelRuntimeService.Dispose();
@@ -125,13 +137,15 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.OpenConfigUi -= OpenConfigUi;
         PluginInterface.UiBuilder.OpenMainUi -= OpenMainUi;
         CommandManager.RemoveHandler(PluginInfo.Command);
-        CommandManager.RemoveHandler(PluginInfo.AliasCommand);
+        CommandManager.RemoveHandler(PluginInfo.ShortAliasCommand);
+        CommandManager.RemoveHandler(PluginInfo.LegacyAliasCommand);
         WindowSystem.RemoveAllWindows();
         dtrEntry?.Remove();
         mainWindow.Dispose();
         configWindow.Dispose();
         watchWindow.Dispose();
-        Log.Information("[Coppelia] Plugin unloaded.");
+        miniWindow.Dispose();
+        Log.Information("[Coppelia] HealBot plugin unloaded.");
     }
 
     public bool SetHealbotEnabled(bool enabled, bool printStatus)
@@ -141,7 +155,17 @@ public sealed class Plugin : IDalamudPlugin
     {
         if (enabled)
         {
-            if (Configuration.BotMode is BotMode.HealBot or BotMode.Jot)
+            if (Configuration.BotMode == BotMode.Newb)
+            {
+                if (!HealBotPairingService.TryValidateNewbActivation(out var reason))
+                {
+                    LastAutomationBlocker = reason;
+                    if (printStatus)
+                        PrintStatus(reason);
+                    return false;
+                }
+            }
+            else if (Configuration.BotMode is BotMode.HealBot or BotMode.Jot)
             {
                 DependencyService.Refresh(force: true);
                 if (!DependencyService.Current.IsHealbotReady)
@@ -162,7 +186,8 @@ public sealed class Plugin : IDalamudPlugin
                     return false;
                 }
             }
-            else if (!PowerlevelRuntimeService.TryValidateActivation(out var reason))
+            else if (Configuration.BotMode == BotMode.PowerlevelBot &&
+                     !PowerlevelRuntimeService.TryValidateActivation(out var reason))
             {
                 LastAutomationBlocker = reason;
                 if (printStatus)
@@ -187,7 +212,8 @@ public sealed class Plugin : IDalamudPlugin
         Configuration.AutomationEnabled = false;
         Configuration.HealbotEnabled = false;
         LastAutomationBlocker = string.Empty;
-        CoppeliaQstIpcService.ReleaseForDeactivation("Coppelia automation was disabled.");
+        HealBotPairingService.ReleaseForDeactivation("HealBot automation was disabled.");
+        CoppeliaQstIpcService.ReleaseForDeactivation("HealBot automation was disabled.");
         Configuration.Save();
         HealbotRuntimeService.Deactivate("Automation is off.");
         PowerlevelRuntimeService.Deactivate("Automation is off.");
@@ -195,7 +221,7 @@ public sealed class Plugin : IDalamudPlugin
         UpdateDtrBar();
 
         if (printStatus)
-            PrintStatus("Coppelia automation disabled.");
+            PrintStatus("HealBot automation disabled.");
 
         return true;
     }
@@ -210,11 +236,16 @@ public sealed class Plugin : IDalamudPlugin
         }
 
         var wasAutomationEnabled = Configuration.AutomationEnabled;
-        if (mode == BotMode.PowerlevelBot)
-            CoppeliaQstIpcService.ReleaseForDeactivation("PowerlevelBot mode was selected.");
+        HealBotPairingService.ReleaseForDeactivation("Automation mode changed.");
+        CoppeliaQstIpcService.ReleaseForDeactivation("Automation mode changed.");
         HealbotRuntimeService.Deactivate("Mode switched.");
         PowerlevelRuntimeService.Deactivate("Mode switched.");
         JotRuntimeService.Deactivate("Mode switched.");
+        if (wasAutomationEnabled && mode == BotMode.Newb)
+        {
+            Configuration.AutomationEnabled = false;
+            Configuration.HealbotEnabled = false;
+        }
         AutomationModePolicy.ApplyMode(Configuration, mode);
         Configuration.Save();
         UpdateDtrBar();
@@ -247,7 +278,8 @@ public sealed class Plugin : IDalamudPlugin
         Configuration.Save();
         if (!enabled)
         {
-            CoppeliaQstIpcService.ReleaseForDeactivation("Coppelia was disabled.");
+            HealBotPairingService.ReleaseForDeactivation("HealBot was disabled.");
+            CoppeliaQstIpcService.ReleaseForDeactivation("HealBot was disabled.");
             HealbotRuntimeService.Deactivate("Plugin disabled.");
             PowerlevelRuntimeService.Deactivate("Plugin disabled.");
             JotRuntimeService.Deactivate("Plugin disabled.");
@@ -312,6 +344,20 @@ public sealed class Plugin : IDalamudPlugin
         watchWindow.IsOpen = true;
     }
 
+    public void ToggleMiniUi()
+    {
+        if (!miniWindow.IsOpen)
+            miniWindow.RefreshDrafts();
+        miniWindow.Toggle();
+    }
+
+    public void OpenMiniUi()
+    {
+        if (!miniWindow.IsOpen)
+            miniWindow.RefreshDrafts();
+        miniWindow.IsOpen = true;
+    }
+
     public void PrintStatus(string message)
     {
         ChatGui.Print($"[{PluginInfo.DisplayName}] {message}");
@@ -350,7 +396,7 @@ public sealed class Plugin : IDalamudPlugin
         if (!SetAutomationEnabled(true, printStatus: true))
         {
             message = string.IsNullOrWhiteSpace(LastAutomationBlocker)
-                ? "Coppelia could not enable the selected mode."
+                ? "HealBot could not enable the selected mode."
                 : LastAutomationBlocker;
             return false;
         }
@@ -392,14 +438,14 @@ public sealed class Plugin : IDalamudPlugin
         mainWindow.ApplySavedPosition();
         configWindow.ApplySavedPosition();
         watchWindow.ApplySavedPosition();
-        PrintStatus("Reset Coppelia window positions to 1,1.");
+        PrintStatus("Reset HealBot window positions to 1,1.");
     }
 
     public void JumpMainWindowToRandomVisibleLocation()
     {
         mainWindow.QueueRandomVisibleJump();
         mainWindow.IsOpen = true;
-        PrintStatus("Queued a random visible jump for the Coppelia main window.");
+        PrintStatus("Queued a random visible jump for the HealBot main window.");
     }
 
     public void ShowDependencyToast(string message)
@@ -431,6 +477,8 @@ public sealed class Plugin : IDalamudPlugin
             ? "Off"
             : !Configuration.AutomationEnabled
                 ? "Ready"
+                : Configuration.BotMode == BotMode.Newb
+                    ? HealBotPairingService.ConnectionStatus
                 : Configuration.BotMode == BotMode.PowerlevelBot
                     ? PowerlevelRuntimeService.LastIssuedAction
                     : Configuration.BotMode == BotMode.Jot
@@ -468,6 +516,7 @@ public sealed class Plugin : IDalamudPlugin
     private void OnFrameworkUpdate(IFramework framework)
     {
         CoppeliaQstIpcService.Update();
+        HealBotPairingService.Update();
         DependencyService.Refresh();
         WatchTargetService.Update(Configuration, force: pendingInitialWatchRefresh);
         pendingInitialWatchRefresh = false;
@@ -531,6 +580,12 @@ public sealed class Plugin : IDalamudPlugin
             return;
         }
 
+        if (trimmed.Equals("mini", StringComparison.OrdinalIgnoreCase))
+        {
+            ToggleMiniUi();
+            return;
+        }
+
         if (trimmed.Equals("heal", StringComparison.OrdinalIgnoreCase))
         {
             SetBotMode(BotMode.HealBot, printStatus: true);
@@ -548,6 +603,12 @@ public sealed class Plugin : IDalamudPlugin
             trimmed.Equals("jot", StringComparison.OrdinalIgnoreCase))
         {
             SetBotMode(BotMode.Jot, printStatus: true);
+            return;
+        }
+
+        if (trimmed.Equals("newb", StringComparison.OrdinalIgnoreCase))
+        {
+            SetBotMode(BotMode.Newb, printStatus: true);
             return;
         }
 
@@ -586,6 +647,14 @@ public sealed class Plugin : IDalamudPlugin
 
     private void ActivateSelectedMode()
     {
+        if (Configuration.BotMode == BotMode.Newb)
+        {
+            HealbotRuntimeService.Deactivate("Newb mode performs no local healing.");
+            JotRuntimeService.Deactivate("Newb mode performs no local attacking.");
+            PowerlevelRuntimeService.Deactivate("Newb mode selected.");
+            return;
+        }
+
         if (Configuration.BotMode == BotMode.PowerlevelBot)
         {
             HealbotRuntimeService.Deactivate("PowerlevelBot mode selected.");
@@ -607,6 +676,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             BotMode.PowerlevelBot => PowerlevelRuntimeService.StatusText,
             BotMode.Jot => $"Healing: {HealbotRuntimeService.StatusText} Attacking: {JotRuntimeService.StatusText}",
+            BotMode.Newb => $"Pairing: {HealBotPairingService.ConnectionStatus}. {HealBotPairingService.RuntimeStatus} Blocker: {(string.IsNullOrWhiteSpace(HealBotPairingService.Blocker) ? "none" : HealBotPairingService.Blocker)}",
             _ => HealbotRuntimeService.StatusText,
         };
 }

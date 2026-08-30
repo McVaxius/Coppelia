@@ -5,6 +5,7 @@ public enum BotMode
     HealBot = 0,
     PowerlevelBot = 1,
     Jot = 2,
+    Newb = 3,
 }
 
 public enum PowerlevelJob
@@ -22,6 +23,7 @@ internal static class AutomationModeText
             BotMode.HealBot => "HealBot",
             BotMode.PowerlevelBot => "PowerlevelBot",
             BotMode.Jot => "Jacqueline of All Trades (JOAT)",
+            BotMode.Newb => "Newb",
             _ => mode.ToString(),
         };
 
@@ -30,6 +32,7 @@ internal static class AutomationModeText
         {
             BotMode.PowerlevelBot => "PL",
             BotMode.Jot => "JOAT",
+            BotMode.Newb => "NB",
             _ => "HB",
         };
 

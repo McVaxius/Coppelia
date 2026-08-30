@@ -73,7 +73,7 @@ internal sealed class CoppeliaTravelService
         actionHoldUntilUtc = DateTime.UtcNow.AddSeconds(2);
         PauseOwnedRoute();
         StopForwardProbePath();
-        State = "Paused for a Coppelia action";
+        State = "Paused for a HealBot action";
         Plugin.Log.Information("[Coppelia][QST] Accepted action entered the two-second travel hold.");
     }
 
@@ -332,7 +332,7 @@ internal sealed class CoppeliaTravelService
         if (DateTime.UtcNow < actionHoldUntilUtc)
         {
             PauseOwnedRoute();
-            State = "Paused for a Coppelia action";
+            State = "Paused for a HealBot action";
             return;
         }
 

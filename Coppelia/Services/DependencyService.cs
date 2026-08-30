@@ -51,8 +51,8 @@ internal sealed class DependencyService
             missing.Add("BMR or VBM");
 
         return missing.Count == 0
-            ? "All Coppelia required dependencies are ready."
-            : $"Coppelia requires {string.Join(", ", missing)}. Install the missing plugin(s) or disable healbot in settings.";
+            ? "All HealBot required dependencies are ready."
+            : $"HealBot requires {string.Join(", ", missing)}. Install the missing plugin(s) or disable automation in settings.";
     }
 }
 

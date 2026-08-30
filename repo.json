@@ -2,11 +2,11 @@
   {
     "$schema": "https://raw.githubusercontent.com/goatcorp/Dalamud/master/Dalamud/Configuration/PluginManifest/pluginmanifest.schema.json",
     "Author": "DhogGPT",
-    "Name": "Coppelia",
-    "Punchline": "Guided watched-target healing, healer-first JOT support, and Fren-assisted powerleveling.",
-    "Description": "Coppelia provides guided setup for three mutually exclusive automation modes. HealBot runs configurable WHM, SCH, AST, or SGE healing, raises, buffs, and pre-buffs for up to 20 watched friendly targets. Jacqueline of All Trades (JOT) gives that healing absolute priority, then uses the equipped healer's highest available single-target filler spell only when the healing decision is idle and an eligible damaged enemy is already targeting FrenRider's configured visible Fren or the local healer. PowerlevelBot retains its BRD/MCH instant-action policy. Includes dependency/readiness checks, optional saved targets, and optional Rotation Solver Reborn isolation for HealBot and JOT. Use /healbot to open.",
+    "Name": "HealBot",
+    "Punchline": "Guided healing, healer-first JOAT, Fren-assisted powerleveling, and paired Newb travel.",
+    "Description": "HealBot provides four mutually exclusive modes: watched-target healing, healer-first JOAT, BRD/MCH PowerlevelBot, and one-to-one Newb pairing over authenticated direct TCP. Newb sends exact identity and travel state to a HealBot for healing and chase while performing no local healing or attacking. LAN traffic is authenticated but not encrypted, so names and coordinates remain visible on the network. Use /healbot, /hb, or /copellia to open.",
     "InternalName": "Coppelia",
-    "AssemblyVersion": "1.2.1.0",
+    "AssemblyVersion": "1.3.0.0",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 15,
     "Tags": [
@@ -19,8 +19,8 @@
       "utility"
     ],
     "RepoUrl": "https://github.com/McVaxius/Coppelia",
-    "DownloadLinkInstall": "https://github.com/McVaxius/Coppelia/releases/download/v1.2.1.0/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/McVaxius/Coppelia/releases/download/v1.2.1.0/latest.zip",
+    "DownloadLinkInstall": "https://github.com/McVaxius/Coppelia/releases/download/v1.3.0.0/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/McVaxius/Coppelia/releases/download/v1.3.0.0/latest.zip",
     "DownloadLinkTesting": "https://github.com/McVaxius/Coppelia/releases/latest/download/latest.zip",
     "IconUrl": "https://raw.githubusercontent.com/McVaxius/Coppelia/main/Coppelia/images/icon.png"
   }
