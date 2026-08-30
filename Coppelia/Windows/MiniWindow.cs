@@ -109,8 +109,7 @@ public sealed class MiniWindow : Window, IDisposable
     private bool ShouldDrawJoatAttackMode()
         => plugin.Configuration.OperatingRole == OperatingRole.Helper ||
            (plugin.Configuration.OperatingRole == OperatingRole.StandAlone &&
-            plugin.Configuration.BotMode == BotMode.Jot) ||
-           plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned;
+            plugin.Configuration.BotMode == BotMode.Jot);
 
     private void DrawJoatAttackMode()
     {
@@ -143,6 +142,8 @@ public sealed class MiniWindow : Window, IDisposable
                 $"QST controls the active mode ({(fullRsrRotation ? "Full RSR rotation" : "DoTs only")}); " +
                 "the saved local choice resumes after release.");
         }
+
+        ImGui.TextDisabled("Both choices use RSR Manual targeting. Full RSR changes offensive actions and AoE only.");
     }
 
     private void DrawCompanion()

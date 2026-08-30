@@ -537,10 +537,17 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
             var wasOwned = qstJoatAttackModeOwned;
             var previousMode = qstFullRsrRotation;
+            plugin.DependencyService.Refresh(force: true);
+            if (wasOwned && previousMode == enabled && plugin.HealbotRuntimeService.IsRsrControlReady)
+                return true;
+
             qstJoatAttackModeOwned = true;
             qstFullRsrRotation = enabled;
             if (plugin.HealbotRuntimeService.TryApplyRsrProfileNow())
                 return true;
+
+            if (wasOwned && previousMode == enabled)
+                return false;
 
             qstJoatAttackModeOwned = wasOwned;
             qstFullRsrRotation = previousMode;

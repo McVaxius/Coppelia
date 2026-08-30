@@ -9,6 +9,8 @@ namespace Coppelia.Services;
 
 internal sealed class JotRuntimeService : IDisposable
 {
+    private const float PairedAttackRangeYalms = 30f;
+
     private readonly Plugin plugin;
     private readonly FrenRiderPowerlevelIpcService frenRiderIpcService;
     private readonly RsrIpcService rsrIpcService;
@@ -248,31 +250,89 @@ internal sealed class JotRuntimeService : IDisposable
             return;
         }
 
-        if (pairedAssignment && pairedLeaderObjectId == 0)
+        if (pairedAssignment)
         {
-            HoldRsrDamage();
-            StatusText = "Idle: the exact QST target is selected but remote.";
-            LastIssuedAction = "Idle";
-            LastMatchedRule = "The exact QST target is remote.";
+            EvaluatePairedAttack(localPlayer, pairedLeaderObjectId);
             return;
         }
 
-        var protectedLeaderObjectId = pairedAssignment
-            ? pairedLeaderObjectId
-            : status.VisibleFrenObjectId;
-        var candidates = BuildTargetCandidates(localPlayer, protectedLeaderObjectId);
+        EvaluateStandaloneAttack(localPlayer, status.VisibleFrenObjectId);
+    }
+
+    private void EvaluatePairedAttack(ICharacter localPlayer, ulong pairedLeaderObjectId)
+    {
+        if (pairedLeaderObjectId == 0 || ResolveCharacter(pairedLeaderObjectId) is not { } pairedLeader)
+        {
+            HoldRsrDamage();
+            StatusText = "Idle: the exact paired target is selected but remote.";
+            LastIssuedAction = "Idle";
+            LastMatchedRule = "The exact paired target is remote.";
+            return;
+        }
+
+        var pairDistance = Vector3.Distance(localPlayer.Position, pairedLeader.Position);
+        if (pairDistance > PairedAttackRangeYalms)
+        {
+            HoldRsrDamage();
+            StatusText = $"Holding: the exact paired target is {pairDistance:0.0} yalms away.";
+            LastIssuedAction = "Holding";
+            LastMatchedRule = "The exact paired target is beyond 30 yalms.";
+            return;
+        }
+
+        var candidates = BuildTargetCandidates(localPlayer, pairedLeaderObjectId, includeFullHp: true);
+        var selection = SelectPairedTarget(candidates, pairedLeader, localPlayer.GameObjectId);
+
+        Plugin.TargetManager.Target = pairedLeader;
+        if (!rsrIpcService.TrySetMode(RsrIpcService.RsrStateCommandType.Manual))
+        {
+            LastIssuedAction = "Blocked";
+            LastMatchedRule = "RSR Manual failed.";
+            StatusText = "Blocked: Rotation Solver Reborn rejected Manual mode for the paired JOAT assignment.";
+            return;
+        }
+
+        var attackMode = plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation
+            ? "full RSR rotation"
+            : "DoTs only";
+        if (selection.Target == null)
+        {
+            LastIssuedAction = "RSR Manual";
+            LastMatchedRule = "Waiting on the friendly paired target for an engaged hostile.";
+            StatusText = $"RSR Manual ({attackMode}) waiting; no engaged hostile is eligible within the paired range.";
+            return;
+        }
+
+        var character = ResolveCharacter(selection.Target.GameObjectId);
+        if (character == null)
+        {
+            LastIssuedAction = "RSR Manual";
+            LastMatchedRule = "The selected paired hostile disappeared.";
+            StatusText = $"RSR Manual ({attackMode}) waiting; the selected hostile disappeared.";
+            return;
+        }
+
+        Plugin.TargetManager.Target = character;
+        LastIssuedAction = "RSR Manual";
+        LastMatchedRule =
+            $"{plugin.FormatDisplayName(selection.Target.Name)} - {(selection.LeaderTarget ? "paired target" : "engaging pair/healer")}";
+        StatusText =
+            $"RSR Manual ({attackMode}) on {plugin.FormatDisplayName(selection.Target.Name)} at {selection.Target.HpRatio:P0} HP.";
+    }
+
+    private void EvaluateStandaloneAttack(ICharacter localPlayer, ulong frenObjectId)
+    {
+        var candidates = BuildTargetCandidates(localPlayer, frenObjectId, includeFullHp: false);
         var selection = targetSelector.Select(
             candidates,
-            protectedLeaderObjectId,
+            frenObjectId,
             localPlayer.GameObjectId,
             DateTimeOffset.UtcNow);
 
         if (selection.Target == null)
         {
             HoldRsrDamage();
-            StatusText = pairedAssignment
-                ? "Idle: healing is clear, but no damaged enemy is targeting the exact QST target or local healer."
-                : "Idle: healing is clear, but no damaged enemy is targeting the Fren or local healer.";
+            StatusText = "Idle: healing is clear, but no damaged enemy is targeting the Fren or local healer.";
             LastIssuedAction = "Idle";
             LastMatchedRule = "No eligible tagged enemy.";
             return;
@@ -289,26 +349,27 @@ internal sealed class JotRuntimeService : IDisposable
         }
 
         Plugin.TargetManager.Target = character;
-        if (rsrIpcService.TrySetMode(RsrIpcService.RsrStateCommandType.Auto))
+        if (rsrIpcService.TrySetMode(RsrIpcService.RsrStateCommandType.Manual))
         {
             targetSelector.MarkActionLanded(character.GameObjectId);
             var attackMode = plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation
                 ? "full RSR rotation"
                 : "DoTs only";
-            LastIssuedAction = "RSR Auto";
+            LastIssuedAction = "RSR Manual";
             LastMatchedRule = $"{plugin.FormatDisplayName(selection.Target.Name)} - {(selection.Retained ? "retained" : "selected")}";
-            StatusText = $"RSR Auto ({attackMode}) on {plugin.FormatDisplayName(selection.Target.Name)} at {selection.Target.HpRatio:P0} HP.";
+            StatusText = $"RSR Manual ({attackMode}) on {plugin.FormatDisplayName(selection.Target.Name)} at {selection.Target.HpRatio:P0} HP.";
             return;
         }
 
         LastIssuedAction = "Blocked";
-        LastMatchedRule = $"{plugin.FormatDisplayName(selection.Target.Name)} - RSR Auto failed";
-        StatusText = $"Blocked: Rotation Solver Reborn rejected Auto mode for {plugin.FormatDisplayName(selection.Target.Name)}.";
+        LastMatchedRule = $"{plugin.FormatDisplayName(selection.Target.Name)} - RSR Manual failed";
+        StatusText = $"Blocked: Rotation Solver Reborn rejected Manual mode for {plugin.FormatDisplayName(selection.Target.Name)}.";
     }
 
     private PowerlevelTargetSnapshot[] BuildTargetCandidates(
         ICharacter localPlayer,
-        ulong frenObjectId)
+        ulong protectedLeaderObjectId,
+        bool includeFullHp)
     {
         var result = new List<PowerlevelTargetSnapshot>();
 
@@ -318,7 +379,7 @@ internal sealed class JotRuntimeService : IDisposable
                 continue;
 
             if (obj.GameObjectId == localPlayer.GameObjectId ||
-                obj.GameObjectId == frenObjectId ||
+                obj.GameObjectId == protectedLeaderObjectId ||
                 battleNpc.BattleNpcKind is BattleNpcSubKind.Buddy or BattleNpcSubKind.NpcPartyMember or BattleNpcSubKind.Combatant)
             {
                 continue;
@@ -336,13 +397,48 @@ internal sealed class JotRuntimeService : IDisposable
                 obj.TargetObjectId,
                 IsUsable: true);
 
-            if (!PowerlevelTargetSelector.IsInitiallyEligible(preliminary, frenObjectId, localPlayer.GameObjectId))
+            if (includeFullHp)
+            {
+                if (preliminary.GameObjectId == 0 || preliminary.IsDead ||
+                    !preliminary.IsTargetable || preliminary.MaxHp == 0)
+                {
+                    continue;
+                }
+            }
+            else if (!PowerlevelTargetSelector.IsInitiallyEligible(
+                         preliminary,
+                         protectedLeaderObjectId,
+                         localPlayer.GameObjectId))
+            {
                 continue;
+            }
 
             result.Add(preliminary);
         }
 
         return result.ToArray();
+    }
+
+    private static (PowerlevelTargetSnapshot? Target, bool LeaderTarget) SelectPairedTarget(
+        IReadOnlyList<PowerlevelTargetSnapshot> candidates,
+        ICharacter pairedLeader,
+        ulong localPlayerObjectId)
+    {
+        var leaderTarget = candidates.FirstOrDefault(candidate =>
+            candidate.GameObjectId == pairedLeader.TargetObjectId &&
+            (candidate.IsDamaged || candidate.TargetObjectId != 0));
+        if (leaderTarget != null)
+            return (leaderTarget, true);
+
+        var engagingTarget = candidates
+            .Where(candidate =>
+                candidate.TargetObjectId == pairedLeader.GameObjectId ||
+                candidate.TargetObjectId == localPlayerObjectId)
+            .OrderBy(candidate => candidate.HpRatio)
+            .ThenBy(candidate => candidate.Distance)
+            .ThenBy(candidate => candidate.GameObjectId)
+            .FirstOrDefault();
+        return (engagingTarget, false);
     }
 
     private static ICharacter? ResolveCharacter(ulong gameObjectId)

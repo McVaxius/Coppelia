@@ -52,7 +52,7 @@ internal sealed class RsrIpcService
         if (joatMode && fullRsrRotation)
         {
             ok &= TrySetSetting("AoEType", sessionSnapshot.AoEType.ToString());
-            ok &= TrySetSetting("HostileType", sessionSnapshot.HostileType.ToString());
+            ok &= TrySetSetting("HostileType", RsrTargetHostileType.TargetsHaveTarget.ToString());
             foreach (var pair in sessionSnapshot.ActionEnabledByName)
                 ok &= TryToggleAction(pair.Key, pair.Value);
         }

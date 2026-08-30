@@ -377,7 +377,7 @@ public sealed class ConfigWindow : Window, IDisposable
             }
 
             CoppeliaUi.WrappedHelp(
-                "Healing wins every 900-ms decision cycle. Coppelia switches RSR off before a matching Watch rule acts, holds it off while healing is queued, blocked, or casting, and resumes RSR Auto only after a genuinely idle healing decision and a restricted enemy selection.");
+                "Healing wins every 900-ms decision cycle. Coppelia switches RSR off before a matching Watch rule acts, holds it off while healing is queued, blocked, or casting, and uses RSR Manual only after a genuinely idle healing decision. Paired JOAT waits in Manual at or below 30 yalms while Coppelia alone selects an engaged hostile.");
         }
 
         DrawSetupNavigation(allowContinue: true);
@@ -388,7 +388,7 @@ public sealed class ConfigWindow : Window, IDisposable
         var draft = setupDraft!;
         CoppeliaUi.SectionHeader(
             "JOAT attack mode",
-            "DoTs only enables only the equipped healer's RSR damage-over-time actions. Full RSR rotation reuses the offensive actions, AoE mode, and hostile-target mode captured when Coppelia took ownership.");
+            "Both choices use RSR Manual targeting. DoTs only enables only the equipped healer's damage-over-time actions; Full RSR restores the captured offensive actions and AoE mode without enabling automatic targeting.");
         ImGui.BeginDisabled(plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned);
         if (ImGui.RadioButton("DoTs only##QuickSetupJoatAttack", !draft.JoatFullRsrRotation))
             draft.JoatFullRsrRotation = false;
@@ -551,7 +551,7 @@ public sealed class ConfigWindow : Window, IDisposable
                 ? $"Saved targets on; {draft.SavedTargetScanRangeYalms} y rejoin scan."
                 : "Saved targets off.");
             if (draft.Mode == BotMode.Jot)
-                ImGui.TextDisabled($"JOAT attack mode: {(draft.JoatFullRsrRotation ? "Full RSR rotation" : "DoTs only")}; attacks run only during genuinely idle healing cycles.");
+                ImGui.TextDisabled($"JOAT attack mode: {(draft.JoatFullRsrRotation ? "Full RSR rotation" : "DoTs only")}; both use RSR Manual targeting during genuinely idle healing cycles.");
         }
         else
         {
@@ -742,7 +742,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
         CoppeliaUi.SectionHeader(
             "JOAT attack mode",
-            "This saved local choice is used by Stand-alone JOAT and resumes after QST releases its temporary override.");
+            "This saved local choice is used by Stand-alone JOAT and resumes after QST releases its temporary override. Both choices use RSR Manual targeting; Full RSR changes captured offensive actions and AoE, not targeting.");
         ImGui.BeginDisabled(plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned);
         if (ImGui.RadioButton("DoTs only##GeneralJoatAttack", !configuration.JoatFullRsrRotation))
         {
