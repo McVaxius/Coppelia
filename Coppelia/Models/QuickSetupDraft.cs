@@ -20,6 +20,7 @@ internal sealed class QuickSetupDraft
     public OperatingRole Role { get; set; }
     public BotMode Mode { get; set; }
     public PowerlevelJob PowerlevelJob { get; set; }
+    public bool JoatFullRsrRotation { get; set; }
     public bool WatchPlayers { get; set; }
     public bool WatchCompanionChocobos { get; set; }
     public bool WatchPartyNpcs { get; set; }
@@ -39,6 +40,7 @@ internal sealed class QuickSetupDraft
                 : configuration.OperatingRole,
             Mode = configuration.BotMode,
             PowerlevelJob = configuration.PowerlevelJob,
+            JoatFullRsrRotation = configuration.JoatFullRsrRotation,
             WatchPlayers = configuration.WatchPlayers,
             WatchCompanionChocobos = configuration.WatchCompanionChocobos,
             WatchPartyNpcs = configuration.WatchPartyNpcs,
@@ -55,6 +57,7 @@ internal sealed class QuickSetupDraft
     {
         configuration.BotMode = Mode == BotMode.Newb ? BotMode.HealBot : Mode;
         configuration.PowerlevelJob = PowerlevelJob;
+        configuration.JoatFullRsrRotation = JoatFullRsrRotation;
         configuration.WatchPlayers = WatchPlayers;
         configuration.WatchCompanionChocobos = WatchCompanionChocobos;
         configuration.WatchPartyNpcs = WatchPartyNpcs;
@@ -91,6 +94,8 @@ internal sealed record JotSetupReadiness(
     bool WatchedTargetsAvailable,
     bool HealingReady,
     string HealingReason,
+    bool RotationSolverLoaded,
+    bool RotationSolverControlReady,
     bool FrenRiderIpcAvailable,
     bool FrenRiderCompatible,
     bool FrenRiderEnabled,

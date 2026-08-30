@@ -16,12 +16,26 @@ internal sealed class RsrIpcService
         "RotationSolver.json");
 
     private RsrSessionSnapshot? sessionSnapshot;
+    private RsrStateCommandType? lastRequestedMode;
 
-    public bool ApplyHealbotProfile(HealbotJobProfile profile, Configuration configuration)
+    public bool HasSessionSnapshot => sessionSnapshot != null;
+
+    public bool ApplyHealbotProfile(
+        HealbotJobProfile profile,
+        Configuration configuration,
+        bool joatMode,
+        bool fullRsrRotation)
     {
-        sessionSnapshot ??= CaptureSessionSnapshot(profile);
+        if (sessionSnapshot == null)
+        {
+            sessionSnapshot = CaptureSessionSnapshot(profile);
+            if (sessionSnapshot == null)
+                return false;
+        }
 
         var ok = true;
+        if (joatMode)
+            ok &= TrySetMode(RsrStateCommandType.Off);
         ok &= TrySetSetting("AutoHeal", "false");
         ok &= TrySetSetting("UseGroundBeneficialAbility", "false");
         ok &= TrySetSetting("UseAoeDefense", "false");
@@ -29,8 +43,6 @@ internal sealed class RsrIpcService
         ok &= TrySetSetting("FriendlyPartyNpcHealRaise3", ToBoolString(configuration.WatchPartyNpcs));
         ok &= TrySetSetting("FriendlyBattleNpcHeal", ToBoolString(configuration.WatchFriendlyBattleNpcs));
         ok &= TrySetSetting("ChocoboPartyMember", ToBoolString(configuration.WatchCompanionChocobos));
-        ok &= TrySetSetting("AoEType", RsrAoEType.Off.ToString());
-        ok &= TrySetSetting("HostileType", RsrTargetHostileType.TargetsHaveTarget.ToString());
         ok &= TrySetSetting("RaiseType", RsrRaiseType.AllOutOfDuty.ToString());
         ok &= TrySetSetting("HealthAreaAbilityHot", "0");
         ok &= TrySetSetting("HealthAreaSpellHot", "0");
@@ -41,14 +53,28 @@ internal sealed class RsrIpcService
         ok &= TrySetSetting("HealthSingleAbility", "0");
         ok &= TrySetSetting("HealthSingleSpell", "0");
 
-        foreach (var actionName in profile.OffensiveActionNames.Distinct(StringComparer.OrdinalIgnoreCase))
-            ok &= TryToggleAction(actionName, enabled: false);
+        if (joatMode && fullRsrRotation)
+        {
+            ok &= TrySetSetting("AoEType", sessionSnapshot.AoEType.ToString());
+            ok &= TrySetSetting("HostileType", sessionSnapshot.HostileType.ToString());
+            foreach (var pair in sessionSnapshot.ActionEnabledByName)
+                ok &= TryToggleAction(pair.Key, pair.Value);
+        }
+        else
+        {
+            ok &= TrySetSetting("AoEType", RsrAoEType.Off.ToString());
+            ok &= TrySetSetting("HostileType", RsrTargetHostileType.TargetsHaveTarget.ToString());
+            var dotActions = new HashSet<string>(profile.DotActionNames, StringComparer.OrdinalIgnoreCase);
+            foreach (var actionName in profile.OffensiveActionNames.Distinct(StringComparer.OrdinalIgnoreCase))
+                ok &= TryToggleAction(actionName, joatMode && dotActions.Contains(actionName));
+        }
 
-        ok &= TrySetMode(RsrStateCommandType.Henched);
+        if (!joatMode)
+            ok &= TrySetMode(RsrStateCommandType.Henched);
         return ok;
     }
 
-    public void RestoreSessionSnapshot(bool keepRaiseOutsideDutyEnabled)
+    public void RestoreSessionSnapshot()
     {
         if (sessionSnapshot == null)
             return;
@@ -62,8 +88,7 @@ internal sealed class RsrIpcService
         TrySetSetting("ChocoboPartyMember", ToBoolString(sessionSnapshot.ChocoboPartyMember));
         TrySetSetting("AoEType", sessionSnapshot.AoEType.ToString());
         TrySetSetting("HostileType", sessionSnapshot.HostileType.ToString());
-        if (!keepRaiseOutsideDutyEnabled)
-            TrySetSetting("RaiseType", sessionSnapshot.RaiseType.ToString());
+        TrySetSetting("RaiseType", sessionSnapshot.RaiseType.ToString());
         TrySetSetting("HealthAreaAbilityHot", sessionSnapshot.HealthAreaAbilityHot.ToString("0.##", CultureInfo.InvariantCulture));
         TrySetSetting("HealthAreaSpellHot", sessionSnapshot.HealthAreaSpellHot.ToString("0.##", CultureInfo.InvariantCulture));
         TrySetSetting("HealthAreaAbility", sessionSnapshot.HealthAreaAbility.ToString("0.##", CultureInfo.InvariantCulture));
@@ -78,6 +103,7 @@ internal sealed class RsrIpcService
 
         TrySetMode(RsrStateCommandType.Off);
         sessionSnapshot = null;
+        lastRequestedMode = null;
     }
 
     public bool TryTriggerSingleTargetHeal()
@@ -88,11 +114,15 @@ internal sealed class RsrIpcService
 
     public bool TrySetMode(RsrStateCommandType mode)
     {
+        if (lastRequestedMode == mode)
+            return true;
+
         try
         {
             Plugin.PluginInterface
                 .GetIpcSubscriber<RsrStateCommandType, object>($"{IpcPrefix}.ChangeOperatingMode")
                 .InvokeAction(mode);
+            lastRequestedMode = mode;
             return true;
         }
         catch (Exception ex)
@@ -150,9 +180,15 @@ internal sealed class RsrIpcService
         }
     }
 
-    private RsrSessionSnapshot CaptureSessionSnapshot(HealbotJobProfile profile)
+    private RsrSessionSnapshot? CaptureSessionSnapshot(HealbotJobProfile profile)
     {
         var root = LoadRoot();
+        if (root == null)
+        {
+            Plugin.Log.Debug("[Coppelia] RotationSolver.json is unavailable; RSR ownership was not acquired.");
+            return null;
+        }
+
         var snapshot = new RsrSessionSnapshot
         {
             AutoHeal = ReadBooleanSetting(root, "AutoHeal", fallback: true),
@@ -176,7 +212,10 @@ internal sealed class RsrIpcService
         };
 
         foreach (var pair in ResolveActionIds(profile.OffensiveActionNames))
-            snapshot.ActionEnabledByName[pair.Key] = ReadActionEnabled(root, profile.JobAbbreviation, pair.Value, fallback: true);
+        {
+            snapshot.ActionEnabledByName[pair.Key] =
+                !TryReadActionEnabled(root, profile.JobAbbreviation, pair.Value, out var enabled) || enabled;
+        }
 
         return snapshot;
     }
@@ -226,16 +265,28 @@ internal sealed class RsrIpcService
         return result;
     }
 
-    private static bool ReadActionEnabled(JsonObject? root, string jobAbbreviation, uint actionRowId, bool fallback)
+    private static bool TryReadActionEnabled(
+        JsonObject root,
+        string jobAbbreviation,
+        uint actionRowId,
+        out bool enabled)
     {
         try
         {
             var actionNode = root?["_rotationActionConfigDict"]?[jobAbbreviation]?[actionRowId.ToString()]?["IsEnabled"];
-            return actionNode?.GetValue<bool>() ?? fallback;
+            if (actionNode == null)
+            {
+                enabled = false;
+                return false;
+            }
+
+            enabled = actionNode.GetValue<bool>();
+            return true;
         }
         catch
         {
-            return fallback;
+            enabled = false;
+            return false;
         }
     }
 
@@ -294,9 +345,6 @@ internal sealed class RsrIpcService
             return fallback;
         }
     }
-
-    private static string FormatRatio(int percent)
-        => (Math.Clamp(percent, 0, 100) / 100f).ToString("0.##", CultureInfo.InvariantCulture);
 
     private static string ToBoolString(bool value)
         => value ? "true" : "false";

@@ -344,6 +344,19 @@ public sealed class ConfigWindow : Window, IDisposable
         if (jot)
         {
             CoppeliaUi.SectionHeader(
+                "JOAT attack mode",
+                "DoTs only enables only the equipped healer's RSR damage-over-time actions. Full RSR rotation reuses the offensive actions, AoE mode, and hostile-target mode captured when Coppelia took ownership.");
+            ImGui.BeginDisabled(plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned);
+            if (ImGui.RadioButton("DoTs only##QuickSetupJoatAttack", !draft.JoatFullRsrRotation))
+                draft.JoatFullRsrRotation = false;
+            ImGui.SameLine();
+            if (ImGui.RadioButton("Full RSR rotation##QuickSetupJoatAttack", draft.JoatFullRsrRotation))
+                draft.JoatFullRsrRotation = true;
+            ImGui.EndDisabled();
+            if (plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned)
+                ImGui.TextDisabled("QST currently controls the active attack mode; the saved local choice resumes after release.");
+
+            CoppeliaUi.SectionHeader(
                 "JOAT attacking readiness",
                 "JOAT never adds FrenRider's Fren to Watch. Explicitly select the Fren there so healing can protect it; attacks remain limited to enemies already targeting that visible Fren or the local healer.");
             RefreshJotReadiness();
@@ -355,6 +368,8 @@ public sealed class ConfigWindow : Window, IDisposable
                 CoppeliaUi.StatusLine("Healer action matrix", readiness.HealerConfigurationEnabled, "Enabled", "Disabled");
                 CoppeliaUi.StatusLine("Watched targets", readiness.WatchedTargetsAvailable, "Selected", "None selected");
                 CoppeliaUi.StatusLine("Healing gate", readiness.HealingReady, "Ready", readiness.HealingReason);
+                CoppeliaUi.StatusLine("Rotation Solver Reborn", readiness.RotationSolverLoaded, "Loaded", "Missing");
+                CoppeliaUi.StatusLine("RSR control", readiness.RotationSolverControlReady, "Ready", "Not acquired");
                 CoppeliaUi.StatusLine(
                     "FrenRider IPC",
                     readiness.FrenRiderIpcAvailable && readiness.FrenRiderCompatible,
@@ -373,7 +388,7 @@ public sealed class ConfigWindow : Window, IDisposable
             }
 
             CoppeliaUi.WrappedHelp(
-                "Healing wins every 900-ms decision cycle. JOAT attacks only after no healing action was queued or blocked, using the highest available single-target filler spell for the equipped healer. It never uses DoTs, AoE, or oGCD attacks.");
+                "Healing wins every 900-ms decision cycle. Coppelia switches RSR off before a matching Watch rule acts, holds it off while healing is queued, blocked, or casting, and resumes RSR Auto only after a genuinely idle healing decision and a restricted enemy selection.");
         }
 
         DrawSetupNavigation(allowContinue: true);
@@ -527,7 +542,7 @@ public sealed class ConfigWindow : Window, IDisposable
                 ? $"Saved targets on; {draft.SavedTargetScanRangeYalms} y rejoin scan."
                 : "Saved targets off.");
             if (draft.Mode == BotMode.Jot)
-                ImGui.TextDisabled("JOAT attacks only during genuinely idle healing cycles and ignores the Powerlevel job selection.");
+                ImGui.TextDisabled($"JOAT attack mode: {(draft.JoatFullRsrRotation ? "Full RSR rotation" : "DoTs only")}; attacks run only during genuinely idle healing cycles.");
         }
         else
         {
@@ -714,6 +729,29 @@ public sealed class ConfigWindow : Window, IDisposable
             configuration.CompanionStance = CoppeliaCompanionPolicy.StanceNames[companionStance];
             plugin.CoppeliaCompanionService.ApplySelectedStanceImmediately();
             changed = true;
+        }
+
+        CoppeliaUi.SectionHeader(
+            "JOAT attack mode",
+            "This saved local choice is used by Stand-alone JOAT and resumes after QST releases its temporary override.");
+        ImGui.BeginDisabled(plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned);
+        if (ImGui.RadioButton("DoTs only##GeneralJoatAttack", !configuration.JoatFullRsrRotation))
+        {
+            configuration.JoatFullRsrRotation = false;
+            changed = true;
+        }
+        ImGui.SameLine();
+        if (ImGui.RadioButton("Full RSR rotation##GeneralJoatAttack", configuration.JoatFullRsrRotation))
+        {
+            configuration.JoatFullRsrRotation = true;
+            changed = true;
+        }
+        ImGui.EndDisabled();
+        if (plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned)
+        {
+            ImGui.TextDisabled(
+                $"QST currently controls JOAT attacks ({(plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation ? "Full RSR rotation" : "DoTs only")}). " +
+                "Your saved local choice resumes when QST releases it.");
         }
 
         CoppeliaUi.SectionHeader("QST travel");
@@ -1034,6 +1072,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
         CoppeliaUi.SectionHeader("Jacqueline of All Trades (JOAT) requirements");
         ImGui.BulletText("The HealBot dependencies, a supported equipped healer, an enabled healer action matrix, and an explicitly watched target.");
+        ImGui.BulletText("Loaded, working Rotation Solver Reborn; JOAT damage is executed only through RSR.");
         ImGui.BulletText("Compatible FrenRider Powerlevel IPC with FrenRider enabled and its configured Fren visible.");
         ImGui.BulletText("The Fren is never auto-added to Watch; select it explicitly when it is the low-level heal target.");
 

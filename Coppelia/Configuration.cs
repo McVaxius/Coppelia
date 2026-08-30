@@ -22,6 +22,7 @@ public sealed class Configuration : IPluginConfiguration
     public OperatingRole LastNonOffRole { get; set; } = OperatingRole.StandAlone;
     public BotMode BotMode { get; set; } = BotMode.HealBot;
     public PowerlevelJob PowerlevelJob { get; set; } = PowerlevelJob.None;
+    public bool JoatFullRsrRotation { get; set; }
 
     // Legacy v4 runtime flag kept for migration only.
     public bool HealbotEnabled { get; set; }

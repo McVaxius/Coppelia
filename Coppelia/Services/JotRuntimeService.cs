@@ -11,7 +11,7 @@ internal sealed class JotRuntimeService : IDisposable
 {
     private readonly Plugin plugin;
     private readonly FrenRiderPowerlevelIpcService frenRiderIpcService;
-    private readonly ActionExecutionService actionExecutionService;
+    private readonly RsrIpcService rsrIpcService;
     private readonly PowerlevelTargetSelector targetSelector = new();
 
     private bool armed;
@@ -19,11 +19,11 @@ internal sealed class JotRuntimeService : IDisposable
     public JotRuntimeService(
         Plugin plugin,
         FrenRiderPowerlevelIpcService frenRiderIpcService,
-        ActionExecutionService actionExecutionService)
+        RsrIpcService rsrIpcService)
     {
         this.plugin = plugin;
         this.frenRiderIpcService = frenRiderIpcService;
-        this.actionExecutionService = actionExecutionService;
+        this.rsrIpcService = rsrIpcService;
     }
 
     public string StatusText { get; private set; } = "JOAT attacking is off.";
@@ -45,6 +45,7 @@ internal sealed class JotRuntimeService : IDisposable
 
     public void Deactivate(string reason)
     {
+        HoldRsrDamage();
         frenRiderIpcService.Release(reason);
         armed = false;
         targetSelector.Clear();
@@ -72,6 +73,7 @@ internal sealed class JotRuntimeService : IDisposable
         if (frenRiderIpcService.LeaseAcquired &&
             !frenRiderIpcService.HeartbeatIfDue(out var heartbeatFailure))
         {
+            HoldRsrDamage();
             StatusText = $"Blocked: {heartbeatFailure}";
             LastIssuedAction = "Blocked";
             LastMatchedRule = "FrenRider lease heartbeat failed.";
@@ -83,11 +85,13 @@ internal sealed class JotRuntimeService : IDisposable
             case HealbotDecisionOutcome.None:
                 return;
             case HealbotDecisionOutcome.Queued:
+                HoldRsrDamage();
                 StatusText = $"Holding: healing queued {plugin.HealbotRuntimeService.LastIssuedAction}.";
                 LastIssuedAction = "Holding";
                 LastMatchedRule = "Healing action won this decision cycle.";
                 return;
             case HealbotDecisionOutcome.Blocked:
+                HoldRsrDamage();
                 StatusText = plugin.HealbotRuntimeService.LastIssuedAction == "Casting"
                     ? $"Holding: the current cast blocks attacking. {plugin.HealbotRuntimeService.StatusText}"
                     : $"Holding: healing is blocked. {plugin.HealbotRuntimeService.StatusText}";
@@ -97,6 +101,7 @@ internal sealed class JotRuntimeService : IDisposable
                     : "A matched healing action is blocked.";
                 return;
             case HealbotDecisionOutcome.Unavailable:
+                HoldRsrDamage();
                 StatusText = $"Blocked: healing is not ready. {plugin.HealbotRuntimeService.StatusText}";
                 LastIssuedAction = "Blocked";
                 LastMatchedRule = "Healing dependencies, configuration, or watched targets are unavailable.";
@@ -122,11 +127,18 @@ internal sealed class JotRuntimeService : IDisposable
             healerConfigEnabled,
             watchedTargetsAvailable);
 
+        var rsrLoaded = plugin.DependencyService.Current.RotationSolverLoaded;
+        var joatRunning = plugin.Configuration.PluginEnabled &&
+                          plugin.Configuration.AutomationEnabled &&
+                          plugin.Configuration.BotMode == BotMode.Jot;
+        var rsrControlReady = rsrLoaded &&
+                              (!joatRunning || plugin.HealbotRuntimeService.IsRsrControlReady);
         var ipcSucceeded = frenRiderIpcService.TryGetStatus(out var status);
         var ipcAvailable = ipcSucceeded || status.ContractVersion > 0;
         var pairedAssignment = plugin.WatchTargetService.HasEphemeralQstTarget;
         var pairedLeaderVisible = plugin.WatchTargetService.IsEphemeralQstTargetVisible;
         var attackingReady = healingReady &&
+                             rsrControlReady &&
                              ipcSucceeded &&
                              (pairedAssignment
                                  ? pairedLeaderVisible
@@ -134,6 +146,8 @@ internal sealed class JotRuntimeService : IDisposable
         var attackingReason = BuildAttackingReadinessReason(
             healingReady,
             healingReason,
+            rsrLoaded,
+            rsrControlReady,
             ipcSucceeded,
             status,
             pairedAssignment,
@@ -147,6 +161,8 @@ internal sealed class JotRuntimeService : IDisposable
             watchedTargetsAvailable,
             healingReady,
             healingReason,
+            rsrLoaded,
+            rsrControlReady,
             ipcAvailable,
             status.IsCompatible,
             status.FrenRiderEnabled,
@@ -158,16 +174,18 @@ internal sealed class JotRuntimeService : IDisposable
 
     private void EvaluateAttack()
     {
-        if (!plugin.HealbotRuntimeService.IsRsrDamageIsolationReady)
+        if (!plugin.HealbotRuntimeService.IsRsrControlReady)
         {
-            StatusText = "Blocked: Rotation Solver isolation is not active, so JOAT attacking will not compete with it.";
+            HoldRsrDamage();
+            StatusText = "Blocked: Rotation Solver Reborn control is not active, so JOAT cannot attack.";
             LastIssuedAction = "Blocked";
-            LastMatchedRule = "Rotation Solver isolation failed.";
+            LastMatchedRule = "Rotation Solver Reborn control failed.";
             return;
         }
 
         if (ShouldPause(out var pauseReason))
         {
+            HoldRsrDamage();
             StatusText = $"Holding: {pauseReason}.";
             LastIssuedAction = "Holding";
             LastMatchedRule = pauseReason;
@@ -176,6 +194,7 @@ internal sealed class JotRuntimeService : IDisposable
 
         if (!frenRiderIpcService.TryGetStatus(out var status))
         {
+            HoldRsrDamage();
             StatusText = $"Blocked: {frenRiderIpcService.LastFailure}";
             LastIssuedAction = "Blocked";
             LastMatchedRule = "FrenRider IPC unavailable.";
@@ -186,6 +205,7 @@ internal sealed class JotRuntimeService : IDisposable
         var pairedAssignment = plugin.WatchTargetService.HasEphemeralQstTarget;
         if (!pairedAssignment && (!status.FrenRiderEnabled || !status.FrenConfigured || !status.FrenVisible))
         {
+            HoldRsrDamage();
             StatusText = $"Blocked: {BuildFrenReadinessReason(status)}";
             LastIssuedAction = "Blocked";
             LastMatchedRule = "FrenRider attack gate failed.";
@@ -194,6 +214,7 @@ internal sealed class JotRuntimeService : IDisposable
 
         if (!frenRiderIpcService.LeaseAcquired && !frenRiderIpcService.Acquire(out var acquireFailure))
         {
+            HoldRsrDamage();
             StatusText = $"Blocked: {acquireFailure}";
             LastIssuedAction = "Blocked";
             LastMatchedRule = "FrenRider lease acquire failed.";
@@ -202,6 +223,7 @@ internal sealed class JotRuntimeService : IDisposable
 
         if (!frenRiderIpcService.HeartbeatIfDue(out var heartbeatFailure))
         {
+            HoldRsrDamage();
             StatusText = $"Blocked: {heartbeatFailure}";
             LastIssuedAction = "Blocked";
             LastMatchedRule = "FrenRider lease heartbeat failed.";
@@ -210,14 +232,16 @@ internal sealed class JotRuntimeService : IDisposable
 
         if (Plugin.ObjectTable.LocalPlayer is not ICharacter localPlayer)
         {
+            HoldRsrDamage();
             StatusText = "Blocked: local healer is unavailable.";
             LastIssuedAction = "Blocked";
             LastMatchedRule = "Local healer unavailable.";
             return;
         }
 
-        if (!plugin.HealbotRuntimeService.IsSupportedLocalJob(out var profile, out var healerReason))
+        if (!plugin.HealbotRuntimeService.IsSupportedLocalJob(out _, out var healerReason))
         {
+            HoldRsrDamage();
             StatusText = $"Blocked: {healerReason}";
             LastIssuedAction = "Blocked";
             LastMatchedRule = "Supported local healer unavailable.";
@@ -226,6 +250,7 @@ internal sealed class JotRuntimeService : IDisposable
 
         if (pairedAssignment && pairedLeaderObjectId == 0)
         {
+            HoldRsrDamage();
             StatusText = "Idle: the exact QST target is selected but remote.";
             LastIssuedAction = "Idle";
             LastMatchedRule = "The exact QST target is remote.";
@@ -235,7 +260,7 @@ internal sealed class JotRuntimeService : IDisposable
         var protectedLeaderObjectId = pairedAssignment
             ? pairedLeaderObjectId
             : status.VisibleFrenObjectId;
-        var candidates = BuildTargetCandidates(localPlayer, protectedLeaderObjectId, profile!);
+        var candidates = BuildTargetCandidates(localPlayer, protectedLeaderObjectId);
         var selection = targetSelector.Select(
             candidates,
             protectedLeaderObjectId,
@@ -244,6 +269,7 @@ internal sealed class JotRuntimeService : IDisposable
 
         if (selection.Target == null)
         {
+            HoldRsrDamage();
             StatusText = pairedAssignment
                 ? "Idle: healing is clear, but no damaged enemy is targeting the exact QST target or local healer."
                 : "Idle: healing is clear, but no damaged enemy is targeting the Fren or local healer.";
@@ -255,6 +281,7 @@ internal sealed class JotRuntimeService : IDisposable
         var character = ResolveCharacter(selection.Target.GameObjectId);
         if (character == null)
         {
+            HoldRsrDamage();
             StatusText = "Idle: the selected enemy disappeared.";
             LastIssuedAction = "Idle";
             LastMatchedRule = "Target disappeared.";
@@ -262,24 +289,26 @@ internal sealed class JotRuntimeService : IDisposable
         }
 
         Plugin.TargetManager.Target = character;
-        if (actionExecutionService.TryExecuteJotFiller(profile!, character, out var action, out var failureReason))
+        if (rsrIpcService.TrySetMode(RsrIpcService.RsrStateCommandType.Auto))
         {
             targetSelector.MarkActionLanded(character.GameObjectId);
-            LastIssuedAction = action;
+            var attackMode = plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation
+                ? "full RSR rotation"
+                : "DoTs only";
+            LastIssuedAction = "RSR Auto";
             LastMatchedRule = $"{plugin.FormatDisplayName(selection.Target.Name)} - {(selection.Retained ? "retained" : "selected")}";
-            StatusText = $"Queued {action} on {plugin.FormatDisplayName(selection.Target.Name)} at {selection.Target.HpRatio:P0} HP.";
+            StatusText = $"RSR Auto ({attackMode}) on {plugin.FormatDisplayName(selection.Target.Name)} at {selection.Target.HpRatio:P0} HP.";
             return;
         }
 
         LastIssuedAction = "Blocked";
-        LastMatchedRule = $"{plugin.FormatDisplayName(selection.Target.Name)} - {failureReason}";
-        StatusText = $"Target {plugin.FormatDisplayName(selection.Target.Name)} blocked: {failureReason}";
+        LastMatchedRule = $"{plugin.FormatDisplayName(selection.Target.Name)} - RSR Auto failed";
+        StatusText = $"Blocked: Rotation Solver Reborn rejected Auto mode for {plugin.FormatDisplayName(selection.Target.Name)}.";
     }
 
     private PowerlevelTargetSnapshot[] BuildTargetCandidates(
         ICharacter localPlayer,
-        ulong frenObjectId,
-        HealbotJobProfile profile)
+        ulong frenObjectId)
     {
         var result = new List<PowerlevelTargetSnapshot>();
 
@@ -310,8 +339,7 @@ internal sealed class JotRuntimeService : IDisposable
             if (!PowerlevelTargetSelector.IsInitiallyEligible(preliminary, frenObjectId, localPlayer.GameObjectId))
                 continue;
 
-            var isUsable = actionExecutionService.CanUseAnyJotFiller(profile, battleNpc, out _);
-            result.Add(preliminary with { IsUsable = isUsable });
+            result.Add(preliminary);
         }
 
         return result.ToArray();
@@ -399,6 +427,8 @@ internal sealed class JotRuntimeService : IDisposable
     private string BuildAttackingReadinessReason(
         bool healingReady,
         string healingReason,
+        bool rsrLoaded,
+        bool rsrControlReady,
         bool ipcSucceeded,
         FrenRiderPowerlevelStatus status,
         bool pairedAssignment,
@@ -406,6 +436,10 @@ internal sealed class JotRuntimeService : IDisposable
     {
         if (!healingReady)
             return $"Attacking waits for healing readiness: {healingReason}";
+        if (!rsrLoaded)
+            return "Rotation Solver Reborn must be loaded for JOAT attacking.";
+        if (!rsrControlReady)
+            return "Coppelia could not acquire working Rotation Solver Reborn control.";
         if (!ipcSucceeded)
             return frenRiderIpcService.LastFailure;
         if (pairedAssignment)
@@ -426,5 +460,11 @@ internal sealed class JotRuntimeService : IDisposable
             return "FrenRider's configured Fren must be visible.";
 
         return "JOAT attacking is ready when healing is idle.";
+    }
+
+    private void HoldRsrDamage()
+    {
+        if (rsrIpcService.HasSessionSnapshot)
+            rsrIpcService.TrySetMode(RsrIpcService.RsrStateCommandType.Off);
     }
 }

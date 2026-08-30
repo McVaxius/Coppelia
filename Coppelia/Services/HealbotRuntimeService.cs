@@ -35,8 +35,8 @@ internal sealed class HealbotRuntimeService : IDisposable
     public string StatusText { get; private set; } = "Healbot mode is off.";
     public string LastIssuedAction { get; private set; } = "Idle";
     public string LastMatchedRule { get; private set; } = "No rule matched.";
-    public bool IsRsrDamageIsolationReady
-        => !dependencyService.Current.RotationSolverLoaded || rsrIsolationApplied;
+    public bool IsRsrControlReady
+        => dependencyService.Current.RotationSolverLoaded && rsrIsolationApplied;
 
     public void Dispose()
     {
@@ -70,8 +70,8 @@ internal sealed class HealbotRuntimeService : IDisposable
 
     public void Deactivate(string reason)
     {
-        if (rsrIsolationApplied)
-            rsrIpcService.RestoreSessionSnapshot(keepRaiseOutsideDutyEnabled: true);
+        if (rsrIpcService.HasSessionSnapshot)
+            rsrIpcService.RestoreSessionSnapshot();
 
         if (profileArmed)
             RestorePreviousTarget();
@@ -154,14 +154,30 @@ internal sealed class HealbotRuntimeService : IDisposable
         return EvaluateSelectedTarget(profile, jobConfig);
     }
 
+    internal bool TryApplyRsrProfileNow()
+    {
+        dependencyService.Refresh(force: true);
+        if (!dependencyService.Current.RotationSolverLoaded ||
+            !IsSupportedLocalJob(out var profile, out _))
+        {
+            return false;
+        }
+
+        var jobConfig = plugin.Configuration.GetJobConfigForJob(profile!.JobId);
+        var signature = BuildSignature(profile, jobConfig, rsrLoaded: true);
+        ApplyProfile(profile, signature, rsrLoaded: true);
+        return rsrIsolationApplied;
+    }
+
     private void ApplyProfile(HealbotJobProfile profile, string signature, bool rsrLoaded)
     {
+        var joatMode = plugin.Configuration.BotMode == BotMode.Jot;
         if (!profileArmed)
             CapturePreviousTarget();
 
-        if (rsrIsolationApplied && !rsrLoaded)
+        if (rsrIpcService.HasSessionSnapshot && !rsrLoaded)
         {
-            rsrIpcService.RestoreSessionSnapshot(keepRaiseOutsideDutyEnabled: true);
+            rsrIpcService.RestoreSessionSnapshot();
             rsrIsolationApplied = false;
         }
 
@@ -170,24 +186,34 @@ internal sealed class HealbotRuntimeService : IDisposable
             profileArmed = true;
             rsrIsolationApplied = false;
             appliedSignature = signature;
-            StatusText = $"Healbot action matrix armed for {profile.JobDisplayName}. RSR isolation unavailable.";
+            StatusText = joatMode
+                ? $"Healbot action matrix armed for {profile.JobDisplayName}. RSR is required before JOAT can attack."
+                : $"Healbot action matrix armed for {profile.JobDisplayName}. RSR isolation unavailable.";
             return;
         }
 
-        if (rsrIpcService.ApplyHealbotProfile(profile, plugin.Configuration))
+        if (rsrIpcService.ApplyHealbotProfile(
+                profile,
+                plugin.Configuration,
+                joatMode,
+                plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation))
         {
             profileArmed = true;
             rsrIsolationApplied = true;
             appliedSignature = signature;
-            StatusText = $"Healbot action matrix armed for {profile.JobDisplayName}. RSR isolation active.";
+            StatusText = joatMode
+                ? $"Healbot action matrix armed for {profile.JobDisplayName}. RSR JOAT control active."
+                : $"Healbot action matrix armed for {profile.JobDisplayName}. RSR isolation active.";
             return;
         }
 
-        rsrIpcService.RestoreSessionSnapshot(keepRaiseOutsideDutyEnabled: true);
+        rsrIpcService.RestoreSessionSnapshot();
         profileArmed = true;
         rsrIsolationApplied = false;
         appliedSignature = signature;
-        StatusText = $"Healbot action matrix armed for {profile.JobDisplayName}. RSR isolation failed; direct healing remains active.";
+        StatusText = joatMode
+            ? $"Healbot action matrix armed for {profile.JobDisplayName}. RSR control failed; JOAT attacking is blocked and direct healing remains active."
+            : $"Healbot action matrix armed for {profile.JobDisplayName}. RSR isolation failed; direct healing remains active.";
     }
 
     private HealbotDecisionOutcome EvaluateSelectedTarget(HealbotJobProfile profile, HealerJobConfig jobConfig)
@@ -317,6 +343,14 @@ internal sealed class HealbotRuntimeService : IDisposable
                 matchingRuleFound = true;
                 matchedRule = BuildRuleLabel(definition, rule);
 
+                if (plugin.Configuration.BotMode == BotMode.Jot &&
+                    rsrIsolationApplied &&
+                    !rsrIpcService.TrySetMode(RsrIpcService.RsrStateCommandType.Off))
+                {
+                    rsrIsolationApplied = false;
+                    appliedSignature = string.Empty;
+                }
+
                 if (actionExecutionService.TryExecute(definition, selectedSnapshot.GameObjectId, rule.MinimumMpPercent, out var failureReason))
                 {
                     statusText = BuildSuccessMessage(definition, selectedSnapshot);
@@ -444,6 +478,7 @@ internal sealed class HealbotRuntimeService : IDisposable
             plugin.Configuration.WatchPartyNpcs,
             plugin.Configuration.WatchCompanionChocobos,
             plugin.Configuration.WatchFriendlyBattleNpcs,
+            plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation,
             rsrLoaded);
 }
 

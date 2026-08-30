@@ -10,6 +10,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     private const string StatusEndpoint = "Coppelia.QST.Status";
     private const string CommandEndpoint = "Coppelia.QST.Command";
     private const string CompanionSummoningEndpoint = "Coppelia.QST.SetCompanionSummoning";
+    private const string JoatFullRsrRotationEndpoint = "Coppelia.QST.SetJoatFullRsrRotation";
     private const string FrenStatusEndpoint = "FrenRider.Coppelia.Powerlevel.Status";
     private const string FrenConfigureEndpoint = "FrenRider.Dad.ConfigureAndEnable";
     private const string FrenClearEndpoint = "FrenRider.CombatOnly.ClearFrenName";
@@ -28,6 +29,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     private readonly ICallGateProvider<string> statusProvider;
     private readonly ICallGateProvider<string, string> commandProvider;
     private readonly ICallGateProvider<bool, bool> companionSummoningProvider;
+    private readonly ICallGateProvider<bool, bool> joatFullRsrRotationProvider;
     private readonly object gate = new();
 
     private Assignment? assignment;
@@ -39,6 +41,9 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     private bool statusProviderRegistered;
     private bool commandProviderRegistered;
     private bool companionSummoningProviderRegistered;
+    private bool joatFullRsrRotationProviderRegistered;
+    private bool qstJoatAttackModeOwned;
+    private bool qstFullRsrRotation;
     private bool started;
     private bool disposed;
 
@@ -53,6 +58,25 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         statusProvider = Plugin.PluginInterface.GetIpcProvider<string>(StatusEndpoint);
         commandProvider = Plugin.PluginInterface.GetIpcProvider<string, string>(CommandEndpoint);
         companionSummoningProvider = Plugin.PluginInterface.GetIpcProvider<bool, bool>(CompanionSummoningEndpoint);
+        joatFullRsrRotationProvider = Plugin.PluginInterface.GetIpcProvider<bool, bool>(JoatFullRsrRotationEndpoint);
+    }
+
+    public bool IsJoatAttackModeQstOwned
+    {
+        get
+        {
+            lock (gate)
+                return qstJoatAttackModeOwned;
+        }
+    }
+
+    public bool EffectiveJoatFullRsrRotation
+    {
+        get
+        {
+            lock (gate)
+                return qstJoatAttackModeOwned ? qstFullRsrRotation : plugin.Configuration.JoatFullRsrRotation;
+        }
     }
 
     public void Start()
@@ -74,6 +98,8 @@ internal sealed class CoppeliaQstIpcService : IDisposable
                 commandProviderRegistered = true;
                 companionSummoningProvider.RegisterFunc(SetCompanionSummoning);
                 companionSummoningProviderRegistered = true;
+                joatFullRsrRotationProvider.RegisterFunc(SetJoatFullRsrRotation);
+                joatFullRsrRotationProviderRegistered = true;
                 started = true;
             }
             catch
@@ -195,6 +221,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             if (assignment?.Source == AssignmentSource.Qst)
                 ReleaseActive(reason);
             companionService.ClearQstOwnership();
+            ClearJoatAttackModeOwnership();
             RestoreActivationSnapshot(ActivationOwner.Qst);
         }
     }
@@ -331,6 +358,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             disposed = true;
             ReleaseActive("HealBot is unloading.");
             companionService.ClearQstOwnership();
+            ClearJoatAttackModeOwnership();
             RestoreActivationSnapshot(activationOwner);
             UnregisterProviders();
             started = false;
@@ -339,6 +367,12 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
     private void UnregisterProviders()
     {
+        if (joatFullRsrRotationProviderRegistered)
+        {
+            joatFullRsrRotationProvider.UnregisterFunc();
+            joatFullRsrRotationProviderRegistered = false;
+        }
+
         if (companionSummoningProviderRegistered)
         {
             companionSummoningProvider.UnregisterFunc();
@@ -459,12 +493,16 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     private CoppeliaQstCommandResponse DeactivateQst()
     {
         if (activationOwner == ActivationOwner.None)
+        {
+            ClearJoatAttackModeOwnership();
             return Accepted("QST-owned HealBot activation was already restored.");
+        }
         if (activationOwner != ActivationOwner.Qst)
             return Failed("QST does not own the active HealBot provider.");
         if (assignment?.Source == AssignmentSource.Qst)
             ReleaseActive("QST deactivated HealBot.");
         companionService.ClearQstOwnership();
+        ClearJoatAttackModeOwnership();
         RestoreActivationSnapshot(ActivationOwner.Qst);
         return Accepted("QST-owned HealBot activation was restored.");
     }
@@ -482,6 +520,32 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             }
 
             return companionService.SetQstOwnership(enabled);
+        }
+    }
+
+    private bool SetJoatFullRsrRotation(bool enabled)
+    {
+        lock (gate)
+        {
+            if (disposed || activationOwner != ActivationOwner.Qst || activationSnapshot == null ||
+                !plugin.Configuration.PluginEnabled ||
+                !plugin.Configuration.AutomationEnabled ||
+                plugin.Configuration.BotMode != BotMode.Jot)
+            {
+                return false;
+            }
+
+            var wasOwned = qstJoatAttackModeOwned;
+            var previousMode = qstFullRsrRotation;
+            qstJoatAttackModeOwned = true;
+            qstFullRsrRotation = enabled;
+            if (plugin.HealbotRuntimeService.TryApplyRsrProfileNow())
+                return true;
+
+            qstJoatAttackModeOwned = wasOwned;
+            qstFullRsrRotation = previousMode;
+            _ = plugin.HealbotRuntimeService.TryApplyRsrProfileNow();
+            return false;
         }
     }
 
@@ -768,6 +832,8 @@ internal sealed class CoppeliaQstIpcService : IDisposable
                 Plugin.Log.Warning($"[Coppelia][QST] FrenRider restore failed during release: {restoreFailure}");
 
             lastReleasedSessionId = assignment.SessionId;
+            if (assignment.Source == AssignmentSource.Qst)
+                ClearJoatAttackModeOwnership();
             assignment = null;
             plugin.WatchTargetService.ClearEphemeralQstTarget();
             Plugin.Log.Information($"[Coppelia][QST] Assignment released: {reason}");
@@ -822,10 +888,31 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         plugin.DependencyService.Refresh(force: true);
         if (!plugin.DependencyService.Current.IsHealbotReady)
             return (false, plugin.DependencyService.BuildMissingDependencyMessage());
+        if (!plugin.DependencyService.Current.RotationSolverLoaded)
+            return (false, "Rotation Solver Reborn is required for JOAT attacking.");
+        if (!plugin.HealbotRuntimeService.IsRsrControlReady)
+            return (false, "Coppelia could not acquire working Rotation Solver Reborn control.");
         if (!plugin.HealbotRuntimeService.IsSupportedLocalJob(out _, out var jobFailure))
             return (false, jobFailure);
 
         return (true, string.Empty);
+    }
+
+    private void ClearJoatAttackModeOwnership()
+    {
+        if (!qstJoatAttackModeOwned)
+            return;
+
+        qstJoatAttackModeOwned = false;
+        qstFullRsrRotation = false;
+        if (!disposed &&
+            plugin.Configuration.PluginEnabled &&
+            plugin.Configuration.AutomationEnabled &&
+            plugin.Configuration.BotMode == BotMode.Jot &&
+            !plugin.HealbotRuntimeService.TryApplyRsrProfileNow())
+        {
+            Plugin.Log.Warning("[Coppelia][QST] Failed to restore the saved local JOAT attack mode.");
+        }
     }
 
     private static (bool Ready, string Blocker) EvaluateDafReadiness(bool requireDad)

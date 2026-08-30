@@ -38,8 +38,8 @@ public sealed class StartupLifecycleTests
 
         Assert.Contains("StartRuntime();", frameworkUpdate, StringComparison.Ordinal);
         Assert.Contains("CoppeliaQstIpcService.Start();", runtimeStart, StringComparison.Ordinal);
-        Assert.Equal(3, Count(qstSource, ".RegisterFunc("));
-        Assert.Equal(3, Count(qstStart, ".RegisterFunc("));
+        Assert.Equal(4, Count(qstSource, ".RegisterFunc("));
+        Assert.Equal(4, Count(qstStart, ".RegisterFunc("));
         Assert.Contains("Plugin.Condition[ConditionFlag.BoundByDuty]", qstStart, StringComparison.Ordinal);
         AssertInOrder(
             runtimeStart,
@@ -71,7 +71,8 @@ public sealed class StartupLifecycleTests
         var unregister = ExtractBlock(qstSource, "private void UnregisterProviders()");
 
         Assert.Contains("UnregisterProviders();", dispose, StringComparison.Ordinal);
-        Assert.Equal(3, Count(unregister, ".UnregisterFunc();"));
+        Assert.Equal(4, Count(unregister, ".UnregisterFunc();"));
+        Assert.Contains("joatFullRsrRotationProvider.UnregisterFunc();", unregister, StringComparison.Ordinal);
         Assert.Contains("companionSummoningProvider.UnregisterFunc();", unregister, StringComparison.Ordinal);
         Assert.Contains("commandProvider.UnregisterFunc();", unregister, StringComparison.Ordinal);
         Assert.Contains("statusProvider.UnregisterFunc();", unregister, StringComparison.Ordinal);
@@ -89,9 +90,11 @@ public sealed class StartupLifecycleTests
         AssertRegistrationIsTracked(start, "statusProvider", "statusProviderRegistered");
         AssertRegistrationIsTracked(start, "commandProvider", "commandProviderRegistered");
         AssertRegistrationIsTracked(start, "companionSummoningProvider", "companionSummoningProviderRegistered");
+        AssertRegistrationIsTracked(start, "joatFullRsrRotationProvider", "joatFullRsrRotationProviderRegistered");
         Assert.Contains("if (statusProviderRegistered)", unregister, StringComparison.Ordinal);
         Assert.Contains("if (commandProviderRegistered)", unregister, StringComparison.Ordinal);
         Assert.Contains("if (companionSummoningProviderRegistered)", unregister, StringComparison.Ordinal);
+        Assert.Contains("if (joatFullRsrRotationProviderRegistered)", unregister, StringComparison.Ordinal);
     }
 
     [Fact]

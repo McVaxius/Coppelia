@@ -262,7 +262,7 @@ public sealed class MainWindow : Window, IDisposable
             nextJotReadinessUtc = DateTimeOffset.MinValue;
         }
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Runs watched-target healing first, then casts a healer filler spell only during genuinely idle healing cycles.");
+            ImGui.SetTooltip("Runs watched-target healing first, then lets RSR attack only during genuinely idle healing cycles.");
 
         ImGui.SameLine();
         var powerlevelSelected = configuration.BotMode == BotMode.PowerlevelBot;
@@ -321,7 +321,7 @@ public sealed class MainWindow : Window, IDisposable
         DrawDependencyLine("FrenRider", snapshot.FrenRiderLoaded);
         DrawDependencyLine("vnavmesh", snapshot.VNavmeshLoaded);
         DrawDependencyLine("BMR or VBM", snapshot.HasBossModProvider);
-        DrawDependencyLine("RSR", snapshot.RotationSolverLoaded, required: false);
+        DrawDependencyLine("RSR", snapshot.RotationSolverLoaded, required: plugin.Configuration.BotMode == BotMode.Jot);
 
         var healerReady = plugin.HealbotRuntimeService.IsSupportedLocalJob(out var profile, out var reason);
         CoppeliaUi.StatusLine(
@@ -333,7 +333,9 @@ public sealed class MainWindow : Window, IDisposable
         if (!snapshot.IsHealbotReady)
             CoppeliaUi.StatusText(plugin.DependencyService.BuildMissingDependencyMessage(), ready: false);
 
-        CoppeliaUi.WrappedHelp("RSR isolation and restore is used when loaded. HealBot and JOAT actions still fire through direct ActionManager execution.");
+        CoppeliaUi.WrappedHelp(plugin.Configuration.BotMode == BotMode.Jot
+            ? "RSR is required and exclusively executes JOAT damage. Coppelia continues to execute Watch healing directly and owns the RSR off/idle-resume handoff."
+            : "RSR isolation and exact session restoration are used when RSR is loaded; HealBot healing still executes directly.");
 
         if (plugin.Configuration.BotMode == BotMode.Jot)
             DrawJotReadiness();
@@ -469,6 +471,8 @@ public sealed class MainWindow : Window, IDisposable
         CoppeliaUi.StatusLine("JOAT healer action matrix", readiness.HealerConfigurationEnabled, "Enabled", "Disabled");
         CoppeliaUi.StatusLine("JOAT watched targets", readiness.WatchedTargetsAvailable, "Selected", "None selected");
         CoppeliaUi.StatusLine("Healing configuration", readiness.HealingReady, "Ready", readiness.HealingReason);
+        CoppeliaUi.StatusLine("Rotation Solver Reborn", readiness.RotationSolverLoaded, "Loaded", "Missing");
+        CoppeliaUi.StatusLine("RSR control", readiness.RotationSolverControlReady, "Ready", "Not acquired");
         CoppeliaUi.StatusLine(
             "FrenRider attack IPC",
             readiness.FrenRiderIpcAvailable && readiness.FrenRiderCompatible,

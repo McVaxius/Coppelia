@@ -7,14 +7,14 @@ internal sealed class HealbotJobProfile
         string jobAbbreviation,
         string jobDisplayName,
         string raiseActionName,
-        IReadOnlyList<string> singleTargetFillerActionNames,
+        IReadOnlyList<string> dotActionNames,
         IReadOnlyList<string> offensiveActionNames)
     {
         JobId = jobId;
         JobAbbreviation = jobAbbreviation;
         JobDisplayName = jobDisplayName;
         RaiseActionName = raiseActionName;
-        SingleTargetFillerActionNames = singleTargetFillerActionNames;
+        DotActionNames = dotActionNames;
         OffensiveActionNames = offensiveActionNames;
     }
 
@@ -22,7 +22,7 @@ internal sealed class HealbotJobProfile
     public string JobAbbreviation { get; }
     public string JobDisplayName { get; }
     public string RaiseActionName { get; }
-    public IReadOnlyList<string> SingleTargetFillerActionNames { get; }
+    public IReadOnlyList<string> DotActionNames { get; }
     public IReadOnlyList<string> OffensiveActionNames { get; }
 
     public static bool TryResolve(uint jobId, out HealbotJobProfile profile)
@@ -41,7 +41,7 @@ internal sealed class HealbotJobProfile
             "WHM",
             "White Mage",
             "Raise",
-            new[] { "Glare III", "Glare", "Stone IV", "Stone III", "Stone II", "Stone" },
+            new[] { "Aero", "Aero II", "Dia" },
             new[]
             {
                 "Stone",
@@ -64,7 +64,7 @@ internal sealed class HealbotJobProfile
             "SCH",
             "Scholar",
             "Resurrection",
-            new[] { "Broil IV", "Broil III", "Broil II", "Broil", "Ruin II", "Ruin" },
+            new[] { "Bio", "Bio II", "Biolysis" },
             new[]
             {
                 "Ruin",
@@ -85,7 +85,7 @@ internal sealed class HealbotJobProfile
             "AST",
             "Astrologian",
             "Ascend",
-            new[] { "Fall Malefic", "Malefic IV", "Malefic III", "Malefic II", "Malefic" },
+            new[] { "Combust", "Combust II", "Combust III" },
             new[]
             {
                 "Malefic",
@@ -106,7 +106,7 @@ internal sealed class HealbotJobProfile
             "SGE",
             "Sage",
             "Resurrection",
-            new[] { "Dosis III", "Dosis II", "Dosis" },
+            new[] { "Eukrasian Dosis", "Eukrasian Dosis II", "Eukrasian Dosis III" },
             new[]
             {
                 "Dosis",

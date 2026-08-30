@@ -24,8 +24,8 @@ Stand-alone performs no networking. Its HealBot and JOAT behaviors use the Watch
 - Supports healing, raises, buffs, and pre-buffs according to the configured job rules.
 - Can discover players, companion chocobos, NPC party members, and friendly battle NPCs through independent filters.
 - Can optionally save explicitly watched targets. The saved-target scan range only allows a saved target to rejoin after it returns; it never discovers or selects a new target.
-- Requires FrenRider, vnavmesh, and either BossMod Reborn (BMR) or VBM.
-- Uses optional Rotation Solver Reborn isolation and restores the session snapshot when available.
+- Requires FrenRider, vnavmesh, and either BossMod Reborn (BMR) or VBM. JOAT additionally requires loaded, working Rotation Solver Reborn (RSR) for damage.
+- HealBot uses optional RSR isolation when available. Coppelia restores the captured RSR session settings when it releases ownership.
 
 Use the separate Watch window to add or remove targets. Unticking a target also removes its saved copy. Hold Ctrl while clearing the full set or removing an absent retained target.
 
@@ -48,13 +48,14 @@ Protocol v2 reports provider, JOAT, and travel readiness separately. Older peers
 
 ## Jacqueline of All Trades (JOAT)
 
-JOAT shares HealBot's dependencies, watch list, per-healer action matrix, 900-ms decision cycle, and optional Rotation Solver Reborn isolation. Healing always wins: JOAT attacks only after the current healing decision queued nothing and found no blocked matching healing action.
+JOAT shares HealBot's dependencies, watch list, per-healer action matrix, and 900-ms decision cycle. Loaded, working Rotation Solver Reborn is required and exclusively executes JOAT damage. Healing always wins: before a matching Watch heal, buff, or raise rule executes, Coppelia switches RSR off; it stays off while healing is queued, blocked, or casting and returns to Auto only after the next genuinely idle healing decision and an eligible enemy selection.
 
 - Requires an equipped WHM, SCH, AST, or SGE with that healer's action matrix enabled and at least one active watched target.
 - Uses the existing FrenRider lease and restricted enemy selector, but ignores the BRD/MCH Powerlevel job selection.
 - Considers only living, damaged, targetable enemies already targeting FrenRider's configured visible Fren or the local healer. Untouched enemies and enemies fighting anyone else are excluded.
-- Uses only the highest currently available single-target filler spell for the equipped healer. DoTs, AoE, and oGCD attacks are excluded.
-- Issues damage directly through HealBot's action executor while Rotation Solver Reborn remains isolated.
+- Defaults to **DoTs only**, which temporarily enables WHM Aero/Aero II/Dia, SCH Bio/Bio II/Biolysis, AST Combust variants, or SGE Eukrasian Dosis variants while disabling the equipped healer's other RSR offensive actions.
+- **Full RSR rotation** reuses the offensive-action states, AoE mode, and hostile-target mode captured when Coppelia took ownership. Switching modes or releasing ownership restores captured values instead of enabling every action.
+- Issues no JOAT damage through Coppelia's direct action executor; RSR Auto owns the attack after Coppelia selects the eligible enemy.
 - Never auto-adds the Fren to Watch. When the Fren is the low-level character, select it explicitly so JOAT healing protects it.
 
 ### QST-owned Helper provider
@@ -65,7 +66,7 @@ Outside duties, HealBot follows without requiring a party: Lifestream visits the
 
 Native Mount Roulette mirrors a mounted Quester and still mounts for on-foot catch-up beyond 50 yalms. Every permitted mounted chase prefers flight with a five-yalm vnavmesh tolerance: an on-foot Quester is approached in flight to 20 yalms before landing, dismounting, and finishing on foot; a grounded mounted Quester is approached to 5 yalms before landing while remaining mounted; and a flying Quester is followed in the air to 5 yalms. Completed aether-current sets permit flight directly. Mountable ARR territories without a standard set probe one flying route; success proves flight for that territory, while a rejected or non-starting probe visibly falls back to ground until the territory or session resets. HealBot stops only its owned active path for casts and actions, cancels an actually pending pathfind only on terminal session release, suspends travel inside duties, and clears travel once when the session releases.
 
-The QST High-Level Helper setting **Summon companion chocobo** is on by default. QST must successfully apply that preference through the local-only companion IPC before Helper activation is ready. While owned and enabled, HealBot checks at most every 15 seconds and uses Gysahl Greens only below 900 seconds of buddy time while logged in, on foot, outside combat/duties/sanctuaries, and free of casting or occupied states. It pauses only HealBot-owned navigation for the item action and does not control companion stance. Deactivation, role/provider loss, plugin disable, and unload clear QST ownership.
+The QST High-Level Helper setting **Summon companion chocobo** is on by default. QST must successfully apply that preference and its default-DoTs-only JOAT attack preference through separate local-only IPC endpoints before Helper activation is ready. While companion summoning is owned and enabled, HealBot checks at most every 15 seconds and uses Gysahl Greens only below 900 seconds of buddy time while logged in, on foot, outside combat/duties/sanctuaries, and free of casting or occupied states. It pauses only HealBot-owned navigation for the item action and does not control companion stance. QST's attack-mode ownership is temporary; assignment release, deactivation, role/provider loss, and unload restore Coppelia's saved local radio choice.
 
 HealBot exclusively owns prebuffing, healing, raising, action selection, and cast holds for the assigned Quester; JOAT attacks enemies targeting that exact visible Quester only after HealBot yields. Both remain held while the paired Helper is mounted or mounting, so after landing HealBot resumes first and keeps priority. Optional DAF duties require ADS and FrenRider. Quester-owned entry waits for stable duty entry before configuring FrenRider with the exact Quester and starting ADS. The retained `Coppelia`-owned entry additionally requires DAD, keeps the helper as party leader, and asks DAD for a Regular + Unsynced run. Assignment release restores temporary FrenRider, target, and movement state while keeping QST-owned activation across connection churn; changing the Helper role/provider or unloading QST restores the prior HealBot activation state.
 
@@ -80,7 +81,7 @@ Activation requires compatible FrenRider Powerlevel IPC, FrenRider enabled, a co
 HealBot provides four windows:
 
 - **Main** begins with Off, Stand-alone, Helper, and Newb, then shows one primary state, one next action, and the active or paired identity.
-- **Settings** contains Quick Setup, General, role-specific networking, HealBot Actions, and Requirements / Help tabs. Helper owns port/shared-secret fields; Newb additionally owns the Helper IPv4 address.
+- **Settings** contains Quick Setup, General, role-specific networking, JOAT DoTs-only/full-RSR radios, HealBot Actions, and Requirements / Help tabs. QST temporarily disables the local attack radios while it owns the mode; Helper owns port/shared-secret fields, and Newb additionally owns the Helper IPv4 address.
 - **Watch** manages the shared HealBot/JOAT filters, persistence, retained targets, and the live eligible-target table.
 - **Mini** provides the four operational role controls, Stand-alone behavior selection, live status, and a Settings button; it does not edit networking fields.
 

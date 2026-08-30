@@ -64,7 +64,7 @@ public sealed class Plugin : IDalamudPlugin
         var jotFrenRiderIpcService = new FrenRiderPowerlevelIpcService();
         HealbotRuntimeService = new HealbotRuntimeService(this, DependencyService, WatchTargetService, RsrIpcService, ActionExecutionService);
         PowerlevelRuntimeService = new PowerlevelRuntimeService(this, FrenRiderPowerlevelIpcService, ActionExecutionService);
-        JotRuntimeService = new JotRuntimeService(this, jotFrenRiderIpcService, ActionExecutionService);
+        JotRuntimeService = new JotRuntimeService(this, jotFrenRiderIpcService, RsrIpcService);
 
         mainWindow = new MainWindow(this);
         configWindow = new ConfigWindow(this);
@@ -284,6 +284,8 @@ public sealed class Plugin : IDalamudPlugin
             DependencyService.Refresh(force: true);
             if (!DependencyService.Current.IsHealbotReady)
                 blocker = DependencyService.BuildMissingDependencyMessage();
+            else if (mode == BotMode.Jot && !DependencyService.Current.RotationSolverLoaded)
+                blocker = "Jacqueline of All Trades requires Rotation Solver Reborn for attacking.";
             else if (!HealbotRuntimeService.IsSupportedLocalJob(out _, out var jobBlocker))
                 blocker = jobBlocker;
         }
