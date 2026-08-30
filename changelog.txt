@@ -1,5 +1,6 @@
 # Changelog
 
+- Deferred live-state startup until the first framework update so construction only creates and wires objects. Saved-role restoration, dependency/login/Quick Setup/DTR initialization, LAN behavior, QST duty sampling, and all three QST IPC providers now start after construction; callback and partial IPC registration failures roll back their handlers.
 - Replaced the separate mode/plugin/automation/LAN workflow with four top-level operating roles: Off, Stand-alone, Helper, and Newb. Stand-alone retains HealBot, JOAT, and PowerlevelBot as its local behavior choice; `/healbot on` resumes the saved non-Off role.
 - Migrated existing configurations so LAN-enabled HealBot/JOAT becomes Helper, Newb remains Newb, ordinary local behavior becomes Stand-alone, and the prior on/off state, endpoint, secret, behavior, and automation state are preserved.
 - Fixed JOAT Helper listening by routing the authenticated listener from the Helper role instead of HealBot behavior. Compatible authenticated v2 status requests now idempotently activate plugin + JOAT, while disconnect keeps provider activation ready and Helper exit/unload restores the pre-Helper state.

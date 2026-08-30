@@ -36,6 +36,10 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     private string lastReleasedSessionId = string.Empty;
     private bool wasBoundByDuty;
     private DateTime boundByDutySinceUtc = DateTime.MinValue;
+    private bool statusProviderRegistered;
+    private bool commandProviderRegistered;
+    private bool companionSummoningProviderRegistered;
+    private bool started;
     private bool disposed;
 
     public CoppeliaQstIpcService(
@@ -49,18 +53,46 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         statusProvider = Plugin.PluginInterface.GetIpcProvider<string>(StatusEndpoint);
         commandProvider = Plugin.PluginInterface.GetIpcProvider<string, string>(CommandEndpoint);
         companionSummoningProvider = Plugin.PluginInterface.GetIpcProvider<bool, bool>(CompanionSummoningEndpoint);
-        statusProvider.RegisterFunc(GetStatusJson);
-        commandProvider.RegisterFunc(HandleCommandJson);
-        companionSummoningProvider.RegisterFunc(SetCompanionSummoning);
-        wasBoundByDuty = Plugin.Condition[ConditionFlag.BoundByDuty];
-        if (wasBoundByDuty)
-            boundByDutySinceUtc = DateTime.UtcNow;
+    }
+
+    public void Start()
+    {
+        lock (gate)
+        {
+            ObjectDisposedException.ThrowIf(disposed, this);
+            if (started)
+                return;
+
+            wasBoundByDuty = Plugin.Condition[ConditionFlag.BoundByDuty];
+            boundByDutySinceUtc = wasBoundByDuty ? DateTime.UtcNow : DateTime.MinValue;
+
+            try
+            {
+                statusProvider.RegisterFunc(GetStatusJson);
+                statusProviderRegistered = true;
+                commandProvider.RegisterFunc(HandleCommandJson);
+                commandProviderRegistered = true;
+                companionSummoningProvider.RegisterFunc(SetCompanionSummoning);
+                companionSummoningProviderRegistered = true;
+                started = true;
+            }
+            catch
+            {
+                UnregisterProviders();
+                wasBoundByDuty = false;
+                boundByDutySinceUtc = DateTime.MinValue;
+                throw;
+            }
+        }
     }
 
     public void Update()
     {
         lock (gate)
         {
+            if (!started || disposed)
+                return;
+
             var inDuty = Plugin.Condition[ConditionFlag.BoundByDuty];
             if (inDuty && !wasBoundByDuty)
                 boundByDutySinceUtc = DateTime.UtcNow;
@@ -291,16 +323,39 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
     public void Dispose()
     {
-        if (disposed)
-            return;
+        lock (gate)
+        {
+            if (disposed)
+                return;
 
-        disposed = true;
-        ReleaseActive("HealBot is unloading.");
-        companionService.ClearQstOwnership();
-        RestoreActivationSnapshot(activationOwner);
-        companionSummoningProvider.UnregisterFunc();
-        commandProvider.UnregisterFunc();
-        statusProvider.UnregisterFunc();
+            disposed = true;
+            ReleaseActive("HealBot is unloading.");
+            companionService.ClearQstOwnership();
+            RestoreActivationSnapshot(activationOwner);
+            UnregisterProviders();
+            started = false;
+        }
+    }
+
+    private void UnregisterProviders()
+    {
+        if (companionSummoningProviderRegistered)
+        {
+            companionSummoningProvider.UnregisterFunc();
+            companionSummoningProviderRegistered = false;
+        }
+
+        if (commandProviderRegistered)
+        {
+            commandProvider.UnregisterFunc();
+            commandProviderRegistered = false;
+        }
+
+        if (statusProviderRegistered)
+        {
+            statusProvider.UnregisterFunc();
+            statusProviderRegistered = false;
+        }
     }
 
     private string GetStatusJson()

@@ -38,9 +38,9 @@ public sealed class Plugin : IDalamudPlugin
     private readonly MiniWindow miniWindow;
     private IDtrBarEntry? dtrEntry;
     private DateTimeOffset nextDependencyToastUtc = DateTimeOffset.MinValue;
-    private bool pendingInitialRoleRestore = true;
+    private bool runtimeStartPending = true;
+    private bool runtimeStarted;
     private bool pendingInitialWatchRefresh = true;
-    private bool constructionComplete;
 
     public Plugin()
     {
@@ -76,37 +76,7 @@ public sealed class Plugin : IDalamudPlugin
         WindowSystem.AddWindow(watchWindow);
         WindowSystem.AddWindow(miniWindow);
 
-        CommandManager.AddHandler(PluginInfo.Command, new CommandInfo(OnCommand)
-        {
-            HelpMessage = "Open HealBot. Use /healbot mini, config, watch, on, off, standalone, helper, newb, heal, joat, powerlevel, status, ws, or j. /healbot jot remains an alias.",
-        });
-
-        CommandManager.AddHandler(PluginInfo.ShortAliasCommand, new CommandInfo(OnCommand)
-        {
-            HelpMessage = "Short alias for /healbot.",
-        });
-
-        CommandManager.AddHandler(PluginInfo.LegacyAliasCommand, new CommandInfo(OnCommand)
-        {
-            HelpMessage = "Compatibility alias for /healbot.",
-        });
-
-        PluginInterface.UiBuilder.Draw += WindowSystem.Draw;
-        PluginInterface.UiBuilder.OpenConfigUi += OpenConfigUi;
-        PluginInterface.UiBuilder.OpenMainUi += OpenMainUi;
-        Framework.Update += OnFrameworkUpdate;
-        ClientState.Login += OnLogin;
-
-        DependencyService.Refresh(force: true);
-        SetupDtrBar();
-        constructionComplete = true;
-        UpdateDtrBar();
-        if (Configuration.ShouldAutoOpenSetup())
-            OpenQuickSetupUi();
-        if (ClientState.IsLoggedIn)
-            QueueCommunityLocationRefresh("plugin load while already logged in");
-
-        Log.Information("[Coppelia] HealBot plugin loaded.");
+        RegisterCallbacks();
     }
 
     public Configuration Configuration { get; }
@@ -126,6 +96,75 @@ public sealed class Plugin : IDalamudPlugin
     internal PowerlevelRuntimeService PowerlevelRuntimeService { get; }
     internal JotRuntimeService JotRuntimeService { get; }
     internal string LastAutomationBlocker { get; private set; } = string.Empty;
+
+    private void RegisterCallbacks()
+    {
+        var commandRegistered = false;
+        var shortAliasRegistered = false;
+        var legacyAliasRegistered = false;
+        var drawRegistered = false;
+        var openConfigRegistered = false;
+        var openMainRegistered = false;
+        var loginRegistered = false;
+        var frameworkRegistered = false;
+
+        try
+        {
+            commandRegistered = CommandManager.AddHandler(PluginInfo.Command, new CommandInfo(OnCommand)
+            {
+                HelpMessage = "Open HealBot. Use /healbot mini, config, watch, on, off, standalone, helper, newb, heal, joat, powerlevel, status, ws, or j. /healbot jot remains an alias.",
+            });
+            if (!commandRegistered)
+                throw new InvalidOperationException($"Could not register {PluginInfo.Command}.");
+
+            shortAliasRegistered = CommandManager.AddHandler(PluginInfo.ShortAliasCommand, new CommandInfo(OnCommand)
+            {
+                HelpMessage = "Short alias for /healbot.",
+            });
+            if (!shortAliasRegistered)
+                throw new InvalidOperationException($"Could not register {PluginInfo.ShortAliasCommand}.");
+
+            legacyAliasRegistered = CommandManager.AddHandler(PluginInfo.LegacyAliasCommand, new CommandInfo(OnCommand)
+            {
+                HelpMessage = "Compatibility alias for /healbot.",
+            });
+            if (!legacyAliasRegistered)
+                throw new InvalidOperationException($"Could not register {PluginInfo.LegacyAliasCommand}.");
+
+            PluginInterface.UiBuilder.Draw += WindowSystem.Draw;
+            drawRegistered = true;
+            PluginInterface.UiBuilder.OpenConfigUi += OpenConfigUi;
+            openConfigRegistered = true;
+            PluginInterface.UiBuilder.OpenMainUi += OpenMainUi;
+            openMainRegistered = true;
+            ClientState.Login += OnLogin;
+            loginRegistered = true;
+            Framework.Update += OnFrameworkUpdate;
+            frameworkRegistered = true;
+
+            Log.Information("[Coppelia] HealBot plugin loaded.");
+        }
+        catch
+        {
+            if (frameworkRegistered)
+                Framework.Update -= OnFrameworkUpdate;
+            if (loginRegistered)
+                ClientState.Login -= OnLogin;
+            if (openMainRegistered)
+                PluginInterface.UiBuilder.OpenMainUi -= OpenMainUi;
+            if (openConfigRegistered)
+                PluginInterface.UiBuilder.OpenConfigUi -= OpenConfigUi;
+            if (drawRegistered)
+                PluginInterface.UiBuilder.Draw -= WindowSystem.Draw;
+            if (legacyAliasRegistered)
+                CommandManager.RemoveHandler(PluginInfo.LegacyAliasCommand);
+            if (shortAliasRegistered)
+                CommandManager.RemoveHandler(PluginInfo.ShortAliasCommand);
+            if (commandRegistered)
+                CommandManager.RemoveHandler(PluginInfo.Command);
+            throw;
+        }
+    }
 
     public void Dispose()
     {
@@ -226,7 +265,7 @@ public sealed class Plugin : IDalamudPlugin
         }
 
         Configuration.Save();
-        if (constructionComplete)
+        if (runtimeStarted)
             UpdateDtrBar();
 
         if (printStatus)
@@ -561,11 +600,15 @@ public sealed class Plugin : IDalamudPlugin
 
     private void OnFrameworkUpdate(IFramework framework)
     {
-        if (pendingInitialRoleRestore)
+        if (runtimeStartPending)
         {
-            pendingInitialRoleRestore = false;
-            SetOperatingRole(Configuration.OperatingRole, printStatus: false);
+            runtimeStartPending = false;
+            StartRuntime();
+            runtimeStarted = true;
         }
+
+        if (!runtimeStarted)
+            return;
 
         CoppeliaQstIpcService.Update();
         HealBotPairingService.Update();
@@ -576,6 +619,18 @@ public sealed class Plugin : IDalamudPlugin
         JotRuntimeService.Update(healingDecision);
         PowerlevelRuntimeService.Update();
         UpdateDtrBar();
+    }
+
+    private void StartRuntime()
+    {
+        DependencyService.Refresh(force: true);
+        SetOperatingRole(Configuration.OperatingRole, printStatus: false);
+        if (ClientState.IsLoggedIn)
+            QueueCommunityLocationRefresh("plugin load while already logged in");
+        if (Configuration.ShouldAutoOpenSetup())
+            OpenQuickSetupUi();
+        UpdateDtrBar();
+        CoppeliaQstIpcService.Start();
     }
 
     private void OnLogin()
