@@ -130,10 +130,13 @@ internal enum CoppeliaRouteInterruption
 internal sealed class CoppeliaRoutePolicy
 {
     public static readonly TimeSpan StartupActivityTimeout = TimeSpan.FromSeconds(2);
+    public static readonly TimeSpan DestinationRefreshInterval = TimeSpan.FromSeconds(10);
+    public const float DestinationRefreshDistance = 5f;
 
     private bool observedOwnedActivity;
     private bool restartAfterPause;
     private DateTime startupAcceptedUtc;
+    private Vector3 startedDestination;
     private long activeSequence;
     private long lastStartedSequence;
     private long rejectedSequence;
@@ -207,6 +210,7 @@ internal sealed class CoppeliaRoutePolicy
         OwnsPendingPathfind = true;
         observedOwnedActivity = false;
         startupAcceptedUtc = utcNow;
+        startedDestination = LatestDestination;
         activeSequence = LatestSequence;
         lastStartedSequence = LatestSequence;
         restartAfterPause = false;
@@ -223,6 +227,26 @@ internal sealed class CoppeliaRoutePolicy
         activeSequence = 0;
         lastStartedSequence = LatestSequence;
         restartAfterPause = false;
+    }
+
+    public CoppeliaRouteInterruption RefreshStaleDestination(
+        bool pathfindInProgress,
+        bool pathRunning,
+        DateTime utcNow)
+    {
+        if (!OwnsRoute ||
+            utcNow - startupAcceptedUtc < DestinationRefreshInterval ||
+            Vector3.Distance(startedDestination, LatestDestination) <= DestinationRefreshDistance ||
+            (!pathRunning && (!OwnsPendingPathfind || !pathfindInProgress)))
+        {
+            return CoppeliaRouteInterruption.None;
+        }
+
+        var latestSequence = LatestSequence;
+        var latestDestination = LatestDestination;
+        var interruption = Release(pathfindInProgress, pathRunning);
+        AcceptSnapshot(latestSequence, latestDestination);
+        return interruption;
     }
 
     public CoppeliaRouteInterruption Pause(bool pathRunning)
@@ -249,6 +273,7 @@ internal sealed class CoppeliaRoutePolicy
         observedOwnedActivity = false;
         restartAfterPause = false;
         startupAcceptedUtc = default;
+        startedDestination = default;
         activeSequence = 0;
         lastStartedSequence = 0;
         rejectedSequence = 0;

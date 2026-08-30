@@ -155,6 +155,12 @@ internal sealed class CoppeliaTravelService
 
     public void ClearLineOfSightRescue()
     {
+        if (!lineOfSightRescueHasDestination && !lineOfSightRescueRoutePolicy.OwnsRoute)
+        {
+            LineOfSightRescueState = "Inactive";
+            return;
+        }
+
         StopLineOfSightRescueRoute();
         lineOfSightRescueTargetId = 0;
         lineOfSightRescueDestination = default;
@@ -263,6 +269,12 @@ internal sealed class CoppeliaTravelService
         {
             ResetTerritoryHandoff();
             Stop("Suspended inside duty");
+            return;
+        }
+
+        if (lineOfSightRescueHasDestination)
+        {
+            State = LineOfSightRescueState;
             return;
         }
 
@@ -553,7 +565,8 @@ internal sealed class CoppeliaTravelService
             return;
         }
 
-        var routeActivity = routePolicy.Observe(isPathfinding, isPathRunning, DateTime.UtcNow);
+        var utcNow = DateTime.UtcNow;
+        var routeActivity = routePolicy.Observe(isPathfinding, isPathRunning, utcNow);
         flightPolicy.ObserveRouteActivity(isPathfinding || isPathRunning);
         if (routeActivity == CoppeliaRouteActivity.Rejected)
             flightPolicy.MarkProbeRejected();
@@ -567,6 +580,17 @@ internal sealed class CoppeliaTravelService
 
         if (routeActivity == CoppeliaRouteActivity.Owned)
         {
+            var refreshInterruption = routePolicy.RefreshStaleDestination(
+                isPathfinding,
+                isPathRunning,
+                utcNow);
+            if (refreshInterruption != CoppeliaRouteInterruption.None)
+            {
+                InterruptOwnedRoute(refreshInterruption);
+                State = BuildFollowState("Refreshing the latest Quester destination", fallbackBlocker);
+                return;
+            }
+
             State = BuildFollowState(
                 decision.UseFlight
                     ? $"Flying at {distance:F1} yalms"
@@ -1525,6 +1549,11 @@ internal sealed class CoppeliaTravelService
         var interruption = routePolicy.Release(
             activityKnown && isPathfinding,
             activityKnown ? isPathRunning : routePolicy.OwnsRoute);
+        InterruptOwnedRoute(interruption);
+    }
+
+    private void InterruptOwnedRoute(CoppeliaRouteInterruption interruption)
+    {
         if (interruption == CoppeliaRouteInterruption.None)
             return;
 

@@ -9,6 +9,14 @@ public sealed class CoppeliaRoutePolicyTests
     private static readonly DateTime Started = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
     [Fact]
+    public void InitialRouteIsImmediatelyEligible()
+    {
+        var policy = ReadyPolicy(new Vector3(1, 2, 3));
+
+        Assert.True(policy.CanStart(pathfindInProgress: false, pathRunning: false));
+    }
+
+    [Fact]
     public void ActiveOrPendingVnavActivityPreventsAnotherRouteStartup()
     {
         var policy = ReadyPolicy(new Vector3(1, 2, 3));
@@ -33,6 +41,125 @@ public sealed class CoppeliaRoutePolicyTests
         Assert.True(policy.OwnsRoute);
         Assert.False(policy.CanStart(pathfindInProgress: false, pathRunning: false));
         Assert.Equal(new Vector3(4, 5, 6), policy.LatestDestination);
+    }
+
+    [Fact]
+    public void NewerSnapshotsDoNotRefreshBeforeTenSecondsOrWithinFiveYalms()
+    {
+        var policy = ReadyPolicy(Vector3.Zero);
+        policy.MarkStartupAccepted(Started);
+        policy.AcceptSnapshot(2, new Vector3(6, 0, 0));
+        Assert.Equal(
+            CoppeliaRouteActivity.Owned,
+            policy.Observe(pathfindInProgress: false, pathRunning: true, Started.AddSeconds(1)));
+
+        Assert.Equal(
+            CoppeliaRouteInterruption.None,
+            policy.RefreshStaleDestination(
+                pathfindInProgress: false,
+                pathRunning: true,
+                Started.AddSeconds(10).AddTicks(-1)));
+
+        policy.AcceptSnapshot(3, new Vector3(0, 3, 4));
+        Assert.Equal(
+            CoppeliaRouteInterruption.None,
+            policy.RefreshStaleDestination(
+                pathfindInProgress: false,
+                pathRunning: true,
+                Started + CoppeliaRoutePolicy.DestinationRefreshInterval));
+        Assert.True(policy.OwnsRoute);
+    }
+
+    [Theory]
+    [InlineData(true, false, true)]
+    [InlineData(false, true, false)]
+    public void OwnedPendingOrMovingRouteRefreshesAtThreshold(
+        bool pathfindInProgress,
+        bool pathRunning,
+        bool shouldCancelPending)
+    {
+        var expectedInterruption = shouldCancelPending
+            ? CoppeliaRouteInterruption.StopPathAndCancelPending
+            : CoppeliaRouteInterruption.StopPath;
+        var policy = ReadyPolicy(Vector3.Zero);
+        policy.MarkStartupAccepted(Started);
+        policy.AcceptSnapshot(2, new Vector3(6, 0, 0));
+        Assert.Equal(
+            CoppeliaRouteActivity.Owned,
+            policy.Observe(
+                pathfindInProgress,
+                pathRunning,
+                Started + CoppeliaRoutePolicy.DestinationRefreshInterval));
+
+        Assert.Equal(
+            expectedInterruption,
+            policy.RefreshStaleDestination(
+                pathfindInProgress,
+                pathRunning,
+                Started + CoppeliaRoutePolicy.DestinationRefreshInterval));
+        Assert.False(policy.OwnsRoute);
+        Assert.True(policy.HasDestination);
+        Assert.Equal(2, policy.LatestSequence);
+        Assert.Equal(new Vector3(6, 0, 0), policy.LatestDestination);
+        Assert.False(policy.CanStart(pathfindInProgress, pathRunning));
+        Assert.True(policy.CanStart(pathfindInProgress: false, pathRunning: false));
+    }
+
+    [Fact]
+    public void RefreshIntervalResetsAfterReplacementRouteStarts()
+    {
+        var policy = ReadyPolicy(Vector3.Zero);
+        policy.MarkStartupAccepted(Started);
+        policy.AcceptSnapshot(2, new Vector3(6, 0, 0));
+        policy.Observe(
+            pathfindInProgress: false,
+            pathRunning: true,
+            Started + CoppeliaRoutePolicy.DestinationRefreshInterval);
+        Assert.Equal(
+            CoppeliaRouteInterruption.StopPath,
+            policy.RefreshStaleDestination(
+                pathfindInProgress: false,
+                pathRunning: true,
+                Started + CoppeliaRoutePolicy.DestinationRefreshInterval));
+
+        var replacementStarted = Started + CoppeliaRoutePolicy.DestinationRefreshInterval;
+        policy.MarkStartupAccepted(replacementStarted);
+        policy.AcceptSnapshot(3, new Vector3(12, 0, 0));
+        policy.Observe(pathfindInProgress: false, pathRunning: true, replacementStarted.AddSeconds(1));
+
+        Assert.Equal(
+            CoppeliaRouteInterruption.None,
+            policy.RefreshStaleDestination(
+                pathfindInProgress: false,
+                pathRunning: true,
+                replacementStarted.AddSeconds(10).AddTicks(-1)));
+        Assert.Equal(
+            CoppeliaRouteInterruption.StopPath,
+            policy.RefreshStaleDestination(
+                pathfindInProgress: false,
+                pathRunning: true,
+                replacementStarted + CoppeliaRoutePolicy.DestinationRefreshInterval));
+    }
+
+    [Fact]
+    public void ExternalRouteRemainsUntouched()
+    {
+        var policy = ReadyPolicy(Vector3.Zero);
+        policy.AcceptSnapshot(2, new Vector3(6, 0, 0));
+
+        Assert.Equal(
+            CoppeliaRouteActivity.Other,
+            policy.Observe(pathfindInProgress: true, pathRunning: false, Started));
+        Assert.Equal(
+            CoppeliaRouteInterruption.None,
+            policy.RefreshStaleDestination(
+                pathfindInProgress: true,
+                pathRunning: false,
+                Started + CoppeliaRoutePolicy.DestinationRefreshInterval));
+        Assert.False(policy.OwnsRoute);
+        Assert.True(policy.HasDestination);
+        Assert.False(policy.CanStart(pathfindInProgress: true, pathRunning: false));
+        Assert.True(policy.CanStart(pathfindInProgress: false, pathRunning: false));
     }
 
     [Fact]
@@ -223,23 +350,33 @@ public sealed class CoppeliaRoutePolicyTests
         Assert.Contains("lineOfSightRescueRoutePolicy.CanStart(isPathfinding, isPathRunning)", source, StringComparison.Ordinal);
         Assert.Equal(2, Count(source, "moveCloseTo.InvokeFunc("));
         Assert.Contains("LOS blocked; waiting for current movement owner", source, StringComparison.Ordinal);
+        Assert.Contains("if (lineOfSightRescueHasDestination)", source, StringComparison.Ordinal);
+        Assert.True(
+            source.IndexOf("if (lineOfSightRescueHasDestination)", StringComparison.Ordinal) <
+            source.IndexOf("var routeActivity = routePolicy.Observe", StringComparison.Ordinal));
         Assert.DoesNotContain("lastMoveDestination", source, StringComparison.Ordinal);
     }
 
     [Fact]
-    public void NavmeshReloadIsConfinedToTerminalRelease()
+    public void PendingPathfindCancellationUsesGuardedOwnedInterruptions()
     {
         var source = ReadTravelServiceSource();
         var pauseStart = source.IndexOf("private void PauseOwnedRoute()", StringComparison.Ordinal);
         var releaseStart = source.IndexOf("private void ReleaseOwnedRoute()", StringComparison.Ordinal);
+        var interruptStart = source.IndexOf("private void InterruptOwnedRoute(", StringComparison.Ordinal);
+        var rescueStart = source.IndexOf("private void StopLineOfSightRescueRoute()", StringComparison.Ordinal);
         var stopStart = source.IndexOf("private void InvokePathStop()", StringComparison.Ordinal);
 
         Assert.True(pauseStart >= 0);
         Assert.True(releaseStart > pauseStart);
-        Assert.True(stopStart > releaseStart);
+        Assert.True(interruptStart > releaseStart);
+        Assert.True(rescueStart > interruptStart);
+        Assert.True(stopStart > rescueStart);
         Assert.DoesNotContain("cancelAll", source[pauseStart..releaseStart], StringComparison.Ordinal);
         Assert.Contains("InvokePathStop", source[pauseStart..releaseStart], StringComparison.Ordinal);
-        Assert.Contains("cancelAll.InvokeAction()", source[releaseStart..stopStart], StringComparison.Ordinal);
+        Assert.Contains("InterruptOwnedRoute(interruption)", source[releaseStart..interruptStart], StringComparison.Ordinal);
+        Assert.Contains("cancelAll.InvokeAction()", source[interruptStart..rescueStart], StringComparison.Ordinal);
+        Assert.Contains("InterruptOwnedRoute(refreshInterruption)", source, StringComparison.Ordinal);
         Assert.Equal(2, Count(source, "cancelAll.InvokeAction()"));
     }
 

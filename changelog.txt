@@ -1,5 +1,6 @@
 # Changelog
 
+- Refreshed only Coppelia-owned pending or moving follow routes after at least 10 seconds when the newest Quester/Newb destination moved more than 5 yalms; initial sends and external vnavmesh activity remain unchanged.
 - Added a Mini `Krangle names: ON/OFF` control synchronized with Main, Watch, and Settings, plus role-specific Helper,
   Quester/Newb, watched-target, HP, LOS, and rescue context using the existing local formatter. HealBot now suppresses
   futile casts when the exact watched target is LOS-blocked inside 30 yalms and asks vnavmesh to approach its live
