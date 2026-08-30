@@ -9,11 +9,7 @@ namespace Coppelia.Services;
 internal sealed class RsrIpcService
 {
     private const string IpcPrefix = "RotationSolverReborn";
-    private readonly string rsrConfigPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "XIVLauncher",
-        "pluginConfigs",
-        "RotationSolver.json");
+    private readonly string? rsrConfigPath = ResolveRsrConfigPath();
 
     private RsrSessionSnapshot? sessionSnapshot;
     private RsrStateCommandType? lastRequestedMode;
@@ -224,7 +220,7 @@ internal sealed class RsrIpcService
     {
         try
         {
-            if (!File.Exists(rsrConfigPath))
+            if (string.IsNullOrWhiteSpace(rsrConfigPath) || !File.Exists(rsrConfigPath))
                 return null;
 
             return JsonNode.Parse(File.ReadAllText(rsrConfigPath)) as JsonObject;
@@ -234,6 +230,15 @@ internal sealed class RsrIpcService
             Plugin.Log.Debug(ex, "[Coppelia] Failed to read RotationSolver.json for restore snapshot.");
             return null;
         }
+    }
+
+    private static string? ResolveRsrConfigPath()
+    {
+        var pluginConfigDirectory = Plugin.PluginInterface.GetPluginConfigDirectory();
+        var activeConfigDirectory = new DirectoryInfo(pluginConfigDirectory).Parent?.FullName;
+        return string.IsNullOrWhiteSpace(activeConfigDirectory)
+            ? null
+            : Path.Combine(activeConfigDirectory, "RotationSolver.json");
     }
 
     private Dictionary<string, uint> ResolveActionIds(IEnumerable<string> actionNames)

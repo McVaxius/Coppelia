@@ -36,6 +36,9 @@ public sealed class MiniWindow : Window, IDisposable
         if (plugin.Configuration.OperatingRole == OperatingRole.StandAlone)
             DrawStandaloneBehavior();
 
+        if (ShouldDrawJoatAttackMode())
+            DrawJoatAttackMode();
+
         DrawCompanion();
 
         CoppeliaUi.SectionHeader("Operational status");
@@ -101,6 +104,45 @@ public sealed class MiniWindow : Window, IDisposable
     {
         if (ImGui.RadioButton(label, plugin.Configuration.BotMode == mode))
             plugin.SetStandaloneBehavior(mode, printStatus: true);
+    }
+
+    private bool ShouldDrawJoatAttackMode()
+        => plugin.Configuration.OperatingRole == OperatingRole.Helper ||
+           (plugin.Configuration.OperatingRole == OperatingRole.StandAlone &&
+            plugin.Configuration.BotMode == BotMode.Jot) ||
+           plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned;
+
+    private void DrawJoatAttackMode()
+    {
+        CoppeliaUi.SectionHeader("JOAT attack mode");
+        var configuration = plugin.Configuration;
+        var qstOwned = plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned;
+        var fullRsrRotation = qstOwned
+            ? plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation
+            : configuration.JoatFullRsrRotation;
+
+        ImGui.BeginDisabled(qstOwned);
+        if (ImGui.RadioButton("DoTs only##MiniJoatAttack", !fullRsrRotation) &&
+            configuration.JoatFullRsrRotation)
+        {
+            configuration.JoatFullRsrRotation = false;
+            configuration.Save();
+        }
+        ImGui.SameLine();
+        if (ImGui.RadioButton("Full RSR rotation##MiniJoatAttack", fullRsrRotation) &&
+            !configuration.JoatFullRsrRotation)
+        {
+            configuration.JoatFullRsrRotation = true;
+            configuration.Save();
+        }
+        ImGui.EndDisabled();
+
+        if (qstOwned)
+        {
+            ImGui.TextDisabled(
+                $"QST controls the active mode ({(fullRsrRotation ? "Full RSR rotation" : "DoTs only")}); " +
+                "the saved local choice resumes after release.");
+        }
     }
 
     private void DrawCompanion()

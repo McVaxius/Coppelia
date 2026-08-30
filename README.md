@@ -83,7 +83,7 @@ HealBot provides four windows:
 - **Main** begins with Off, Stand-alone, Helper, and Newb, then shows one primary state, one next action, and the active or paired identity.
 - **Settings** contains Quick Setup, General, role-specific networking, JOAT DoTs-only/full-RSR radios, HealBot Actions, and Requirements / Help tabs. QST temporarily disables the local attack radios while it owns the mode; Helper owns port/shared-secret fields, and Newb additionally owns the Helper IPv4 address.
 - **Watch** manages the shared HealBot/JOAT filters, persistence, retained targets, and the live eligible-target table.
-- **Mini** provides the four operational role controls, Stand-alone behavior selection, live status, and a Settings button; it does not edit networking fields.
+- **Mini** provides the four operational role controls, Stand-alone behavior selection, JOAT attack-mode radios when applicable, live status, and a Settings button; it does not edit networking fields. QST ownership disables the radios and shows the effective paired mode.
 
 Main, Settings, and Watch positions are saved independently. `/healbot ws` resets those positions and `/healbot j` moves Main to a random visible location.
 

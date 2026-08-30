@@ -343,18 +343,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
         if (jot)
         {
-            CoppeliaUi.SectionHeader(
-                "JOAT attack mode",
-                "DoTs only enables only the equipped healer's RSR damage-over-time actions. Full RSR rotation reuses the offensive actions, AoE mode, and hostile-target mode captured when Coppelia took ownership.");
-            ImGui.BeginDisabled(plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned);
-            if (ImGui.RadioButton("DoTs only##QuickSetupJoatAttack", !draft.JoatFullRsrRotation))
-                draft.JoatFullRsrRotation = false;
-            ImGui.SameLine();
-            if (ImGui.RadioButton("Full RSR rotation##QuickSetupJoatAttack", draft.JoatFullRsrRotation))
-                draft.JoatFullRsrRotation = true;
-            ImGui.EndDisabled();
-            if (plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned)
-                ImGui.TextDisabled("QST currently controls the active attack mode; the saved local choice resumes after release.");
+            DrawQuickSetupJoatAttackMode();
 
             CoppeliaUi.SectionHeader(
                 "JOAT attacking readiness",
@@ -392,6 +381,23 @@ public sealed class ConfigWindow : Window, IDisposable
         }
 
         DrawSetupNavigation(allowContinue: true);
+    }
+
+    private void DrawQuickSetupJoatAttackMode()
+    {
+        var draft = setupDraft!;
+        CoppeliaUi.SectionHeader(
+            "JOAT attack mode",
+            "DoTs only enables only the equipped healer's RSR damage-over-time actions. Full RSR rotation reuses the offensive actions, AoE mode, and hostile-target mode captured when Coppelia took ownership.");
+        ImGui.BeginDisabled(plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned);
+        if (ImGui.RadioButton("DoTs only##QuickSetupJoatAttack", !draft.JoatFullRsrRotation))
+            draft.JoatFullRsrRotation = false;
+        ImGui.SameLine();
+        if (ImGui.RadioButton("Full RSR rotation##QuickSetupJoatAttack", draft.JoatFullRsrRotation))
+            draft.JoatFullRsrRotation = true;
+        ImGui.EndDisabled();
+        if (plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned)
+            ImGui.TextDisabled("QST currently controls the active attack mode; the saved local choice resumes after release.");
     }
 
     private void DrawPowerlevelSetup()
@@ -494,6 +500,9 @@ public sealed class ConfigWindow : Window, IDisposable
         if (ImGui.SmallButton("Copy secret##SetupNewb"))
             ImGui.SetClipboardText(draft.LanPairingSecret);
         ImGui.EndDisabled();
+
+        if (role == OperatingRole.Helper)
+            DrawQuickSetupJoatAttackMode();
 
         var localPlayer = Plugin.ObjectTable.LocalPlayer;
         var identityReady = role != OperatingRole.Newb ||

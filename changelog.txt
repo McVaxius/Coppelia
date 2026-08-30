@@ -1,5 +1,6 @@
 # Changelog
 
+- Resolved RotationSolver.json from the active Dalamud plugin-config directory instead of the Windows user profile, and added the saved/effective JOAT attack-mode radios to Helper Quick Setup and Mini with QST ownership disabling.
 - Added default-DoTs-only and opt-in full-RSR JOAT attack modes with exact captured offensive/AoE/hostile restoration, made loaded working RSR the sole JOAT damage executor, and added healing-first RSR Off/idle-Auto handoff plus temporary QST attack-mode ownership through a separate boolean IPC endpoint.
 - Added one default-on companion summon setting shared by every operating role except Off, while preserving QST's temporary ownership override and enabling local summoning during PowerlevelBot. Added NQ+HQ Gysahl counts plus Free, Defender, Attacker, Healer, and Follow stance controls to General Settings and Mini; successful summons pause owned navigation and apply the saved stance after three seconds.
 - Deferred live-state startup until the first framework update so construction only creates and wires objects. Saved-role restoration, dependency/login/Quick Setup/DTR initialization, LAN behavior, QST duty sampling, and all four QST IPC providers now start after construction; callback and partial IPC registration failures roll back their handlers.
