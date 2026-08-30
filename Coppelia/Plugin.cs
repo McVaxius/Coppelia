@@ -56,7 +56,7 @@ public sealed class Plugin : IDalamudPlugin
         AetherytePositionDatabase = new AetherytePositionDatabase(this, Log);
         CoppeliaTravelService = new CoppeliaTravelService(Configuration, AetherytePositionDatabase, MapLocationDatabase);
         ActionExecutionService.SetOwnedNavigationPause(CoppeliaTravelService.PauseForAction);
-        CoppeliaCompanionService = new CoppeliaCompanionService(CoppeliaTravelService);
+        CoppeliaCompanionService = new CoppeliaCompanionService(Configuration, CoppeliaTravelService);
         CoppeliaQstIpcService = new CoppeliaQstIpcService(this, CoppeliaTravelService, CoppeliaCompanionService);
         HealBotPairingService = new HealBotPairingService(this);
         RsrIpcService = new RsrIpcService();
@@ -618,6 +618,7 @@ public sealed class Plugin : IDalamudPlugin
         var healingDecision = HealbotRuntimeService.Update();
         JotRuntimeService.Update(healingDecision);
         PowerlevelRuntimeService.Update();
+        CoppeliaCompanionService.Update();
         UpdateDtrBar();
     }
 

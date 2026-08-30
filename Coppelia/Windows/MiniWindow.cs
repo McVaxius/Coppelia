@@ -13,12 +13,12 @@ public sealed class MiniWindow : Window, IDisposable
         : base($"{PluginInfo.DisplayName} Mini###CoppeliaMini")
     {
         this.plugin = plugin;
-        Size = new Vector2(500f, 390f);
+        Size = new Vector2(500f, 540f);
         SizeCondition = ImGuiCond.FirstUseEver;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(460f, 340f),
-            MaximumSize = new Vector2(720f, 620f),
+            MinimumSize = new Vector2(460f, 500f),
+            MaximumSize = new Vector2(720f, 760f),
         };
     }
 
@@ -35,6 +35,8 @@ public sealed class MiniWindow : Window, IDisposable
         DrawRoles();
         if (plugin.Configuration.OperatingRole == OperatingRole.StandAlone)
             DrawStandaloneBehavior();
+
+        DrawCompanion();
 
         CoppeliaUi.SectionHeader("Operational status");
         var status = plugin.GetOperationalStatus();
@@ -99,5 +101,52 @@ public sealed class MiniWindow : Window, IDisposable
     {
         if (ImGui.RadioButton(label, plugin.Configuration.BotMode == mode))
             plugin.SetStandaloneBehavior(mode, printStatus: true);
+    }
+
+    private void DrawCompanion()
+    {
+        CoppeliaUi.SectionHeader("Companion");
+        var configuration = plugin.Configuration;
+        var greensCount = plugin.CoppeliaCompanionService.GetGysahlGreensCount();
+        var companionLabel = greensCount.HasValue
+            ? $"Summon companion chocobo (Gysahl Greens: {greensCount.Value})##MiniCompanionSummon"
+            : "Summon companion chocobo (Gysahl Greens: unavailable)##MiniCompanionSummon";
+        var summonCompanion = configuration.SummonCompanionChocobo;
+
+        ImGui.BeginDisabled(plugin.CoppeliaCompanionService.IsQstOwned);
+        if (ImGui.Checkbox(companionLabel, ref summonCompanion))
+        {
+            configuration.SummonCompanionChocobo = summonCompanion;
+            configuration.Save();
+        }
+        ImGui.EndDisabled();
+
+        if (plugin.CoppeliaCompanionService.IsQstOwned)
+        {
+            ImGui.TextDisabled(
+                $"QST controls summoning ({(plugin.CoppeliaCompanionService.QstSummoningEnabled ? "enabled" : "disabled")}); " +
+                "the saved local setting resumes after release.");
+        }
+
+        DrawCompanionStanceRadio("Free Stance##MiniCompanionStanceFree", CoppeliaCompanionPolicy.FreeStance);
+        ImGui.SameLine();
+        DrawCompanionStanceRadio("Defender Stance##MiniCompanionStanceDefender", CoppeliaCompanionPolicy.DefenderStance);
+        ImGui.SameLine();
+        DrawCompanionStanceRadio("Attacker Stance##MiniCompanionStanceAttacker", CoppeliaCompanionPolicy.AttackerStance);
+        DrawCompanionStanceRadio("Healer Stance##MiniCompanionStanceHealer", CoppeliaCompanionPolicy.HealerStance);
+        ImGui.SameLine();
+        DrawCompanionStanceRadio("Follow##MiniCompanionStanceFollow", CoppeliaCompanionPolicy.FollowStance);
+    }
+
+    private void DrawCompanionStanceRadio(string label, string stance)
+    {
+        var configuration = plugin.Configuration;
+        var selectedStance = CoppeliaCompanionPolicy.NormalizeStance(configuration.CompanionStance);
+        if (!ImGui.RadioButton(label, string.Equals(selectedStance, stance, StringComparison.Ordinal)))
+            return;
+
+        configuration.CompanionStance = stance;
+        configuration.Save();
+        plugin.CoppeliaCompanionService.ApplySelectedStanceImmediately();
     }
 }

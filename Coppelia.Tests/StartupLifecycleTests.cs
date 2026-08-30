@@ -59,6 +59,7 @@ public sealed class StartupLifecycleTests
             "HealbotRuntimeService.Update();",
             "JotRuntimeService.Update(healingDecision);",
             "PowerlevelRuntimeService.Update();",
+            "CoppeliaCompanionService.Update();",
             "UpdateDtrBar();");
     }
 

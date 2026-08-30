@@ -30,6 +30,8 @@ public sealed class Configuration : IPluginConfiguration
     public string DtrIconEnabled { get; set; } = "\uE04E";
     public string DtrIconDisabled { get; set; } = "\uE04C";
     public bool ShowDependencyToasts { get; set; } = true;
+    public bool SummonCompanionChocobo { get; set; } = true;
+    public string CompanionStance { get; set; } = "Free Stance";
     public bool WatchPlayers { get; set; } = true;
     public bool WatchCompanionChocobos { get; set; }
     public bool WatchPartyNpcs { get; set; }

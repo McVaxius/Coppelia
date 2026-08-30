@@ -680,6 +680,42 @@ public sealed class ConfigWindow : Window, IDisposable
             changed = true;
         }
 
+        CoppeliaUi.SectionHeader("Companion");
+        var greensCount = plugin.CoppeliaCompanionService.GetGysahlGreensCount();
+        ImGui.TextDisabled(greensCount.HasValue
+            ? $"Gysahl Greens (NQ + HQ): {greensCount.Value}"
+            : "Gysahl Greens (NQ + HQ): unavailable");
+
+        var summonCompanion = configuration.SummonCompanionChocobo;
+        ImGui.BeginDisabled(plugin.CoppeliaCompanionService.IsQstOwned);
+        if (ImGui.Checkbox("Summon companion chocobo##GeneralCompanionSummon", ref summonCompanion))
+        {
+            configuration.SummonCompanionChocobo = summonCompanion;
+            changed = true;
+        }
+        ImGui.EndDisabled();
+        if (plugin.CoppeliaCompanionService.IsQstOwned)
+        {
+            ImGui.TextDisabled(
+                $"QST currently controls summoning ({(plugin.CoppeliaCompanionService.QstSummoningEnabled ? "enabled" : "disabled")}). " +
+                "Your saved local setting resumes when QST releases it.");
+        }
+
+        var companionStance = Array.IndexOf(
+            CoppeliaCompanionPolicy.StanceNames,
+            CoppeliaCompanionPolicy.NormalizeStance(configuration.CompanionStance));
+        ImGui.SetNextItemWidth(220f);
+        if (ImGui.Combo(
+                "Companion stance",
+                ref companionStance,
+                CoppeliaCompanionPolicy.StanceNames,
+                CoppeliaCompanionPolicy.StanceNames.Length))
+        {
+            configuration.CompanionStance = CoppeliaCompanionPolicy.StanceNames[companionStance];
+            plugin.CoppeliaCompanionService.ApplySelectedStanceImmediately();
+            changed = true;
+        }
+
         CoppeliaUi.SectionHeader("QST travel");
         var avoidTamamizu = configuration.AvoidTamamizuAetheryte;
         if (ImGui.Checkbox("Do not use Tamamizu aetheryte", ref avoidTamamizu))

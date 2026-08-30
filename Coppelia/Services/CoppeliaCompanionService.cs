@@ -3,7 +3,9 @@ using Coppelia.Models;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 
 namespace Coppelia.Services;
 
@@ -13,11 +15,13 @@ internal unsafe sealed class CoppeliaCompanionService
     private const uint MountRouletteGeneralActionId = 9;
     private const float AetheryteSanctuaryDistanceSquared = 50f * 50f;
 
+    private readonly Configuration configuration;
     private readonly CoppeliaTravelService travelService;
     private readonly CoppeliaCompanionPolicy policy = new();
 
-    public CoppeliaCompanionService(CoppeliaTravelService travelService)
+    public CoppeliaCompanionService(Configuration configuration, CoppeliaTravelService travelService)
     {
+        this.configuration = configuration;
         this.travelService = travelService;
     }
 
@@ -29,14 +33,38 @@ internal unsafe sealed class CoppeliaCompanionService
 
     public void ClearQstOwnership() => policy.ClearQstOwnership();
 
+    public bool IsQstOwned => policy.IsQstOwned;
+    public bool QstSummoningEnabled => policy.QstEnabled;
+
+    public int? GetGysahlGreensCount()
+        => Plugin.ClientState.IsLoggedIn ? GetInventoryItemCount(GysahlGreensItemId) : null;
+
+    public void ApplySelectedStanceImmediately()
+    {
+        var command = policy.SelectStance(
+            configuration.CompanionStance,
+            Plugin.ClientState.IsLoggedIn && GetBuddyTimeRemaining() > 0f);
+        if (command != null)
+            ExecuteStanceCommand(command);
+    }
+
     public void Update()
     {
-        if (!policy.IsQstOwned)
+        policy.SetLocalState(
+            configuration.SummonCompanionChocobo,
+            configuration.OperatingRole);
+        if (!policy.Enabled)
             return;
 
+        var nowMilliseconds = Environment.TickCount64;
         var localPlayer = Plugin.ObjectTable.LocalPlayer;
+        var loggedIn = Plugin.ClientState.IsLoggedIn && localPlayer != null;
+        var pendingStance = policy.TakeDueStance(nowMilliseconds, loggedIn);
+        if (pendingStance != null)
+            ExecuteStanceCommand(pendingStance);
+
         var conditions = new CoppeliaCompanionConditions(
-            Plugin.ClientState.IsLoggedIn && localPlayer != null,
+            loggedIn,
             !Plugin.Condition[ConditionFlag.Mounted] &&
             !Plugin.Condition[ConditionFlag.Mounting71] &&
             !Plugin.Condition[ConditionFlag.InFlight],
@@ -47,7 +75,7 @@ internal unsafe sealed class CoppeliaCompanionService
             IsOccupied(),
             GetInventoryItemCount(GysahlGreensItemId) > 0,
             GetBuddyTimeRemaining());
-        if (policy.Evaluate(conditions, Environment.TickCount64) != CoppeliaCompanionDecision.Summon)
+        if (policy.Evaluate(conditions, nowMilliseconds) != CoppeliaCompanionDecision.Summon)
             return;
 
         var actionManager = ActionManager.Instance();
@@ -60,7 +88,33 @@ internal unsafe sealed class CoppeliaCompanionService
         if (actionManager->UseAction(ActionType.Item, GysahlGreensItemId, extraParam: 65535))
         {
             travelService.PauseForAction();
-            Plugin.Log.Information("[Coppelia][QST] Summoning the companion chocobo with Gysahl Greens.");
+            policy.ScheduleStance(configuration.CompanionStance, nowMilliseconds);
+            Plugin.Log.Information("[Coppelia][Companion] Summoning the companion chocobo with Gysahl Greens.");
+        }
+    }
+
+    private static void ExecuteStanceCommand(string command)
+    {
+        try
+        {
+            var shellModule = RaptureShellModule.Instance();
+            if (shellModule == null || shellModule->UIModule == null)
+                return;
+
+            var textCommand = new Utf8String(command);
+            try
+            {
+                shellModule->ExecuteCommandInner(&textCommand, shellModule->UIModule);
+                Plugin.Log.Information($"[Coppelia][Companion] Applied stance with {command}.");
+            }
+            finally
+            {
+                textCommand.Dtor();
+            }
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Warning(ex, $"[Coppelia][Companion] Failed to apply stance with {command}.");
         }
     }
 
