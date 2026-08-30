@@ -11,13 +11,15 @@ public sealed class Configuration : IPluginConfiguration
     public const int DefaultLanPairingPort = 47790;
     public const int ReservedLanDiscoveryPort = 47789;
 
-    private const int CurrentConfigurationVersion = 8;
+    private const int CurrentConfigurationVersion = 9;
     private const int MaxTrackedTargets = 20;
 
     public int Version { get; set; } = CurrentConfigurationVersion;
     public bool SetupWizardCompleted { get; set; }
     public bool PluginEnabled { get; set; } = true;
     public bool AutomationEnabled { get; set; }
+    public OperatingRole OperatingRole { get; set; } = OperatingRole.Off;
+    public OperatingRole LastNonOffRole { get; set; } = OperatingRole.StandAlone;
     public BotMode BotMode { get; set; } = BotMode.HealBot;
     public PowerlevelJob PowerlevelJob { get; set; } = PowerlevelJob.None;
 
@@ -108,6 +110,7 @@ public sealed class Configuration : IPluginConfiguration
 
         SavedTargetScanRangeYalms = Math.Clamp(SavedTargetScanRangeYalms, 1, 200);
         changed |= NormalizeAutomationMode();
+        changed |= NormalizeOperatingRole();
         var normalizedAddress = LanHealBotAddress?.Trim() ?? string.Empty;
         if (!string.Equals(LanHealBotAddress, normalizedAddress, StringComparison.Ordinal))
         {
@@ -154,7 +157,27 @@ public sealed class Configuration : IPluginConfiguration
                     LanPairingPort = DefaultLanPairingPort;
             }
 
+            if (sourceVersion < 9)
+            {
+                var migratedRole = BotMode == BotMode.Newb
+                    ? OperatingRole.Newb
+                    : EnableLanPairing && BotMode is BotMode.HealBot or BotMode.Jot
+                        ? OperatingRole.Helper
+                        : OperatingRole.StandAlone;
+                LastNonOffRole = migratedRole;
+                OperatingRole = PluginEnabled && AutomationEnabled ? migratedRole : OperatingRole.Off;
+                if (BotMode == BotMode.Newb)
+                    BotMode = BotMode.HealBot;
+                changed = true;
+            }
+
             Version = CurrentConfigurationVersion;
+            changed = true;
+        }
+
+        if (Version >= 9 && BotMode == BotMode.Newb)
+        {
+            BotMode = BotMode.HealBot;
             changed = true;
         }
 
@@ -164,10 +187,8 @@ public sealed class Configuration : IPluginConfiguration
     public void Save()
         => Plugin.PluginInterface.SavePluginConfig(this);
 
-    public string GetLanPairingBlocker(BotMode role)
+    public string GetLanPairingBlocker(OperatingRole role)
     {
-        if (!EnableLanPairing)
-            return "LAN pairing is disabled.";
         if (!IsValidLanPairingPort(LanPairingPort))
         {
             return LanPairingPort == ReservedLanDiscoveryPort
@@ -175,12 +196,15 @@ public sealed class Configuration : IPluginConfiguration
                 : "The pairing port must be between 1024 and 65535.";
         }
         if (LanPairingSecret.Length < 16)
-            return "The pair secret must contain at least 16 characters.";
-        if (role == BotMode.Newb && !TryParseLanHealBotAddress(LanHealBotAddress, out _))
-            return "Enter one valid IPv4 HealBot address, such as 127.0.0.1 or 192.168.1.25.";
+            return "The shared secret must contain at least 16 characters.";
+        if (role == OperatingRole.Newb && !TryParseLanHealBotAddress(LanHealBotAddress, out _))
+            return "Enter one valid IPv4 Helper address, such as 127.0.0.1 or 192.168.1.25.";
 
         return string.Empty;
     }
+
+    public string GetLanPairingBlocker(BotMode role)
+        => GetLanPairingBlocker(role == BotMode.Newb ? OperatingRole.Newb : OperatingRole.Helper);
 
     public static bool IsValidLanPairingPort(int port)
         => port is >= 1024 and <= 65535 && port != ReservedLanDiscoveryPort;
@@ -282,6 +306,24 @@ public sealed class Configuration : IPluginConfiguration
         if (!PowerlevelJob.IsSupportedPowerlevelJob() && PowerlevelJob != PowerlevelJob.None)
         {
             PowerlevelJob = PowerlevelJob.None;
+            changed = true;
+        }
+
+        return changed;
+    }
+
+    private bool NormalizeOperatingRole()
+    {
+        var changed = false;
+        if (!Enum.IsDefined(OperatingRole))
+        {
+            OperatingRole = OperatingRole.Off;
+            changed = true;
+        }
+
+        if (!Enum.IsDefined(LastNonOffRole) || LastNonOffRole == OperatingRole.Off)
+        {
+            LastNonOffRole = OperatingRole.StandAlone;
             changed = true;
         }
 

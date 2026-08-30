@@ -32,6 +32,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
     private Assignment? assignment;
     private ActivationSnapshot? activationSnapshot;
+    private ActivationOwner activationOwner;
     private string lastReleasedSessionId = string.Empty;
     private bool wasBoundByDuty;
     private DateTime boundByDutySinceUtc = DateTime.MinValue;
@@ -85,10 +86,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     }
 
     public void ReleaseForDeactivation(string reason)
-    {
-        ReleaseActive(reason);
-        companionService.ClearQstOwnership();
-    }
+        => ReleaseQstForLocalRoleChange(reason);
 
     public (bool Ready, string Blocker) EvaluateNewbReadiness()
     {
@@ -96,23 +94,89 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         {
             if (disposed)
                 return (false, "HealBot pairing is unloading.");
-            if (!plugin.Configuration.PluginEnabled)
-                return (false, "HealBot is disabled.");
-            if (!plugin.Configuration.AutomationEnabled)
-                return (false, "HealBot automation is disabled.");
-            if (plugin.Configuration.BotMode != BotMode.HealBot)
-                return (false, "Select HealBot mode on the healing client.");
+            if (plugin.Configuration.OperatingRole != OperatingRole.Helper)
+                return (false, "Select the Helper role on the healing client.");
+            if (activationOwner != ActivationOwner.DirectNewb)
+                return (false, "The Helper provider is not owned by direct Newb pairing.");
             if (assignment?.Source == AssignmentSource.Qst)
                 return (false, "HealBot already has an active QST assignment.");
 
-            plugin.DependencyService.Refresh(force: true);
-            if (!plugin.DependencyService.Current.IsHealbotReady)
-                return (false, plugin.DependencyService.BuildMissingDependencyMessage());
-            if (!plugin.HealbotRuntimeService.IsSupportedLocalJob(out _, out var jobFailure))
-                return (false, jobFailure);
+            var joat = EvaluateJoatReadiness();
+            if (!joat.Ready)
+                return joat;
 
             return travelService.EvaluateReadiness();
         }
+    }
+
+    public (bool Ready, string Blocker) BeginDirectHelperRole()
+    {
+        lock (gate)
+        {
+            if (disposed)
+                return (false, "HealBot pairing is unloading.");
+            if (activationOwner == ActivationOwner.Qst)
+                return (false, "QST currently owns provider activation.");
+            if (activationOwner == ActivationOwner.DirectNewb)
+                return (true, string.Empty);
+
+            CaptureActivation(ActivationOwner.DirectNewb);
+            plugin.ApplyProviderState(
+                pluginEnabled: activationSnapshot!.PluginEnabled,
+                automationEnabled: false,
+                activationSnapshot.Mode);
+            return (true, string.Empty);
+        }
+    }
+
+    public (bool Ready, string Blocker) EnsureDirectHelperActivated()
+    {
+        lock (gate)
+        {
+            if (plugin.Configuration.OperatingRole != OperatingRole.Helper)
+                return (false, "Select the Helper role on the healing client.");
+            if (activationOwner != ActivationOwner.DirectNewb)
+                return (false, "Direct Newb pairing does not own Helper activation.");
+
+            return ActivateOwned(ActivationOwner.DirectNewb);
+        }
+    }
+
+    public void LeaveDirectHelperRole(string reason)
+    {
+        lock (gate)
+        {
+            if (activationOwner != ActivationOwner.DirectNewb)
+                return;
+            if (assignment?.Source == AssignmentSource.Newb)
+                ReleaseActive(reason);
+            RestoreActivationSnapshot(ActivationOwner.DirectNewb);
+        }
+    }
+
+    public void ReleaseQstForLocalRoleChange(string reason)
+    {
+        lock (gate)
+        {
+            if (activationOwner != ActivationOwner.Qst)
+                return;
+            if (assignment?.Source == AssignmentSource.Qst)
+                ReleaseActive(reason);
+            companionService.ClearQstOwnership();
+            RestoreActivationSnapshot(ActivationOwner.Qst);
+        }
+    }
+
+    public (bool Ready, string Blocker) EvaluateJoatProviderReadiness()
+    {
+        lock (gate)
+            return EvaluateJoatReadiness();
+    }
+
+    public (bool Ready, string Blocker) EvaluateTravelReadiness()
+    {
+        lock (gate)
+            return travelService.EvaluateReadiness();
     }
 
     public CoppeliaAssignmentSnapshot GetAssignmentSnapshot()
@@ -135,6 +199,8 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         {
             if (!IsValidSessionId(command.SessionId))
                 return Failed("Invalid Newb session ID.");
+            if (activationOwner != ActivationOwner.DirectNewb)
+                return Failed("Direct Newb pairing does not own Helper activation.");
 
             if (assignment != null)
             {
@@ -231,7 +297,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         disposed = true;
         ReleaseActive("HealBot is unloading.");
         companionService.ClearQstOwnership();
-        RestoreActivationSnapshot();
+        RestoreActivationSnapshot(activationOwner);
         companionSummoningProvider.UnregisterFunc();
         commandProvider.UnregisterFunc();
         statusProvider.UnregisterFunc();
@@ -303,7 +369,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             }
 
             if (command.Action is "Activate" or "Deactivate")
-                return command.Action == "Activate" ? Activate() : Deactivate();
+                return command.Action == "Activate" ? ActivateQst() : DeactivateQst();
 
             if (!IsValidSessionId(command.SessionId))
                 return Failed("Invalid QST session ID.");
@@ -320,40 +386,31 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         }
     }
 
-    private CoppeliaQstCommandResponse Activate()
+    private CoppeliaQstCommandResponse ActivateQst()
     {
-        activationSnapshot ??= new ActivationSnapshot(
-            plugin.Configuration.PluginEnabled,
-            plugin.Configuration.AutomationEnabled,
-            plugin.Configuration.BotMode);
+        if (activationOwner == ActivationOwner.DirectNewb)
+            return Failed("Direct Newb pairing currently owns Helper activation.");
+        if (activationOwner == ActivationOwner.None)
+            CaptureActivation(ActivationOwner.Qst);
 
-        if (plugin.Configuration.PluginEnabled &&
-            plugin.Configuration.AutomationEnabled &&
-            plugin.Configuration.BotMode == BotMode.Jot)
-        {
-            return Accepted("HealBot JOAT is already active for QST.");
-        }
+        var activation = ActivateOwned(ActivationOwner.Qst);
+        if (activation.Ready)
+            return Accepted("HealBot JOAT is active for QST.");
 
-        plugin.SetPluginEnabled(true, printStatus: false);
-        if (!plugin.SetBotMode(BotMode.Jot, printStatus: false) ||
-            !plugin.SetAutomationEnabled(true, printStatus: false))
-        {
-            var blocker = string.IsNullOrWhiteSpace(plugin.LastAutomationBlocker)
-                ? "HealBot could not activate JOAT."
-                : plugin.LastAutomationBlocker;
-            RestoreActivationSnapshot();
-            return Failed(blocker);
-        }
-
-        return Accepted("HealBot JOAT is active for QST.");
+        RestoreActivationSnapshot(ActivationOwner.Qst);
+        return Failed(activation.Blocker);
     }
 
-    private CoppeliaQstCommandResponse Deactivate()
+    private CoppeliaQstCommandResponse DeactivateQst()
     {
+        if (activationOwner == ActivationOwner.None)
+            return Accepted("QST-owned HealBot activation was already restored.");
+        if (activationOwner != ActivationOwner.Qst)
+            return Failed("QST does not own the active HealBot provider.");
         if (assignment?.Source == AssignmentSource.Qst)
             ReleaseActive("QST deactivated HealBot.");
         companionService.ClearQstOwnership();
-        RestoreActivationSnapshot();
+        RestoreActivationSnapshot(ActivationOwner.Qst);
         return Accepted("QST-owned HealBot activation was restored.");
     }
 
@@ -361,7 +418,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     {
         lock (gate)
         {
-            if (disposed || activationSnapshot == null ||
+            if (disposed || activationOwner != ActivationOwner.Qst || activationSnapshot == null ||
                 !plugin.Configuration.PluginEnabled ||
                 !plugin.Configuration.AutomationEnabled ||
                 plugin.Configuration.BotMode != BotMode.Jot)
@@ -375,6 +432,8 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
     private CoppeliaQstCommandResponse AssignQuester(CoppeliaQstCommand command)
     {
+        if (activationOwner != ActivationOwner.Qst)
+            return Failed("QST does not own the active HealBot provider.");
         if (assignment != null)
         {
             var sameAssignment = assignment.Source == AssignmentSource.Qst &&
@@ -660,18 +719,40 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         }
     }
 
-    private void RestoreActivationSnapshot()
+    private void CaptureActivation(ActivationOwner owner)
     {
-        if (activationSnapshot == null)
+        activationSnapshot = new ActivationSnapshot(
+            plugin.Configuration.PluginEnabled,
+            plugin.Configuration.AutomationEnabled,
+            plugin.Configuration.BotMode);
+        activationOwner = owner;
+    }
+
+    private (bool Ready, string Blocker) ActivateOwned(ActivationOwner owner)
+    {
+        if (activationOwner != owner)
+            return (false, "Another provider owns HealBot activation.");
+        if (plugin.Configuration.PluginEnabled &&
+            plugin.Configuration.AutomationEnabled &&
+            plugin.Configuration.BotMode == BotMode.Jot)
+        {
+            return (true, string.Empty);
+        }
+
+        return plugin.TryActivateProviderMode(BotMode.Jot, out var blocker)
+            ? (true, string.Empty)
+            : (false, string.IsNullOrWhiteSpace(blocker) ? "HealBot could not activate JOAT." : blocker);
+    }
+
+    private void RestoreActivationSnapshot(ActivationOwner expectedOwner)
+    {
+        if (activationSnapshot == null || activationOwner != expectedOwner)
             return;
 
         var snapshot = activationSnapshot;
         activationSnapshot = null;
-        plugin.SetAutomationEnabled(false, printStatus: false);
-        plugin.SetBotMode(snapshot.Mode, printStatus: false);
-        plugin.SetPluginEnabled(snapshot.PluginEnabled, printStatus: false);
-        if (snapshot.PluginEnabled && snapshot.AutomationEnabled)
-            plugin.SetAutomationEnabled(true, printStatus: false);
+        activationOwner = ActivationOwner.None;
+        plugin.ApplyProviderState(snapshot.PluginEnabled, snapshot.AutomationEnabled, snapshot.Mode);
     }
 
     private (bool Ready, string Blocker) EvaluateJoatReadiness()
@@ -931,6 +1012,13 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     {
         Qst,
         Newb,
+    }
+
+    private enum ActivationOwner
+    {
+        None,
+        Qst,
+        DirectNewb,
     }
 }
 

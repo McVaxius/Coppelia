@@ -17,6 +17,7 @@ internal enum QuickSetupCompletionChoice
 
 internal sealed class QuickSetupDraft
 {
+    public OperatingRole Role { get; set; }
     public BotMode Mode { get; set; }
     public PowerlevelJob PowerlevelJob { get; set; }
     public bool WatchPlayers { get; set; }
@@ -33,6 +34,9 @@ internal sealed class QuickSetupDraft
     public static QuickSetupDraft FromConfiguration(Configuration configuration)
         => new()
         {
+            Role = configuration.OperatingRole == OperatingRole.Off
+                ? configuration.LastNonOffRole
+                : configuration.OperatingRole,
             Mode = configuration.BotMode,
             PowerlevelJob = configuration.PowerlevelJob,
             WatchPlayers = configuration.WatchPlayers,
@@ -49,7 +53,7 @@ internal sealed class QuickSetupDraft
 
     public void ApplyTo(Configuration configuration)
     {
-        configuration.BotMode = Mode;
+        configuration.BotMode = Mode == BotMode.Newb ? BotMode.HealBot : Mode;
         configuration.PowerlevelJob = PowerlevelJob;
         configuration.WatchPlayers = WatchPlayers;
         configuration.WatchCompanionChocobos = WatchCompanionChocobos;

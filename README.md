@@ -1,23 +1,23 @@
 # HealBot
 
-Guided watched-target healing, healer-first JOAT support, Fren-assisted powerleveling, and paired Newb travel.
+Stand-alone watched-target healing, healer-first JOAT, Fren-assisted powerleveling, and authenticated Helper/Newb pairing.
 
-HealBot provides four mutually exclusive automation modes. HealBot runs configurable WHM, SCH, AST, or SGE healing for up to 20 watched friendly targets. Jacqueline of All Trades (JOAT) gives healing absolute priority, then uses the equipped healer's single-target filler only while healing is idle. PowerlevelBot retains its BRD/MCH instant-action policy. Newb sends one client's exact identity and travel state to one directly paired HealBot for remote healing and chase. Use `/healbot`, `/hb`, or the retained `/copellia` alias to open.
+HealBot has four top-level operating roles: **Off**, **Stand-alone**, **Helper**, and **Newb**. Stand-alone has the smaller HealBot, Jacqueline of All Trades (JOAT), and PowerlevelBot behavior choice. Helper listens for one authenticated Newb and activates JOAT for remote healing and chase after a compatible status request. Newb connects asynchronously and performs no local healing or attacking. Use `/healbot`, `/hb`, or the retained `/copellia` alias to open.
 
 ## Quick Setup
 
 Open Main and choose **Quick Setup**, or open Settings and select its permanent **Quick Setup** tab.
 
-- Choose HealBot, Jacqueline of All Trades (JOAT), PowerlevelBot, or Newb. The modes are mutually exclusive.
+- Choose Stand-alone, Helper, or Newb; Stand-alone then chooses HealBot, JOAT, or PowerlevelBot.
 - Changes remain in a draft until **Finish**. **Cancel** discards that draft.
-- Finish requires either **Enable this mode now** or **Save setup and leave automation off**.
-- If activation fails, the wizard stays incomplete and shows the same blocker used by normal activation.
+- Finish requires either **Start this role now** or **Save setup and leave role Off**.
+- If startup fails, the wizard stays incomplete and shows the same blocker used by normal role selection.
 - A genuinely new configuration opens Quick Setup automatically. Existing configurations migrate without unsolicited onboarding.
 - Closing an unfinished first-run setup leaves it incomplete, so it opens again on the next plugin load. Completed setup remains manually rerunnable.
 
-## HealBot
+## Stand-alone
 
-HealBot uses the Watch window and the existing per-healer action matrix.
+Stand-alone performs no networking. Its HealBot and JOAT behaviors use the Watch window and existing per-healer action matrix; PowerlevelBot retains its BRD/MCH policy.
 
 - Supports WHM, SCH, AST, and SGE.
 - Evaluates up to 20 explicitly watched friendly targets, including players outside the party.
@@ -26,24 +26,25 @@ HealBot uses the Watch window and the existing per-healer action matrix.
 - Can optionally save explicitly watched targets. The saved-target scan range only allows a saved target to rejoin after it returns; it never discovers or selects a new target.
 - Requires FrenRider, vnavmesh, and either BossMod Reborn (BMR) or VBM.
 - Uses optional Rotation Solver Reborn isolation and restores the session snapshot when available.
-- Can optionally listen for one directly paired Newb while ordinary standalone healing continues normally.
 
 Use the separate Watch window to add or remove targets. Unticking a target also removes its saved copy. Hold Ctrl while clearing the full set or removing an absent retained target.
 
-## Newb direct pairing
+## Helper and Newb direct pairing
 
-Newb is a one-to-one, opt-in LAN mode. The Newb client connects directly to the configured HealBot IPv4 address; there is no UDP discovery. Both clients must run this compatible build and use the same TCP port and pair secret.
+Helper/Newb is one-to-one direct TCP pairing with no UDP discovery. Helper listens automatically when its port and shared secret are valid. Newb validates only local identity, IPv4 address, port, and shared secret synchronously; connection, authentication, assignment, and reconnect work run asynchronously.
 
-- Enable authenticated LAN pairing on both clients.
-- On the Newb client, enter the HealBot PC's IPv4 address. Use `127.0.0.1` only when both game clients are on the same PC.
+- Select Helper on the healing client and Newb on the connecting client.
+- In Newb Settings, enter the Helper PC's IPv4 address. Use `127.0.0.1` only when both game clients are on the same PC.
 - Use port `47790` by default. Ports `1024` through `65535` are valid except reserved port `47789`.
-- Use the same pair-specific secret on both clients; it must contain at least 16 characters. Mini and Settings can generate and copy one.
-- Start HealBot mode and automation on the healing client first, then start Newb mode and automation on the Newb client.
+- Use the same visible pair-specific shared secret on both clients; it must contain at least 16 characters. Settings generates exactly 32 random bytes as 64 hexadecimal characters and provides Copy.
+- Editing a networking field commits when editing finishes; generation commits immediately. Each commit saves and restarts pairing once.
 - The HealBot client needs its normal healing dependencies plus Lifestream and vnavmesh readiness for paired travel.
 
-Newb performs no local healing or attacking. After an exact-name/home-world assignment is acknowledged, it sends an immediate travel snapshot and then sends at most one every 750 ms after three yalms of movement or a mount, flight, world, territory, or accepted-teleport change. HealBot uses its existing exact ephemeral target, healing action engine, and owned travel route. QST and direct Newb assignments cannot be active at the same time. Disconnect, stop, mode change, configuration restart, or unload releases the session, paired target, and owned navigation; reconnect uses 1/2/5/10-second delays and a fresh assignment.
+An authenticated compatible v2 status request idempotently activates the Helper's plugin and JOAT provider even when local JOAT was not already running. Disconnect releases the Newb assignment, exact target, and owned navigation while keeping Helper activation ready for reconnection. Leaving Helper or unloading restores the pre-Helper plugin, Stand-alone behavior, and automation state. QST and direct Newb have separate activation and assignment ownership and cannot restore or release each other's state.
 
-Pairing frames use HMAC-SHA256 authentication, two-minute freshness, five-minute replay rejection, and a 64-KiB newline-delimited limit. Traffic is authenticated but **not encrypted**: character names and coordinates remain visible to the local network. Use a trusted LAN and a pair-specific secret.
+After an exact-name/home-world assignment is acknowledged, Newb sends an immediate travel snapshot and then sends at most one every 750 ms after three yalms of movement or a mount, flight, world, territory, or accepted-teleport change. Reconnect uses 1/2/5/10-second delays and a fresh assignment.
+
+Protocol v2 reports provider, JOAT, and travel readiness separately. Older peers receive an explicit incompatibility blocker before assignment or Helper activation. Pairing frames retain the authenticated HMAC-SHA256 envelope, two-minute freshness, five-minute replay rejection, correlated acknowledgements, and a 64-KiB newline-delimited limit. Traffic is authenticated but **not encrypted**: character names and coordinates remain visible to the local network. Use a trusted LAN and a pair-specific secret.
 
 ## Jacqueline of All Trades (JOAT)
 
@@ -56,7 +57,7 @@ JOAT shares HealBot's dependencies, watch list, per-healer action matrix, 900-ms
 - Issues damage directly through HealBot's action executor while Rotation Solver Reborn remains isolated.
 - Never auto-adds the Fren to Watch. When the Fren is the low-level character, select it explicitly so JOAT healing protects it.
 
-### QST automatic helper mode
+### QST-owned Helper provider
 
 When a High-Level Helper selects the retained **Coppelia (JOAT)** provider in Questionable Companion, authenticated `Coppelia.QST` v3 status requests idempotently enable HealBot, select JOAT, and enable automation. One session-scoped assignment immediately displays the exact name/home-world Quester as selected but remote, then resolves only that identity into the native HealBot candidate when visible. It never saves the assignment or changes the configured watch list. The assembly, namespace, configuration/InternalName, repository, and `Coppelia.QST` IPC identity remain unchanged for compatibility.
 
@@ -78,10 +79,10 @@ Activation requires compatible FrenRider Powerlevel IPC, FrenRider enabled, a co
 
 HealBot provides four windows:
 
-- **Main** is the status dashboard for mode, automation, readiness, runtime state, and mode-specific target information.
-- **Settings** contains Quick Setup, General, HealBot Actions, and Requirements / Help tabs.
+- **Main** begins with Off, Stand-alone, Helper, and Newb, then shows one primary state, one next action, and the active or paired identity.
+- **Settings** contains Quick Setup, General, role-specific networking, HealBot Actions, and Requirements / Help tabs. Helper owns port/shared-secret fields; Newb additionally owns the Helper IPv4 address.
 - **Watch** manages the shared HealBot/JOAT filters, persistence, retained targets, and the live eligible-target table.
-- **Mini** provides all four mode choices, Start/Stop, role-aware pairing settings, secret generation/copy, save/restart, and live connection/healing/chase status.
+- **Mini** provides the four operational role controls, Stand-alone behavior selection, live status, and a Settings button; it does not edit networking fields.
 
 Main, Settings, and Watch positions are saved independently. `/healbot ws` resets those positions and `/healbot j` moves Main to a random visible location.
 
@@ -91,13 +92,14 @@ Commands:
 - `/healbot mini`, `/hb mini`, or `/copellia mini` - open Mini
 - `/healbot config` - open Settings
 - `/healbot watch` - open Watch
-- `/healbot on` or `/healbot off` - control automation for the selected mode
-- `/healbot heal` - select HealBot
-- `/healbot powerlevel` or `/healbot pl` - select PowerlevelBot
-- `/healbot joat` - select Jacqueline of All Trades (JOAT)
+- `/healbot off` - select Off
+- `/healbot on` - resume the saved non-Off role
+- `/healbot standalone`, `/healbot helper`, or `/healbot newb` - select that operating role
+- `/healbot heal` - select Stand-alone + HealBot
+- `/healbot powerlevel` or `/healbot pl` - select Stand-alone + PowerlevelBot
+- `/healbot joat` - select Stand-alone + Jacqueline of All Trades (JOAT)
 - `/healbot jot` - compatibility alias for `/healbot joat`
-- `/healbot newb` - select Newb
-- `/healbot status` - print the selected mode status
+- `/healbot status` - print role, primary state, next action, and active/paired identity
 
 ## Build
 

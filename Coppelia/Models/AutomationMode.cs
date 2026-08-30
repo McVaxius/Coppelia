@@ -1,5 +1,13 @@
 namespace Coppelia.Models;
 
+public enum OperatingRole
+{
+    Off = 0,
+    StandAlone = 1,
+    Helper = 2,
+    Newb = 3,
+}
+
 public enum BotMode
 {
     HealBot = 0,
@@ -17,6 +25,25 @@ public enum PowerlevelJob
 
 internal static class AutomationModeText
 {
+    public static string GetLabel(this OperatingRole role)
+        => role switch
+        {
+            OperatingRole.Off => "Off",
+            OperatingRole.StandAlone => "Stand-alone",
+            OperatingRole.Helper => "Helper",
+            OperatingRole.Newb => "Newb",
+            _ => role.ToString(),
+        };
+
+    public static string GetDtrLabel(this OperatingRole role, BotMode behavior)
+        => role switch
+        {
+            OperatingRole.Off => "OFF",
+            OperatingRole.Helper => "HELP",
+            OperatingRole.Newb => "NEWB",
+            _ => behavior.GetDtrLabel(),
+        };
+
     public static string GetLabel(this BotMode mode)
         => mode switch
         {

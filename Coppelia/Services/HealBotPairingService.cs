@@ -33,6 +33,8 @@ internal sealed class HealBotPairingService : IDisposable
     private PendingRecovery? pendingRecovery;
     private TravelSnapshot? lastAcceptedTravel;
     private PendingTeleport? pendingTeleport;
+    private string workflowBlocker = string.Empty;
+    private HelperReadinessSnapshot helperReadiness = HelperReadinessSnapshot.Empty;
     private bool disposed;
 
     public HealBotPairingService(Plugin plugin)
@@ -40,12 +42,7 @@ internal sealed class HealBotPairingService : IDisposable
         this.plugin = plugin;
     }
 
-    public string ConnectionStatus { get; private set; } = "Stopped";
-    public string PairingIdentity { get; private set; } = "None";
-    public string Blocker { get; private set; } = string.Empty;
-    public string RuntimeStatus { get; private set; } = "Pairing is stopped.";
-    public string HealingStatus { get; private set; } = "Not paired.";
-    public string ChaseStatus { get; private set; } = "Idle";
+    public PairingSnapshot Snapshot { get; private set; } = PairingSnapshot.Stopped;
 
     public void Update()
     {
@@ -57,32 +54,28 @@ internal sealed class HealBotPairingService : IDisposable
         ObservePendingRecovery();
 
         var configuration = plugin.Configuration;
-        if (!configuration.PluginEnabled || !configuration.AutomationEnabled)
+        if (configuration.OperatingRole == OperatingRole.Helper)
         {
-            StopResources("Automation is off.");
-            return;
-        }
-
-        if (configuration.BotMode == BotMode.HealBot)
-        {
-            StopClient("HealBot mode is listening, not connecting.");
+            StopClient("Helper listens instead of connecting.");
             UpdateHealBotRole();
             return;
         }
 
-        if (configuration.BotMode == BotMode.Newb)
+        if (configuration.OperatingRole == OperatingRole.Newb)
         {
-            StopServer("Newb mode is connecting, not listening.");
+            StopServer("Newb connects instead of listening.");
             UpdateNewbRole();
             return;
         }
 
-        StopResources("The selected mode does not use direct pairing.");
+        StopResources(configuration.OperatingRole == OperatingRole.Off
+            ? "The operating role is Off."
+            : "Stand-alone does not use direct pairing.");
     }
 
     public bool TryValidateNewbActivation(out string reason)
     {
-        reason = plugin.Configuration.GetLanPairingBlocker(BotMode.Newb);
+        reason = plugin.Configuration.GetLanPairingBlocker(OperatingRole.Newb);
         if (!string.IsNullOrWhiteSpace(reason))
             return false;
 
@@ -91,56 +84,13 @@ internal sealed class HealBotPairingService : IDisposable
             string.IsNullOrWhiteSpace(localPlayer.Name.TextValue) ||
             localPlayer.HomeWorld.RowId == 0)
         {
-            reason = "The local Newb identity is unavailable. Log in fully before starting Newb mode.";
+            reason = "The local Newb identity is unavailable. Log in fully before starting the Newb role.";
             return false;
         }
 
-        if (!Configuration.TryParseLanHealBotAddress(plugin.Configuration.LanHealBotAddress, out var address))
+        if (!Configuration.TryParseLanHealBotAddress(plugin.Configuration.LanHealBotAddress, out _))
         {
-            reason = "Enter one valid IPv4 HealBot address.";
-            return false;
-        }
-
-        var probe = HealBotLanClient.ProbeAsync(
-                address,
-                plugin.Configuration.LanPairingPort,
-                plugin.Configuration.LanPairingSecret)
-            .GetAwaiter()
-            .GetResult();
-        if (probe.Status == null)
-        {
-            reason = probe.Failure;
-            return false;
-        }
-
-        var status = probe.Status;
-        if (status.PairProtocolVersion != HealBotLanEnvelope.CurrentProtocolVersion)
-        {
-            reason = "The paired endpoint uses an incompatible HealBot pairing protocol.";
-            return false;
-        }
-        if (string.IsNullOrWhiteSpace(status.HealBotName) || status.HealBotWorldId == 0)
-        {
-            reason = "The paired endpoint did not report an exact HealBot identity.";
-            return false;
-        }
-        if (string.Equals(status.AssignmentSource, "QST", StringComparison.Ordinal))
-        {
-            reason = "The paired HealBot already has an active QST assignment.";
-            return false;
-        }
-        if (string.Equals(status.AssignmentSource, "Newb", StringComparison.Ordinal) &&
-            (!string.Equals(status.AssignedName, localPlayer.Name.TextValue.Trim(), StringComparison.Ordinal) ||
-             status.AssignedWorldId != localPlayer.HomeWorld.RowId))
-        {
-            reason = "The paired HealBot already belongs to another Newb session.";
-            return false;
-        }
-        if (!status.Ready)
-        {
-            reason = string.IsNullOrWhiteSpace(status.Blocker)
-                ? "The paired HealBot is not ready."
-                : status.Blocker;
+            reason = "Enter one valid IPv4 Helper address.";
             return false;
         }
 
@@ -158,30 +108,62 @@ internal sealed class HealBotPairingService : IDisposable
     public void ReleaseForDeactivation(string reason)
         => StopResources(reason);
 
-    public HealBotLanStatusResponse BuildServerStatus(string requestId, HealBotLanStatusRequest? request)
+    public HealBotLanStatusResponse BuildServerStatus(
+        string requestId,
+        HealBotLanStatusRequest? request,
+        int envelopeProtocolVersion)
     {
         var localPlayer = Plugin.ObjectTable.LocalPlayer;
         var localName = localPlayer?.Name.TextValue.Trim() ?? string.Empty;
         var localWorld = (ushort)(localPlayer?.HomeWorld.RowId ?? 0);
         var assignment = plugin.CoppeliaQstIpcService.GetAssignmentSnapshot();
-        var readiness = plugin.CoppeliaQstIpcService.EvaluateNewbReadiness();
-        var blocker = plugin.Configuration.GetLanPairingBlocker(BotMode.HealBot);
-        if (request?.PairProtocolVersion != HealBotLanEnvelope.CurrentProtocolVersion)
-            blocker = "The Newb client uses an incompatible HealBot pairing protocol.";
+        var compatible = envelopeProtocolVersion == HealBotLanEnvelope.CurrentProtocolVersion &&
+                         request?.PairProtocolVersion == HealBotLanEnvelope.CurrentProtocolVersion;
+        var provider = compatible
+            ? plugin.CoppeliaQstIpcService.EnsureDirectHelperActivated()
+            : (Ready: false, Blocker: "HealBot direct pairing v2 is required. Update the older peer before pairing.");
+        var joat = plugin.CoppeliaQstIpcService.EvaluateJoatProviderReadiness();
+        var travel = plugin.CoppeliaQstIpcService.EvaluateTravelReadiness();
+        var blocker = plugin.Configuration.GetLanPairingBlocker(OperatingRole.Helper);
+        if (!compatible)
+            blocker = provider.Blocker;
         else if (string.IsNullOrWhiteSpace(localName) || localWorld == 0)
             blocker = "The local HealBot identity is unavailable.";
-        else if (!readiness.Ready)
-            blocker = readiness.Blocker;
+        else if (!provider.Ready)
+            blocker = provider.Blocker;
+        else if (!joat.Ready)
+            blocker = joat.Blocker;
+        else if (!travel.Ready)
+            blocker = travel.Blocker;
+        else if (assignment.Source == "QST")
+            blocker = "HealBot already has an active QST assignment.";
 
         var ready = string.IsNullOrWhiteSpace(blocker);
+        helperReadiness = new HelperReadinessSnapshot(
+            true,
+            ready,
+            blocker,
+            provider.Ready,
+            provider.Blocker,
+            joat.Ready,
+            joat.Blocker,
+            travel.Ready,
+            travel.Blocker);
         return new HealBotLanStatusResponse(
             requestId,
             HealBotLanEnvelope.CurrentProtocolVersion,
             localName,
             localWorld,
+            compatible,
             ready,
             blocker,
-            plugin.Configuration.BotMode.GetLabel(),
+            provider.Ready,
+            provider.Blocker,
+            joat.Ready,
+            joat.Blocker,
+            travel.Ready,
+            travel.Blocker,
+            plugin.Configuration.OperatingRole.GetLabel(),
             plugin.Configuration.AutomationEnabled,
             assignment.Source,
             assignment.Name,
@@ -190,6 +172,27 @@ internal sealed class HealBotPairingService : IDisposable
             assignment.Source == "Newb" ? "Paired" : server?.IsRunning == true ? "Listening" : "Stopped",
             plugin.HealbotRuntimeService.StatusText,
             plugin.CoppeliaTravelService.State);
+    }
+
+    public HealBotLanLegacyStatusResponse BuildLegacyIncompatibilityStatus(string requestId)
+    {
+        var localPlayer = Plugin.ObjectTable.LocalPlayer;
+        return new HealBotLanLegacyStatusResponse(
+            requestId,
+            HealBotLanEnvelope.CurrentProtocolVersion,
+            localPlayer?.Name.TextValue.Trim() ?? string.Empty,
+            (ushort)(localPlayer?.HomeWorld.RowId ?? 0),
+            false,
+            "HealBot direct pairing v2 is required. Update the older peer before pairing.",
+            plugin.Configuration.OperatingRole.GetLabel(),
+            false,
+            string.Empty,
+            string.Empty,
+            0,
+            string.Empty,
+            "Blocked",
+            "Unavailable",
+            "Unavailable");
     }
 
     public HealBotLanCommandResult HandleServerCommand(string requestId, HealBotLanTargetedCommand? targeted)
@@ -235,16 +238,25 @@ internal sealed class HealBotPairingService : IDisposable
 
     private void UpdateHealBotRole()
     {
-        var blocker = plugin.Configuration.GetLanPairingBlocker(BotMode.HealBot);
+        var ownership = plugin.CoppeliaQstIpcService.BeginDirectHelperRole();
+        var blocker = plugin.Configuration.GetLanPairingBlocker(OperatingRole.Helper);
+        if (string.IsNullOrWhiteSpace(blocker) && !ownership.Ready)
+            blocker = ownership.Blocker;
         if (!string.IsNullOrWhiteSpace(blocker))
         {
             StopServer(blocker);
-            ConnectionStatus = "Blocked";
-            PairingIdentity = FormatAssignmentIdentity();
-            Blocker = blocker;
-            RuntimeStatus = "Ordinary HealBot healing remains active; LAN pairing is blocked.";
-            HealingStatus = plugin.HealbotRuntimeService.StatusText;
-            ChaseStatus = plugin.CoppeliaTravelService.State;
+            Snapshot = new PairingSnapshot(
+                OperatingRole.Helper,
+                PairingState.Blocked,
+                "Blocked",
+                $"Resolve: {blocker}",
+                FormatAssignmentIdentity(),
+                $"TCP {plugin.Configuration.LanPairingPort}",
+                "Inactive",
+                plugin.JotRuntimeService.StatusText,
+                plugin.CoppeliaTravelService.State,
+                blocker,
+                false);
             return;
         }
 
@@ -258,32 +270,69 @@ internal sealed class HealBotPairingService : IDisposable
         }
 
         var assignment = plugin.CoppeliaQstIpcService.GetAssignmentSnapshot();
-        ConnectionStatus = server.IsRunning
-            ? server.ConnectedClientCount > 0 ? "Connected" : "Listening"
-            : "Starting";
-        PairingIdentity = FormatAssignmentIdentity();
-        Blocker = server.ListeningBlocker;
-        RuntimeStatus = assignment.Source == "Newb"
-            ? "Active Newb assignment"
+        var state = assignment.Source == "Newb"
+            ? PairingState.Paired
+            : helperReadiness.Seen && !helperReadiness.Ready
+                ? PairingState.Blocked
             : server.IsRunning
-                ? $"Listening on TCP {plugin.Configuration.LanPairingPort}"
-                : "Starting the pairing listener";
-        HealingStatus = plugin.HealbotRuntimeService.StatusText;
-        ChaseStatus = plugin.CoppeliaTravelService.State;
+                ? server.ConnectedClientCount > 0 ? PairingState.Connected : PairingState.Listening
+                : string.IsNullOrWhiteSpace(server.ListeningBlocker) ? PairingState.Connecting : PairingState.Blocked;
+        var primary = state switch
+        {
+            PairingState.Paired => "Paired",
+            PairingState.Connected => "Connected",
+            PairingState.Listening => "Listening",
+            PairingState.Blocked => "Blocked",
+            _ => "Starting",
+        };
+        var nextAction = state switch
+        {
+            PairingState.Paired => "No action required.",
+            PairingState.Connected => "Wait for authenticated assignment.",
+            PairingState.Listening => "Start Newb with this port and shared secret.",
+            PairingState.Blocked => $"Resolve: {(string.IsNullOrWhiteSpace(helperReadiness.Blocker) ? server.ListeningBlocker : helperReadiness.Blocker)}",
+            _ => "Wait for the listener to start.",
+        };
+        Snapshot = new PairingSnapshot(
+            OperatingRole.Helper,
+            state,
+            primary,
+            nextAction,
+            FormatAssignmentIdentity(),
+            $"TCP {plugin.Configuration.LanPairingPort}",
+            !helperReadiness.Seen
+                ? "Waiting for authenticated Newb status"
+                : helperReadiness.ProviderReady ? "JOAT provider active" : helperReadiness.ProviderBlocker,
+            !helperReadiness.Seen
+                ? plugin.JotRuntimeService.StatusText
+                : helperReadiness.JoatReady ? plugin.JotRuntimeService.StatusText : helperReadiness.JoatBlocker,
+            !helperReadiness.Seen
+                ? plugin.CoppeliaTravelService.State
+                : helperReadiness.TravelReady ? plugin.CoppeliaTravelService.State : helperReadiness.TravelBlocker,
+            string.IsNullOrWhiteSpace(helperReadiness.Blocker) ? server.ListeningBlocker : helperReadiness.Blocker,
+            state == PairingState.Paired);
     }
 
     private void UpdateNewbRole()
     {
-        var blocker = plugin.Configuration.GetLanPairingBlocker(BotMode.Newb);
-        if (!string.IsNullOrWhiteSpace(blocker))
+        if (plugin.Configuration.AutomationEnabled)
+            plugin.ApplyProviderState(pluginEnabled: true, automationEnabled: false, plugin.Configuration.BotMode);
+
+        if (!TryValidateNewbActivation(out var blocker))
         {
             StopClient(blocker);
-            ConnectionStatus = "Blocked";
-            PairingIdentity = "None";
-            Blocker = blocker;
-            RuntimeStatus = "Newb fails closed and performs no local healing or attacking.";
-            HealingStatus = "Remote HealBot unavailable.";
-            ChaseStatus = "Remote chase unavailable.";
+            Snapshot = new PairingSnapshot(
+                OperatingRole.Newb,
+                PairingState.Blocked,
+                "Blocked",
+                $"Resolve: {blocker}",
+                "None",
+                $"{plugin.Configuration.LanHealBotAddress}:{plugin.Configuration.LanPairingPort}",
+                "Remote provider unavailable",
+                "Remote JOAT unavailable",
+                "Remote travel unavailable",
+                blocker,
+                false);
             return;
         }
 
@@ -297,26 +346,90 @@ internal sealed class HealBotPairingService : IDisposable
                 plugin.Configuration.LanPairingSecret);
             clientSignature = signature;
             client.Start();
+            workflowBlocker = string.Empty;
             teleportObserver = new HealBotTeleportObserver(Plugin.GameInteropProvider);
             teleportObserver.OnTeleportAccepted += OnTeleportAccepted;
         }
 
         UpdateNewbWorkflow();
         var status = client.LastStatus;
-        ConnectionStatus = client.ConnectionState;
-        PairingIdentity = !string.IsNullOrWhiteSpace(sessionId)
+        var identity = !string.IsNullOrWhiteSpace(sessionId)
             ? FormatIdentity(healBotName, healBotWorldId)
             : status == null
                 ? "None"
                 : FormatIdentity(status.Status.HealBotName, status.Status.HealBotWorldId);
-        Blocker = !string.IsNullOrWhiteSpace(Blocker)
-            ? Blocker
+        var activeBlocker = !string.IsNullOrWhiteSpace(workflowBlocker)
+            ? workflowBlocker
             : client.Blocker;
-        RuntimeStatus = string.IsNullOrWhiteSpace(sessionId)
-            ? pendingAssignment != null ? "Waiting for assignment acknowledgement" : "Waiting for a fresh assignment"
-            : "Newb paired; local healing and attacking are disabled";
-        HealingStatus = status?.Status.HealingState ?? "Waiting for remote HealBot status.";
-        ChaseStatus = status?.Status.ChaseState ?? "Waiting for remote chase status.";
+        var state = !string.IsNullOrWhiteSpace(sessionId)
+            ? PairingState.Paired
+            : status is { Status.Ready: false } || IsHardPairingBlocker(activeBlocker)
+                ? PairingState.Blocked
+            : client.ConnectionState switch
+            {
+                "Connected" => PairingState.Connected,
+                "Authenticating" => PairingState.Authenticating,
+                "Connecting" => PairingState.Connecting,
+                _ when client.ConnectionState.StartsWith("Reconnect", StringComparison.Ordinal) => PairingState.Connecting,
+                _ when !string.IsNullOrWhiteSpace(activeBlocker) => PairingState.Blocked,
+                _ => PairingState.Connecting,
+            };
+        var primary = state switch
+        {
+            PairingState.Paired => "Paired",
+            PairingState.Blocked => "Blocked",
+            _ => client.ConnectionState,
+        };
+        var nextAction = state switch
+        {
+            PairingState.Paired => "No action required.",
+            PairingState.Connected when pendingAssignment != null => "Wait for assignment acknowledgement.",
+            PairingState.Connected => "Wait for a fresh authenticated status and assignment.",
+            PairingState.Blocked => BuildBlockedNextAction(activeBlocker),
+            _ => "Wait for the asynchronous connection or reconnect.",
+        };
+        Snapshot = new PairingSnapshot(
+            OperatingRole.Newb,
+            state,
+            primary,
+            nextAction,
+            identity,
+            $"{plugin.Configuration.LanHealBotAddress}:{plugin.Configuration.LanPairingPort}",
+            status == null
+                ? "Waiting for remote provider status"
+                : status.Status.ProviderReady ? "Remote provider ready" : status.Status.ProviderBlocker,
+            status == null
+                ? "Waiting for remote JOAT status"
+                : status.Status.JoatReady ? status.Status.HealingState : status.Status.JoatBlocker,
+            status == null
+                ? "Waiting for remote travel status"
+                : status.Status.TravelReady ? status.Status.ChaseState : status.Status.TravelBlocker,
+            activeBlocker,
+            state == PairingState.Paired);
+    }
+
+    private static bool IsHardPairingBlocker(string blocker)
+        => blocker.Contains("v2", StringComparison.OrdinalIgnoreCase) ||
+           blocker.Contains("incompatible", StringComparison.OrdinalIgnoreCase) ||
+           blocker.Contains("authentication", StringComparison.OrdinalIgnoreCase) ||
+           blocker.Contains("secret", StringComparison.OrdinalIgnoreCase) ||
+           blocker.Contains("replay", StringComparison.OrdinalIgnoreCase) ||
+           blocker.Contains("malformed", StringComparison.OrdinalIgnoreCase);
+
+    private static string BuildBlockedNextAction(string blocker)
+    {
+        if (blocker.Contains("v2", StringComparison.OrdinalIgnoreCase) ||
+            blocker.Contains("incompatible", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Update the older peer to a compatible HealBot direct-pairing v2 build.";
+        }
+        if (blocker.Contains("authentication", StringComparison.OrdinalIgnoreCase) ||
+            blocker.Contains("secret", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Enter the same shared secret on Helper and Newb in Settings.";
+        }
+
+        return $"Resolve: {blocker}";
     }
 
     private void UpdateNewbWorkflow()
@@ -327,8 +440,8 @@ internal sealed class HealBotPairingService : IDisposable
         var localPlayer = Plugin.ObjectTable.LocalPlayer;
         if (localPlayer == null || string.IsNullOrWhiteSpace(localPlayer.Name.TextValue) || localPlayer.HomeWorld.RowId == 0)
         {
-            Blocker = "The local Newb identity is unavailable.";
-            ReleaseSession(Blocker);
+            workflowBlocker = "The local Newb identity is unavailable.";
+            ReleaseSession(workflowBlocker);
             return;
         }
 
@@ -337,11 +450,19 @@ internal sealed class HealBotPairingService : IDisposable
         {
             if (!string.IsNullOrWhiteSpace(sessionId))
                 ClearSessionState("The paired HealBot connection or authenticated status was lost.");
-            Blocker = client.Blocker;
+            workflowBlocker = client.Blocker;
             return;
         }
 
         var peer = observed.Status;
+        if (!peer.Compatible || peer.PairProtocolVersion != HealBotLanEnvelope.CurrentProtocolVersion)
+        {
+            workflowBlocker = string.IsNullOrWhiteSpace(peer.Blocker)
+                ? "HealBot direct pairing v2 is required. Update the older peer before pairing."
+                : peer.Blocker;
+            ReleaseSession(workflowBlocker);
+            return;
+        }
         if (!string.IsNullOrWhiteSpace(sessionId) &&
             (!string.Equals(healBotName, peer.HealBotName, StringComparison.Ordinal) ||
              healBotWorldId != peer.HealBotWorldId))
@@ -363,14 +484,14 @@ internal sealed class HealBotPairingService : IDisposable
                 recoveryStatusBoundaryUtc = DateTime.MinValue;
                 if (!string.IsNullOrWhiteSpace(peer.SessionId))
                 {
-                    Blocker = $"The paired HealBot still reports released session {peer.SessionId}.";
+                    workflowBlocker = $"The paired HealBot still reports released session {peer.SessionId}.";
                     return;
                 }
             }
 
             if (string.Equals(peer.AssignmentSource, "QST", StringComparison.Ordinal))
             {
-                Blocker = "The paired HealBot has an active QST assignment.";
+                workflowBlocker = "The paired HealBot has an active QST assignment.";
                 return;
             }
 
@@ -380,7 +501,7 @@ internal sealed class HealBotPairingService : IDisposable
                 if (!string.Equals(peer.AssignedName, localPlayer.Name.TextValue.Trim(), StringComparison.Ordinal) ||
                     peer.AssignedWorldId != localPlayer.HomeWorld.RowId)
                 {
-                    Blocker = "The paired HealBot belongs to another Newb session.";
+                    workflowBlocker = "The paired HealBot belongs to another Newb session.";
                     return;
                 }
 
@@ -390,7 +511,7 @@ internal sealed class HealBotPairingService : IDisposable
 
             if (!peer.Ready)
             {
-                Blocker = string.IsNullOrWhiteSpace(peer.Blocker) ? "The paired HealBot is not ready." : peer.Blocker;
+                workflowBlocker = string.IsNullOrWhiteSpace(peer.Blocker) ? "The paired HealBot is not ready." : peer.Blocker;
                 return;
             }
 
@@ -406,7 +527,7 @@ internal sealed class HealBotPairingService : IDisposable
             return;
         }
 
-        Blocker = peer.Ready ? string.Empty : peer.Blocker;
+        workflowBlocker = peer.Ready ? string.Empty : peer.Blocker;
         TrySendTravelUpdate(force: false);
     }
 
@@ -418,7 +539,7 @@ internal sealed class HealBotPairingService : IDisposable
         var newb = Plugin.ObjectTable.LocalPlayer;
         if (newb == null)
         {
-            Blocker = "The local Newb identity is unavailable.";
+            workflowBlocker = "The local Newb identity is unavailable.";
             return;
         }
 
@@ -435,7 +556,7 @@ internal sealed class HealBotPairingService : IDisposable
             peer.HealBotWorldId,
             candidateSessionId,
             client.SendCommandAsync(Target(peer.HealBotName, peer.HealBotWorldId, command)));
-        Blocker = "Waiting for the paired HealBot to acknowledge the exact Newb session.";
+        workflowBlocker = "Waiting for the paired HealBot to acknowledge the exact Newb session.";
     }
 
     private void ObservePendingAssignment()
@@ -448,7 +569,7 @@ internal sealed class HealBotPairingService : IDisposable
         if (!result.Accepted)
         {
             QueueRelease(pending.HelperName, pending.HelperWorldId, pending.SessionId);
-            Blocker = string.IsNullOrWhiteSpace(result.Blocker)
+            workflowBlocker = string.IsNullOrWhiteSpace(result.Blocker)
                 ? "The paired HealBot rejected the Newb assignment."
                 : result.Blocker;
             return;
@@ -462,7 +583,7 @@ internal sealed class HealBotPairingService : IDisposable
         nextTravelUtc = DateTime.MinValue;
         assignmentAcknowledgedUtc = DateTime.UtcNow;
         releasedRecoverySessionId = string.Empty;
-        Blocker = string.Empty;
+        workflowBlocker = string.Empty;
         Plugin.Log.Information("[Coppelia][Pairing] The HealBot acknowledged the exact Newb assignment.");
         TrySendTravelUpdate(force: true);
     }
@@ -476,7 +597,7 @@ internal sealed class HealBotPairingService : IDisposable
         var result = GetTaskResult(pending.CommandTask, pending.Command.SessionId, pending.Command.Action);
         if (result.Accepted)
         {
-            Blocker = string.Empty;
+            workflowBlocker = string.Empty;
             if (pending.Command.Action == "TravelUpdate")
             {
                 travelSequence = pending.Command.TravelSequence;
@@ -493,7 +614,7 @@ internal sealed class HealBotPairingService : IDisposable
             return;
         }
 
-        Blocker = string.IsNullOrWhiteSpace(result.Blocker)
+        workflowBlocker = string.IsNullOrWhiteSpace(result.Blocker)
             ? $"The paired HealBot rejected {pending.Command.Action}."
             : result.Blocker;
         ReleaseSession($"The paired HealBot did not accept {pending.Command.Action} for the active session.");
@@ -578,7 +699,7 @@ internal sealed class HealBotPairingService : IDisposable
         var remoteSessionId = peer.SessionId;
         if (!string.IsNullOrWhiteSpace(sessionId))
             ClearSessionState(reason);
-        Blocker = reason;
+        workflowBlocker = reason;
 
         if (!string.Equals(peer.AssignmentSource, "Newb", StringComparison.Ordinal) ||
             string.IsNullOrWhiteSpace(remoteSessionId))
@@ -592,13 +713,13 @@ internal sealed class HealBotPairingService : IDisposable
             !string.Equals(peer.AssignedName, localPlayer.Name.TextValue.Trim(), StringComparison.Ordinal) ||
             peer.AssignedWorldId != localPlayer.HomeWorld.RowId)
         {
-            Blocker = "The paired HealBot belongs to another Newb session.";
+            workflowBlocker = "The paired HealBot belongs to another Newb session.";
             return;
         }
 
         if (string.Equals(releasedRecoverySessionId, remoteSessionId, StringComparison.Ordinal))
         {
-            Blocker = $"The paired HealBot still reports released session {remoteSessionId}.";
+            workflowBlocker = $"The paired HealBot still reports released session {remoteSessionId}.";
             return;
         }
 
@@ -620,7 +741,7 @@ internal sealed class HealBotPairingService : IDisposable
         recoveryStatusBoundaryUtc = DateTime.UtcNow;
         if (!result.Accepted)
         {
-            Blocker = string.IsNullOrWhiteSpace(result.Blocker)
+            workflowBlocker = string.IsNullOrWhiteSpace(result.Blocker)
                 ? "The paired HealBot did not acknowledge its stale-session release."
                 : result.Blocker;
         }
@@ -673,21 +794,29 @@ internal sealed class HealBotPairingService : IDisposable
         pendingCommand = null;
         lastAcceptedTravel = null;
         if (!string.IsNullOrWhiteSpace(reason))
-            Blocker = reason;
+            workflowBlocker = reason;
     }
 
     private void StopResources(string reason)
     {
         StopClient(reason);
         StopServer(reason);
-        ConnectionStatus = "Stopped";
-        PairingIdentity = "None";
-        Blocker = reason;
-        RuntimeStatus = reason;
-        HealingStatus = plugin.Configuration.BotMode == BotMode.HealBot
-            ? plugin.HealbotRuntimeService.StatusText
-            : "Not paired.";
-        ChaseStatus = plugin.CoppeliaTravelService.State;
+        workflowBlocker = reason;
+        helperReadiness = HelperReadinessSnapshot.Empty;
+        Snapshot = new PairingSnapshot(
+            plugin.Configuration.OperatingRole,
+            PairingState.Stopped,
+            plugin.Configuration.OperatingRole == OperatingRole.Off ? "Off" : "Stopped",
+            plugin.Configuration.OperatingRole == OperatingRole.Off
+                ? $"Use /healbot on to resume {plugin.Configuration.LastNonOffRole.GetLabel()}."
+                : "Select Helper or Newb to use direct pairing.",
+            "None",
+            string.Empty,
+            "Inactive",
+            "Inactive",
+            plugin.CoppeliaTravelService.State,
+            string.Empty,
+            false);
     }
 
     private void StopClient(string reason)
@@ -714,6 +843,7 @@ internal sealed class HealBotPairingService : IDisposable
 
     private void StopServer(string reason)
     {
+        helperReadiness = HelperReadinessSnapshot.Empty;
         server?.Dispose();
         server = null;
         serverSignature = string.Empty;
@@ -789,6 +919,29 @@ internal sealed class HealBotPairingService : IDisposable
         bool Mounted,
         bool Flying,
         PendingTeleport? Teleport);
+
+    private sealed record HelperReadinessSnapshot(
+        bool Seen,
+        bool Ready,
+        string Blocker,
+        bool ProviderReady,
+        string ProviderBlocker,
+        bool JoatReady,
+        string JoatBlocker,
+        bool TravelReady,
+        string TravelBlocker)
+    {
+        public static readonly HelperReadinessSnapshot Empty = new(
+            false,
+            false,
+            string.Empty,
+            false,
+            string.Empty,
+            false,
+            string.Empty,
+            false,
+            string.Empty);
+    }
 }
 
 internal sealed class HealBotLanServer : IDisposable
@@ -983,8 +1136,25 @@ internal sealed class HealBotLanServer : IDisposable
         if (message.Type == HealBotLanMessageType.StatusRequest)
         {
             var request = message.GetData<HealBotLanStatusRequest>();
+            if (message.ProtocolVersion == HealBotLanEnvelope.LegacyProtocolVersion)
+            {
+                var legacyStatus = await Plugin.Framework.RunOnFrameworkThread(() =>
+                    plugin.HealBotPairingService.BuildLegacyIncompatibilityStatus(message.MessageId)).ConfigureAwait(false);
+                await SendAsync(
+                    client,
+                    HealBotLanEnvelope.CreateForProtocol(
+                        HealBotLanEnvelope.LegacyProtocolVersion,
+                        HealBotLanMessageType.StatusResponse,
+                        legacyStatus),
+                    cancellationToken).ConfigureAwait(false);
+                return;
+            }
+
             var status = await Plugin.Framework.RunOnFrameworkThread(() =>
-                plugin.HealBotPairingService.BuildServerStatus(message.MessageId, request)).ConfigureAwait(false);
+                plugin.HealBotPairingService.BuildServerStatus(
+                    message.MessageId,
+                    request,
+                    message.ProtocolVersion)).ConfigureAwait(false);
             await SendAsync(
                 client,
                 HealBotLanEnvelope.Create(HealBotLanMessageType.StatusResponse, status),
@@ -996,6 +1166,21 @@ internal sealed class HealBotLanServer : IDisposable
             HealBotLanMessageType.TravelUpdate or
             HealBotLanMessageType.Release))
         {
+            return;
+        }
+
+        if (message.ProtocolVersion != HealBotLanEnvelope.CurrentProtocolVersion)
+        {
+            await SendAsync(
+                client,
+                HealBotLanEnvelope.CreateForProtocol(
+                    message.ProtocolVersion,
+                    HealBotLanMessageType.CommandResult,
+                    HealBotLanCommandResult.Rejected(
+                        message.MessageId,
+                        null,
+                        "HealBot direct pairing v2 is required. Update the older peer before pairing.")),
+                cancellationToken).ConfigureAwait(false);
             return;
         }
 
@@ -1294,50 +1479,6 @@ internal sealed class HealBotLanClient : IDisposable
         cancellationTokenSource = null;
     }
 
-    public static async Task<HealBotLanProbeResult> ProbeAsync(IPAddress address, int port, string secret)
-    {
-        using var client = new TcpClient();
-        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(3));
-        var replayCache = new HealBotLanReplayCache();
-        try
-        {
-            ConfigureSocket(client);
-            await client.ConnectAsync(address, port, cancellation.Token).ConfigureAwait(false);
-            var request = HealBotLanEnvelope.Create(
-                HealBotLanMessageType.StatusRequest,
-                new HealBotLanStatusRequest());
-            var bytes = HealBotLanContract.SerializeFrame(request, secret);
-            await client.GetStream().WriteAsync(bytes, cancellation.Token).ConfigureAwait(false);
-            var line = await HealBotLanContract.ReadFrameAsync(client.GetStream(), cancellation.Token).ConfigureAwait(false);
-            if (string.IsNullOrEmpty(line))
-                return new HealBotLanProbeResult(null, "The HealBot endpoint closed before returning authenticated status.");
-
-            var envelope = JsonSerializer.Deserialize<HealBotLanEnvelope>(line, HealBotLanContract.JsonOptions);
-            var failure = "Malformed pairing envelope.";
-            if (envelope == null || !HealBotLanContract.TryValidate(envelope, secret, replayCache, out failure))
-                return new HealBotLanProbeResult(null, failure);
-            if (envelope.Type != HealBotLanMessageType.StatusResponse)
-                return new HealBotLanProbeResult(null, "The endpoint returned an incompatible pairing response.");
-
-            var status = envelope.GetData<HealBotLanStatusResponse>();
-            if (status == null || !string.Equals(status.RequestId, request.MessageId, StringComparison.Ordinal))
-                return new HealBotLanProbeResult(null, "The endpoint returned an uncorrelated pairing status.");
-            return new HealBotLanProbeResult(status, string.Empty);
-        }
-        catch (OperationCanceledException)
-        {
-            return new HealBotLanProbeResult(null, $"The HealBot endpoint at {address}:{port} did not return authenticated status in time.");
-        }
-        catch (SocketException ex) when (ex.SocketErrorCode == SocketError.ConnectionRefused)
-        {
-            return new HealBotLanProbeResult(null, $"No HealBot is listening at {address}:{port}.");
-        }
-        catch (Exception ex)
-        {
-            return new HealBotLanProbeResult(null, $"Could not authenticate the HealBot at {address}:{port}: {ex.Message}");
-        }
-    }
-
     private async Task MonitorAsync(CancellationToken cancellationToken)
     {
         var nextReconnectUtc = DateTime.MinValue;
@@ -1372,9 +1513,13 @@ internal sealed class HealBotLanClient : IDisposable
                     var status = await RequestStatusAsync(cancellationToken).ConfigureAwait(false);
                     if (status == null)
                     {
-                        DropConnection(string.IsNullOrWhiteSpace(Blocker)
-                            ? "The paired HealBot did not return correlated authenticated status. Check the pair secret and protocol."
-                            : Blocker);
+                        var failure = await IsLegacyPeerAsync(cancellationToken).ConfigureAwait(false)
+                            ? "HealBot direct pairing v2 is required. Update the older Helper before pairing."
+                            : string.IsNullOrWhiteSpace(Blocker) ||
+                              Blocker.StartsWith("Connected; waiting", StringComparison.Ordinal)
+                                ? "The paired HealBot did not return correlated authenticated status. Check the shared secret and protocol."
+                                : Blocker;
+                        DropConnection(failure);
                         nextReconnectUtc = ScheduleReconnect();
                         nextStatusUtc = DateTime.MinValue;
                     }
@@ -1474,6 +1619,12 @@ internal sealed class HealBotLanClient : IDisposable
                 if (message == null || !HealBotLanContract.TryValidate(message, secret, replayCache, out failure))
                 {
                     Blocker = failure;
+                    break;
+                }
+
+                if (message.ProtocolVersion != HealBotLanEnvelope.CurrentProtocolVersion)
+                {
+                    Blocker = "HealBot direct pairing v2 is required. Update the older peer before pairing.";
                     break;
                 }
 
@@ -1580,6 +1731,46 @@ internal sealed class HealBotLanClient : IDisposable
         lock (gate)
             pendingStatuses.Remove(message.MessageId);
         return finished == completion.Task ? await completion.Task.ConfigureAwait(false) : null;
+    }
+
+    private async Task<bool> IsLegacyPeerAsync(CancellationToken cancellationToken)
+    {
+        using var legacyClient = new TcpClient();
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(TimeSpan.FromSeconds(3));
+        try
+        {
+            ConfigureSocket(legacyClient);
+            await legacyClient.ConnectAsync(address, port, timeout.Token).ConfigureAwait(false);
+            var request = HealBotLanEnvelope.CreateForProtocol(
+                HealBotLanEnvelope.LegacyProtocolVersion,
+                HealBotLanMessageType.StatusRequest,
+                new HealBotLanStatusRequest(HealBotLanEnvelope.LegacyProtocolVersion));
+            var bytes = HealBotLanContract.SerializeFrame(request, secret);
+            await legacyClient.GetStream().WriteAsync(bytes, timeout.Token).ConfigureAwait(false);
+            var line = await HealBotLanContract.ReadFrameAsync(legacyClient.GetStream(), timeout.Token).ConfigureAwait(false);
+            if (string.IsNullOrEmpty(line))
+                return false;
+
+            var envelope = JsonSerializer.Deserialize<HealBotLanEnvelope>(line, HealBotLanContract.JsonOptions);
+            var failure = string.Empty;
+            if (envelope == null ||
+                envelope.ProtocolVersion != HealBotLanEnvelope.LegacyProtocolVersion ||
+                !HealBotLanContract.TryValidate(envelope, secret, replayCache, out failure) ||
+                envelope.Type != HealBotLanMessageType.StatusResponse)
+            {
+                return false;
+            }
+
+            var status = envelope.GetData<HealBotLanLegacyStatusResponse>();
+            return status != null &&
+                   string.Equals(status.RequestId, request.MessageId, StringComparison.Ordinal) &&
+                   status.PairProtocolVersion == HealBotLanEnvelope.LegacyProtocolVersion;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private async Task<bool> SendAsync(
@@ -1708,4 +1899,3 @@ internal sealed class HealBotLanClient : IDisposable
 }
 
 internal sealed record ObservedHealBotStatus(HealBotLanStatusResponse Status, DateTime ReceivedUtc);
-internal sealed record HealBotLanProbeResult(HealBotLanStatusResponse? Status, string Failure);

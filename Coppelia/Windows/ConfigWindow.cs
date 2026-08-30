@@ -35,11 +35,18 @@ public sealed class ConfigWindow : Window, IDisposable
     private DateTimeOffset nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
     private JotSetupReadiness? jotReadiness;
     private DateTimeOffset nextJotReadinessUtc = DateTimeOffset.MinValue;
+    private string networkAddressDraft;
+    private int networkPortDraft;
+    private string networkSecretDraft;
+    private string networkConfirmation = string.Empty;
 
     public ConfigWindow(Plugin plugin)
         : base($"{PluginInfo.DisplayName} Settings###CoppeliaConfig")
     {
         this.plugin = plugin;
+        networkAddressDraft = plugin.Configuration.LanHealBotAddress;
+        networkPortDraft = plugin.Configuration.LanPairingPort;
+        networkSecretDraft = plugin.Configuration.LanPairingSecret;
         SizeConstraints = new WindowSizeConstraints
         {
             MinimumSize = new Vector2(920f, 680f),
@@ -182,7 +189,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
         CoppeliaUi.SectionHeader(
             "Quick Setup",
-            "Choose one mutually exclusive automation mode. Settings stay in this draft until Finish; Cancel discards the draft.");
+            "Choose an operating role. Stand-alone then uses one local behavior. Settings stay in this draft until Finish; Cancel discards the draft.");
 
         if (setupStep == QuickSetupStep.Complete)
         {
@@ -207,10 +214,12 @@ public sealed class ConfigWindow : Window, IDisposable
                 DrawSetupModeChoice();
                 break;
             case QuickSetupStep.Configure:
-                if (setupDraft.Mode == BotMode.PowerlevelBot)
+                if (setupDraft.Role == OperatingRole.Helper)
+                    DrawPairingSetup(OperatingRole.Helper);
+                else if (setupDraft.Role == OperatingRole.Newb)
+                    DrawPairingSetup(OperatingRole.Newb);
+                else if (setupDraft.Mode == BotMode.PowerlevelBot)
                     DrawPowerlevelSetup();
-                else if (setupDraft.Mode == BotMode.Newb)
-                    DrawNewbSetup();
                 else if (setupDraft.Mode == BotMode.Jot)
                     DrawHealbotSetup(jot: true);
                 else
@@ -225,45 +234,49 @@ public sealed class ConfigWindow : Window, IDisposable
     private void DrawSetupModeChoice()
     {
         CoppeliaUi.WrappedHelp(
-            "HealBot is healing-only. JOAT heals first and attacks only while healing is idle. PowerlevelBot remains the BRD/MCH instant-action mode. Newb sends its exact identity and travel state to one paired HealBot and performs no local healing or attacking.");
+            "Stand-alone runs HealBot, JOAT, or PowerlevelBot without networking. Helper listens for and remotely activates JOAT for one authenticated Newb. Newb connects asynchronously and performs no local healing or attacking.");
         ImGui.Spacing();
 
-        if (CoppeliaUi.PrimaryButton("Set up HealBot", new Vector2(220f, 38f)))
+        if (CoppeliaUi.PrimaryButton("Set up Stand-alone", new Vector2(220f, 38f)))
         {
-            setupDraft!.Mode = BotMode.HealBot;
+            setupDraft!.Role = OperatingRole.StandAlone;
+            if (setupDraft.Mode == BotMode.Newb)
+                setupDraft.Mode = BotMode.HealBot;
             setupStep = QuickSetupStep.Configure;
             setupMessage = string.Empty;
         }
-        CoppeliaUi.Tooltip("Configure friendly target filters, optional persistence, and HealBot readiness.");
+        CoppeliaUi.Tooltip("Configure the selected HealBot, JOAT, or PowerlevelBot behavior without networking.");
 
         ImGui.SameLine();
-        if (CoppeliaUi.PrimaryButton("Set up JOAT", new Vector2(220f, 38f)))
+        if (CoppeliaUi.PrimaryButton("Set up Helper", new Vector2(220f, 38f)))
         {
-            setupDraft!.Mode = BotMode.Jot;
+            setupDraft!.Role = OperatingRole.Helper;
             setupStep = QuickSetupStep.Configure;
             setupMessage = string.Empty;
-            nextJotReadinessUtc = DateTimeOffset.MinValue;
         }
-        CoppeliaUi.Tooltip("Configure the HealBot watch path plus restricted healer-filler attacking during genuinely idle healing cycles.");
-
-        ImGui.SameLine();
-        if (CoppeliaUi.PrimaryButton("Set up PowerlevelBot", new Vector2(220f, 38f)))
-        {
-            setupDraft!.Mode = BotMode.PowerlevelBot;
-            setupStep = QuickSetupStep.Configure;
-            setupMessage = string.Empty;
-            nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
-        }
-        CoppeliaUi.Tooltip("Choose BRD or MCH and verify FrenRider, job, visibility, and companion readiness.");
+        CoppeliaUi.Tooltip("Configure the authenticated listener port and visible shared secret.");
 
         ImGui.SameLine();
         if (CoppeliaUi.PrimaryButton("Set up Newb", new Vector2(220f, 38f)))
         {
-            setupDraft!.Mode = BotMode.Newb;
+            setupDraft!.Role = OperatingRole.Newb;
             setupStep = QuickSetupStep.Configure;
             setupMessage = string.Empty;
         }
         CoppeliaUi.Tooltip("Configure one authenticated direct-TCP HealBot endpoint. Newb never heals or attacks locally.");
+
+        CoppeliaUi.SectionHeader("Stand-alone behavior");
+        var heal = setupDraft!.Mode == BotMode.HealBot;
+        if (ImGui.RadioButton("HealBot##SetupBehavior", heal))
+            setupDraft.Mode = BotMode.HealBot;
+        ImGui.SameLine();
+        var joat = setupDraft.Mode == BotMode.Jot;
+        if (ImGui.RadioButton("JOAT##SetupBehavior", joat))
+            setupDraft.Mode = BotMode.Jot;
+        ImGui.SameLine();
+        var powerlevel = setupDraft.Mode == BotMode.PowerlevelBot;
+        if (ImGui.RadioButton("PowerlevelBot##SetupBehavior", powerlevel))
+            setupDraft.Mode = BotMode.PowerlevelBot;
 
         ImGui.Spacing();
         if (ImGui.Button("Cancel##QuickSetupChoose"))
@@ -432,21 +445,22 @@ public sealed class ConfigWindow : Window, IDisposable
         DrawSetupNavigation(allowContinue: draft.PowerlevelJob.IsSupportedPowerlevelJob());
     }
 
-    private void DrawNewbSetup()
+    private void DrawPairingSetup(OperatingRole role)
     {
         var draft = setupDraft!;
         CoppeliaUi.SectionHeader(
-            "Newb direct pairing",
-            "Enter the IPv4 address of one active HealBot client. Both clients must use the same port and pair secret; UDP discovery is not used.");
+            $"{role.GetLabel()} direct pairing",
+            role == OperatingRole.Helper
+                ? "Helper listens for one authenticated Newb and activates JOAT only after a compatible status request."
+                : "Newb connects asynchronously to one exact Helper IPv4 endpoint and never heals or attacks locally.");
 
-        var enabled = draft.EnableLanPairing;
-        if (ImGui.Checkbox("Enable authenticated LAN pairing##SetupNewb", ref enabled))
-            draft.EnableLanPairing = enabled;
-
-        ImGui.SetNextItemWidth(320f);
-        var address = draft.LanHealBotAddress;
-        if (ImGui.InputText("HealBot IPv4 address##SetupNewb", ref address, 45))
-            draft.LanHealBotAddress = address;
+        if (role == OperatingRole.Newb)
+        {
+            ImGui.SetNextItemWidth(320f);
+            var address = draft.LanHealBotAddress;
+            if (ImGui.InputText("Helper IPv4 address##SetupNewb", ref address, 45))
+                draft.LanHealBotAddress = address;
+        }
 
         ImGui.SetNextItemWidth(160f);
         var port = draft.LanPairingPort;
@@ -455,11 +469,11 @@ public sealed class ConfigWindow : Window, IDisposable
 
         ImGui.SetNextItemWidth(420f);
         var secret = draft.LanPairingSecret;
-        if (ImGui.InputText("Pair secret##SetupNewb", ref secret, 256, ImGuiInputTextFlags.Password))
+        if (ImGui.InputText("Visible shared secret##SetupNewb", ref secret, 256))
             draft.LanPairingSecret = secret;
 
         if (ImGui.SmallButton("Generate secret##SetupNewb"))
-            draft.LanPairingSecret = Convert.ToBase64String(RandomNumberGenerator.GetBytes(24));
+            draft.LanPairingSecret = Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLowerInvariant();
         ImGui.SameLine();
         ImGui.BeginDisabled(string.IsNullOrEmpty(draft.LanPairingSecret));
         if (ImGui.SmallButton("Copy secret##SetupNewb"))
@@ -467,36 +481,43 @@ public sealed class ConfigWindow : Window, IDisposable
         ImGui.EndDisabled();
 
         var localPlayer = Plugin.ObjectTable.LocalPlayer;
-        var identityReady = localPlayer != null &&
+        var identityReady = role != OperatingRole.Newb ||
+                            localPlayer != null &&
                             !string.IsNullOrWhiteSpace(localPlayer.Name.TextValue) &&
                             localPlayer.HomeWorld.RowId != 0;
-        CoppeliaUi.StatusLine(
-            "Local Newb identity",
-            identityReady,
-            identityReady ? "Available" : "Unavailable",
-            "Log in fully before enabling Newb mode");
-        var addressReady = Configuration.TryParseLanHealBotAddress(draft.LanHealBotAddress, out _);
+        if (role == OperatingRole.Newb)
+        {
+            CoppeliaUi.StatusLine(
+                "Local Newb identity",
+                identityReady,
+                identityReady ? "Available" : "Unavailable",
+                "Log in fully before starting Newb");
+        }
+        var addressReady = role != OperatingRole.Newb || Configuration.TryParseLanHealBotAddress(draft.LanHealBotAddress, out _);
         var portReady = Configuration.IsValidLanPairingPort(draft.LanPairingPort);
         var secretReady = draft.LanPairingSecret.Length >= 16;
-        CoppeliaUi.StatusLine("HealBot address", addressReady, "Valid IPv4", "Invalid IPv4 address");
+        if (role == OperatingRole.Newb)
+            CoppeliaUi.StatusLine("Helper address", addressReady, "Valid IPv4", "Invalid IPv4 address");
         CoppeliaUi.StatusLine("Pair port", portReady, "Valid", draft.LanPairingPort == Configuration.ReservedLanDiscoveryPort ? "47789 is reserved" : "Use 1024-65535");
-        CoppeliaUi.StatusLine("Pair secret", secretReady, "At least 16 characters", "Too short");
+        CoppeliaUi.StatusLine("Shared secret", secretReady, "At least 16 characters", "Too short");
         CoppeliaUi.WrappedHelp(
-            "LAN traffic is authenticated but not encrypted. Character names and coordinates remain visible on the local network. Newb activation also requires the configured HealBot to answer with fresh authenticated compatible status.");
+            "LAN traffic is authenticated but not encrypted. Character names and coordinates remain visible on the local network. Connection, authentication, assignment, and reconnect work remain asynchronous.");
 
-        DrawSetupNavigation(draft.EnableLanPairing && addressReady && portReady && secretReady && identityReady);
+        DrawSetupNavigation(addressReady && portReady && secretReady && identityReady);
     }
 
     private void DrawSetupFinish(Configuration configuration)
     {
         var draft = setupDraft!;
         CoppeliaUi.SectionHeader("Review and finish");
-        ImGui.TextUnformatted($"Mode: {draft.Mode.GetLabel()}");
-        if (draft.Mode == BotMode.Newb)
+        ImGui.TextUnformatted($"Role: {draft.Role.GetLabel()}");
+        if (draft.Role is OperatingRole.Helper or OperatingRole.Newb)
         {
-            ImGui.TextDisabled($"HealBot endpoint: {draft.LanHealBotAddress}:{draft.LanPairingPort}.");
-            ImGui.TextDisabled(draft.EnableLanPairing ? "Authenticated LAN pairing enabled." : "Authenticated LAN pairing disabled.");
-            ImGui.TextDisabled("Newb performs no local healing or attacking.");
+            if (draft.Role == OperatingRole.Newb)
+                ImGui.TextDisabled($"Helper endpoint: {draft.LanHealBotAddress}:{draft.LanPairingPort}.");
+            else
+                ImGui.TextDisabled($"Helper listener port: {draft.LanPairingPort}.");
+            ImGui.TextDisabled("Authenticated direct pairing uses the visible shared secret.");
         }
         else if (draft.Mode != BotMode.PowerlevelBot)
         {
@@ -515,14 +536,14 @@ public sealed class ConfigWindow : Window, IDisposable
         }
 
         CoppeliaUi.WrappedHelp(
-            "Finish must either enable the selected mode now or save it with automation off. If activation is blocked, setup stays incomplete and the same activation blocker is shown here.");
+            "Finish must either start the selected role now or save it as the role resumed by /healbot on while remaining Off.");
 
         var enableNow = setupCompletionChoice == QuickSetupCompletionChoice.EnableNow;
-        if (ImGui.RadioButton("Enable this mode now##QuickSetupFinish", enableNow))
+        if (ImGui.RadioButton("Start this role now##QuickSetupFinish", enableNow))
             setupCompletionChoice = QuickSetupCompletionChoice.EnableNow;
 
         var leaveOff = setupCompletionChoice == QuickSetupCompletionChoice.LeaveAutomationOff;
-        if (ImGui.RadioButton("Save setup and leave automation off##QuickSetupFinish", leaveOff))
+        if (ImGui.RadioButton("Save setup and leave role Off##QuickSetupFinish", leaveOff))
             setupCompletionChoice = QuickSetupCompletionChoice.LeaveAutomationOff;
 
         if (!string.IsNullOrWhiteSpace(setupMessage))
@@ -547,6 +568,7 @@ public sealed class ConfigWindow : Window, IDisposable
                 setupMessage = resultMessage;
                 setupStep = QuickSetupStep.Complete;
                 setupDraft = QuickSetupDraft.FromConfiguration(configuration);
+                RefreshNetworkDrafts();
             }
             else
             {
@@ -623,24 +645,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
     private void DrawGeneralSettings(Configuration configuration, ref bool changed)
     {
-        var pluginEnabled = configuration.PluginEnabled;
-        if (ImGui.Checkbox("Plugin enabled", ref pluginEnabled))
-        {
-            plugin.SetPluginEnabled(pluginEnabled, printStatus: false);
-            changed = true;
-        }
-
-        ImGui.SameLine();
-        var automationEnabled = configuration.AutomationEnabled;
-        if (ImGui.Checkbox("Automation enabled", ref automationEnabled))
-        {
-            plugin.SetAutomationEnabled(automationEnabled, printStatus: false);
-            changed = true;
-        }
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Controls the currently selected HealBot mode. /healbot on and /healbot off use this same switch.");
-
-        ImGui.SameLine();
+        ImGui.TextDisabled($"Operating role: {configuration.OperatingRole.GetLabel()}");
         var krangleEnabled = configuration.KrangleNames;
         if (ImGui.Checkbox("Krangle names", ref krangleEnabled))
         {
@@ -694,60 +699,53 @@ public sealed class ConfigWindow : Window, IDisposable
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Refreshes LootGoblin's community map-location data once per HealBot version for nearest-aetheryte selection.");
 
+        var networkRole = configuration.OperatingRole == OperatingRole.Off
+            ? configuration.LastNonOffRole
+            : configuration.OperatingRole;
         CoppeliaUi.SectionHeader(
-            "Direct Newb pairing",
-            "HealBot listens; Newb connects to the configured IPv4 address. Both roles use the same port and pair secret.");
-        var pairingEnabled = configuration.EnableLanPairing;
-        if (ImGui.Checkbox("Enable authenticated LAN pairing", ref pairingEnabled))
+            "Role networking",
+            "Helper owns its listener port and shared secret. Newb additionally owns the Helper IPv4 address.");
+        if (networkRole is OperatingRole.Helper or OperatingRole.Newb)
         {
-            configuration.EnableLanPairing = pairingEnabled;
-            changed = true;
-        }
+            if (networkRole == OperatingRole.Newb)
+            {
+                ImGui.SetNextItemWidth(300f);
+                if (ImGui.InputText("Helper IPv4 address", ref networkAddressDraft, 45))
+                    networkConfirmation = string.Empty;
+                if (ImGui.IsItemDeactivatedAfterEdit())
+                    CommitNetworking(networkRole);
+            }
 
-        ImGui.SetNextItemWidth(300f);
-        var pairingAddress = configuration.LanHealBotAddress;
-        if (ImGui.InputText("HealBot IPv4 address", ref pairingAddress, 45))
-        {
-            configuration.LanHealBotAddress = pairingAddress;
-            changed = true;
-        }
+            ImGui.SetNextItemWidth(160f);
+            if (ImGui.InputInt("Pairing TCP port", ref networkPortDraft))
+                networkConfirmation = string.Empty;
+            if (ImGui.IsItemDeactivatedAfterEdit())
+                CommitNetworking(networkRole);
 
-        ImGui.SetNextItemWidth(160f);
-        var pairingPort = configuration.LanPairingPort;
-        if (ImGui.InputInt("Pairing TCP port", ref pairingPort))
-        {
-            configuration.LanPairingPort = pairingPort;
-            changed = true;
-        }
+            ImGui.SetNextItemWidth(520f);
+            if (ImGui.InputText("Visible shared secret", ref networkSecretDraft, 256))
+                networkConfirmation = string.Empty;
+            if (ImGui.IsItemDeactivatedAfterEdit())
+                CommitNetworking(networkRole);
 
-        ImGui.SetNextItemWidth(420f);
-        var pairingSecret = configuration.LanPairingSecret;
-        if (ImGui.InputText("Pair secret", ref pairingSecret, 256, ImGuiInputTextFlags.Password))
-        {
-            configuration.LanPairingSecret = pairingSecret;
-            changed = true;
+            if (ImGui.SmallButton("Generate 64-character hex secret##ConfigPairSecret"))
+            {
+                networkSecretDraft = Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLowerInvariant();
+                CommitNetworking(networkRole);
+            }
+            ImGui.SameLine();
+            ImGui.BeginDisabled(string.IsNullOrEmpty(networkSecretDraft));
+            if (ImGui.SmallButton("Copy##ConfigPairSecret"))
+                ImGui.SetClipboardText(networkSecretDraft);
+            ImGui.EndDisabled();
+            if (!string.IsNullOrWhiteSpace(networkConfirmation))
+                CoppeliaUi.StatusText(networkConfirmation, ready: true);
+            CoppeliaUi.WrappedHelp("Authenticated LAN traffic is not encrypted; character names and coordinates remain visible on the network.");
         }
-        if (ImGui.SmallButton("Generate##ConfigPairSecret"))
+        else
         {
-            configuration.LanPairingSecret = Convert.ToBase64String(RandomNumberGenerator.GetBytes(24));
-            changed = true;
+            ImGui.TextDisabled("Select Helper or Newb to edit direct-pairing settings.");
         }
-        ImGui.SameLine();
-        ImGui.BeginDisabled(string.IsNullOrEmpty(configuration.LanPairingSecret));
-        if (ImGui.SmallButton("Copy##ConfigPairSecret"))
-            ImGui.SetClipboardText(configuration.LanPairingSecret);
-        ImGui.EndDisabled();
-        ImGui.SameLine();
-        if (CoppeliaUi.PrimaryButton("Save / restart pairing##Config"))
-        {
-            configuration.Save();
-            plugin.HealBotPairingService.Restart();
-            plugin.PrintStatus("Pairing settings saved; direct pairing is restarting.");
-        }
-        CoppeliaUi.WrappedHelp("Authenticated LAN traffic is not encrypted; character names and coordinates remain visible on the network.");
-
-        CoppeliaUi.SectionHeader("Mode");
-        DrawModeSettings(configuration, ref changed);
 
         CoppeliaUi.SectionHeader(
             "Watch filters",
@@ -804,72 +802,35 @@ public sealed class ConfigWindow : Window, IDisposable
         ImGui.TextDisabled("Unticking a watched target or Ctrl-clearing the watch set removes it from the saved set too. Scan range only affects saved targets rejoining after they return.");
     }
 
-    private void DrawModeSettings(Configuration configuration, ref bool changed)
+    private void CommitNetworking(OperatingRole role)
     {
-        var healSelected = configuration.BotMode == BotMode.HealBot;
-        if (ImGui.RadioButton("HealBot##ConfigModeHeal", healSelected))
-            plugin.SetBotMode(BotMode.HealBot, printStatus: false);
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Uses the watched-target list and per-healer action matrix.");
-
-        ImGui.SameLine();
-        var jotSelected = configuration.BotMode == BotMode.Jot;
-        if (ImGui.RadioButton("Jacqueline of All Trades (JOAT)##ConfigModeJot", jotSelected))
-            plugin.SetBotMode(BotMode.Jot, printStatus: false);
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Gives watched-target healing priority, then casts a healer filler spell only when healing is idle.");
-
-        ImGui.SameLine();
-        var powerlevelSelected = configuration.BotMode == BotMode.PowerlevelBot;
-        if (ImGui.RadioButton("PowerlevelBot##ConfigModePowerlevel", powerlevelSelected))
-            plugin.SetBotMode(BotMode.PowerlevelBot, printStatus: false);
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Uses FrenRider's configured Fren as the leader and attacks only damaged enemies already targeting that Fren or you.");
-
-        ImGui.SameLine();
-        var newbSelected = configuration.BotMode == BotMode.Newb;
-        if (ImGui.RadioButton("Newb##ConfigModeNewb", newbSelected))
-            plugin.SetBotMode(BotMode.Newb, printStatus: false);
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Pairs to one HealBot, sends identity and travel, and performs no local healing or attacking.");
-
-        if (configuration.BotMode == BotMode.PowerlevelBot)
+        var configuration = plugin.Configuration;
+        var address = networkAddressDraft.Trim();
+        var changed = configuration.LanPairingPort != networkPortDraft ||
+                      !string.Equals(configuration.LanPairingSecret, networkSecretDraft, StringComparison.Ordinal) ||
+                      role == OperatingRole.Newb &&
+                      !string.Equals(configuration.LanHealBotAddress, address, StringComparison.Ordinal);
+        if (!changed)
         {
-            var jobs = new[] { PowerlevelJob.None, PowerlevelJob.BRD, PowerlevelJob.MCH };
-            var labels = jobs.Select(job => job.GetLabel()).ToArray();
-            var selectedIndex = Math.Max(0, Array.IndexOf(jobs, configuration.PowerlevelJob));
-            ImGui.SetNextItemWidth(210f);
-            if (ImGui.Combo("Required job##ConfigPowerlevelJob", ref selectedIndex, labels, labels.Length))
-            {
-                configuration.PowerlevelJob = jobs[selectedIndex];
-                changed = true;
-            }
-            if (ImGui.IsItemHovered())
-                ImGui.SetTooltip("PowerlevelBot requires this job to be unlocked and currently equipped. It never switches gearsets.");
+            networkConfirmation = "Networking is already saved.";
+            return;
         }
 
-        if (configuration.BotMode == BotMode.Jot)
-        {
-            RefreshJotReadiness();
-            if (jotReadiness != null)
-            {
-                CoppeliaUi.StatusLine("JOAT healing readiness", jotReadiness.HealingReady, "Ready", jotReadiness.HealingReason);
-                CoppeliaUi.StatusLine("JOAT attacking readiness", jotReadiness.AttackingReady, "Ready when healing is idle", jotReadiness.AttackingReason);
-            }
+        if (role == OperatingRole.Newb)
+            configuration.LanHealBotAddress = address;
+        configuration.LanPairingPort = networkPortDraft;
+        configuration.LanPairingSecret = networkSecretDraft;
+        configuration.Save();
+        plugin.HealBotPairingService.Restart();
+        networkConfirmation = "Networking saved; direct pairing restarted once.";
+    }
 
-            ImGui.TextDisabled($"Healing: {plugin.HealbotRuntimeService.StatusText}");
-            ImGui.TextDisabled($"Attacking: {plugin.JotRuntimeService.StatusText}");
-        }
-
-        else if (configuration.BotMode == BotMode.Newb)
-        {
-            ImGui.TextDisabled($"Pairing: {plugin.HealBotPairingService.ConnectionStatus}");
-            ImGui.TextDisabled($"Runtime: {plugin.HealBotPairingService.RuntimeStatus}");
-            if (!string.IsNullOrWhiteSpace(plugin.HealBotPairingService.Blocker))
-                CoppeliaUi.StatusText(plugin.HealBotPairingService.Blocker, ready: false);
-        }
-
-        ImGui.TextDisabled("Modes are mutually exclusive. HealBot and JOAT share healing rules; PowerlevelBot uses BRD/MCH; Newb uses only direct pairing.");
+    private void RefreshNetworkDrafts()
+    {
+        networkAddressDraft = plugin.Configuration.LanHealBotAddress;
+        networkPortDraft = plugin.Configuration.LanPairingPort;
+        networkSecretDraft = plugin.Configuration.LanPairingSecret;
+        networkConfirmation = string.Empty;
     }
 
     private void DrawJobTabsContent(Configuration configuration, ref bool changed)
@@ -1022,7 +983,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
     private void DrawRequirements()
     {
-        CoppeliaUi.SectionHeader("HealBot requirements");
+        CoppeliaUi.SectionHeader("Stand-alone HealBot requirements");
         foreach (var requirement in PluginInfo.RequiredPlugins)
             ImGui.BulletText(requirement);
 
@@ -1040,14 +1001,14 @@ public sealed class ConfigWindow : Window, IDisposable
         ImGui.BulletText("Compatible FrenRider Powerlevel IPC with FrenRider enabled and its configured Fren visible.");
         ImGui.BulletText("The Fren is never auto-added to Watch; select it explicitly when it is the low-level heal target.");
 
-        CoppeliaUi.SectionHeader("Newb pairing requirements");
-        ImGui.BulletText("One active HealBot client running this compatible build with LAN pairing enabled.");
-        ImGui.BulletText("One IPv4 HealBot address, matching TCP port, and matching pair secret of at least 16 characters.");
-        ImGui.BulletText("HealBot also needs Lifestream and vnavmesh ready for paired travel.");
+        CoppeliaUi.SectionHeader("Helper / Newb pairing requirements");
+        ImGui.BulletText("Helper needs a valid TCP port and visible shared secret; Newb additionally needs the Helper IPv4 address.");
+        ImGui.BulletText("Both peers must run compatible direct-pairing protocol v2 and use the same port and shared secret.");
+        ImGui.BulletText("Helper needs the HealBot/JOAT dependencies plus Lifestream and vnavmesh for paired travel.");
         ImGui.BulletText("Traffic is authenticated but not encrypted; names and coordinates remain visible on the network.");
 
         CoppeliaUi.SectionHeader("Commands and windows");
-        ImGui.TextDisabled("HealBot supports /healbot, /hb, and /copellia with mini, on|off, status, heal, joat (or jot), powerlevel, newb, config, watch, ws, and j.");
+        ImGui.TextDisabled("HealBot supports /healbot, /hb, and /copellia with off, on, standalone, helper, newb, heal, joat (or jot), powerlevel, mini, status, config, watch, ws, and j.");
         if (ImGui.Button("Open Main##Requirements"))
             plugin.OpenMainUi();
         ImGui.SameLine();

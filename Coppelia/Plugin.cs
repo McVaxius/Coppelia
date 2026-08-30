@@ -39,6 +39,7 @@ public sealed class Plugin : IDalamudPlugin
     private IDtrBarEntry? dtrEntry;
     private DateTimeOffset nextDependencyToastUtc = DateTimeOffset.MinValue;
     private bool pendingInitialWatchRefresh = true;
+    private bool constructionComplete;
 
     public Plugin()
     {
@@ -63,6 +64,7 @@ public sealed class Plugin : IDalamudPlugin
         HealbotRuntimeService = new HealbotRuntimeService(this, DependencyService, WatchTargetService, RsrIpcService, ActionExecutionService);
         PowerlevelRuntimeService = new PowerlevelRuntimeService(this, FrenRiderPowerlevelIpcService, ActionExecutionService);
         JotRuntimeService = new JotRuntimeService(this, jotFrenRiderIpcService, ActionExecutionService);
+        SetOperatingRole(Configuration.OperatingRole, printStatus: false);
 
         mainWindow = new MainWindow(this);
         configWindow = new ConfigWindow(this);
@@ -76,7 +78,7 @@ public sealed class Plugin : IDalamudPlugin
 
         CommandManager.AddHandler(PluginInfo.Command, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Open HealBot. Use /healbot mini, config, watch, on, off, heal, joat, powerlevel, newb, status, ws, or j. /healbot jot remains an alias.",
+            HelpMessage = "Open HealBot. Use /healbot mini, config, watch, on, off, standalone, helper, newb, heal, joat, powerlevel, status, ws, or j. /healbot jot remains an alias.",
         });
 
         CommandManager.AddHandler(PluginInfo.ShortAliasCommand, new CommandInfo(OnCommand)
@@ -97,6 +99,7 @@ public sealed class Plugin : IDalamudPlugin
 
         DependencyService.Refresh(force: true);
         SetupDtrBar();
+        constructionComplete = true;
         UpdateDtrBar();
         if (Configuration.ShouldAutoOpenSetup())
             OpenQuickSetupUi();
@@ -149,85 +152,154 @@ public sealed class Plugin : IDalamudPlugin
     }
 
     public bool SetHealbotEnabled(bool enabled, bool printStatus)
-        => SetAutomationEnabled(enabled, printStatus);
+        => enabled
+            ? SetOperatingRole(Configuration.LastNonOffRole, printStatus)
+            : SetOperatingRole(OperatingRole.Off, printStatus);
 
     public bool SetAutomationEnabled(bool enabled, bool printStatus)
+        => enabled
+            ? SetOperatingRole(Configuration.LastNonOffRole, printStatus)
+            : SetOperatingRole(OperatingRole.Off, printStatus);
+
+    public bool SetOperatingRole(OperatingRole role, bool printStatus)
+        => SetOperatingRole(role, behaviorOverride: null, printStatus);
+
+    public bool SetStandaloneBehavior(BotMode mode, bool printStatus)
     {
-        if (enabled)
+        if (mode == BotMode.Newb)
+            mode = BotMode.HealBot;
+        return SetOperatingRole(OperatingRole.StandAlone, mode, printStatus);
+    }
+
+    private bool SetOperatingRole(OperatingRole role, BotMode? behaviorOverride, bool printStatus)
+    {
+        if (!Enum.IsDefined(role))
+            role = OperatingRole.Off;
+
+        var previousRole = Configuration.OperatingRole;
+        if (previousRole == OperatingRole.Helper && role != OperatingRole.Helper)
         {
-            if (Configuration.BotMode == BotMode.Newb)
-            {
-                if (!HealBotPairingService.TryValidateNewbActivation(out var reason))
-                {
-                    LastAutomationBlocker = reason;
-                    if (printStatus)
-                        PrintStatus(reason);
-                    return false;
-                }
-            }
-            else if (Configuration.BotMode is BotMode.HealBot or BotMode.Jot)
-            {
-                DependencyService.Refresh(force: true);
-                if (!DependencyService.Current.IsHealbotReady)
-                {
-                    var message = DependencyService.BuildMissingDependencyMessage();
-                    LastAutomationBlocker = message;
-                    ShowDependencyToast(message);
-                    if (printStatus)
-                        PrintStatus(message);
-                    return false;
-                }
-
-                if (!HealbotRuntimeService.IsSupportedLocalJob(out _, out var reason))
-                {
-                    LastAutomationBlocker = reason;
-                    if (printStatus)
-                        PrintStatus(reason);
-                    return false;
-                }
-            }
-            else if (Configuration.BotMode == BotMode.PowerlevelBot &&
-                     !PowerlevelRuntimeService.TryValidateActivation(out var reason))
-            {
-                LastAutomationBlocker = reason;
-                if (printStatus)
-                    PrintStatus(reason);
-                return false;
-            }
-
-            Configuration.PluginEnabled = true;
-            Configuration.AutomationEnabled = true;
-            Configuration.HealbotEnabled = Configuration.BotMode == BotMode.HealBot;
-            LastAutomationBlocker = string.Empty;
-            Configuration.Save();
-            ActivateSelectedMode();
-            UpdateDtrBar();
-
-            if (printStatus)
-                PrintStatus($"{Configuration.BotMode.GetLabel()} mode enabled.");
-
-            return true;
+            HealBotPairingService.ReleaseForDeactivation("The Helper role changed.");
+            CoppeliaQstIpcService.LeaveDirectHelperRole("The Helper role changed.");
+        }
+        else if (previousRole == OperatingRole.Newb && role != OperatingRole.Newb)
+        {
+            HealBotPairingService.ReleaseForDeactivation("The Newb role changed.");
         }
 
-        Configuration.AutomationEnabled = false;
-        Configuration.HealbotEnabled = false;
-        LastAutomationBlocker = string.Empty;
-        HealBotPairingService.ReleaseForDeactivation("HealBot automation was disabled.");
-        CoppeliaQstIpcService.ReleaseForDeactivation("HealBot automation was disabled.");
+        CoppeliaQstIpcService.ReleaseQstForLocalRoleChange("The local operating role changed.");
+
+        if (behaviorOverride.HasValue)
+            Configuration.BotMode = behaviorOverride.Value;
+
+        Configuration.OperatingRole = role;
+        if (role != OperatingRole.Off)
+            Configuration.LastNonOffRole = role;
+
+        bool started;
+        switch (role)
+        {
+            case OperatingRole.Off:
+                ApplyProviderState(pluginEnabled: false, automationEnabled: false, Configuration.BotMode);
+                LastAutomationBlocker = string.Empty;
+                started = true;
+                break;
+            case OperatingRole.StandAlone:
+                started = TryActivateProviderMode(Configuration.BotMode, out var standaloneBlocker);
+                LastAutomationBlocker = standaloneBlocker;
+                break;
+            case OperatingRole.Helper:
+                var claim = CoppeliaQstIpcService.BeginDirectHelperRole();
+                var helperConfigurationBlocker = Configuration.GetLanPairingBlocker(OperatingRole.Helper);
+                LastAutomationBlocker = !claim.Ready ? claim.Blocker : helperConfigurationBlocker;
+                started = claim.Ready && string.IsNullOrWhiteSpace(helperConfigurationBlocker);
+                break;
+            case OperatingRole.Newb:
+                ApplyProviderState(pluginEnabled: true, automationEnabled: false, Configuration.BotMode);
+                started = HealBotPairingService.TryValidateNewbActivation(out var newbBlocker);
+                LastAutomationBlocker = newbBlocker;
+                break;
+            default:
+                started = false;
+                LastAutomationBlocker = "Unknown operating role.";
+                break;
+        }
+
         Configuration.Save();
-        HealbotRuntimeService.Deactivate("Automation is off.");
-        PowerlevelRuntimeService.Deactivate("Automation is off.");
-        JotRuntimeService.Deactivate("Automation is off.");
-        UpdateDtrBar();
+        if (constructionComplete)
+            UpdateDtrBar();
 
         if (printStatus)
-            PrintStatus("HealBot automation disabled.");
+            PrintStatus(started
+                ? $"{role.GetLabel()} selected."
+                : $"{role.GetLabel()} selected but blocked: {LastAutomationBlocker}");
 
+        return started;
+    }
+
+    internal bool TryActivateProviderMode(BotMode mode, out string blocker)
+    {
+        blocker = string.Empty;
+        if (mode is BotMode.HealBot or BotMode.Jot)
+        {
+            DependencyService.Refresh(force: true);
+            if (!DependencyService.Current.IsHealbotReady)
+                blocker = DependencyService.BuildMissingDependencyMessage();
+            else if (!HealbotRuntimeService.IsSupportedLocalJob(out _, out var jobBlocker))
+                blocker = jobBlocker;
+        }
+        else if (mode == BotMode.PowerlevelBot &&
+                 !PowerlevelRuntimeService.TryValidateActivation(out var powerlevelBlocker))
+        {
+            blocker = powerlevelBlocker;
+        }
+        else if (mode == BotMode.Newb)
+        {
+            blocker = "Newb is an operating role, not a Stand-alone behavior.";
+        }
+
+        if (!string.IsNullOrWhiteSpace(blocker))
+        {
+            ApplyProviderState(pluginEnabled: true, automationEnabled: false, mode == BotMode.Newb ? BotMode.HealBot : mode);
+            return false;
+        }
+
+        ApplyProviderState(pluginEnabled: true, automationEnabled: true, mode);
         return true;
+    }
+
+    internal void ApplyProviderState(bool pluginEnabled, bool automationEnabled, BotMode mode)
+    {
+        Configuration.PluginEnabled = pluginEnabled;
+        Configuration.AutomationEnabled = automationEnabled;
+        Configuration.BotMode = mode == BotMode.Newb ? BotMode.HealBot : mode;
+        Configuration.HealbotEnabled = automationEnabled && Configuration.BotMode == BotMode.HealBot;
+        if (automationEnabled)
+        {
+            ActivateSelectedMode();
+        }
+        else
+        {
+            HealbotRuntimeService.Deactivate(pluginEnabled ? "Automation is off." : "Plugin disabled.");
+            PowerlevelRuntimeService.Deactivate(pluginEnabled ? "Automation is off." : "Plugin disabled.");
+            JotRuntimeService.Deactivate(pluginEnabled ? "Automation is off." : "Plugin disabled.");
+        }
+
+        Configuration.Save();
     }
 
     public bool SetBotMode(BotMode mode, bool printStatus)
     {
+        if (mode == BotMode.Newb)
+            return SetOperatingRole(OperatingRole.Newb, printStatus);
+        if (Configuration.OperatingRole != OperatingRole.StandAlone)
+        {
+            Configuration.BotMode = mode;
+            Configuration.Save();
+            if (printStatus)
+                PrintStatus($"Selected {mode.GetLabel()} as the Stand-alone behavior.");
+            return true;
+        }
         if (Configuration.BotMode == mode)
         {
             if (printStatus)
@@ -235,60 +307,24 @@ public sealed class Plugin : IDalamudPlugin
             return true;
         }
 
-        var wasAutomationEnabled = Configuration.AutomationEnabled;
-        HealBotPairingService.ReleaseForDeactivation("Automation mode changed.");
-        CoppeliaQstIpcService.ReleaseForDeactivation("Automation mode changed.");
+        CoppeliaQstIpcService.ReleaseQstForLocalRoleChange("The Stand-alone behavior changed.");
         HealbotRuntimeService.Deactivate("Mode switched.");
         PowerlevelRuntimeService.Deactivate("Mode switched.");
         JotRuntimeService.Deactivate("Mode switched.");
-        if (wasAutomationEnabled && mode == BotMode.Newb)
-        {
-            Configuration.AutomationEnabled = false;
-            Configuration.HealbotEnabled = false;
-        }
         AutomationModePolicy.ApplyMode(Configuration, mode);
-        Configuration.Save();
+        var enabled = TryActivateProviderMode(mode, out var blocker);
+        LastAutomationBlocker = blocker;
         UpdateDtrBar();
-
-        if (!wasAutomationEnabled)
-        {
-            if (printStatus)
-                PrintStatus($"Selected {mode.GetLabel()} mode.");
-            return true;
-        }
-
-        var enabled = SetAutomationEnabled(true, printStatus: false);
         if (printStatus)
             PrintStatus(enabled
-                ? $"Switched to {mode.GetLabel()} mode."
-                : $"Selected {mode.GetLabel()} mode, but activation is blocked. Use /healbot status for details.");
+                ? $"Switched the Stand-alone behavior to {mode.GetLabel()}."
+                : $"Selected {mode.GetLabel()}, but Stand-alone is blocked: {blocker}");
 
         return enabled;
     }
 
     public void SetPluginEnabled(bool enabled, bool printStatus)
-    {
-        Configuration.PluginEnabled = enabled;
-        if (!enabled)
-        {
-            Configuration.AutomationEnabled = false;
-            Configuration.HealbotEnabled = false;
-        }
-
-        Configuration.Save();
-        if (!enabled)
-        {
-            HealBotPairingService.ReleaseForDeactivation("HealBot was disabled.");
-            CoppeliaQstIpcService.ReleaseForDeactivation("HealBot was disabled.");
-            HealbotRuntimeService.Deactivate("Plugin disabled.");
-            PowerlevelRuntimeService.Deactivate("Plugin disabled.");
-            JotRuntimeService.Deactivate("Plugin disabled.");
-        }
-
-        UpdateDtrBar();
-        if (printStatus)
-            PrintStatus(enabled ? "Plugin enabled." : "Plugin disabled.");
-    }
+        => SetOperatingRole(enabled ? Configuration.LastNonOffRole : OperatingRole.Off, printStatus);
 
     public void ToggleMainUi()
     {
@@ -371,8 +407,11 @@ public sealed class Plugin : IDalamudPlugin
         QuickSetupCompletionChoice completionChoice,
         out string message)
     {
-        SetAutomationEnabled(false, printStatus: false);
+        SetOperatingRole(OperatingRole.Off, printStatus: false);
         draft.ApplyTo(Configuration);
+        Configuration.LastNonOffRole = draft.Role == OperatingRole.Off
+            ? OperatingRole.StandAlone
+            : draft.Role;
         Configuration.SetupWizardCompleted = false;
         Configuration.Save();
         DependencyService.Refresh(force: true);
@@ -383,7 +422,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             Configuration.SetupWizardCompleted = true;
             Configuration.Save();
-            message = $"{Configuration.BotMode.GetLabel()} setup saved. Automation remains off.";
+            message = $"{draft.Role.GetLabel()} setup saved. The operating role remains Off.";
             return true;
         }
 
@@ -393,17 +432,17 @@ public sealed class Plugin : IDalamudPlugin
             return false;
         }
 
-        if (!SetAutomationEnabled(true, printStatus: true))
+        if (!SetOperatingRole(draft.Role, printStatus: true))
         {
             message = string.IsNullOrWhiteSpace(LastAutomationBlocker)
-                ? "HealBot could not enable the selected mode."
+                ? "HealBot could not start the selected role."
                 : LastAutomationBlocker;
             return false;
         }
 
         Configuration.SetupWizardCompleted = true;
         Configuration.Save();
-        message = $"{Configuration.BotMode.GetLabel()} setup saved and enabled.";
+        message = $"{draft.Role.GetLabel()} setup saved and started.";
         return true;
     }
 
@@ -473,13 +512,15 @@ public sealed class Plugin : IDalamudPlugin
         if (!Configuration.DtrBarEnabled)
             return;
 
-        var state = !Configuration.PluginEnabled
-            ? "Off"
-            : !Configuration.AutomationEnabled
-                ? "Ready"
-                : Configuration.BotMode == BotMode.Newb
-                    ? HealBotPairingService.ConnectionStatus
-                : Configuration.BotMode == BotMode.PowerlevelBot
+        var assignment = CoppeliaQstIpcService.GetAssignmentSnapshot();
+        var state = assignment.Source == "QST"
+            ? "QST paired"
+            : Configuration.OperatingRole switch
+        {
+            OperatingRole.Off => "Off",
+            OperatingRole.Helper or OperatingRole.Newb => HealBotPairingService.Snapshot.PrimaryState,
+            _ when !Configuration.AutomationEnabled => "Blocked",
+            _ => Configuration.BotMode == BotMode.PowerlevelBot
                     ? PowerlevelRuntimeService.LastIssuedAction
                     : Configuration.BotMode == BotMode.Jot
                         ? DependencyService.Current.IsHealbotReady
@@ -487,10 +528,15 @@ public sealed class Plugin : IDalamudPlugin
                             : "Blocked"
                     : DependencyService.Current.IsHealbotReady
                         ? HealbotRuntimeService.LastIssuedAction
-                        : "Blocked";
+                        : "Blocked",
+        };
 
-        var glyph = Configuration.AutomationEnabled ? Configuration.DtrIconEnabled : Configuration.DtrIconDisabled;
-        var modeLabel = Configuration.BotMode.GetDtrLabel();
+        var glyph = assignment.Source == "QST" || Configuration.OperatingRole != OperatingRole.Off
+            ? Configuration.DtrIconEnabled
+            : Configuration.DtrIconDisabled;
+        var modeLabel = assignment.Source == "QST"
+            ? "HELP"
+            : Configuration.OperatingRole.GetDtrLabel(Configuration.BotMode);
         dtrEntry.Text = Configuration.DtrBarMode switch
         {
             1 => new SeString(new TextPayload($"{glyph} {modeLabel}")),
@@ -588,27 +634,40 @@ public sealed class Plugin : IDalamudPlugin
 
         if (trimmed.Equals("heal", StringComparison.OrdinalIgnoreCase))
         {
-            SetBotMode(BotMode.HealBot, printStatus: true);
+            SetStandaloneBehavior(BotMode.HealBot, printStatus: true);
             return;
         }
 
         if (trimmed.Equals("powerlevel", StringComparison.OrdinalIgnoreCase) ||
             trimmed.Equals("pl", StringComparison.OrdinalIgnoreCase))
         {
-            SetBotMode(BotMode.PowerlevelBot, printStatus: true);
+            SetStandaloneBehavior(BotMode.PowerlevelBot, printStatus: true);
             return;
         }
 
         if (trimmed.Equals("joat", StringComparison.OrdinalIgnoreCase) ||
             trimmed.Equals("jot", StringComparison.OrdinalIgnoreCase))
         {
-            SetBotMode(BotMode.Jot, printStatus: true);
+            SetStandaloneBehavior(BotMode.Jot, printStatus: true);
             return;
         }
 
         if (trimmed.Equals("newb", StringComparison.OrdinalIgnoreCase))
         {
-            SetBotMode(BotMode.Newb, printStatus: true);
+            SetOperatingRole(OperatingRole.Newb, printStatus: true);
+            return;
+        }
+
+        if (trimmed.Equals("helper", StringComparison.OrdinalIgnoreCase))
+        {
+            SetOperatingRole(OperatingRole.Helper, printStatus: true);
+            return;
+        }
+
+        if (trimmed.Equals("standalone", StringComparison.OrdinalIgnoreCase) ||
+            trimmed.Equals("stand-alone", StringComparison.OrdinalIgnoreCase))
+        {
+            SetOperatingRole(OperatingRole.StandAlone, printStatus: true);
             return;
         }
 
@@ -632,13 +691,13 @@ public sealed class Plugin : IDalamudPlugin
 
         if (trimmed.Equals("on", StringComparison.OrdinalIgnoreCase))
         {
-            SetAutomationEnabled(true, printStatus: true);
+            SetOperatingRole(Configuration.LastNonOffRole, printStatus: true);
             return;
         }
 
         if (trimmed.Equals("off", StringComparison.OrdinalIgnoreCase))
         {
-            SetAutomationEnabled(false, printStatus: true);
+            SetOperatingRole(OperatingRole.Off, printStatus: true);
             return;
         }
 
@@ -647,14 +706,6 @@ public sealed class Plugin : IDalamudPlugin
 
     private void ActivateSelectedMode()
     {
-        if (Configuration.BotMode == BotMode.Newb)
-        {
-            HealbotRuntimeService.Deactivate("Newb mode performs no local healing.");
-            JotRuntimeService.Deactivate("Newb mode performs no local attacking.");
-            PowerlevelRuntimeService.Deactivate("Newb mode selected.");
-            return;
-        }
-
         if (Configuration.BotMode == BotMode.PowerlevelBot)
         {
             HealbotRuntimeService.Deactivate("PowerlevelBot mode selected.");
@@ -671,12 +722,48 @@ public sealed class Plugin : IDalamudPlugin
             JotRuntimeService.Deactivate("HealBot mode selected.");
     }
 
-    internal string GetSelectedModeStatus()
-        => Configuration.BotMode switch
+    internal (string PrimaryState, string NextAction, string Identity) GetOperationalStatus()
+    {
+        var assignment = CoppeliaQstIpcService.GetAssignmentSnapshot();
+        if (assignment.Source == "QST")
+        {
+            return (
+                "Helper active (QST-owned)",
+                "Use QST to release or deactivate this provider session.",
+                $"{assignment.Name}@{assignment.WorldId}");
+        }
+
+        if (Configuration.OperatingRole is OperatingRole.Helper or OperatingRole.Newb)
+        {
+            var pairing = HealBotPairingService.Snapshot;
+            return (pairing.PrimaryState, pairing.NextAction, pairing.Identity);
+        }
+
+        if (Configuration.OperatingRole == OperatingRole.Off)
+            return ("Off", $"Use /healbot on to resume {Configuration.LastNonOffRole.GetLabel()}.", "None");
+
+        var state = Configuration.BotMode switch
         {
             BotMode.PowerlevelBot => PowerlevelRuntimeService.StatusText,
             BotMode.Jot => $"Healing: {HealbotRuntimeService.StatusText} Attacking: {JotRuntimeService.StatusText}",
-            BotMode.Newb => $"Pairing: {HealBotPairingService.ConnectionStatus}. {HealBotPairingService.RuntimeStatus} Blocker: {(string.IsNullOrWhiteSpace(HealBotPairingService.Blocker) ? "none" : HealBotPairingService.Blocker)}",
             _ => HealbotRuntimeService.StatusText,
         };
+        var next = string.IsNullOrWhiteSpace(LastAutomationBlocker)
+            ? state.Contains("Blocked", StringComparison.OrdinalIgnoreCase)
+                ? "Resolve the blocker shown in the primary state."
+                : "No action required."
+            : $"Resolve: {LastAutomationBlocker}";
+        var local = ObjectTable.LocalPlayer;
+        var identity = local == null ? "None" : $"{local.Name.TextValue.Trim()}@{local.HomeWorld.RowId}";
+        return (state, next, identity);
+    }
+
+    internal string GetSelectedModeStatus()
+    {
+        var status = GetOperationalStatus();
+        var behavior = Configuration.OperatingRole == OperatingRole.StandAlone
+            ? $" Behavior: {Configuration.BotMode.GetLabel()}."
+            : string.Empty;
+        return $"Role: {Configuration.OperatingRole.GetLabel()}.{behavior} State: {status.PrimaryState} Next: {status.NextAction} Identity: {status.Identity}";
+    }
 }

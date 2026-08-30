@@ -3,10 +3,10 @@
     "$schema": "https://raw.githubusercontent.com/goatcorp/Dalamud/master/Dalamud/Configuration/PluginManifest/pluginmanifest.schema.json",
     "Author": "DhogGPT",
     "Name": "HealBot",
-    "Punchline": "Guided healing, healer-first JOAT, Fren-assisted powerleveling, and paired Newb travel.",
-    "Description": "HealBot provides four mutually exclusive modes: watched-target healing, healer-first JOAT, BRD/MCH PowerlevelBot, and one-to-one Newb pairing over authenticated direct TCP. Newb sends exact identity and travel state to a HealBot for healing and chase while performing no local healing or attacking. LAN traffic is authenticated but not encrypted, so names and coordinates remain visible on the network. Use /healbot, /hb, or /copellia to open.",
+    "Punchline": "Stand-alone healing/JOAT/powerleveling and authenticated Helper/Newb pairing.",
+    "Description": "HealBot has four operating roles: Off, Stand-alone, Helper, and Newb. Stand-alone runs HealBot, healer-first JOAT, or BRD/MCH PowerlevelBot without networking. Helper listens for one authenticated Newb and activates JOAT for remote healing and chase; Newb connects asynchronously and performs no local healing or attacking. Pairing traffic is authenticated but not encrypted, so names and coordinates remain visible on the network. Use /healbot, /hb, or /copellia to open.",
     "InternalName": "Coppelia",
-    "AssemblyVersion": "1.3.0.0",
+    "AssemblyVersion": "1.3.1.0",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 15,
     "Tags": [
@@ -19,8 +19,8 @@
       "utility"
     ],
     "RepoUrl": "https://github.com/McVaxius/Coppelia",
-    "DownloadLinkInstall": "https://github.com/McVaxius/Coppelia/releases/download/v1.3.0.0/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/McVaxius/Coppelia/releases/download/v1.3.0.0/latest.zip",
+    "DownloadLinkInstall": "https://github.com/McVaxius/Coppelia/releases/download/v1.3.1.0/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/McVaxius/Coppelia/releases/download/v1.3.1.0/latest.zip",
     "DownloadLinkTesting": "https://github.com/McVaxius/Coppelia/releases/latest/download/latest.zip",
     "IconUrl": "https://raw.githubusercontent.com/McVaxius/Coppelia/main/Coppelia/images/icon.png"
   }

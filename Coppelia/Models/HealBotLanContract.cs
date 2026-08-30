@@ -18,7 +18,8 @@ internal enum HealBotLanMessageType
 
 internal sealed class HealBotLanEnvelope
 {
-    public const int CurrentProtocolVersion = 1;
+    public const int CurrentProtocolVersion = 2;
+    public const int LegacyProtocolVersion = 1;
     public const int MaximumTcpFrameBytes = 64 * 1024;
 
     public int ProtocolVersion { get; set; } = CurrentProtocolVersion;
@@ -31,6 +32,14 @@ internal sealed class HealBotLanEnvelope
     public static HealBotLanEnvelope Create(HealBotLanMessageType type, object? data = null)
         => new()
         {
+            Type = type,
+            Data = data == null ? null : JsonSerializer.Serialize(data, HealBotLanContract.JsonOptions),
+        };
+
+    public static HealBotLanEnvelope CreateForProtocol(int protocolVersion, HealBotLanMessageType type, object? data = null)
+        => new()
+        {
+            ProtocolVersion = protocolVersion,
             Type = type,
             Data = data == null ? null : JsonSerializer.Serialize(data, HealBotLanContract.JsonOptions),
         };
@@ -56,7 +65,7 @@ internal static class HealBotLanContract
     public static void Sign(HealBotLanEnvelope message, string secret)
     {
         if (secret.Length < 16)
-            throw new InvalidOperationException("The pair secret must contain at least 16 characters.");
+            throw new InvalidOperationException("The shared secret must contain at least 16 characters.");
 
         using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
         message.AuthenticationTag = Convert.ToBase64String(hmac.ComputeHash(BuildAuthenticatedBytes(message)));
@@ -71,11 +80,11 @@ internal static class HealBotLanContract
         failure = string.Empty;
         if (secret.Length < 16)
         {
-            failure = "The pair secret is not configured.";
+            failure = "The shared secret is not configured.";
             return false;
         }
 
-        if (message.ProtocolVersion != HealBotLanEnvelope.CurrentProtocolVersion ||
+        if (message.ProtocolVersion is not (HealBotLanEnvelope.LegacyProtocolVersion or HealBotLanEnvelope.CurrentProtocolVersion) ||
             string.IsNullOrWhiteSpace(message.MessageId) ||
             message.MessageId.Length > 128 ||
             string.IsNullOrWhiteSpace(message.UtcTimestamp) ||
@@ -214,6 +223,30 @@ internal sealed record HealBotLanStatusResponse(
     int PairProtocolVersion,
     string HealBotName,
     ushort HealBotWorldId,
+    bool Compatible,
+    bool Ready,
+    string Blocker,
+    bool ProviderReady,
+    string ProviderBlocker,
+    bool JoatReady,
+    string JoatBlocker,
+    bool TravelReady,
+    string TravelBlocker,
+    string Mode,
+    bool AutomationEnabled,
+    string AssignmentSource,
+    string AssignedName,
+    ushort AssignedWorldId,
+    string SessionId,
+    string RuntimeState,
+    string HealingState,
+    string ChaseState);
+
+internal sealed record HealBotLanLegacyStatusResponse(
+    string RequestId,
+    int PairProtocolVersion,
+    string HealBotName,
+    ushort HealBotWorldId,
     bool Ready,
     string Blocker,
     string Mode,
@@ -283,4 +316,42 @@ internal sealed record HealBotLanCommandResult(
             targeted?.Command.SessionId ?? string.Empty,
             false,
             blocker);
+}
+
+internal enum PairingState
+{
+    Stopped,
+    Listening,
+    Connecting,
+    Authenticating,
+    Connected,
+    Paired,
+    Blocked,
+}
+
+internal sealed record PairingSnapshot(
+    OperatingRole Role,
+    PairingState State,
+    string PrimaryState,
+    string NextAction,
+    string Identity,
+    string Endpoint,
+    string ProviderState,
+    string JoatState,
+    string TravelState,
+    string Blocker,
+    bool IsPaired)
+{
+    public static readonly PairingSnapshot Stopped = new(
+        OperatingRole.Off,
+        PairingState.Stopped,
+        "Off",
+        "Select Helper or Newb to start direct pairing.",
+        "None",
+        string.Empty,
+        "Inactive",
+        "Inactive",
+        "Idle",
+        string.Empty,
+        false);
 }

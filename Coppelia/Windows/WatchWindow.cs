@@ -100,7 +100,7 @@ public sealed class WatchWindow : Window, IDisposable
     {
         CoppeliaUi.SectionHeader(
             "Watch status",
-            "This window manages the shared HealBot/JOAT watch list. PowerlevelBot uses its restricted enemy source; Newb sends identity/travel and ignores this local list.");
+            "This window manages the Stand-alone HealBot/JOAT watch list and any session-only Helper assignment. PowerlevelBot and Newb do not use this local list.");
 
         if (plugin.WatchTargetService.HasEphemeralQstTarget)
         {
@@ -113,41 +113,29 @@ public sealed class WatchWindow : Window, IDisposable
             CoppeliaUi.WrappedHelp("This session-only exact target overrides saved watched targets for automation without changing or saving them.");
         }
 
-        var automationEnabled = plugin.Configuration.AutomationEnabled;
-        if (ImGui.Checkbox("Automation##WatchWindow", ref automationEnabled))
-            plugin.SetAutomationEnabled(automationEnabled, printStatus: true);
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Controls the currently selected HealBot mode.");
-
+        ImGui.TextUnformatted("Operating role");
+        DrawRoleRadio("Off##WatchRole", OperatingRole.Off);
         ImGui.SameLine();
-        var healSelected = plugin.Configuration.BotMode == BotMode.HealBot;
-        if (ImGui.RadioButton("HealBot##WatchModeHeal", healSelected))
-            plugin.SetBotMode(BotMode.HealBot, printStatus: true);
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Watched targets in this window are used by HealBot and JOAT healing.");
-
+        DrawRoleRadio("Stand-alone##WatchRole", OperatingRole.StandAlone);
         ImGui.SameLine();
-        var jotSelected = plugin.Configuration.BotMode == BotMode.Jot;
-        if (ImGui.RadioButton("JOAT##WatchModeJot", jotSelected))
-            plugin.SetBotMode(BotMode.Jot, printStatus: true);
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("JOAT heals this watch list first, then attacks only when that healing decision is idle.");
-
+        DrawRoleRadio("Helper##WatchRole", OperatingRole.Helper);
         ImGui.SameLine();
-        var powerlevelSelected = plugin.Configuration.BotMode == BotMode.PowerlevelBot;
-        if (ImGui.RadioButton("PowerlevelBot##WatchModePowerlevel", powerlevelSelected))
-            plugin.SetBotMode(BotMode.PowerlevelBot, printStatus: true);
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("PowerlevelBot ignores this watched-target list and follows FrenRider's configured Fren.");
+        DrawRoleRadio("Newb##WatchRole", OperatingRole.Newb);
 
-        ImGui.SameLine();
-        var newbSelected = plugin.Configuration.BotMode == BotMode.Newb;
-        if (ImGui.RadioButton("Newb##WatchModeNewb", newbSelected))
-            plugin.SetBotMode(BotMode.Newb, printStatus: true);
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Newb ignores this local list and pairs to one remote HealBot.");
+        if (plugin.Configuration.OperatingRole == OperatingRole.StandAlone)
+        {
+            ImGui.SameLine();
+            if (ImGui.RadioButton("HealBot##WatchBehavior", plugin.Configuration.BotMode == BotMode.HealBot))
+                plugin.SetStandaloneBehavior(BotMode.HealBot, printStatus: true);
+            ImGui.SameLine();
+            if (ImGui.RadioButton("JOAT##WatchBehavior", plugin.Configuration.BotMode == BotMode.Jot))
+                plugin.SetStandaloneBehavior(BotMode.Jot, printStatus: true);
+            ImGui.SameLine();
+            if (ImGui.RadioButton("PowerlevelBot##WatchBehavior", plugin.Configuration.BotMode == BotMode.PowerlevelBot))
+                plugin.SetStandaloneBehavior(BotMode.PowerlevelBot, printStatus: true);
+        }
 
-        ImGui.SameLine();
+        ImGui.Spacing();
         var krangleEnabled = plugin.Configuration.KrangleNames;
         if (ImGui.Checkbox("Krangle names##WatchWindow", ref krangleEnabled))
         {
@@ -177,14 +165,13 @@ public sealed class WatchWindow : Window, IDisposable
         if (ImGui.SmallButton("Ko-fi##WatchWindow"))
             Process.Start(new ProcessStartInfo { FileName = PluginInfo.SupportUrl, UseShellExecute = true });
 
-        CoppeliaUi.StatusLine(
-            "Automation",
-            plugin.Configuration.AutomationEnabled,
-            $"{plugin.Configuration.BotMode.GetLabel()} enabled",
-            $"{plugin.Configuration.BotMode.GetLabel()} off",
-            optional: true);
+        var operational = plugin.GetOperationalStatus();
+        ImGui.TextWrapped($"Primary state: {operational.PrimaryState}");
+        ImGui.TextWrapped($"Next action: {operational.NextAction}");
+        ImGui.TextWrapped($"Active / paired identity: {operational.Identity}");
 
-        if (plugin.Configuration.BotMode == BotMode.Jot)
+        if (plugin.Configuration.OperatingRole != OperatingRole.Newb &&
+            plugin.Configuration.BotMode == BotMode.Jot)
         {
             RefreshJotReadiness();
             if (jotReadiness != null)
@@ -202,12 +189,13 @@ public sealed class WatchWindow : Window, IDisposable
             return;
         }
 
-        if (plugin.Configuration.BotMode == BotMode.Newb)
+        if (plugin.Configuration.OperatingRole == OperatingRole.Newb)
         {
+            var pairing = plugin.HealBotPairingService.Snapshot;
             ImGui.PushStyleColor(ImGuiCol.Text, CoppeliaUi.Accent);
-            ImGui.TextWrapped($"Pairing: {plugin.HealBotPairingService.ConnectionStatus} - {plugin.HealBotPairingService.PairingIdentity}");
-            ImGui.TextWrapped($"Remote healing: {plugin.HealBotPairingService.HealingStatus}");
-            ImGui.TextWrapped($"Remote chase: {plugin.HealBotPairingService.ChaseStatus}");
+            ImGui.TextWrapped($"Pairing: {pairing.PrimaryState} - {pairing.Identity}");
+            ImGui.TextWrapped($"Remote healing: {pairing.JoatState}");
+            ImGui.TextWrapped($"Remote chase: {pairing.TravelState}");
             ImGui.PopStyleColor();
             CoppeliaUi.WrappedHelp("Newb performs no local healing or attacking. This watched-target list remains unchanged for later HealBot or JOAT use.");
             return;
@@ -219,6 +207,12 @@ public sealed class WatchWindow : Window, IDisposable
         ImGui.PushStyleColor(ImGuiCol.Text, CoppeliaUi.Accent);
         ImGui.TextWrapped(runtimeStatus);
         ImGui.PopStyleColor();
+    }
+
+    private void DrawRoleRadio(string label, OperatingRole role)
+    {
+        if (ImGui.RadioButton(label, plugin.Configuration.OperatingRole == role))
+            plugin.SetOperatingRole(role, printStatus: true);
     }
 
     private void RefreshJotReadiness()
