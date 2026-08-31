@@ -31,7 +31,6 @@ internal sealed class CoppeliaTravelService
     private readonly CoppeliaFollowPolicy followPolicy = new();
     private readonly CoppeliaRoutePolicy routePolicy = new();
     private readonly CoppeliaRoutePolicy lineOfSightRescueRoutePolicy = new();
-    private readonly CoppeliaLosRescuePolicy lineOfSightRescuePolicy = new();
     private readonly CoppeliaFlightPolicy flightPolicy = new();
     private readonly CoppeliaLifestreamRequestPolicy lifestreamPolicy = new();
     private readonly CoppeliaTerritoryHandoffPolicy territoryHandoffPolicy = new();
@@ -78,18 +77,31 @@ internal sealed class CoppeliaTravelService
 
     public string UpdateLineOfSightRescue(ulong targetGameObjectId, Vector3 liveDestination)
     {
-        if (TryEvaluatePairedLineOfSightRescue(
-                targetGameObjectId,
-                liveDestination,
-                DateTime.UtcNow,
-                out var pairedDecision,
-                out var pairedDistance))
+        var travel = latestTravel;
+        var localPlayer = Plugin.ObjectTable.LocalPlayer;
+        if (travel != null && localPlayer != null &&
+            (travel.QuesterCurrentWorldId != localPlayer.CurrentWorld.RowId ||
+             travel.TerritoryId != Plugin.ClientState.TerritoryType))
         {
-            if (pairedDecision is CoppeliaLosRescueDecision.CancelRemote or CoppeliaLosRescueDecision.Timeout)
-                return ReleasePairedLineOfSightRescue(pairedDecision, pairedDistance);
-            if (pairedDecision == CoppeliaLosRescueDecision.Remote)
-                return YieldLineOfSightRescue("LOS blocked; paired travel resolving remote location");
-            if (pairedDecision == CoppeliaLosRescueDecision.Suppressed)
+            var hadRescueRoute = lineOfSightRescueHasDestination || lineOfSightRescueRoutePolicy.OwnsRoute;
+            var state = YieldLineOfSightRescue("LOS blocked; paired travel resolving remote location");
+            if (hadRescueRoute)
+            {
+                Plugin.Log.Information(
+                    $"[Coppelia][HealBot] LOS rescue released to paired travel because the target is remote " +
+                    $"(world {travel.QuesterCurrentWorldId}/{localPlayer.CurrentWorld.RowId}, " +
+                    $"territory {travel.TerritoryId}/{Plugin.ClientState.TerritoryType}).");
+            }
+            return state;
+        }
+
+        if (!TryGetRouteActivity(out var isPathfinding, out var isPathRunning))
+            return SetLineOfSightRescueState("LOS blocked; moving to 1y");
+
+        if (routePolicy.OwnsRoute)
+        {
+            routePolicy.Observe(isPathfinding, isPathRunning, DateTime.UtcNow);
+            if (routePolicy.OwnsRoute)
                 return YieldLineOfSightRescue("LOS blocked; paired travel active");
         }
 
@@ -105,26 +117,11 @@ internal sealed class CoppeliaTravelService
             lineOfSightRescueRoutePolicy.AcceptSnapshot(++lineOfSightRescueSequence, liveDestination);
         }
 
-        if (!TryGetRouteActivity(out var isPathfinding, out var isPathRunning))
-            return SetLineOfSightRescueState("LOS blocked; moving to 1y");
-
         if (lineOfSightRescueRoutePolicy.OwnsRoute)
         {
             var rescueActivity = lineOfSightRescueRoutePolicy.Observe(isPathfinding, isPathRunning, DateTime.UtcNow);
             if (rescueActivity == CoppeliaRouteActivity.Owned)
                 return SetLineOfSightRescueState("LOS blocked; moving to 1y");
-        }
-
-        if (routePolicy.OwnsRoute)
-        {
-            routePolicy.Observe(isPathfinding, isPathRunning, DateTime.UtcNow);
-            if (routePolicy.OwnsRoute)
-            {
-                ReleaseOwnedRoute();
-                RearmLatestTravelRoute();
-                lineOfSightRescueOwnStopPending = true;
-                return SetLineOfSightRescueState("LOS blocked; moving to 1y");
-            }
         }
 
         if (isPathfinding || isPathRunning)
@@ -171,7 +168,6 @@ internal sealed class CoppeliaTravelService
 
     public void ClearLineOfSightRescue()
     {
-        lineOfSightRescuePolicy.Reset();
         if (!lineOfSightRescueHasDestination && !lineOfSightRescueRoutePolicy.OwnsRoute)
         {
             LineOfSightRescueState = "Inactive";
@@ -295,25 +291,6 @@ internal sealed class CoppeliaTravelService
             return;
         }
 
-        var pairedDistance = float.PositiveInfinity;
-        var lineOfSightRescueExpiry = lineOfSightRescueHasDestination &&
-                                      TryEvaluatePairedLineOfSightRescue(
-                                          lineOfSightRescueTargetId,
-                                          lineOfSightRescueDestination,
-                                          DateTime.UtcNow,
-                                          out var pairedDecision,
-                                          out pairedDistance)
-            ? pairedDecision
-            : CoppeliaLosRescueDecision.Rescue;
-        if (lineOfSightRescueExpiry is CoppeliaLosRescueDecision.CancelRemote or CoppeliaLosRescueDecision.Timeout)
-            ReleasePairedLineOfSightRescue(lineOfSightRescueExpiry, pairedDistance);
-
-        if (lineOfSightRescueHasDestination)
-        {
-            State = LineOfSightRescueState;
-            return;
-        }
-
         var travel = latestTravel;
         if (lifestreamRequest != null && IsBetweenAreas())
             lifestreamObservedLoading = true;
@@ -330,6 +307,17 @@ internal sealed class CoppeliaTravelService
 
             State = "Waiting for the helper character";
             return;
+        }
+
+        if (lineOfSightRescueHasDestination &&
+            (travel.QuesterCurrentWorldId != localPlayer.CurrentWorld.RowId ||
+             travel.TerritoryId != Plugin.ClientState.TerritoryType))
+        {
+            YieldLineOfSightRescue("LOS blocked; paired travel resolving remote location");
+            Plugin.Log.Information(
+                $"[Coppelia][HealBot] LOS rescue released to paired travel because the target is remote " +
+                $"(world {travel.QuesterCurrentWorldId}/{localPlayer.CurrentWorld.RowId}, " +
+                $"territory {travel.TerritoryId}/{Plugin.ClientState.TerritoryType}).");
         }
 
         if (localPlayer is IBattleChara battleChara && battleChara.IsCasting)
@@ -602,7 +590,14 @@ internal sealed class CoppeliaTravelService
         }
 
         var utcNow = DateTime.UtcNow;
+        var lineOfSightRescueActive = lineOfSightRescueRoutePolicy.OwnsRoute &&
+                                      lineOfSightRescueRoutePolicy.Observe(
+                                          isPathfinding,
+                                          isPathRunning,
+                                          utcNow) == CoppeliaRouteActivity.Owned;
         var routeActivity = routePolicy.Observe(isPathfinding, isPathRunning, utcNow);
+        if (lineOfSightRescueActive && !routePolicy.OwnsRoute)
+            routeActivity = CoppeliaRouteActivity.Other;
         flightPolicy.ObserveRouteActivity(isPathfinding || isPathRunning);
         if (routeActivity == CoppeliaRouteActivity.Rejected)
             flightPolicy.MarkProbeRejected();
@@ -1609,6 +1604,14 @@ internal sealed class CoppeliaTravelService
     private void StopLineOfSightRescueRoute()
     {
         var activityKnown = TryGetRouteActivity(out var isPathfinding, out var isPathRunning);
+        if (activityKnown && routePolicy.OwnsRoute)
+            routePolicy.Observe(isPathfinding, isPathRunning, DateTime.UtcNow);
+        if (routePolicy.OwnsRoute)
+        {
+            lineOfSightRescueRoutePolicy.Release(pathfindInProgress: false, pathRunning: false);
+            return;
+        }
+
         if (activityKnown && lineOfSightRescueRoutePolicy.OwnsRoute)
             lineOfSightRescueRoutePolicy.Observe(isPathfinding, isPathRunning, DateTime.UtcNow);
         var interruption = lineOfSightRescueRoutePolicy.Release(
@@ -1639,55 +1642,6 @@ internal sealed class CoppeliaTravelService
         routePolicy.AcceptSnapshot(
             latestTravel.TravelSequence,
             new Vector3(latestTravel.X, latestTravel.Y, latestTravel.Z));
-    }
-
-    private bool TryEvaluatePairedLineOfSightRescue(
-        ulong targetGameObjectId,
-        Vector3 pairedPosition,
-        DateTime utcNow,
-        out CoppeliaLosRescueDecision decision,
-        out float distance)
-    {
-        var travel = latestTravel;
-        var localPlayer = Plugin.ObjectTable.LocalPlayer;
-        if (travel == null || localPlayer == null)
-        {
-            decision = CoppeliaLosRescueDecision.Rescue;
-            distance = float.PositiveInfinity;
-            return false;
-        }
-
-        distance = Vector3.Distance(
-            localPlayer.Position,
-            pairedPosition);
-        decision = lineOfSightRescuePolicy.Evaluate(
-            travel.SessionId,
-            targetGameObjectId,
-            travel.QuesterCurrentWorldId,
-            localPlayer.CurrentWorld.RowId,
-            travel.TerritoryId,
-            Plugin.ClientState.TerritoryType,
-            distance,
-            utcNow);
-        return true;
-    }
-
-    private string ReleasePairedLineOfSightRescue(
-        CoppeliaLosRescueDecision decision,
-        float distance)
-    {
-        var state = decision == CoppeliaLosRescueDecision.CancelRemote
-            ? "LOS blocked; paired travel resolving remote location"
-            : "LOS blocked; paired travel active";
-        YieldLineOfSightRescue(state);
-
-        var travel = latestTravel;
-        var localPlayer = Plugin.ObjectTable.LocalPlayer;
-        var reason = decision == CoppeliaLosRescueDecision.CancelRemote
-            ? $"paired target is remote (world {travel?.QuesterCurrentWorldId ?? 0}/{localPlayer?.CurrentWorld.RowId ?? 0}, territory {travel?.TerritoryId ?? 0}/{Plugin.ClientState.TerritoryType})"
-            : $"20-second lifetime expired at {distance:F1} yalms";
-        Plugin.Log.Information($"[Coppelia][HealBot] LOS rescue released to paired travel: {reason}.");
-        return state;
     }
 
     private string YieldLineOfSightRescue(string state)

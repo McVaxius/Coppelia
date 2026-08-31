@@ -350,14 +350,20 @@ public sealed class CoppeliaRoutePolicyTests
         Assert.Contains("lineOfSightRescueRoutePolicy.CanStart(isPathfinding, isPathRunning)", source, StringComparison.Ordinal);
         Assert.Equal(2, Count(source, "moveCloseTo.InvokeFunc("));
         Assert.Contains("LOS blocked; waiting for current movement owner", source, StringComparison.Ordinal);
-        Assert.Contains("var lineOfSightRescueExpiry =", source, StringComparison.Ordinal);
-        Assert.Contains("if (lineOfSightRescueHasDestination)", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("State = LineOfSightRescueState;", source, StringComparison.Ordinal);
+        var rescueUpdateStart = source.IndexOf("public string UpdateLineOfSightRescue(", StringComparison.Ordinal);
+        var rescueClearStart = source.IndexOf("public void ClearLineOfSightRescue()", StringComparison.Ordinal);
+        var pairedOwnerCheck = source.IndexOf("if (routePolicy.OwnsRoute)", rescueUpdateStart, StringComparison.Ordinal);
+        var rescueDestinationUpdate = source.IndexOf("var destinationChanged =", rescueUpdateStart, StringComparison.Ordinal);
+        Assert.True(rescueUpdateStart >= 0);
+        Assert.True(rescueClearStart > rescueUpdateStart);
+        Assert.True(pairedOwnerCheck > rescueUpdateStart);
+        Assert.True(rescueDestinationUpdate > pairedOwnerCheck);
+        Assert.DoesNotContain("ReleaseOwnedRoute()", source[rescueUpdateStart..rescueClearStart], StringComparison.Ordinal);
         Assert.True(
-            source.IndexOf("var lineOfSightRescueExpiry =", StringComparison.Ordinal) <
-            source.IndexOf("if (lineOfSightRescueHasDestination)", StringComparison.Ordinal));
-        Assert.True(
-            source.IndexOf("if (lineOfSightRescueHasDestination)", StringComparison.Ordinal) <
+            source.IndexOf("var lineOfSightRescueActive =", StringComparison.Ordinal) <
             source.IndexOf("var routeActivity = routePolicy.Observe", StringComparison.Ordinal));
+        Assert.Contains("if (lineOfSightRescueActive && !routePolicy.OwnsRoute)", source, StringComparison.Ordinal);
         Assert.DoesNotContain("lastMoveDestination", source, StringComparison.Ordinal);
     }
 
