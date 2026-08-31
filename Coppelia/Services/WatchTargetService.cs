@@ -652,7 +652,7 @@ internal sealed class WatchTargetService
                     categoryLabel = "NPC Party Member";
                     return true;
 
-                case BattleNpcSubKind.Combatant:
+                case BattleNpcSubKind.Combatant when !battleNpc.StatusFlags.HasFlag(StatusFlags.Hostile):
                     category = WatchTargetCategory.FriendlyBattleNpc;
                     categoryLabel = "Battle NPC";
                     return true;

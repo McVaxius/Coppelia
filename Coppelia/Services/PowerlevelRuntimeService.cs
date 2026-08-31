@@ -257,7 +257,8 @@ internal sealed class PowerlevelRuntimeService : IDisposable
 
             if (obj.GameObjectId == localPlayer.GameObjectId ||
                 obj.GameObjectId == frenObjectId ||
-                battleNpc.BattleNpcKind is BattleNpcSubKind.Buddy or BattleNpcSubKind.NpcPartyMember or BattleNpcSubKind.Combatant)
+                battleNpc.BattleNpcKind != BattleNpcSubKind.Combatant ||
+                !battleNpc.StatusFlags.HasFlag(StatusFlags.Hostile))
             {
                 continue;
             }
