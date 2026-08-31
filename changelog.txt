@@ -1,5 +1,6 @@
 # Changelog
 
+- Bounded paired Quester/Newb LOS rescue to 20 seconds while the target remains over 10 yalms, canceled it immediately across world or territory changes, and returned movement to the latest paired travel destination without allowing obstructed heals or raises. Timed-out rescues stay suppressed until the target closes to 10 yalms, LOS clears, or the target, world, territory, or assignment changes.
 - Fixed JOAT and Powerlevel enemy classification to select only hostile combatants while keeping hostile combatants out of friendly healing targets.
 - Refreshed only Coppelia-owned pending or moving follow routes after at least 10 seconds when the newest Quester/Newb destination moved more than 5 yalms; initial sends and external vnavmesh activity remain unchanged.
 - Added a Mini `Krangle names: ON/OFF` control synchronized with Main, Watch, and Settings, plus role-specific Helper,

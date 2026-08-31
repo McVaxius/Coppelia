@@ -308,14 +308,16 @@ internal sealed class HealbotRuntimeService : IDisposable
                 ? "LOS unavailable"
                 : hasLineOfSight ? "LOS clear" : "LOS blocked";
 
-            if (LineOfSightService.ShouldRescue(
-                    targetVisible: true,
-                    distance,
-                    lineOfSightBlocked: lineOfSightKnown && !hasLineOfSight))
+            if (lineOfSightKnown && !hasLineOfSight)
             {
-                var rescueState = plugin.CoppeliaTravelService.UpdateLineOfSightRescue(
-                    selectedCharacter.GameObjectId,
-                    selectedCharacter.Position);
+                var rescueState = LineOfSightService.ShouldRescue(
+                        targetVisible: true,
+                        distance,
+                        lineOfSightBlocked: true)
+                    ? plugin.CoppeliaTravelService.UpdateLineOfSightRescue(
+                        selectedCharacter.GameObjectId,
+                        selectedCharacter.Position)
+                    : plugin.CoppeliaTravelService.YieldLineOfSightRescueToTravel();
                 StatusText = rescueState;
                 LastIssuedAction = "Movement";
                 LastMatchedRule = $"{plugin.FormatDisplayName(candidate.Snapshot.Name)} - LOS blocked.";

@@ -350,7 +350,11 @@ public sealed class CoppeliaRoutePolicyTests
         Assert.Contains("lineOfSightRescueRoutePolicy.CanStart(isPathfinding, isPathRunning)", source, StringComparison.Ordinal);
         Assert.Equal(2, Count(source, "moveCloseTo.InvokeFunc("));
         Assert.Contains("LOS blocked; waiting for current movement owner", source, StringComparison.Ordinal);
+        Assert.Contains("var lineOfSightRescueExpiry =", source, StringComparison.Ordinal);
         Assert.Contains("if (lineOfSightRescueHasDestination)", source, StringComparison.Ordinal);
+        Assert.True(
+            source.IndexOf("var lineOfSightRescueExpiry =", StringComparison.Ordinal) <
+            source.IndexOf("if (lineOfSightRescueHasDestination)", StringComparison.Ordinal));
         Assert.True(
             source.IndexOf("if (lineOfSightRescueHasDestination)", StringComparison.Ordinal) <
             source.IndexOf("var routeActivity = routePolicy.Observe", StringComparison.Ordinal));

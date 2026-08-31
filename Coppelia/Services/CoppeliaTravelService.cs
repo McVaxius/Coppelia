@@ -31,6 +31,7 @@ internal sealed class CoppeliaTravelService
     private readonly CoppeliaFollowPolicy followPolicy = new();
     private readonly CoppeliaRoutePolicy routePolicy = new();
     private readonly CoppeliaRoutePolicy lineOfSightRescueRoutePolicy = new();
+    private readonly CoppeliaLosRescuePolicy lineOfSightRescuePolicy = new();
     private readonly CoppeliaFlightPolicy flightPolicy = new();
     private readonly CoppeliaLifestreamRequestPolicy lifestreamPolicy = new();
     private readonly CoppeliaTerritoryHandoffPolicy territoryHandoffPolicy = new();
@@ -77,6 +78,21 @@ internal sealed class CoppeliaTravelService
 
     public string UpdateLineOfSightRescue(ulong targetGameObjectId, Vector3 liveDestination)
     {
+        if (TryEvaluatePairedLineOfSightRescue(
+                targetGameObjectId,
+                liveDestination,
+                DateTime.UtcNow,
+                out var pairedDecision,
+                out var pairedDistance))
+        {
+            if (pairedDecision is CoppeliaLosRescueDecision.CancelRemote or CoppeliaLosRescueDecision.Timeout)
+                return ReleasePairedLineOfSightRescue(pairedDecision, pairedDistance);
+            if (pairedDecision == CoppeliaLosRescueDecision.Remote)
+                return YieldLineOfSightRescue("LOS blocked; paired travel resolving remote location");
+            if (pairedDecision == CoppeliaLosRescueDecision.Suppressed)
+                return YieldLineOfSightRescue("LOS blocked; paired travel active");
+        }
+
         var destinationChanged = targetGameObjectId != lineOfSightRescueTargetId ||
                                  !lineOfSightRescueHasDestination ||
                                  Vector3.DistanceSquared(liveDestination, lineOfSightRescueDestination) > 1f;
@@ -155,6 +171,7 @@ internal sealed class CoppeliaTravelService
 
     public void ClearLineOfSightRescue()
     {
+        lineOfSightRescuePolicy.Reset();
         if (!lineOfSightRescueHasDestination && !lineOfSightRescueRoutePolicy.OwnsRoute)
         {
             LineOfSightRescueState = "Inactive";
@@ -169,6 +186,12 @@ internal sealed class CoppeliaTravelService
         LineOfSightRescueState = "Inactive";
         RearmLatestTravelRoute();
     }
+
+    public string YieldLineOfSightRescueToTravel() =>
+        YieldLineOfSightRescue(
+            latestTravel == null
+                ? "LOS blocked; target outside rescue range"
+                : "LOS blocked; paired travel active");
 
     public void PauseForAction()
     {
@@ -271,6 +294,19 @@ internal sealed class CoppeliaTravelService
             Stop("Suspended inside duty");
             return;
         }
+
+        var pairedDistance = float.PositiveInfinity;
+        var lineOfSightRescueExpiry = lineOfSightRescueHasDestination &&
+                                      TryEvaluatePairedLineOfSightRescue(
+                                          lineOfSightRescueTargetId,
+                                          lineOfSightRescueDestination,
+                                          DateTime.UtcNow,
+                                          out var pairedDecision,
+                                          out pairedDistance)
+            ? pairedDecision
+            : CoppeliaLosRescueDecision.Rescue;
+        if (lineOfSightRescueExpiry is CoppeliaLosRescueDecision.CancelRemote or CoppeliaLosRescueDecision.Timeout)
+            ReleasePairedLineOfSightRescue(lineOfSightRescueExpiry, pairedDistance);
 
         if (lineOfSightRescueHasDestination)
         {
@@ -1603,6 +1639,66 @@ internal sealed class CoppeliaTravelService
         routePolicy.AcceptSnapshot(
             latestTravel.TravelSequence,
             new Vector3(latestTravel.X, latestTravel.Y, latestTravel.Z));
+    }
+
+    private bool TryEvaluatePairedLineOfSightRescue(
+        ulong targetGameObjectId,
+        Vector3 pairedPosition,
+        DateTime utcNow,
+        out CoppeliaLosRescueDecision decision,
+        out float distance)
+    {
+        var travel = latestTravel;
+        var localPlayer = Plugin.ObjectTable.LocalPlayer;
+        if (travel == null || localPlayer == null)
+        {
+            decision = CoppeliaLosRescueDecision.Rescue;
+            distance = float.PositiveInfinity;
+            return false;
+        }
+
+        distance = Vector3.Distance(
+            localPlayer.Position,
+            pairedPosition);
+        decision = lineOfSightRescuePolicy.Evaluate(
+            travel.SessionId,
+            targetGameObjectId,
+            travel.QuesterCurrentWorldId,
+            localPlayer.CurrentWorld.RowId,
+            travel.TerritoryId,
+            Plugin.ClientState.TerritoryType,
+            distance,
+            utcNow);
+        return true;
+    }
+
+    private string ReleasePairedLineOfSightRescue(
+        CoppeliaLosRescueDecision decision,
+        float distance)
+    {
+        var state = decision == CoppeliaLosRescueDecision.CancelRemote
+            ? "LOS blocked; paired travel resolving remote location"
+            : "LOS blocked; paired travel active";
+        YieldLineOfSightRescue(state);
+
+        var travel = latestTravel;
+        var localPlayer = Plugin.ObjectTable.LocalPlayer;
+        var reason = decision == CoppeliaLosRescueDecision.CancelRemote
+            ? $"paired target is remote (world {travel?.QuesterCurrentWorldId ?? 0}/{localPlayer?.CurrentWorld.RowId ?? 0}, territory {travel?.TerritoryId ?? 0}/{Plugin.ClientState.TerritoryType})"
+            : $"20-second lifetime expired at {distance:F1} yalms";
+        Plugin.Log.Information($"[Coppelia][HealBot] LOS rescue released to paired travel: {reason}.");
+        return state;
+    }
+
+    private string YieldLineOfSightRescue(string state)
+    {
+        StopLineOfSightRescueRoute();
+        lineOfSightRescueTargetId = 0;
+        lineOfSightRescueDestination = default;
+        lineOfSightRescueHasDestination = false;
+        lineOfSightRescueOwnStopPending = false;
+        RearmLatestTravelRoute();
+        return SetLineOfSightRescueState(state);
     }
 
     private string SetLineOfSightRescueState(string state)

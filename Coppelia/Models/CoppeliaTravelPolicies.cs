@@ -285,6 +285,133 @@ internal sealed class CoppeliaRoutePolicy
     }
 }
 
+internal enum CoppeliaLosRescueDecision
+{
+    Rescue,
+    CancelRemote,
+    Remote,
+    Timeout,
+    Suppressed,
+}
+
+internal sealed class CoppeliaLosRescuePolicy
+{
+    public static readonly TimeSpan Lifetime = TimeSpan.FromSeconds(20);
+    public const float PairedTravelDistance = 10f;
+
+    private CoppeliaLosRescueState state;
+    private bool hasContext;
+    private string assignmentId = string.Empty;
+    private ulong targetId;
+    private uint questerWorldId;
+    private uint helperWorldId;
+    private uint questerTerritoryId;
+    private uint helperTerritoryId;
+    private DateTime startedUtc;
+
+    public CoppeliaLosRescueDecision Evaluate(
+        string currentAssignmentId,
+        ulong currentTargetId,
+        uint currentQuesterWorldId,
+        uint currentHelperWorldId,
+        uint currentQuesterTerritoryId,
+        uint currentHelperTerritoryId,
+        float distance,
+        DateTime utcNow)
+    {
+        var contextChanged = !hasContext ||
+                             !string.Equals(assignmentId, currentAssignmentId, StringComparison.Ordinal) ||
+                             targetId != currentTargetId ||
+                             questerWorldId != currentQuesterWorldId ||
+                             helperWorldId != currentHelperWorldId ||
+                             questerTerritoryId != currentQuesterTerritoryId ||
+                             helperTerritoryId != currentHelperTerritoryId;
+        var wasActive = state == CoppeliaLosRescueState.Active;
+        var remote = currentQuesterWorldId != currentHelperWorldId ||
+                     currentQuesterTerritoryId != currentHelperTerritoryId;
+
+        StoreContext(
+            currentAssignmentId,
+            currentTargetId,
+            currentQuesterWorldId,
+            currentHelperWorldId,
+            currentQuesterTerritoryId,
+            currentHelperTerritoryId);
+
+        if (remote)
+        {
+            state = CoppeliaLosRescueState.Remote;
+            startedUtc = default;
+            return wasActive
+                ? CoppeliaLosRescueDecision.CancelRemote
+                : CoppeliaLosRescueDecision.Remote;
+        }
+
+        if (state == CoppeliaLosRescueState.Remote ||
+            contextChanged ||
+            state == CoppeliaLosRescueState.Suppressed && distance <= PairedTravelDistance)
+        {
+            state = CoppeliaLosRescueState.Idle;
+            startedUtc = default;
+        }
+
+        if (state == CoppeliaLosRescueState.Suppressed)
+            return CoppeliaLosRescueDecision.Suppressed;
+
+        if (state == CoppeliaLosRescueState.Idle)
+        {
+            state = CoppeliaLosRescueState.Active;
+            startedUtc = utcNow;
+        }
+
+        if (utcNow - startedUtc >= Lifetime && distance > PairedTravelDistance)
+        {
+            state = CoppeliaLosRescueState.Suppressed;
+            return CoppeliaLosRescueDecision.Timeout;
+        }
+
+        return CoppeliaLosRescueDecision.Rescue;
+    }
+
+    public void Reset()
+    {
+        state = CoppeliaLosRescueState.Idle;
+        hasContext = false;
+        assignmentId = string.Empty;
+        targetId = 0;
+        questerWorldId = 0;
+        helperWorldId = 0;
+        questerTerritoryId = 0;
+        helperTerritoryId = 0;
+        startedUtc = default;
+    }
+
+    private void StoreContext(
+        string currentAssignmentId,
+        ulong currentTargetId,
+        uint currentQuesterWorldId,
+        uint currentHelperWorldId,
+        uint currentQuesterTerritoryId,
+        uint currentHelperTerritoryId)
+    {
+        hasContext = true;
+        assignmentId = currentAssignmentId;
+        targetId = currentTargetId;
+        questerWorldId = currentQuesterWorldId;
+        helperWorldId = currentHelperWorldId;
+        questerTerritoryId = currentQuesterTerritoryId;
+        helperTerritoryId = currentHelperTerritoryId;
+    }
+
+    private enum CoppeliaLosRescueState
+    {
+        Idle,
+        Active,
+        Remote,
+        Suppressed,
+    }
+}
+
 internal enum CoppeliaFlightEligibility
 {
     Locked,
