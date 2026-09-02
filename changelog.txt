@@ -1,5 +1,6 @@
 # Changelog
 
+- Fixed unloaded paired-territory handoffs to retain the previous Newb/Quester snapshot as their physical source, wait for the Helper to load, probe forward only from that source, and fall back from other territories. The forward-probe duration is now immediately configurable from 1-20 seconds under HealBot Settings > General > QST travel and defaults to five seconds.
 - Restored event-driven paired Quester/Newb following so live travel snapshots run every framework update, owned paired routes take priority, and idle LOS rescue cannot preempt existing movement. World or territory changes now cancel only an owned LOS route before immediately handing movement back to the latest paired destination, while obstructed heals and raises remain blocked.
 - Fixed JOAT and Powerlevel enemy classification to select only hostile combatants while keeping hostile combatants out of friendly healing targets.
 - Refreshed only Coppelia-owned pending or moving follow routes after at least 10 seconds when the newest Quester/Newb destination moved more than 5 yalms; initial sends and external vnavmesh activity remain unchanged.

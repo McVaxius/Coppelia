@@ -124,6 +124,21 @@ public sealed class ConfigurationMigrationTests
     }
 
     [Fact]
+    public void TerritoryForwardProbeDefaultsToFiveSecondsAndNormalizesToSupportedRange()
+    {
+        Assert.Equal(5, new Configuration().TerritoryForwardProbeSeconds);
+
+        var belowMinimum = new Configuration { TerritoryForwardProbeSeconds = 0 };
+        var aboveMaximum = new Configuration { TerritoryForwardProbeSeconds = 21 };
+
+        belowMinimum.MigrateIfNeeded();
+        aboveMaximum.MigrateIfNeeded();
+
+        Assert.Equal(1, belowMinimum.TerritoryForwardProbeSeconds);
+        Assert.Equal(20, aboveMaximum.TerritoryForwardProbeSeconds);
+    }
+
+    [Fact]
     public void QuickSetupDraftDoesNotMutateConfigurationUntilApplied()
     {
         var configuration = new Configuration

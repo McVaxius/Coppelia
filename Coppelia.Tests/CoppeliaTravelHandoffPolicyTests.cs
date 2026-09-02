@@ -128,39 +128,44 @@ public sealed class CoppeliaTravelHandoffPolicyTests
     }
 
     [Fact]
-    public void ForwardProbeKeepsOneFiveSecondWindowAcrossNewerSnapshots()
+    public void UnloadedPhysicalHandoffWaitsThenProbesSourceForSuppliedDuration()
     {
         var policy = new CoppeliaTerritoryHandoffPolicy();
+        var duration = TimeSpan.FromSeconds(7);
 
-        Assert.True(policy.TryArm(true, false, false, true, 100, 100, 200));
+        Assert.True(policy.TryArm(true, false, false, 100, 200));
+        Assert.Equal(
+            CoppeliaTerritoryHandoffDecision.WaitForLoad,
+            policy.Evaluate(0, 200, betweenAreas: true, helperLoaded: false, duration, Started));
+        Assert.Equal((uint)100, policy.SourceTerritoryId);
         Assert.Equal(
             CoppeliaTerritoryHandoffDecision.StartForwardProbe,
-            policy.Evaluate(100, 200, betweenAreas: false, helperLoaded: true, Started));
-        Assert.False(policy.TryArm(true, false, false, true, 100, 100, 300));
-        Assert.Equal(Started, policy.ProbeStartedUtc);
+            policy.Evaluate(100, 200, betweenAreas: false, helperLoaded: true, duration, Started.AddSeconds(1)));
+        Assert.Equal(Started.AddSeconds(1), policy.ProbeStartedUtc);
+        Assert.Equal(duration, policy.ProbeDuration);
         Assert.Equal(
             CoppeliaTerritoryHandoffDecision.ContinueForwardProbe,
-            policy.Evaluate(100, 300, betweenAreas: false, helperLoaded: true, Started.AddMilliseconds(4999)));
+            policy.Evaluate(100, 200, betweenAreas: false, helperLoaded: true, TimeSpan.FromSeconds(1), Started.AddMilliseconds(7999)));
         Assert.Equal(
             CoppeliaTerritoryHandoffDecision.UseTeleportFallback,
-            policy.Evaluate(100, 300, betweenAreas: false, helperLoaded: true, Started.AddSeconds(5)));
+            policy.Evaluate(100, 200, betweenAreas: false, helperLoaded: true, TimeSpan.FromSeconds(1), Started.AddSeconds(8)));
     }
 
     [Fact]
     public void ObservedTransitionWaitsForLoadAndCompletesInLatestTerritory()
     {
         var policy = new CoppeliaTerritoryHandoffPolicy();
-        Assert.True(policy.TryArm(true, false, false, true, 100, 100, 200));
+        Assert.True(policy.TryArm(true, false, false, 100, 200));
         Assert.Equal(
             CoppeliaTerritoryHandoffDecision.StartForwardProbe,
-            policy.Evaluate(100, 200, betweenAreas: false, helperLoaded: true, Started));
+            policy.Evaluate(100, 200, betweenAreas: false, helperLoaded: true, TimeSpan.FromSeconds(5), Started));
 
         Assert.Equal(
             CoppeliaTerritoryHandoffDecision.WaitForLoad,
-            policy.Evaluate(100, 200, betweenAreas: true, helperLoaded: false, Started.AddSeconds(1)));
+            policy.Evaluate(100, 200, betweenAreas: true, helperLoaded: false, TimeSpan.FromSeconds(5), Started.AddSeconds(1)));
         Assert.Equal(
             CoppeliaTerritoryHandoffDecision.DestinationReached,
-            policy.Evaluate(200, 200, betweenAreas: false, helperLoaded: true, Started.AddSeconds(2)));
+            policy.Evaluate(200, 200, betweenAreas: false, helperLoaded: true, TimeSpan.FromSeconds(5), Started.AddSeconds(2)));
         Assert.False(policy.IsActive);
     }
 
@@ -168,29 +173,27 @@ public sealed class CoppeliaTravelHandoffPolicyTests
     public void WrongIntermediateTerritoryUsesLatestDestinationFallback()
     {
         var policy = new CoppeliaTerritoryHandoffPolicy();
-        Assert.True(policy.TryArm(true, false, false, true, 100, 100, 200));
+        Assert.True(policy.TryArm(true, false, false, 100, 200));
         Assert.Equal(
             CoppeliaTerritoryHandoffDecision.StartForwardProbe,
-            policy.Evaluate(100, 200, betweenAreas: false, helperLoaded: true, Started));
+            policy.Evaluate(100, 200, betweenAreas: false, helperLoaded: true, TimeSpan.FromSeconds(5), Started));
         Assert.Equal(
             CoppeliaTerritoryHandoffDecision.WaitForLoad,
-            policy.Evaluate(150, 300, betweenAreas: true, helperLoaded: false, Started.AddSeconds(1)));
+            policy.Evaluate(150, 300, betweenAreas: true, helperLoaded: false, TimeSpan.FromSeconds(5), Started.AddSeconds(1)));
         Assert.Equal(
             CoppeliaTerritoryHandoffDecision.UseTeleportFallback,
-            policy.Evaluate(150, 300, betweenAreas: false, helperLoaded: true, Started.AddSeconds(2)));
+            policy.Evaluate(150, 300, betweenAreas: false, helperLoaded: true, TimeSpan.FromSeconds(5), Started.AddSeconds(2)));
     }
 
     [Theory]
-    [InlineData(false, false, false, true, 100, 100, 200)]
-    [InlineData(true, false, false, true, 999, 100, 200)]
-    [InlineData(true, true, false, true, 100, 100, 200)]
-    [InlineData(true, false, true, true, 100, 100, 200)]
+    [InlineData(false, false, false, 100, 200)]
+    [InlineData(true, true, false, 100, 200)]
+    [InlineData(true, false, true, 100, 200)]
+    [InlineData(true, false, false, 100, 100)]
     public void InitialReloadExactAndWorldMismatchesDoNotArmBlindProbe(
         bool hasPreviousSnapshot,
         bool explicitTeleport,
         bool worldChanged,
-        bool helperLoaded,
-        uint observedTerritory,
         uint previousTerritory,
         uint destinationTerritory)
     {
@@ -200,8 +203,6 @@ public sealed class CoppeliaTravelHandoffPolicyTests
             hasPreviousSnapshot,
             explicitTeleport,
             worldChanged,
-            helperLoaded,
-            observedTerritory,
             previousTerritory,
             destinationTerritory));
         Assert.False(policy.IsActive);

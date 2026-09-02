@@ -41,6 +41,7 @@ public sealed class Configuration : IPluginConfiguration
     public bool SaveHealTargets { get; set; }
     public int SavedTargetScanRangeYalms { get; set; } = 20;
     public bool AvoidTamamizuAetheryte { get; set; } = true;
+    public int TerritoryForwardProbeSeconds { get; set; } = 5;
     public bool AutoUpdateMapLocationsOnLogin { get; set; } = true;
     public string LastCommunityLocationsRefreshPluginVersion { get; set; } = string.Empty;
     public bool EnableLanPairing { get; set; }
@@ -112,6 +113,12 @@ public sealed class Configuration : IPluginConfiguration
         changed |= NormalizeTrackedTargets(SavedHealTargetEntries);
 
         SavedTargetScanRangeYalms = Math.Clamp(SavedTargetScanRangeYalms, 1, 200);
+        var normalizedTerritoryForwardProbeSeconds = Math.Clamp(TerritoryForwardProbeSeconds, 1, 20);
+        if (TerritoryForwardProbeSeconds != normalizedTerritoryForwardProbeSeconds)
+        {
+            TerritoryForwardProbeSeconds = normalizedTerritoryForwardProbeSeconds;
+            changed = true;
+        }
         changed |= NormalizeAutomationMode();
         changed |= NormalizeOperatingRole();
         var normalizedAddress = LanHealBotAddress?.Trim() ?? string.Empty;

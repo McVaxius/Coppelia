@@ -249,18 +249,20 @@ internal sealed class CoppeliaTravelService
             pendingExactTravel = command;
 
         var localPlayer = Plugin.ObjectTable.LocalPlayer;
-        var helperLoaded = Plugin.ClientState.IsLoggedIn &&
-                           localPlayer != null &&
-                           !IsBetweenAreas() &&
-                           !Plugin.Condition[ConditionFlag.BoundByDuty];
-        territoryHandoffPolicy.TryArm(
+        var handoffArmed = territoryHandoffPolicy.TryArm(
             previousTravel != null,
-            command.AetheryteId.HasValue || pendingExactTravel != null || lifestreamRequest != null,
-            worldChanged || localPlayer?.CurrentWorld.RowId != command.QuesterCurrentWorldId,
-            helperLoaded,
-            Plugin.ClientState.TerritoryType,
+            command.AetheryteId.HasValue,
+            worldChanged ||
+            localPlayer != null && localPlayer.CurrentWorld.RowId != command.QuesterCurrentWorldId,
             previousTravel?.TerritoryId ?? 0,
             command.TerritoryId);
+        if (handoffArmed && pendingExactTravel != null)
+        {
+            Plugin.Log.Information(
+                $"[Coppelia][QST] Discarded older exact teleport snapshot {pendingExactTravel.TravelSequence}; " +
+                $"newer physical territory handoff {command.TravelSequence} targets territory {command.TerritoryId}.");
+            pendingExactTravel = null;
+        }
 
         var prioritySnapshot = previousTravel == null ||
                                command.AetheryteId.HasValue ||
@@ -721,6 +723,7 @@ internal sealed class CoppeliaTravelService
             travel.TerritoryId,
             betweenAreas,
             helperLoaded,
+            TimeSpan.FromSeconds(configuration.TerritoryForwardProbeSeconds),
             DateTime.UtcNow);
 
         switch (decision)
@@ -756,7 +759,7 @@ internal sealed class CoppeliaTravelService
                     forwardProbeOwnsPath = true;
                     State = "Probing forward for the observed territory crossing";
                     Plugin.Log.Information(
-                        $"[Coppelia][QST] Started one five-second forward probe from territory " +
+                        $"[Coppelia][QST] Started one {territoryHandoffPolicy.ProbeDuration.TotalSeconds:0}-second forward probe from territory " +
                         $"{territoryHandoffPolicy.SourceTerritoryId} toward latest destination territory {travel.TerritoryId}.");
                     return true;
                 }
@@ -795,8 +798,9 @@ internal sealed class CoppeliaTravelService
                 StopForwardProbePath();
                 if (previousPhase != CoppeliaTerritoryHandoffPhase.Fallback)
                 {
-                    var result = previousPhase == CoppeliaTerritoryHandoffPhase.Probing
-                        ? "ended after five seconds without a territory transition"
+                    var result = territoryHandoffPolicy.ProbeStartedUtc != default &&
+                                 Plugin.ClientState.TerritoryType == territoryHandoffPolicy.SourceTerritoryId
+                        ? $"ended after {territoryHandoffPolicy.ProbeDuration.TotalSeconds:0} seconds without a territory transition"
                         : $"settled in territory {Plugin.ClientState.TerritoryType} instead of latest territory {travel.TerritoryId}";
                     Plugin.Log.Information($"[Coppelia][QST] Forward probe {result}; selecting teleport fallback.");
                 }

@@ -462,21 +462,19 @@ internal enum CoppeliaTerritoryHandoffDecision
 
 internal sealed class CoppeliaTerritoryHandoffPolicy
 {
-    public static readonly TimeSpan ForwardProbeDuration = TimeSpan.FromSeconds(5);
-
     private DateTime probeStartedUtc;
+    private TimeSpan probeDuration;
 
     public CoppeliaTerritoryHandoffPhase Phase { get; private set; }
     public uint SourceTerritoryId { get; private set; }
     public bool IsActive => Phase != CoppeliaTerritoryHandoffPhase.Idle;
     public DateTime ProbeStartedUtc => probeStartedUtc;
+    public TimeSpan ProbeDuration => probeDuration;
 
     public bool TryArm(
         bool hasPreviousSnapshot,
         bool explicitTeleport,
         bool worldChanged,
-        bool helperLoaded,
-        uint observedTerritoryId,
         uint previousTerritoryId,
         uint destinationTerritoryId)
     {
@@ -484,15 +482,14 @@ internal sealed class CoppeliaTerritoryHandoffPolicy
             !hasPreviousSnapshot ||
             explicitTeleport ||
             worldChanged ||
-            !helperLoaded ||
-            observedTerritoryId == 0 ||
-            observedTerritoryId != previousTerritoryId ||
+            previousTerritoryId == 0 ||
+            destinationTerritoryId == 0 ||
             destinationTerritoryId == previousTerritoryId)
         {
             return false;
         }
 
-        SourceTerritoryId = observedTerritoryId;
+        SourceTerritoryId = previousTerritoryId;
         Phase = CoppeliaTerritoryHandoffPhase.Armed;
         return true;
     }
@@ -502,6 +499,7 @@ internal sealed class CoppeliaTerritoryHandoffPolicy
         uint latestDestinationTerritoryId,
         bool betweenAreas,
         bool helperLoaded,
+        TimeSpan forwardProbeDuration,
         DateTime utcNow)
     {
         if (!IsActive)
@@ -513,46 +511,50 @@ internal sealed class CoppeliaTerritoryHandoffPolicy
             return CoppeliaTerritoryHandoffDecision.DestinationReached;
         }
 
-        if (Phase == CoppeliaTerritoryHandoffPhase.Armed)
+        if (Phase is CoppeliaTerritoryHandoffPhase.Armed or CoppeliaTerritoryHandoffPhase.WaitingForLoad)
         {
-            if (betweenAreas || currentTerritoryId != SourceTerritoryId)
+            if (betweenAreas || !helperLoaded || currentTerritoryId == 0)
             {
                 Phase = CoppeliaTerritoryHandoffPhase.WaitingForLoad;
                 return CoppeliaTerritoryHandoffDecision.WaitForLoad;
             }
 
-            if (!helperLoaded)
-                return CoppeliaTerritoryHandoffDecision.None;
+            if (currentTerritoryId != SourceTerritoryId)
+            {
+                Phase = CoppeliaTerritoryHandoffPhase.Fallback;
+                return CoppeliaTerritoryHandoffDecision.UseTeleportFallback;
+            }
 
-            probeStartedUtc = utcNow;
+            if (probeStartedUtc == default)
+            {
+                probeStartedUtc = utcNow;
+                probeDuration = forwardProbeDuration;
+            }
+            else if (utcNow - probeStartedUtc >= probeDuration)
+            {
+                Phase = CoppeliaTerritoryHandoffPhase.Fallback;
+                return CoppeliaTerritoryHandoffDecision.UseTeleportFallback;
+            }
+
             Phase = CoppeliaTerritoryHandoffPhase.Probing;
             return CoppeliaTerritoryHandoffDecision.StartForwardProbe;
         }
 
         if (Phase == CoppeliaTerritoryHandoffPhase.Probing)
         {
-            if (betweenAreas || currentTerritoryId != SourceTerritoryId)
+            if (betweenAreas || !helperLoaded || currentTerritoryId == 0)
             {
                 Phase = CoppeliaTerritoryHandoffPhase.WaitingForLoad;
                 return CoppeliaTerritoryHandoffDecision.WaitForLoad;
             }
 
-            if (utcNow - probeStartedUtc >= ForwardProbeDuration)
+            if (currentTerritoryId != SourceTerritoryId || utcNow - probeStartedUtc >= probeDuration)
             {
                 Phase = CoppeliaTerritoryHandoffPhase.Fallback;
                 return CoppeliaTerritoryHandoffDecision.UseTeleportFallback;
             }
 
             return CoppeliaTerritoryHandoffDecision.ContinueForwardProbe;
-        }
-
-        if (Phase == CoppeliaTerritoryHandoffPhase.WaitingForLoad)
-        {
-            if (betweenAreas || !helperLoaded)
-                return CoppeliaTerritoryHandoffDecision.WaitForLoad;
-
-            Phase = CoppeliaTerritoryHandoffPhase.Fallback;
-            return CoppeliaTerritoryHandoffDecision.UseTeleportFallback;
         }
 
         return CoppeliaTerritoryHandoffDecision.UseTeleportFallback;
@@ -565,6 +567,7 @@ internal sealed class CoppeliaTerritoryHandoffPolicy
         Phase = CoppeliaTerritoryHandoffPhase.Idle;
         SourceTerritoryId = 0;
         probeStartedUtc = default;
+        probeDuration = default;
     }
 }
 

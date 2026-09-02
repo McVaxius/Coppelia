@@ -773,6 +773,21 @@ public sealed class ConfigWindow : Window, IDisposable
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Skips Tamamizu when choosing a QST teleport destination.");
 
+        var territoryForwardProbeSeconds = configuration.TerritoryForwardProbeSeconds;
+        ImGui.SetNextItemWidth(260f);
+        if (ImGui.SliderInt(
+                "Forward territory probe duration",
+                ref territoryForwardProbeSeconds,
+                1,
+                20,
+                "%d seconds"))
+        {
+            configuration.TerritoryForwardProbeSeconds = territoryForwardProbeSeconds;
+            changed = true;
+        }
+        CoppeliaUi.WrappedHelp(
+            "How long the Helper moves forward when its paired Newb/Quester changes territory without teleporting.");
+
         var autoUpdateMapLocations = configuration.AutoUpdateMapLocationsOnLogin;
         if (ImGui.Checkbox("Auto-update map locations on login", ref autoUpdateMapLocations))
         {
