@@ -9,6 +9,65 @@ public sealed class HealRiderTransportTests
     private static readonly DateTime Started = new(2026, 9, 7, 0, 0, 0, DateTimeKind.Utc);
 
     [Theory]
+    [InlineData("Quester")]
+    [InlineData("Coppelia")]
+    public void DelayedArrivalAndRejectedInvitationsShareOneFixedPickupWindow(string inviter)
+    {
+        var command = new HealRiderCommand
+        {
+            PartyInviter = inviter, PickupDeadlineUtc = Started.AddSeconds(60),
+        };
+        var nextInvite = DateTime.MinValue;
+        var invitations = new List<DateTime>();
+        for (var second = 0; second <= 90; second++)
+        {
+            var now = Started.AddSeconds(second);
+            if (HealRiderPolicy.ShouldInvite(now, command.PickupDeadlineUtc, nextInvite,
+                    travelReady: second >= 20, partyReady: false, solo: true))
+            {
+                invitations.Add(now);
+                nextInvite = now.AddSeconds(5);
+                // Rejected invite: observing it and polling must not extend the window.
+                command = command with { Action = "Inspect" };
+            }
+        }
+        Assert.Equal(Enumerable.Range(0, 8).Select(i => Started.AddSeconds(20 + i * 5)), invitations);
+        Assert.Equal(Started.AddSeconds(60), command.PickupDeadlineUtc);
+        Assert.True(HealRiderPolicy.PickupExpired(command.PickupDeadlineUtc, Started.AddSeconds(60), "Idle"));
+        Assert.True(HealRiderPolicy.PickupExpired(command.PickupDeadlineUtc, Started.AddSeconds(60), "Preparing"));
+        Assert.True(HealRiderPolicy.PickupExpired(command.PickupDeadlineUtc, Started.AddSeconds(60), "Boarding"));
+        Assert.False(HealRiderPolicy.PickupExpired(command.PickupDeadlineUtc, Started.AddSeconds(60), "Transit"));
+        Assert.False(HealRiderPolicy.ShouldInvite(Started.AddSeconds(30), command.PickupDeadlineUtc,
+            Started, travelReady: true, partyReady: true, solo: false));
+        Assert.False(HealRiderPolicy.ShouldInvite(Started.AddSeconds(30), command.PickupDeadlineUtc,
+            Started, travelReady: true, partyReady: false, solo: false));
+    }
+
+    [Theory]
+    [InlineData(50f, false, false, true, false)]
+    [InlineData(50f, true, false, true, false)]
+    [InlineData(3f, true, false, true, false)]
+    [InlineData(3f, false, true, true, false)]
+    [InlineData(3f, false, false, false, false)]
+    [InlineData(3f, false, false, true, true)]
+    public void MountedPickupMustApproachLandAndFinishMountingBeforeBoarding(
+        float distance, bool flying, bool mounting, bool selectedMount, bool expected) =>
+        Assert.Equal(expected, HealRiderPolicy.GroundedForBoarding(distance, flying, mounting, selectedMount));
+
+    [Fact]
+    public void FailedPreparationCanReleasePartyWhileOrdinaryMountedButTransportMustDismount()
+    {
+        Assert.True(HealRiderPolicy.CanRegroup(
+            HealRiderPolicy.MustWaitForDismount(false, true), false, true));
+        Assert.False(HealRiderPolicy.CanRegroup(
+            HealRiderPolicy.MustWaitForDismount(true, true), false, true));
+        Assert.False(HealRiderPolicy.CanRegroup(
+            HealRiderPolicy.MustWaitForDismount(true, false), true, true));
+        Assert.True(HealRiderPolicy.CanRegroup(
+            HealRiderPolicy.MustWaitForDismount(true, false), false, true));
+    }
+
+    [Theory]
     [InlineData(50, true, false, true, true, false)]
     [InlineData(51, true, false, true, true, true)]
     [InlineData(100, false, false, true, true, false)]

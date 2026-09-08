@@ -22,6 +22,7 @@ internal sealed record HealRiderCommand
     public bool PassengerConfirmed { get; init; }
     public uint MountId { get; init; }
     public string PartyInviter { get; init; } = string.Empty;
+    public DateTime PickupDeadlineUtc { get; init; }
 }
 
 internal sealed record HealRiderStatus
@@ -35,6 +36,8 @@ internal sealed record HealRiderStatus
     public bool CanFly { get; init; }
     public bool MountReady { get; init; }
     public bool PickupReady { get; init; }
+    public bool BoardingReady { get; init; }
+    public bool TransportOwnsMount { get; init; }
     public bool Mounted { get; init; }
     public bool PartyReady { get; init; }
     public bool PartyReleased { get; init; }
@@ -44,6 +47,20 @@ internal sealed record HealRiderStatus
 internal static class HealRiderPolicy
 {
     public const float ArrivalTolerance = 5f;
+    public const float BoardingTolerance = 3f;
+
+    public static bool PickupExpired(DateTime deadlineUtc, DateTime now, string state) =>
+        now >= deadlineUtc && state is not ("Transit" or "Arriving" or "Arrived");
+
+    public static bool ShouldInvite(DateTime now, DateTime deadlineUtc, DateTime nextInviteUtc,
+        bool travelReady, bool partyReady, bool solo) =>
+        now < deadlineUtc && now >= nextInviteUtc && travelReady && !partyReady && solo;
+
+    public static bool GroundedForBoarding(float distance, bool flying, bool mounting, bool selectedMount) =>
+        float.IsFinite(distance) && distance <= BoardingTolerance && !flying && !mounting && selectedMount;
+
+    public static bool MustWaitForDismount(bool transportOwnsMount, bool mounted) =>
+        transportOwnsMount && mounted;
 
     public static bool Eligible(float distance, float threshold, bool helperCanFly, bool questerCanFly,
         bool mountReady, bool sameLocation) =>
