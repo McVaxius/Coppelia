@@ -134,6 +134,7 @@ internal sealed class CoppeliaRoutePolicy
     public const float DestinationRefreshDistance = 5f;
 
     private bool observedOwnedActivity;
+    private bool observedOwnedMovement;
     private bool restartAfterPause;
     private DateTime startupAcceptedUtc;
     private Vector3 startedDestination;
@@ -168,6 +169,7 @@ internal sealed class CoppeliaRoutePolicy
             if (busy)
             {
                 observedOwnedActivity = true;
+                observedOwnedMovement |= pathRunning;
                 if (OwnsPendingPathfind && pathRunning)
                     OwnsPendingPathfind = false;
                 return CoppeliaRouteActivity.Owned;
@@ -178,7 +180,7 @@ internal sealed class CoppeliaRoutePolicy
 
             OwnsRoute = false;
             OwnsPendingPathfind = false;
-            if (!observedOwnedActivity)
+            if (!observedOwnedMovement)
             {
                 StartupRejected = LatestSequence <= activeSequence;
                 rejectedSequence = activeSequence;
@@ -209,6 +211,7 @@ internal sealed class CoppeliaRoutePolicy
         OwnsRoute = true;
         OwnsPendingPathfind = true;
         observedOwnedActivity = false;
+        observedOwnedMovement = false;
         startupAcceptedUtc = utcNow;
         startedDestination = LatestDestination;
         activeSequence = LatestSequence;
@@ -222,6 +225,7 @@ internal sealed class CoppeliaRoutePolicy
         OwnsRoute = false;
         OwnsPendingPathfind = false;
         observedOwnedActivity = false;
+        observedOwnedMovement = false;
         StartupRejected = true;
         rejectedSequence = LatestSequence;
         activeSequence = 0;
@@ -271,6 +275,7 @@ internal sealed class CoppeliaRoutePolicy
         OwnsRoute = false;
         OwnsPendingPathfind = false;
         observedOwnedActivity = false;
+        observedOwnedMovement = false;
         restartAfterPause = false;
         startupAcceptedUtc = default;
         startedDestination = default;
@@ -462,6 +467,7 @@ internal enum CoppeliaTerritoryHandoffDecision
 
 internal sealed class CoppeliaTerritoryHandoffPolicy
 {
+    private bool awaitingDestinationSnapshot;
     private DateTime probeStartedUtc;
     private TimeSpan probeDuration;
 
@@ -470,6 +476,16 @@ internal sealed class CoppeliaTerritoryHandoffPolicy
     public bool IsActive => Phase != CoppeliaTerritoryHandoffPhase.Idle;
     public DateTime ProbeStartedUtc => probeStartedUtc;
     public TimeSpan ProbeDuration => probeDuration;
+
+    public bool TryArmFollowFailure(uint currentTerritoryId, bool ownedFollowFailure)
+    {
+        if (IsActive || currentTerritoryId == 0 || !ownedFollowFailure)
+            return false;
+        SourceTerritoryId = currentTerritoryId;
+        awaitingDestinationSnapshot = true;
+        Phase = CoppeliaTerritoryHandoffPhase.Armed;
+        return true;
+    }
 
     public bool TryArm(
         bool hasPreviousSnapshot,
@@ -505,7 +521,10 @@ internal sealed class CoppeliaTerritoryHandoffPolicy
         if (!IsActive)
             return CoppeliaTerritoryHandoffDecision.None;
 
-        if (helperLoaded && !betweenAreas && currentTerritoryId == latestDestinationTerritoryId)
+        if (latestDestinationTerritoryId != SourceTerritoryId)
+            awaitingDestinationSnapshot = false;
+
+        if (!awaitingDestinationSnapshot && helperLoaded && !betweenAreas && currentTerritoryId == latestDestinationTerritoryId)
         {
             Reset();
             return CoppeliaTerritoryHandoffDecision.DestinationReached;
@@ -568,11 +587,14 @@ internal sealed class CoppeliaTerritoryHandoffPolicy
         SourceTerritoryId = 0;
         probeStartedUtc = default;
         probeDuration = default;
+        awaitingDestinationSnapshot = false;
     }
 }
 
 internal sealed class CoppeliaTravelSequencePolicy
 {
+    public bool WaitingForFreshSnapshot { get; private set; }
+    public void RequireFreshSnapshot() => WaitingForFreshSnapshot = true;
     public long LastAcceptedSequence { get; private set; }
     public long BlockedSequence { get; private set; }
     public string BlockedState { get; private set; } = string.Empty;
@@ -583,6 +605,7 @@ internal sealed class CoppeliaTravelSequencePolicy
             return false;
 
         LastAcceptedSequence = sequence;
+        WaitingForFreshSnapshot = false;
         BlockedSequence = 0;
         BlockedState = string.Empty;
         return true;
@@ -599,6 +622,7 @@ internal sealed class CoppeliaTravelSequencePolicy
     public void Reset()
     {
         LastAcceptedSequence = 0;
+        WaitingForFreshSnapshot = false;
         BlockedSequence = 0;
         BlockedState = string.Empty;
     }

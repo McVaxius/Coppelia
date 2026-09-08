@@ -93,6 +93,13 @@ internal sealed class HealbotRuntimeService : IDisposable
 
     public HealbotDecisionOutcome Update()
     {
+        if (plugin.CoppeliaTravelService.HealRiderActive)
+        {
+            StatusText = "Holding actions during HealRider transport.";
+            LastIssuedAction = "Travel";
+            LastMatchedRule = "HealRider owns movement.";
+            return HealbotDecisionOutcome.Blocked;
+        }
         if (Plugin.Condition[ConditionFlag.BetweenAreas] ||
             Plugin.Condition[ConditionFlag.BetweenAreas51] ||
             Plugin.ObjectTable.LocalPlayer == null)

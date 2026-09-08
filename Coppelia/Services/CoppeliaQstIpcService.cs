@@ -28,6 +28,8 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     private readonly CoppeliaCompanionService companionService;
     private readonly ICallGateProvider<string> statusProvider;
     private readonly ICallGateProvider<string, string> commandProvider;
+    private readonly ICallGateProvider<string, string> healRiderCommandProvider;
+    private readonly ICallGateProvider<string, string> healRiderStatusProvider;
     private readonly ICallGateProvider<bool, bool> companionSummoningProvider;
     private readonly ICallGateProvider<bool, bool> joatFullRsrRotationProvider;
     private readonly object gate = new();
@@ -40,6 +42,8 @@ internal sealed class CoppeliaQstIpcService : IDisposable
     private DateTime boundByDutySinceUtc = DateTime.MinValue;
     private bool statusProviderRegistered;
     private bool commandProviderRegistered;
+    private bool healRiderCommandRegistered;
+    private bool healRiderStatusRegistered;
     private bool companionSummoningProviderRegistered;
     private bool joatFullRsrRotationProviderRegistered;
     private bool qstJoatAttackModeOwned;
@@ -57,6 +61,8 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         this.companionService = companionService;
         statusProvider = Plugin.PluginInterface.GetIpcProvider<string>(StatusEndpoint);
         commandProvider = Plugin.PluginInterface.GetIpcProvider<string, string>(CommandEndpoint);
+        healRiderCommandProvider = Plugin.PluginInterface.GetIpcProvider<string, string>("HealBot.HealRider.Command.v1");
+        healRiderStatusProvider = Plugin.PluginInterface.GetIpcProvider<string, string>("HealBot.HealRider.Status.v1");
         companionSummoningProvider = Plugin.PluginInterface.GetIpcProvider<bool, bool>(CompanionSummoningEndpoint);
         joatFullRsrRotationProvider = Plugin.PluginInterface.GetIpcProvider<bool, bool>(JoatFullRsrRotationEndpoint);
     }
@@ -96,6 +102,10 @@ internal sealed class CoppeliaQstIpcService : IDisposable
                 statusProviderRegistered = true;
                 commandProvider.RegisterFunc(HandleCommandJson);
                 commandProviderRegistered = true;
+                healRiderCommandProvider.RegisterFunc(HandleHealRiderJson);
+                healRiderCommandRegistered = true;
+                healRiderStatusProvider.RegisterFunc(request => HandleHealRiderJson(request, statusOnly: true));
+                healRiderStatusRegistered = true;
                 companionSummoningProvider.RegisterFunc(SetCompanionSummoning);
                 companionSummoningProviderRegistered = true;
                 joatFullRsrRotationProvider.RegisterFunc(SetJoatFullRsrRotation);
@@ -367,6 +377,16 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
     private void UnregisterProviders()
     {
+        if (healRiderCommandRegistered)
+        {
+            healRiderCommandProvider.UnregisterFunc();
+            healRiderCommandRegistered = false;
+        }
+        if (healRiderStatusRegistered)
+        {
+            healRiderStatusProvider.UnregisterFunc();
+            healRiderStatusRegistered = false;
+        }
         if (joatFullRsrRotationProviderRegistered)
         {
             joatFullRsrRotationProvider.UnregisterFunc();
@@ -444,6 +464,43 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         }
 
         return JsonSerializer.Serialize(response, CoppeliaQstContract.JsonOptions);
+    }
+
+    private string HandleHealRiderJson(string requestJson) => HandleHealRiderJson(requestJson, false);
+
+    private string HandleHealRiderJson(string requestJson, bool statusOnly)
+    {
+        lock (gate)
+        {
+            HealRiderStatus response;
+            try
+            {
+                var command = JsonSerializer.Deserialize<HealRiderCommand>(requestJson, CoppeliaQstContract.JsonOptions);
+                if (command == null || command.Version != 1 || assignment?.Source != AssignmentSource.Qst ||
+                    assignment.SessionId != command.SessionId || assignment.QuesterName != command.QuesterName ||
+                    assignment.QuesterWorldId != command.QuesterWorldId ||
+                    assignment.DutyInviter != command.PartyInviter ||
+                    (assignment.PendingDutySequence != 0 || assignment.DadDutyRunActive || assignment.DutyOwned) &&
+                    command.Action is not ("Cancel" or "DutyHandoff" or "Inspect"))
+                {
+                    response = new HealRiderStatus
+                    {
+                        SessionId = command?.SessionId ?? string.Empty,
+                        LegId = command?.LegId ?? 0,
+                        State = "Blocked",
+                        Blocker = "HealRider requires the exact active QST assignment outside duty ownership.",
+                    };
+                }
+                else
+                    response = travelService.ApplyHealRider(statusOnly ? command with { Action = "Inspect" } : command);
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.Warning(ex, "[HealRider] Request failed.");
+                response = new HealRiderStatus { State = "Blocked", Blocker = "Invalid or unavailable HealRider request." };
+            }
+            return JsonSerializer.Serialize(response, CoppeliaQstContract.JsonOptions);
+        }
     }
 
     private CoppeliaQstCommandResponse HandleCommand(CoppeliaQstCommand command)
@@ -678,6 +735,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
     private CoppeliaQstCommandResponse QueueDutySequence(long sequence, string state)
     {
+        travelService.CancelHealRider("Duty handoff");
         if (assignment!.ProcessedDutySequences.Contains(sequence))
             return Accepted("Coppelia duty sequence was already completed.");
         if (assignment.PendingDutySequence == sequence)

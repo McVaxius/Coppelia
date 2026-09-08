@@ -1,5 +1,7 @@
 # HealBot
 
+QST Companion can opt in to **HealRider** during its rotations. Select an unlocked passenger mount in QST's Coppelia Helper setup and enable HealRider on the Quester (default walking threshold: 50 yalms). Companion owns the shared party-inviter setting, travel exclusions, and Questionable pause/resume; HealBot owns approach, mount, exact boarding verification, flight, and dismount within five yalms. Missing ride support or eligibility leaves ordinary following available. HealRider uses separate v1 IPC endpoints and requires updated QST endpoints and HealBot; direct Newb pairing does not offer rides.
+
 Stand-alone watched-target healing, healer-first JOAT, Fren-assisted powerleveling, and authenticated Helper/Newb pairing.
 
 HealBot has four top-level operating roles: **Off**, **Stand-alone**, **Helper**, and **Newb**. Stand-alone has the smaller HealBot, Jacqueline of All Trades (JOAT), and PowerlevelBot behavior choice. Helper listens for one authenticated Newb and activates JOAT for remote healing and chase after a compatible status request. Newb connects asynchronously and performs no local healing or attacking. Use `/healbot`, `/hb`, or the retained `/copellia` alias to open.

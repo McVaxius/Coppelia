@@ -173,6 +173,9 @@ public sealed class CoppeliaRoutePolicyTests
             CoppeliaRouteActivity.Owned,
             policy.Observe(pathfindInProgress: true, pathRunning: false, Started.AddMilliseconds(100)));
         Assert.Equal(
+            CoppeliaRouteActivity.Owned,
+            policy.Observe(pathfindInProgress: false, pathRunning: true, Started.AddMilliseconds(150)));
+        Assert.Equal(
             CoppeliaRouteActivity.Completed,
             policy.Observe(pathfindInProgress: false, pathRunning: false, Started.AddMilliseconds(200)));
         Assert.True(policy.CanStart(pathfindInProgress: false, pathRunning: false));

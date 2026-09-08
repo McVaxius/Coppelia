@@ -50,6 +50,8 @@ internal unsafe sealed class CoppeliaCompanionService
 
     public void Update()
     {
+        if (travelService.HealRiderActive)
+            return;
         policy.SetLocalState(
             configuration.SummonCompanionChocobo,
             configuration.OperatingRole);

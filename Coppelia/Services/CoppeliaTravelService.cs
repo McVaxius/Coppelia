@@ -10,7 +10,7 @@ using Lumina.Excel.Sheets;
 
 namespace Coppelia.Services;
 
-internal sealed class CoppeliaTravelService
+internal sealed partial class CoppeliaTravelService
 {
     private const uint MountRouletteGeneralActionId = 9;
     private const uint DismountGeneralActionId = 23;
@@ -77,6 +77,8 @@ internal sealed class CoppeliaTravelService
 
     public string UpdateLineOfSightRescue(ulong targetGameObjectId, Vector3 liveDestination)
     {
+        if (HealRiderActive || travelSequencePolicy.WaitingForFreshSnapshot || hinterlandsRoute != null)
+            return SetLineOfSightRescueState("LOS movement held for HealBot transport");
         var travel = latestTravel;
         var localPlayer = Plugin.ObjectTable.LocalPlayer;
         if (travel != null && localPlayer != null &&
@@ -191,6 +193,8 @@ internal sealed class CoppeliaTravelService
 
     public void PauseForAction()
     {
+        if (HealRiderActive)
+            return;
         actionHoldUntilUtc = DateTime.UtcNow.AddSeconds(2);
         PauseOwnedRoute();
         StopForwardProbePath();
@@ -236,6 +240,10 @@ internal sealed class CoppeliaTravelService
             return new CoppeliaQstCommandResponse(false, "Travel update is missing world or territory metadata.");
 
         var previousTravel = latestTravel;
+        if (hinterlandsRoute != null &&
+            (command.TerritoryId != 399 || command.AetheryteId.HasValue ||
+             command.QuesterCurrentWorldId != previousTravel?.QuesterCurrentWorldId))
+            ClearHinterlandsRoute();
         var worldChanged = previousTravel != null &&
                            command.QuesterCurrentWorldId != previousTravel.QuesterCurrentWorldId;
         if (command.AetheryteId.HasValue || worldChanged)
@@ -283,17 +291,28 @@ internal sealed class CoppeliaTravelService
 
     public void Update()
     {
+        if (UpdateHealRider())
+            return;
         if (latestTravel == null)
             return;
 
+        if (travelSequencePolicy.WaitingForFreshSnapshot)
+        {
+            State = "Waiting for a fresh Quester travel snapshot after HealRider";
+            return;
+        }
+
         if (Plugin.Condition[ConditionFlag.BoundByDuty])
         {
+            ClearHinterlandsRoute();
             ResetTerritoryHandoff();
             Stop("Suspended inside duty");
             return;
         }
 
         var travel = latestTravel;
+        if (hinterlandsRoute != null && UpdateHinterlandsRoute(travel))
+            return;
         if (lifestreamRequest != null && IsBetweenAreas())
             lifestreamObservedLoading = true;
 
@@ -332,6 +351,20 @@ internal sealed class CoppeliaTravelService
         }
 
         TryRecordPendingAetheryteArrival(localPlayer);
+
+        if (hinterlandsRoute == null && lifestreamRequest == null && pendingExactTravel == null &&
+            !territoryHandoffPolicy.IsActive && !travelSequencePolicy.IsBlocked(travel.TravelSequence) &&
+            travel.TerritoryId == 399 && Plugin.ClientState.TerritoryType != 399 && !travel.AetheryteId.HasValue)
+        {
+            if (!CanFlyInTerritory(399))
+                BlockTravel(travel.TravelSequence, "Dravanian Hinterlands travel requires flying on this Helper");
+            else
+            {
+                hinterlandsRoute = new HinterlandsRoute(DateTime.UtcNow.AddMinutes(2));
+                UpdateHinterlandsRoute(travel);
+            }
+            return;
+        }
 
         var currentWorld = (ushort)localPlayer.CurrentWorld.RowId;
         if (ObserveLifestreamRequest(localPlayer, travel))
@@ -420,6 +453,19 @@ internal sealed class CoppeliaTravelService
 
         if (territoryHandoffPolicy.IsActive && HandleTerritoryHandoff(localPlayer, travel))
             return;
+
+        if (travel.TerritoryId == 399 && Plugin.ClientState.TerritoryType != 399 &&
+            !travel.AetheryteId.HasValue)
+        {
+            if (!CanFlyInTerritory(399))
+                BlockTravel(travel.TravelSequence, "Dravanian Hinterlands travel requires flying on this Helper");
+            else
+            {
+                hinterlandsRoute = new HinterlandsRoute(DateTime.UtcNow.AddMinutes(2));
+                UpdateHinterlandsRoute(travel);
+            }
+            return;
+        }
 
         if (Plugin.ClientState.TerritoryType != travel.TerritoryId)
         {
@@ -640,6 +686,8 @@ internal sealed class CoppeliaTravelService
 
         if (routeActivity == CoppeliaRouteActivity.Rejected)
         {
+            if (TryProbeFailedFollow(localPlayer, travel))
+                return;
             State = "vnavmesh rejected route startup; waiting for activity to clear or a new travel snapshot";
             return;
         }
@@ -677,6 +725,8 @@ internal sealed class CoppeliaTravelService
             }
             routePolicy.MarkStartupRejected(isPathfinding, isPathRunning);
             flightPolicy.MarkProbeRejected();
+            if (TryProbeFailedFollow(localPlayer, travel))
+                return;
             State = $"vnavmesh rejected {routeLabel} route startup; waiting for activity to clear or a new travel snapshot";
             Plugin.Log.Warning($"[Coppelia][QST] vnavmesh rejected {routeLabel} route startup.");
         }
@@ -691,6 +741,8 @@ internal sealed class CoppeliaTravelService
 
     public void Release()
     {
+        CancelHealRider("Assignment released");
+        ClearHinterlandsRoute();
         ClearLineOfSightRescue();
         ResetTerritoryHandoff();
         ReleaseOwnedRoute();
@@ -712,6 +764,16 @@ internal sealed class CoppeliaTravelService
 
     private static string BuildFollowState(string state, string blocker) =>
         string.IsNullOrWhiteSpace(blocker) ? state : $"{state}; safe ground fallback ({blocker})";
+
+    private bool TryProbeFailedFollow(IPlayerCharacter localPlayer, CoppeliaQstCommand travel)
+    {
+        if (pendingExactTravel != null || localPlayer.CurrentWorld.RowId != travel.QuesterCurrentWorldId ||
+            Plugin.Condition[ConditionFlag.InFlight] || HealRiderActive || lineOfSightRescueHasDestination)
+            return false;
+        if (!territoryHandoffPolicy.TryArmFollowFailure(Plugin.ClientState.TerritoryType, true))
+            return false;
+        return HandleTerritoryHandoff(localPlayer, travel);
+    }
 
     private bool HandleTerritoryHandoff(IPlayerCharacter? localPlayer, CoppeliaQstCommand travel)
     {
