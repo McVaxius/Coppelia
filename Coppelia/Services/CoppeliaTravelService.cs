@@ -106,6 +106,7 @@ internal sealed partial class CoppeliaTravelService
 
     public string UpdateLineOfSightRescue(ulong targetGameObjectId, Vector3 liveDestination)
     {
+        if (NavigationRecoveryHeld) return "Navigation recovery holds movement";
         if (HealRiderActive || travelSequencePolicy.WaitingForFreshSnapshot || hinterlandsRoute != null)
             return SetLineOfSightRescueState("LOS movement held for HealBot transport");
         var travel = latestTravel;
@@ -263,6 +264,7 @@ internal sealed partial class CoppeliaTravelService
 
     public CoppeliaQstCommandResponse Apply(CoppeliaQstCommand command)
     {
+        if (NavigationRecoveryHeld) return new(false, "Navigation recovery holds this assignment.");
         if (command.TravelSequence <= travelSequencePolicy.LastAcceptedSequence)
             return new CoppeliaQstCommandResponse(true, "Travel snapshot was already accepted; arrival is not implied.");
         if (command.QuesterCurrentWorldId == 0 || command.TerritoryId == 0)
@@ -328,6 +330,7 @@ internal sealed partial class CoppeliaTravelService
 
     public void Update()
     {
+        if (NavigationRecoveryHeld) return;
         if (UpdateHealRider())
             return;
         if (rideMode != null && rideMountsSuspended)

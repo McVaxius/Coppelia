@@ -20,6 +20,89 @@ namespace Coppelia.Tests;
 
 public sealed class HealRiderTransportTests
 {
+    [Fact]
+    public void NavigationRecoveryHoldsOnlyExactQstAssignmentAndRetiresRoutesWithoutLanding()
+    {
+        var calls = new List<string>();
+        var running = true;
+        var finding = true;
+        var pi = Proxy<IDalamudPluginInterface>((method, args) =>
+        {
+            if (method.Name != "GetIpcSubscriber") return null;
+            var endpoint = (string)args![0]!;
+            return Proxy(method.ReturnType, (call, _) =>
+            {
+                if (call.Name == "InvokeAction")
+                {
+                    calls.Add(endpoint);
+                    if (endpoint == "vnavmesh.Path.Stop") running = false;
+                    if (endpoint == "vnavmesh.Nav.PathfindCancelAll") finding = false;
+                }
+                if (call.Name == "InvokeFunc" && call.ReturnType == typeof(bool))
+                    return endpoint == "vnavmesh.Path.IsRunning" ? running : endpoint == "vnavmesh.SimpleMove.PathfindInProgress" && finding;
+                return null;
+            });
+        });
+        const BindingFlags statics = BindingFlags.Static | BindingFlags.NonPublic;
+        const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
+        var oldPi = typeof(Plugin).GetProperty("PluginInterface", statics)!.GetValue(null);
+        var oldLog = typeof(Plugin).GetProperty("Log", statics)!.GetValue(null);
+        try
+        {
+            typeof(Plugin).GetProperty("PluginInterface", statics)!.SetValue(null, pi);
+            typeof(Plugin).GetProperty("Log", statics)!.SetValue(null, Proxy<IPluginLog>((_, _) => null));
+            var travel = new CoppeliaTravelService(new Configuration(), null!, null!);
+            var request = JsonSerializer.Deserialize<CoppeliaQstCommand>(
+                "{\"action\":\"RecoveryHold\",\"sessionId\":\"assignment\",\"questerName\":\"Test Quester\",\"questerWorldId\":1,\"travelSequence\":1}",
+                CoppeliaQstContract.JsonOptions)!;
+            typeof(CoppeliaTravelService).GetField("ride", fields)!.SetValue(travel, new HealRiderCommand { SessionId = "assignment", LegId = 1 });
+            typeof(CoppeliaTravelService).GetField("rideOwnsMount", fields)!.SetValue(travel, true);
+            typeof(CoppeliaTravelService).GetField("latestTravel", fields)!.SetValue(travel, request);
+            var qst = (CoppeliaQstIpcService)System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(typeof(CoppeliaQstIpcService));
+            typeof(CoppeliaQstIpcService).GetField("gate", fields)!.SetValue(qst, new object());
+            typeof(CoppeliaQstIpcService).GetField("travelService", fields)!.SetValue(qst, travel);
+            var assignmentType = typeof(CoppeliaQstIpcService).GetNestedType("Assignment", BindingFlags.NonPublic)!;
+            var sourceType = typeof(CoppeliaQstIpcService).GetNestedType("AssignmentSource", BindingFlags.NonPublic)!;
+            void Assign(string source) => typeof(CoppeliaQstIpcService).GetField("assignment", fields)!.SetValue(qst,
+                Activator.CreateInstance(assignmentType, Enum.Parse(sourceType, source), "assignment", "Test Quester", (ushort)1, false, "Quester"));
+            CoppeliaQstCommandResponse Send(CoppeliaQstCommand command) => (CoppeliaQstCommandResponse)typeof(CoppeliaQstIpcService)
+                .GetMethod("HandleCommand", fields)!.Invoke(qst, new object[] { command })!;
+            Assign("Newb");
+            Assert.False(Send(request).Accepted);
+            Assign("Qst");
+            Assert.False(Send(request with { SessionId = "stale" }).Accepted);
+            Assert.False(Send(request with { QuesterName = "Replacement" }).Accepted);
+            Assert.True(Send(request).Accepted);
+            Assert.True(travel.NavigationRecoveryHeld);
+            Assert.False(running); Assert.False(finding);
+            Assert.Contains("vnavmesh.Path.Stop", calls);
+            Assert.Contains("vnavmesh.Nav.PathfindCancelAll", calls);
+            Assert.Null(typeof(CoppeliaTravelService).GetField("ride", fields)!.GetValue(travel));
+            Assert.Null(typeof(CoppeliaTravelService).GetField("latestTravel", fields)!.GetValue(travel));
+            var stoppedCalls = calls.Count;
+            Assert.True(Send(request).Accepted); // duplicate does not stop or teleport twice
+            travel.Update();
+            Assert.False(travel.Apply(request with { Action = "TravelUpdate" }).Accepted);
+            Assert.Contains("recovery", travel.UpdateLineOfSightRescue(10, Vector3.One));
+            Assert.Equal(stoppedCalls, calls.Count);
+            Assert.False(Send(request with { Action = "RecoveryComplete", TravelSequence = 2 }).Accepted);
+            Assert.True(Send(request with { Action = "RecoveryComplete" }).Accepted);
+            Assert.True(travel.NavigationRecoveryHeld); // remains quiescent until assignment release
+            Assert.False(travel.Apply(request with { Action = "TravelUpdate", TravelSequence = 100 }).Accepted);
+            Assert.False(Send(request).Accepted); // retired generation cannot reacquire the hold
+            Assert.True(Send(request with { TravelSequence = 2 }).Accepted);
+            Assert.True(Send(request with { Action = "RecoveryCancel", TravelSequence = 2 }).Accepted);
+            travel.ForgetNavigationRecovery();
+            Assert.False(travel.NavigationRecoveryHeld);
+            Assert.All(calls, endpoint => Assert.True(endpoint is "vnavmesh.Path.Stop" or "vnavmesh.Nav.PathfindCancelAll"));
+        }
+        finally
+        {
+            typeof(Plugin).GetProperty("PluginInterface", statics)!.SetValue(null, oldPi);
+            typeof(Plugin).GetProperty("Log", statics)!.SetValue(null, oldLog);
+        }
+    }
+
     private static readonly DateTime Started = new(2026, 9, 7, 0, 0, 0, DateTimeKind.Utc);
 
     [Fact]

@@ -1,5 +1,11 @@
 # Changelog
 
+- Added assignment-scoped navigation recovery through the existing QST command endpoint. Companion recovery can
+  stop following, boarding, passenger travel and queued vnav paths without waiting for landing. Navigation and combat
+  actions remain held through evacuation; completion retires stale travel until assignment release. Stale generations,
+  other assignments and standalone Newb pairing cannot control the hold. Update Companion on both clients for
+  coordinated teleport timing and arrival verification. Live validation remains pending.
+
 - HealRider accepts Companion's coordinated automatic cleanup retry after terminal transport failure. Repeated retries
   preserve cleanup already in progress, stop only owned movement, and finish landing/dismount without replaying the
   failed destination. Status now describes cleanup instead of asking for Helper activation.

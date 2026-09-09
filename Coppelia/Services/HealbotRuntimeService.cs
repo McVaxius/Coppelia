@@ -93,6 +93,11 @@ internal sealed class HealbotRuntimeService : IDisposable
 
     public HealbotDecisionOutcome Update()
     {
+        if (plugin.CoppeliaTravelService.NavigationRecoveryHeld)
+        {
+            StatusText = "Navigation recovery holds automation.";
+            return HealbotDecisionOutcome.Blocked;
+        }
         if (plugin.CoppeliaTravelService.HealRiderActive)
         {
             StatusText = "Holding actions during HealRider transport.";

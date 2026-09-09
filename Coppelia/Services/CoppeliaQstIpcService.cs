@@ -129,6 +129,8 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             if (!started || disposed)
                 return;
 
+            if (travelService.NavigationRecoveryHeld) return;
+
             var inDuty = Plugin.Condition[ConditionFlag.BoundByDuty];
             if (inDuty && !wasBoundByDuty)
                 boundByDutySinceUtc = DateTime.UtcNow;
@@ -479,6 +481,12 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             try
             {
                 var command = JsonSerializer.Deserialize<HealRiderCommand>(requestJson, CoppeliaQstContract.JsonOptions);
+                if (travelService.NavigationRecoveryHeld)
+                    return JsonSerializer.Serialize(new HealRiderStatus
+                    {
+                        SessionId = command?.SessionId ?? string.Empty, LegId = command?.LegId ?? 0,
+                        State = "Blocked", Blocker = "Navigation recovery holds this assignment.",
+                    }, CoppeliaQstContract.JsonOptions);
                 if (command == null || command.Version != 2 || !travelService.OwnsHealRiderCleanup(command) &&
                     (assignment?.Source != AssignmentSource.Qst ||
                     assignment.SessionId != command.SessionId || assignment.QuesterName != command.QuesterName ||
@@ -523,6 +531,10 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             if (command.Action is "Activate" or "Deactivate")
                 return command.Action == "Activate" ? ActivateQst() : DeactivateQst();
 
+            if (travelService.NavigationRecoveryHeld && command.Action is not
+                ("RecoveryObserve" or "RecoveryHold" or "RecoveryComplete" or "RecoveryCancel" or "Release"))
+                return Failed("Navigation recovery holds this assignment until release.");
+
             if (!IsValidSessionId(command.SessionId))
                 return Failed("Invalid QST session ID.");
 
@@ -533,7 +545,8 @@ internal sealed class CoppeliaQstIpcService : IDisposable
                 "StartDutyDad" => StartDutyDad(command),
                 "StartDutyInside" => QueueDutyInside(command),
                 "Release" => Release(command.SessionId),
-                _ => Failed("Unknown QST action."),
+                "RecoveryObserve" or "RecoveryHold" or "RecoveryComplete" or "RecoveryCancel" => ApplyNavigationRecovery(command),
+                _ => Failed("Unsupported QST operation. Update HealBot and Companion on both clients."),
             };
         }
     }
@@ -551,6 +564,18 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
         RestoreActivationSnapshot(ActivationOwner.Qst);
         return Failed(activation.Blocker);
+    }
+
+    private CoppeliaQstCommandResponse ApplyNavigationRecovery(CoppeliaQstCommand command)
+    {
+        if (assignment?.Source != AssignmentSource.Qst || assignment.SessionId != command.SessionId ||
+            assignment.QuesterName != command.QuesterName || assignment.QuesterWorldId != command.QuesterWorldId ||
+            assignment.PendingDutySequence != 0 || assignment.DadDutyRunActive || assignment.DutyOwned)
+            return Failed("Navigation recovery requires the exact QST assignment outside duty ownership.");
+        if (command.Action == "RecoveryObserve") return Accepted("Navigation recovery observation supported.");
+        return command.Action == "RecoveryHold"
+            ? travelService.HoldForNavigationRecovery(command.TravelSequence)
+            : travelService.FinishNavigationRecovery(command.TravelSequence);
     }
 
     private CoppeliaQstCommandResponse DeactivateQst()
@@ -884,6 +909,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         lock (gate)
         {
             travelService.Release();
+            travelService.ForgetNavigationRecovery();
             if (assignment == null)
                 return;
 
