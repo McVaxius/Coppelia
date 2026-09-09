@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <PlatformTarget>x64</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
@@ -29,8 +30,8 @@
       <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\Dalamud.Bindings.ImGui.dll</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="FFXIVClientStructs">
-      <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
+    <Reference Include="FFXIVClientStructs;InteropGenerator.Runtime">
+      <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\%(Identity).dll</HintPath>
       <Private>true</Private>
     </Reference>
     <Reference Include="Lumina">

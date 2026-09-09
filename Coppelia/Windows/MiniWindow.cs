@@ -45,6 +45,8 @@ public sealed class MiniWindow : Window, IDisposable
 
         DrawCompanion();
         DrawHealingContext();
+        if (plugin.CoppeliaTravelService.HealRiderActive)
+            ImGui.TextWrapped(plugin.CoppeliaTravelService.State);
 
         CoppeliaUi.SectionHeader("Operational status");
         var status = plugin.GetOperationalStatus();

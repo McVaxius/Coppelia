@@ -136,6 +136,8 @@ internal sealed class CoppeliaQstIpcService : IDisposable
                 CompleteDutyExit();
             wasBoundByDuty = inDuty;
 
+            travelService.SuspendHealRiderMounts(assignment?.PendingDutySequence != 0 && assignment != null ||
+                assignment?.DadDutyRunActive == true || assignment?.DutyOwned == true);
             travelService.Update();
             companionService.Update();
             if (!inDuty && assignment?.DadDutyRunActive == true &&
@@ -476,12 +478,13 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             try
             {
                 var command = JsonSerializer.Deserialize<HealRiderCommand>(requestJson, CoppeliaQstContract.JsonOptions);
-                if (command == null || command.Version != 1 || assignment?.Source != AssignmentSource.Qst ||
+                if (command == null || command.Version != 1 || !travelService.OwnsHealRiderCleanup(command) &&
+                    (assignment?.Source != AssignmentSource.Qst ||
                     assignment.SessionId != command.SessionId || assignment.QuesterName != command.QuesterName ||
                     assignment.QuesterWorldId != command.QuesterWorldId ||
                     assignment.DutyInviter != command.PartyInviter ||
                     (assignment.PendingDutySequence != 0 || assignment.DadDutyRunActive || assignment.DutyOwned) &&
-                    command.Action is not ("Cancel" or "DutyHandoff" or "Inspect"))
+                    command.Action is not ("Cancel" or "DutyHandoff" or "Inspect")))
                 {
                     response = new HealRiderStatus
                     {

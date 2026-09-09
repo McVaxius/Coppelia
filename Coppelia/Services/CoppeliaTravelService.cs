@@ -293,6 +293,20 @@ internal sealed partial class CoppeliaTravelService
     {
         if (UpdateHealRider())
             return;
+        if (rideMode != null && rideMountsSuspended)
+        {
+            PauseOwnedRoute();
+            State = "HealRider following suspended for duty ownership";
+            return;
+        }
+        if (ordinaryMountDeadline.HasValue && DateTime.UtcNow >= ordinaryMountDeadline.Value)
+            ordinaryMountBlocker = "Selected passenger mount preparation exceeded the pickup allowance.";
+        if (rideMode != null && !string.IsNullOrEmpty(ordinaryMountBlocker))
+        {
+            PauseOwnedRoute();
+            State = $"HealRider Blocked: {ordinaryMountBlocker}";
+            return;
+        }
         if (latestTravel == null)
             return;
 
@@ -509,13 +523,6 @@ internal sealed partial class CoppeliaTravelService
 
         MarkPriorityDestinationReached(travel, "the helper is loaded in the requested world and territory");
 
-        if (DateTime.UtcNow < actionHoldUntilUtc)
-        {
-            PauseOwnedRoute();
-            State = "Paused for a HealBot action";
-            return;
-        }
-
         var destination = routePolicy.LatestDestination;
         var distance = Vector3.Distance(localPlayer.Position, destination);
         var mounted = Plugin.Condition[ConditionFlag.Mounted];
@@ -538,6 +545,15 @@ internal sealed partial class CoppeliaTravelService
             mounting,
             flying,
             flightAvailable);
+
+        if (UpdateOrdinaryRideMount(decision.Phase == CoppeliaFollowPhase.Mount))
+            return;
+        if (DateTime.UtcNow < actionHoldUntilUtc)
+        {
+            PauseOwnedRoute();
+            State = "Paused for a HealBot action";
+            return;
+        }
 
         if (decision.Phase == CoppeliaFollowPhase.Mount)
         {
@@ -742,6 +758,9 @@ internal sealed partial class CoppeliaTravelService
     public void Release()
     {
         CancelHealRider("Assignment released");
+        rideMode = null;
+        ordinaryMountDeadline = null;
+        ordinaryMountBlocker = string.Empty;
         ClearHinterlandsRoute();
         ClearLineOfSightRescue();
         ResetTerritoryHandoff();

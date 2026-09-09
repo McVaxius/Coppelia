@@ -1,5 +1,34 @@
 # Changelog
 
+- HealRider observes the identified Quester's native RidingPillion character mode with the captured Helper, selected
+  mount, matching location, and exact two-member party. Empty or stale seat-ID arrays no longer hold an occupied ride
+  in Boarding. Departure still requires the Quester's independent serialized passenger confirmation.
+- Boarding status names the missing confirmation, and changed passenger observations are logged once. Both confirmations
+  submit the captured destination on the next update; native-observation regressions exercise departure, route deduplication,
+  incorrect mount/party/location, passenger loss, and late confirmations after cancellation or timeout.
+
+- HealRider holds boarding while passenger confirmations arrive separately, including seat movement beyond the pickup
+  radius. Both confirmations submit the captured quest destination through existing navigation; repeated observations
+  retain one owned route, and cancelled or blocked legs cannot depart after a late passenger observation.
+- Cancellation before pickup clears ordinary mount preparation without acquiring transport mount ownership. Cleanup
+  preserves actual mount observations, reports its pending condition, and records transitions and issued commands.
+  Regression coverage includes the passenger observation gap and one captured-destination navigation submission.
+
+- HealRider assignment mode now selects the passenger mount before ordinary following or catch-up. Wrong mounts land
+  and are replaced through the same bounded preparation loop as pickup; action holds cannot postpone that loop.
+  Assignment inspection does not create a ride, and duty ownership suspends ordinary mount automation.
+- Cancellation before pickup retires the leg and stops old follow movement. Cleanup waits for pending mount actions,
+  preserves its original deadline, and accepts coordinated explicit retry only for the captured character and party.
+  Production transport transition tests now record approach, preparation, departure, landing, and failure commands.
+
+- HealRider landing and cancellation now keep one 60-second cleanup deadline. Exhaustion exposes Blocked and retains
+  actual mount/party facts without continuing automatic cleanup or accepting another ride. Cleanup remains available
+  for the captured QST ride after assignment deactivation, and an explicit cleanup retry revalidates character and party.
+  Ordinary activation and plugin reload do not restart an old ride. Native passenger verification also remains required
+  during travel. The mini window shows ride stages and blockers even after the Helper role is changed.
+- Extended simulated cleanup regression checks for fixed deadlines, lingering confirmations, continuing party membership,
+  and completion requiring both endpoints. Live Regalia summon, boarding, travel, and cleanup remain unverified.
+
 - HealRider now approaches within three yalms and lands before reporting boarding readiness, including when already mounted far away. Invitations wait for completed travel; party formation, approach, and boarding use Companion's fixed pickup deadline. Departure still requires Quester confirmation plus the exact passenger seat in a two-member party. Status distinguishes transport-owned mounting so failed preparation can release parties while ordinary mounted. Companion uses a temporary FrenRider profile for pillion boarding, with no FrenRider user setup; QST v3 and existing versions are preserved.
 - Added QST-only HealRider v1 command/status IPC. HealBot owns pickup approach, selected unlocked passenger-mount summoning, exact passenger verification, flight, five-yalm arrival, landing, and cancellation; follow, LOS, healing, and companion actions yield during a ride. Companion owns party coordination and the Questionable pause/resume gate.
 - Moved the flying-gated Dravanian Hinterlands route through Idyllshire's Epilogue Gate into HealBot travel with current-world matching, latest coordinates, a two-minute timeout, and owned cancellation.
