@@ -41,7 +41,8 @@ internal sealed class CoppeliaFollowPolicy
         bool helperMounted,
         bool helperMounting,
         bool helperFlying,
-        bool flightAvailable)
+        bool flightAvailable,
+        bool keepPassengerMount = false)
     {
         var resumeDistance = questerMounted ? MountedResumeDistance : OnFootResumeDistance;
         var stopDistance = questerMounted ? MountedStopDistance : OnFootStopDistance;
@@ -80,7 +81,7 @@ internal sealed class CoppeliaFollowPolicy
                 RouteRange: stopDistance);
         }
 
-        if (!questerMounted && helperMounted && !helperMounting && distance <= OnFootResumeDistance)
+        if (!keepPassengerMount && !questerMounted && helperMounted && !helperMounting && distance <= OnFootResumeDistance)
         {
             return new CoppeliaFollowDecision(
                 CoppeliaFollowPhase.Dismount,

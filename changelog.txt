@@ -1,5 +1,11 @@
 # Changelog
 
+- HealRider prepares the selected passenger mount before flying to the stationary pickup position. Ordinary rendezvous
+  preserves that mount instead of dismounting and summoning it again. Boarding requires a landed selected mount and the
+  exact party: within three yalms immediately, or continuously under ten yalms for five seconds when geometry obstructs approach.
+- Mounted continuation survives staggered boundary loading, verifies both passenger observations again, acknowledges each
+  new destination, and retains transport ownership until final dismount. Failed pickup and boundary travel remain blocked.
+
 - HealRider observes the identified Quester's native RidingPillion character mode with the captured Helper, selected
   mount, matching location, and exact two-member party. Empty or stale seat-ID arrays no longer hold an occupied ride
   in Boarding. Departure still requires the Quester's independent serialized passenger confirmation.

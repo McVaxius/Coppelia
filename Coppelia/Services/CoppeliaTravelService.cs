@@ -544,7 +544,8 @@ internal sealed partial class CoppeliaTravelService
             mounted,
             mounting,
             flying,
-            flightAvailable);
+            flightAvailable,
+            keepPassengerMount: rideMode != null && !rideMountsSuspended);
 
         if (UpdateOrdinaryRideMount(decision.Phase == CoppeliaFollowPhase.Mount))
             return;

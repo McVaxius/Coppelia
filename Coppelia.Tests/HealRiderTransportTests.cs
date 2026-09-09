@@ -21,6 +21,46 @@ public sealed class HealRiderTransportTests
 {
     private static readonly DateTime Started = new(2026, 9, 7, 0, 0, 0, DateTimeKind.Utc);
 
+    [Fact]
+    public void SelectedPassengerMountSurvivesOrdinaryRendezvousLandingAndPickup()
+    {
+        var following = new CoppeliaFollowPolicy();
+        Assert.Equal(CoppeliaFollowPhase.Follow, following.Evaluate(100, false, false, true, false, true, true, true).Phase);
+        Assert.Equal(CoppeliaFollowPhase.Land, following.Evaluate(3, false, false, true, false, true, true, true).Phase);
+        Assert.Equal(CoppeliaFollowPhase.Idle, following.Evaluate(3, false, false, true, false, false, true, true).Phase);
+        var actions = new List<string>();
+        var nextAction = DateTime.MinValue;
+        Assert.Equal("Waiting", HealRiderPolicy.PrepareMount(Started, Started.AddSeconds(60), ref nextAction,
+            true, false, false, true, true, true, action => { actions.Add(action); return true; }));
+        Assert.Equal("Ready", HealRiderPolicy.PrepareMount(Started.AddSeconds(2), Started.AddSeconds(60), ref nextAction,
+            true, false, false, false, true, true, action => { actions.Add(action); return true; }));
+        Assert.Equal(new[] { "Land" }, actions);
+        Assert.Equal(CoppeliaFollowPhase.Dismount, following.Evaluate(3, false, false, true, false, false, true).Phase);
+    }
+
+    [Fact]
+    public void GeometryAllowanceRequiresFiveContinuousSecondsUnderTenYalmsAndGroundedSelectedMount()
+    {
+        DateTime? nearSince = null;
+        Assert.False(HealRiderPolicy.ObservePickupRange(9, Started, ref nearSince));
+        Assert.False(HealRiderPolicy.ObservePickupRange(9, Started.AddSeconds(4.99), ref nearSince));
+        Assert.True(HealRiderPolicy.ObservePickupRange(9.99f, Started.AddSeconds(5), ref nearSince));
+        var actions = new List<string>();
+        var state = HealRiderPolicy.AdvanceTransport("Preparing", 9, 100, true, false, false, true,
+            false, false, true, action => { actions.Add(action); return "Ready"; }, settledPickupRange: true);
+        Assert.Equal("Boarding", state.State);
+        Assert.Equal(new[] { "Stop", "PrepareMount" }, actions);
+        Assert.True(HealRiderPolicy.GroundedForBoarding(9, false, false, true, true));
+        Assert.False(HealRiderPolicy.GroundedForBoarding(9, true, false, true, true));
+        Assert.False(HealRiderPolicy.GroundedForBoarding(9, false, false, false, true));
+        Assert.False(HealRiderPolicy.GroundedForBoarding(10, false, false, true, true));
+        Assert.False(HealRiderPolicy.ObservePickupRange(10, Started.AddSeconds(6), ref nearSince));
+        Assert.False(HealRiderPolicy.ObservePickupRange(9, Started.AddSeconds(7), ref nearSince));
+        Assert.False(HealRiderPolicy.ObservePickupRange(float.NaN, Started.AddSeconds(12), ref nearSince));
+        Assert.Null(nearSince);
+        Assert.False(HealRiderPolicy.CanDepart(true, false, true));
+    }
+
     [Theory]
     [InlineData(false, false)]
     [InlineData(true, false)]

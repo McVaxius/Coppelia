@@ -63,7 +63,8 @@ internal static class HealRiderPolicy
 {
     public static (string State, string Blocker) AdvanceTransport(string state, float pickupDistance,
         float destinationDistance, bool mounted, bool mounting, bool flying, bool selectedMount,
-        bool passengerConfirmed, bool nativePassenger, bool partyReady, Func<string, string> issue)
+        bool passengerConfirmed, bool nativePassenger, bool partyReady, Func<string, string> issue,
+        bool settledPickupRange = false)
     {
         switch (state)
         {
@@ -74,7 +75,7 @@ internal static class HealRiderPolicy
                     return issue("PrepareTravelMount") == "Blocked"
                         ? ("Cancelling", "The selected passenger mount could not be prepared.") : (state, string.Empty);
                 }
-                if (pickupDistance > BoardingTolerance)
+                if (pickupDistance > BoardingTolerance && !settledPickupRange)
                 {
                     issue("Approach");
                     return (state, string.Empty);
@@ -99,7 +100,7 @@ internal static class HealRiderPolicy
                 if (passengerConfirmed || nativePassenger)
                     return (state, passengerConfirmed ? "Waiting for the Helper's native passenger observation."
                         : "Waiting for the Quester's passenger confirmation.");
-                return GroundedForBoarding(pickupDistance, flying, mounting, true)
+                return GroundedForBoarding(pickupDistance, flying, mounting, true, settledPickupRange)
                     ? (state, "Waiting for both passenger confirmations.") : ("Preparing", string.Empty);
             case "Transit":
                 if (!mounted || !selectedMount || !CanDepart(passengerConfirmed, nativePassenger, partyReady))
@@ -175,8 +176,21 @@ internal static class HealRiderPolicy
         bool travelReady, bool partyReady, bool solo) =>
         now < deadlineUtc && now >= nextInviteUtc && travelReady && !partyReady && solo;
 
-    public static bool GroundedForBoarding(float distance, bool flying, bool mounting, bool selectedMount) =>
-        float.IsFinite(distance) && distance <= BoardingTolerance && !flying && !mounting && selectedMount;
+    public static bool GroundedForBoarding(float distance, bool flying, bool mounting, bool selectedMount,
+        bool settledPickupRange = false) =>
+        float.IsFinite(distance) && (distance <= BoardingTolerance || settledPickupRange && distance < 10f) &&
+        !flying && !mounting && selectedMount;
+
+    public static bool ObservePickupRange(float distance, DateTime now, ref DateTime? nearSince)
+    {
+        if (!float.IsFinite(distance) || distance >= 10f)
+        {
+            nearSince = null;
+            return false;
+        }
+        nearSince ??= now;
+        return now - nearSince.Value >= TimeSpan.FromSeconds(5);
+    }
 
     public static bool MustWaitForDismount(bool transportOwnsMount, bool mounted) =>
         transportOwnsMount && mounted;
