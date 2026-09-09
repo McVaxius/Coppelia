@@ -6,7 +6,7 @@
     "Punchline": "Stand-alone healing/JOAT/powerleveling and authenticated Helper/Newb pairing.",
     "Description": "HealBot has four operating roles: Off, Stand-alone, Helper, and Newb. Stand-alone runs HealBot, healer-first JOAT, or BRD/MCH PowerlevelBot without networking. Helper listens for one authenticated Newb and activates JOAT for remote healing and chase; Newb connects asynchronously and performs no local healing or attacking. Pairing traffic is authenticated but not encrypted, so names and coordinates remain visible on the network. Use /healbot, /hb, or /copellia to open.",
     "InternalName": "Coppelia",
-    "AssemblyVersion": "2.0.1.7",
+    "AssemblyVersion": "2.1.0.0",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 15,
     "Tags": [
@@ -19,8 +19,8 @@
       "utility"
     ],
     "RepoUrl": "https://github.com/McVaxius/Coppelia",
-    "DownloadLinkInstall": "https://github.com/McVaxius/Coppelia/releases/download/v2.0.1.7/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/McVaxius/Coppelia/releases/download/v2.0.1.7/latest.zip",
+    "DownloadLinkInstall": "https://github.com/McVaxius/Coppelia/releases/download/v2.1.0.0/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/McVaxius/Coppelia/releases/download/v2.1.0.0/latest.zip",
     "DownloadLinkTesting": "https://github.com/McVaxius/Coppelia/releases/latest/download/latest.zip",
     "IconUrl": "https://raw.githubusercontent.com/McVaxius/Coppelia/main/Coppelia/images/icon.png"
   }

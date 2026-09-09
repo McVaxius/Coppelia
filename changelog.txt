@@ -1,5 +1,13 @@
 # Changelog
 
+- All paired Helper following now starts at ten yalms, with or without HealRider, and stops at nine yalms on foot
+  or five yalms mounted. Mount selection, landing, boarding, action ranges, and combat ownership are unchanged.
+- Ordinary following uses the visible exact pair's live position after location checks, retaining authenticated
+  snapshots for remote travel and unseen targets. Completed routes can resume without a new snapshot; rejected
+  routes, other navigation owners, action holds, and fresh-snapshot waits after ride cleanup retain their guards.
+- Same-territory teleport completion now accepts observed loading or physical arrival beside the exact requested
+  aetheryte while Lifestream is idle. A missing busy transition no longer strands an arrived Helper until the Quester moves.
+
 - HealRider following now starts beyond nine yalms and uses nine yalms for on-foot stopping and navigation tolerance,
   allowing physical rendezvous from ten to twenty yalms apart. Mounted stopping remains five yalms, and ordinary
   following outside HealRider keeps its existing distances.

@@ -217,7 +217,7 @@ public sealed class CoppeliaRoutePolicyTests
     }
 
     [Fact]
-    public void GenuinelyCompletedRouteDoesNotRestartTheSameSnapshot()
+    public void CompletedRouteCanResumeOrdinaryFollowingWithoutANewerSnapshot()
     {
         var policy = ReadyPolicy(new Vector3(1, 2, 3));
         policy.MarkStartupAccepted(Started);
@@ -229,6 +229,9 @@ public sealed class CoppeliaRoutePolicyTests
             CoppeliaRouteActivity.Completed,
             policy.Observe(pathfindInProgress: false, pathRunning: false, Started.AddMilliseconds(200)));
         Assert.False(policy.CanStart(pathfindInProgress: false, pathRunning: false));
+        Assert.True(policy.CanStart(pathfindInProgress: false, pathRunning: false, resumeCompletedRoute: true));
+        Assert.False(policy.CanStart(pathfindInProgress: true, pathRunning: false, resumeCompletedRoute: true));
+        Assert.False(policy.CanStart(pathfindInProgress: false, pathRunning: true, resumeCompletedRoute: true));
     }
 
     [Fact]
@@ -241,6 +244,8 @@ public sealed class CoppeliaRoutePolicyTests
             CoppeliaRouteActivity.Rejected,
             policy.Observe(pathfindInProgress: false, pathRunning: false, Started));
         Assert.False(policy.CanStart(pathfindInProgress: false, pathRunning: false));
+        policy.UpdateVisibleDestination(new Vector3(4, 5, 6));
+        Assert.False(policy.CanStart(pathfindInProgress: false, pathRunning: false, resumeCompletedRoute: true));
 
         policy.AcceptSnapshot(2, new Vector3(4, 5, 6));
         Assert.True(policy.CanStart(pathfindInProgress: false, pathRunning: false));
@@ -349,7 +354,7 @@ public sealed class CoppeliaRoutePolicyTests
 
         Assert.Contains("vnavmesh.SimpleMove.PathfindInProgress", source, StringComparison.Ordinal);
         Assert.Contains("routePolicy.Observe(isPathfinding, isPathRunning, DateTime.UtcNow)", source, StringComparison.Ordinal);
-        Assert.Contains("routePolicy.CanStart(isPathfinding, isPathRunning)", source, StringComparison.Ordinal);
+        Assert.Contains("routePolicy.CanStart(isPathfinding, isPathRunning, resumeCompletedRoute: true)", source, StringComparison.Ordinal);
         Assert.Contains("lineOfSightRescueRoutePolicy.CanStart(isPathfinding, isPathRunning)", source, StringComparison.Ordinal);
         Assert.Equal(2, Count(source, "moveCloseTo.InvokeFunc("));
         Assert.Contains("LOS blocked; waiting for current movement owner", source, StringComparison.Ordinal);

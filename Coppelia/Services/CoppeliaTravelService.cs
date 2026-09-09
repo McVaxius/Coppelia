@@ -577,7 +577,16 @@ internal sealed partial class CoppeliaTravelService
 
         MarkPriorityDestinationReached(travel, "the helper is loaded in the requested world, territory, and instance");
 
-        var destination = routePolicy.LatestDestination;
+        // Remote travel and cleanup gates above still use the authenticated snapshot.
+        // A visible exact pair also proves the local instance for legacy Newb following.
+        var visibleQuester = !IsBetweenAreas()
+            ? Plugin.ObjectTable.OfType<IPlayerCharacter>().FirstOrDefault(player =>
+                player.Name.ToString() == travel.QuesterName &&
+                player.HomeWorld.RowId == travel.QuesterWorldId &&
+                player.CurrentWorld.RowId == travel.QuesterCurrentWorldId)
+            : null;
+        var destination = visibleQuester?.Position ?? new Vector3(travel.X, travel.Y, travel.Z);
+        routePolicy.UpdateVisibleDestination(destination);
         var distance = Vector3.Distance(localPlayer.Position, destination);
         var mounted = Plugin.Condition[ConditionFlag.Mounted];
         var mounting = Plugin.Condition[ConditionFlag.Mounting71];
@@ -599,8 +608,7 @@ internal sealed partial class CoppeliaTravelService
             mounting,
             flying,
             flightAvailable,
-            keepPassengerMount: rideMode != null && !rideMountsSuspended && string.IsNullOrEmpty(ordinaryMountBlocker),
-            healRiderActive: rideMode != null);
+            keepPassengerMount: rideMode != null && !rideMountsSuspended && string.IsNullOrEmpty(ordinaryMountBlocker));
 
         if (UpdateOrdinaryRideMount(decision.Phase == CoppeliaFollowPhase.Mount))
             return;
@@ -659,7 +667,7 @@ internal sealed partial class CoppeliaTravelService
             {
                 State = travel.QuesterMounted
                     ? "Landing while remaining mounted"
-                    : $"Landing within {CoppeliaFollowPolicy.OnFootResumeDistance:F0} yalms before dismounting";
+                    : $"Landing within {CoppeliaFollowPolicy.OnFootDismountDistance:F0} yalms before dismounting";
                 return;
             }
 
@@ -669,7 +677,7 @@ internal sealed partial class CoppeliaTravelService
                 PauseForAction();
                 State = travel.QuesterMounted
                     ? "Landing while remaining mounted"
-                    : $"Landing within {CoppeliaFollowPolicy.OnFootResumeDistance:F0} yalms before dismounting";
+                    : $"Landing within {CoppeliaFollowPolicy.OnFootDismountDistance:F0} yalms before dismounting";
                 return;
             }
 
@@ -681,7 +689,7 @@ internal sealed partial class CoppeliaTravelService
         {
             if (DateTime.UtcNow < nextMountActionUtc)
             {
-                State = $"Waiting to dismount within {CoppeliaFollowPolicy.OnFootResumeDistance:F0} yalms";
+                State = $"Waiting to dismount within {CoppeliaFollowPolicy.OnFootDismountDistance:F0} yalms";
                 return;
             }
 
@@ -689,7 +697,7 @@ internal sealed partial class CoppeliaTravelService
             if (TryUseGeneralAction(DismountGeneralActionId, out var dismountFailure))
             {
                 PauseForAction();
-                State = $"Dismounting within {CoppeliaFollowPolicy.OnFootResumeDistance:F0} yalms";
+                State = $"Dismounting within {CoppeliaFollowPolicy.OnFootDismountDistance:F0} yalms";
                 return;
             }
 
@@ -769,7 +777,7 @@ internal sealed partial class CoppeliaTravelService
                 return;
             }
 
-            if (!routePolicy.CanStart(isPathfinding, isPathRunning))
+            if (!routePolicy.CanStart(isPathfinding, isPathRunning, resumeCompletedRoute: true))
                 return;
 
             destination = routePolicy.LatestDestination;
@@ -1178,9 +1186,15 @@ internal sealed partial class CoppeliaTravelService
                                 : Plugin.ClientState.TerritoryType == lifestreamRequest.TerritoryId);
         var previousActivity = lifestreamPolicy.Activity;
         var busyAvailable = TryGetLifestreamBusy(out var busy);
+        // Native teleports may never make Lifestream busy. Observed loading or
+        // physical arrival at the exact crystal also proves same-territory arrival.
+        var atExactAetheryte = targetMatches && !lifestreamRequest.IsWorld && lifestreamRequest.AetheryteId > 0 &&
+            Plugin.ObjectTable.Any(obj => obj.ObjectKind == ObjectKind.Aetheryte &&
+                obj.BaseId == lifestreamRequest.AetheryteId && Vector3.Distance(localPlayer.Position, obj.Position) < 10f);
         var targetReached = targetMatches &&
                             (!lifestreamRequest.RequireBusyCompletion ||
-                             previousActivity == CoppeliaLifestreamActivity.Busy && busyAvailable && !busy);
+                             busyAvailable && !busy &&
+                             (previousActivity == CoppeliaLifestreamActivity.Busy || lifestreamObservedLoading || atExactAetheryte));
         if (targetReached)
         {
             lifestreamPolicy.Observe(busy: false, targetReached: true, utcNow: DateTime.UtcNow);

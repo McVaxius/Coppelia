@@ -26,11 +26,10 @@ internal sealed record CoppeliaFollowDecision(
 
 internal sealed class CoppeliaFollowPolicy
 {
-    public const float MountedResumeDistance = 30f;
+    public const float ResumeDistance = 10f;
     public const float MountedStopDistance = 5f;
-    public const float OnFootResumeDistance = 20f;
-    public const float OnFootStopDistance = 10f;
-    public const float HealRiderFollowDistance = 9f;
+    public const float OnFootStopDistance = 9f;
+    public const float OnFootDismountDistance = 20f;
     public const float MountCatchUpDistance = 50f;
 
     public bool IsFollowing { get; private set; }
@@ -43,15 +42,10 @@ internal sealed class CoppeliaFollowPolicy
         bool helperMounting,
         bool helperFlying,
         bool flightAvailable,
-        bool keepPassengerMount = false,
-        bool healRiderActive = false)
+        bool keepPassengerMount = false)
     {
-        // Rendezvous requires physical separation strictly below ten yalms.
-        var onFootStopDistance = healRiderActive ? HealRiderFollowDistance : OnFootStopDistance;
-        var resumeDistance = healRiderActive ? HealRiderFollowDistance
-            : questerMounted ? MountedResumeDistance : OnFootResumeDistance;
-        var stopDistance = questerMounted ? MountedStopDistance : onFootStopDistance;
-        IsFollowing = IsFollowing ? distance > stopDistance : distance > resumeDistance;
+        var stopDistance = questerMounted ? MountedStopDistance : OnFootStopDistance;
+        IsFollowing = IsFollowing ? distance > stopDistance : distance >= ResumeDistance;
 
         if (helperMounting)
         {
@@ -76,7 +70,7 @@ internal sealed class CoppeliaFollowPolicy
                          !questerFlying &&
                          (questerMounted
                              ? !IsFollowing || distance <= MountedStopDistance
-                             : distance <= OnFootResumeDistance);
+                             : distance <= OnFootDismountDistance);
         if (shouldLand)
         {
             return new CoppeliaFollowDecision(
@@ -86,13 +80,13 @@ internal sealed class CoppeliaFollowPolicy
                 RouteRange: stopDistance);
         }
 
-        if (!keepPassengerMount && !questerMounted && helperMounted && !helperMounting && distance <= OnFootResumeDistance)
+        if (!keepPassengerMount && !questerMounted && helperMounted && !helperMounting && distance <= OnFootDismountDistance)
         {
             return new CoppeliaFollowDecision(
                 CoppeliaFollowPhase.Dismount,
                 IsFollowing,
                 UseFlight: false,
-                RouteRange: onFootStopDistance);
+                RouteRange: OnFootStopDistance);
         }
 
         if (!IsFollowing)
@@ -111,7 +105,7 @@ internal sealed class CoppeliaFollowPolicy
             UseFlight: mountedChase && flightAvailable,
             RouteRange: mountedChase || questerMounted
                 ? MountedStopDistance
-                : onFootStopDistance);
+                : OnFootStopDistance);
     }
 
     public void Reset() => IsFollowing = false;
@@ -167,6 +161,12 @@ internal sealed class CoppeliaRoutePolicy
             StartupRejected = false;
     }
 
+    public void UpdateVisibleDestination(Vector3 destination)
+    {
+        if (HasDestination)
+            LatestDestination = destination;
+    }
+
     public CoppeliaRouteActivity Observe(bool pathfindInProgress, bool pathRunning, DateTime utcNow)
     {
         var busy = pathfindInProgress || pathRunning;
@@ -204,13 +204,14 @@ internal sealed class CoppeliaRoutePolicy
         return busy ? CoppeliaRouteActivity.Other : CoppeliaRouteActivity.Idle;
     }
 
-    public bool CanStart(bool pathfindInProgress, bool pathRunning) =>
+    public bool CanStart(bool pathfindInProgress, bool pathRunning, bool resumeCompletedRoute = false) =>
         HasDestination &&
         !OwnsRoute &&
         !StartupRejected &&
         !pathfindInProgress &&
         !pathRunning &&
-        (LatestSequence > lastStartedSequence || restartAfterPause);
+        (LatestSequence > lastStartedSequence || restartAfterPause ||
+         resumeCompletedRoute && observedOwnedMovement);
 
     public void MarkStartupAccepted(DateTime utcNow)
     {

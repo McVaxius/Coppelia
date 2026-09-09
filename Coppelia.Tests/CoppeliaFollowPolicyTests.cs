@@ -19,27 +19,29 @@ public sealed class CoppeliaFollowPolicyTests
     }
 
     [Fact]
-    public void MountedFollowResumesBeyondThirtyAndStopsAtFive()
+    public void MountedFollowResumesAtTenAndStopsAtFive()
     {
         var policy = new CoppeliaFollowPolicy();
 
-        Assert.False(Evaluate(policy, 30f, questerMounted: true, helperMounted: true).IsFollowing);
-        Assert.True(Evaluate(policy, 30.1f, questerMounted: true, helperMounted: true).IsFollowing);
+        Assert.False(Evaluate(policy, 9.99f, questerMounted: true, helperMounted: true).IsFollowing);
+        Assert.True(Evaluate(policy, 10f, questerMounted: true, helperMounted: true).IsFollowing);
         Assert.True(Evaluate(policy, 5.1f, questerMounted: true, helperMounted: true).IsFollowing);
         Assert.False(Evaluate(policy, 5f, questerMounted: true, helperMounted: true).IsFollowing);
-        Assert.False(Evaluate(policy, 30f, questerMounted: true, helperMounted: true).IsFollowing);
+        Assert.False(Evaluate(policy, 9.99f, questerMounted: true, helperMounted: true).IsFollowing);
+        Assert.True(Evaluate(policy, 10.01f, questerMounted: true, helperMounted: true).IsFollowing);
     }
 
     [Fact]
-    public void OnFootFollowResumesBeyondTwentyAndStopsAtTen()
+    public void OnFootFollowResumesAtTenAndStopsAtNine()
     {
         var policy = new CoppeliaFollowPolicy();
 
-        Assert.False(Evaluate(policy, 20f).IsFollowing);
-        Assert.True(Evaluate(policy, 20.1f).IsFollowing);
-        Assert.True(Evaluate(policy, 10.1f).IsFollowing);
-        Assert.False(Evaluate(policy, 10f).IsFollowing);
-        Assert.False(Evaluate(policy, 20f).IsFollowing);
+        Assert.False(Evaluate(policy, 9.99f).IsFollowing);
+        Assert.True(Evaluate(policy, 10f).IsFollowing);
+        Assert.True(Evaluate(policy, 9.01f).IsFollowing);
+        Assert.False(Evaluate(policy, 9f).IsFollowing);
+        Assert.False(Evaluate(policy, 9.99f).IsFollowing);
+        Assert.True(Evaluate(policy, 10.01f).IsFollowing);
     }
 
     [Theory]
@@ -47,15 +49,15 @@ public sealed class CoppeliaFollowPolicyTests
     [InlineData(false, true)]
     [InlineData(true, false)]
     [InlineData(true, true)]
-    public void HealRiderApproachesBeyondNineAndKeepsMountedStoppingTighter(bool questerMounted, bool keepPassengerMount)
+    public void PassengerMountPreferenceDoesNotChangeFollowDistances(bool questerMounted, bool keepPassengerMount)
     {
         var policy = new CoppeliaFollowPolicy();
-        CoppeliaFollowDecision Decide(float distance, bool healRiderActive = true) => policy.Evaluate(
+        CoppeliaFollowDecision Decide(float distance) => policy.Evaluate(
             distance, questerMounted, false, questerMounted, false, false, false,
-            keepPassengerMount: keepPassengerMount, healRiderActive: healRiderActive);
+            keepPassengerMount: keepPassengerMount);
 
-        Assert.False(Decide(9f).IsFollowing);
-        foreach (var distance in new[] { 9.1f, 10f, 15f, 20f })
+        Assert.False(Decide(9.99f).IsFollowing);
+        foreach (var distance in new[] { 10f, 10.01f, 15f, 20f })
         {
             policy.Reset();
             var approach = Decide(distance);
@@ -68,10 +70,7 @@ public sealed class CoppeliaFollowPolicyTests
         Assert.True(Decide(stopDistance + .1f).IsFollowing);
         Assert.False(Decide(stopDistance).IsFollowing);
         Assert.False(Decide(9f).IsFollowing);
-        Assert.False(Decide(20f, healRiderActive: false).IsFollowing);
-        var ordinary = Decide(31f, healRiderActive: false);
-        Assert.True(ordinary.IsFollowing);
-        Assert.Equal(questerMounted ? 5f : 10f, ordinary.RouteRange);
+        Assert.True(Decide(10f).IsFollowing);
     }
 
     [Fact]
@@ -173,9 +172,9 @@ public sealed class CoppeliaFollowPolicyTests
         var groundFinish = Evaluate(policy, 15f);
         Assert.Equal(CoppeliaFollowPhase.Follow, groundFinish.Phase);
         Assert.False(groundFinish.UseFlight);
-        Assert.Equal(10f, groundFinish.RouteRange);
+        Assert.Equal(9f, groundFinish.RouteRange);
 
-        Assert.Equal(CoppeliaFollowPhase.Idle, Evaluate(policy, 10f).Phase);
+        Assert.Equal(CoppeliaFollowPhase.Idle, Evaluate(policy, 9f).Phase);
     }
 
     [Fact]

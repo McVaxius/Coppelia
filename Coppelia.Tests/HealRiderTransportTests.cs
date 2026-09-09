@@ -34,6 +34,7 @@ public sealed class HealRiderTransportTests
         var clock = new TransportClock();
         var player = Proxy<IPlayerCharacter>((m, _) => m.Name switch
         {
+            "get_Name" => new SeString(new Dalamud.Game.Text.SeStringHandling.Payloads.TextPayload("Test Helper")),
             "get_CurrentWorld" => new RowRef<World>(null!, 1), "get_Position" => Vector3.Zero,
             "get_IsCasting" => false, "get_IsDead" => false, "get_ObjectKind" => (ObjectKind)1, _ => null,
         });
@@ -138,6 +139,217 @@ public sealed class HealRiderTransportTests
         }
     }
 
+    [Theory]
+    [InlineData(false, false, false)]
+    [InlineData(false, true, false)]
+    [InlineData(true, false, false)]
+    [InlineData(true, true, false)]
+    [InlineData(false, false, true)]
+    [InlineData(true, false, true)]
+    public unsafe void OrdinaryFollowUsesVisiblePositionsAndResumesCompletedRoutesWithAllHoldsIntact(
+        bool mounted, bool healRider, bool newb)
+    {
+        var address = Marshal.AllocHGlobal(sizeof(Character));
+        *(Character*)address = default;
+        ((Character*)address)->Mount.MountId = 10;
+        var submitted = new List<(Vector3 Destination, float Range)>();
+        var running = false;
+        var casting = false;
+        var visible = true;
+        var questerName = "Test Quester";
+        uint questerHomeWorld = 1;
+        uint questerCurrentWorld = 1;
+        var helperPosition = Vector3.Zero;
+        var questerPosition = new Vector3(9.99f, 0, 0);
+        var pi = Proxy<IDalamudPluginInterface>((method, args) =>
+        {
+            if (method.Name != "GetIpcSubscriber") return null;
+            var endpoint = (string)args![0]!;
+            return Proxy(method.ReturnType, (call, values) =>
+            {
+                if (call.Name == "InvokeAction" && endpoint == "vnavmesh.Path.Stop") { running = false; return null; }
+                if (call.Name != "InvokeFunc") return null;
+                switch (endpoint)
+                {
+                    case "vnavmesh.Nav.IsReady": return true;
+                    case "vnavmesh.Path.IsRunning": return running;
+                    case "vnavmesh.SimpleMove.PathfindAndMoveCloseTo":
+                        submitted.Add(((Vector3)values![0]!, (float)values[2]!)); running = true; return true;
+                    default: return call.ReturnType == typeof(bool) ? false : null;
+                }
+            });
+        });
+        IPlayerCharacter Player(bool helper) => Proxy<IPlayerCharacter>((m, _) => m.Name switch
+        {
+            "get_Name" => new SeString(new Dalamud.Game.Text.SeStringHandling.Payloads.TextPayload(helper ? "Test Helper" : questerName)),
+            "get_HomeWorld" => new RowRef<World>(null!, helper ? 1U : questerHomeWorld),
+            "get_CurrentWorld" => new RowRef<World>(null!, helper ? 1U : questerCurrentWorld),
+            "get_Position" => helper ? helperPosition : questerPosition,
+            "get_IsCasting" => helper && casting, "get_CastActionId" => 1U,
+            "get_Address" => helper ? address : (nint)0, _ => null,
+        });
+        var player = Player(true);
+        var quester = Player(false);
+        var replacements = new Dictionary<string, object?>
+        {
+            ["PluginInterface"] = pi,
+            ["Log"] = Proxy<IPluginLog>((_, _) => null),
+            ["ObjectTable"] = Proxy<IObjectTable>((m, _) => m.Name switch
+            {
+                "get_LocalPlayer" => player,
+                "GetEnumerator" => ((IEnumerable<IGameObject>)(visible ? new[] { player, quester } : new[] { player })).GetEnumerator(),
+                _ => null,
+            }),
+            ["ClientState"] = Proxy<IClientState>((m, _) => m.Name switch
+            { "get_TerritoryType" => 141U, "get_IsLoggedIn" => true, _ => null }),
+            ["Condition"] = Proxy<ICondition>((m, args) => m.Name == "get_Item" &&
+                (ConditionFlag)args![0]! == ConditionFlag.Mounted && mounted),
+            ["DataManager"] = null,
+        };
+        const BindingFlags statics = BindingFlags.Static | BindingFlags.NonPublic;
+        const BindingFlags instance = BindingFlags.Instance | BindingFlags.NonPublic;
+        var previous = replacements.Keys.ToDictionary(key => key, key => typeof(Plugin).GetProperty(key, statics)!.GetValue(null));
+        try
+        {
+            foreach (var (key, value) in replacements) typeof(Plugin).GetProperty(key, statics)!.SetValue(null, value);
+            var service = new CoppeliaTravelService(new Configuration(), null!, null!);
+            void Set(string field, object? value) => typeof(CoppeliaTravelService).GetField(field, instance)!.SetValue(service, value);
+            Set("instanceReader", (Func<uint?>)(() => 0));
+            if (healRider) Set("rideMode", new HealRiderCommand { SessionId = "session", MountId = 10 });
+            var travel = new CoppeliaQstCommand("TravelUpdate", "session", "Test Quester", 1, 1, 141,
+                9.99f, 0, 0, 1, null, null, null, mounted, false, false, "Quester", 0, 0, 0,
+                InstanceId: newb ? null : 0);
+            Assert.True(service.Apply(travel).Accepted);
+            service.Update(); Assert.Empty(submitted);
+
+            // A 0.01-yalm visible movement crosses the trigger without a LAN update.
+            questerPosition.X = 10f;
+            service.Update();
+            Assert.Equal((questerPosition, mounted ? 5f : 9f), Assert.Single(submitted));
+            service.Update(); // Observe owned movement before completion.
+            helperPosition.X = questerPosition.X - (mounted ? 5f : 9f);
+            running = false; service.Update(); Assert.Single(submitted);
+            helperPosition.X = questerPosition.X - 9.99f;
+            service.Update(); Assert.Single(submitted);
+
+            helperPosition = Vector3.Zero;
+            running = true; service.Update(); // Another navigation owner at ten yalms.
+            Assert.Single(submitted);
+            running = false; casting = true; service.Update(); Assert.Single(submitted);
+            casting = false; Set("actionHoldUntilUtc", DateTime.MinValue);
+            if (healRider)
+            {
+                service.SuspendHealRiderMounts(true); service.Update(); Assert.Single(submitted);
+                service.SuspendHealRiderMounts(false);
+            }
+            service.Update(); Assert.Equal(2, submitted.Count); // Same snapshot and stationary Quester.
+            service.Update();
+            helperPosition = questerPosition; running = false; service.Update();
+            helperPosition.X = -0.01f; service.Update(); // Immediately above ten yalms.
+            Assert.Equal(3, submitted.Count);
+
+            // Invisible or inexact objects must restore the authenticated coordinates.
+            service.Update(); running = false; visible = false; service.Update();
+            Assert.Equal(new Vector3(travel.X, travel.Y, travel.Z), submitted.Last().Destination);
+            visible = true;
+            foreach (var mismatch in new[] { "name", "home", "current" })
+            {
+                questerName = mismatch == "name" ? "Another Quester" : "Test Quester";
+                questerHomeWorld = mismatch == "home" ? 2U : 1U;
+                questerCurrentWorld = mismatch == "current" ? 2U : 1U;
+                service.Update(); running = false; service.Update();
+                Assert.Equal(new Vector3(travel.X, travel.Y, travel.Z), submitted.Last().Destination);
+            }
+            questerCurrentWorld = 1;
+
+            // Production ride completion requires a newer snapshot even with a visible target.
+            typeof(CoppeliaTravelService).GetMethod("FinishRide", instance)!.Invoke(service, new object[] { "Arrived" });
+            var beforeCleanup = submitted.Count;
+            service.Update(); Assert.Contains("fresh Quester travel snapshot", service.State);
+            service.Apply(travel); service.Update(); Assert.Equal(beforeCleanup, submitted.Count);
+            service.Apply(travel with { TravelSequence = 2 }); service.Update();
+            Assert.Equal(beforeCleanup + 1, submitted.Count);
+            Assert.Equal(questerPosition, submitted.Last().Destination);
+        }
+        finally
+        {
+            foreach (var (key, value) in previous) typeof(Plugin).GetProperty(key, statics)!.SetValue(null, value);
+            Marshal.FreeHGlobal(address);
+        }
+    }
+
+    [Fact]
+    public void SameTerritoryTeleportCanVerifyPhysicalArrivalWithoutANewerSnapshotOrBusyTransition()
+    {
+        var busy = false;
+        var loading = false;
+        uint territory = 141;
+        uint crystalId = 8;
+        var crystalPosition = new Vector3(100, 0, 0);
+        var player = Proxy<IPlayerCharacter>((m, _) => m.Name switch
+        { "get_CurrentWorld" => new RowRef<World>(null!, 1), "get_Position" => Vector3.Zero, _ => null });
+        var crystal = Proxy<IGameObject>((m, _) => m.Name switch
+        {
+            "get_ObjectKind" => ObjectKind.Aetheryte, "get_BaseId" => crystalId,
+            "get_Position" => crystalPosition, _ => null,
+        });
+        var replacements = new Dictionary<string, object?>
+        {
+            ["PluginInterface"] = Proxy<IDalamudPluginInterface>((m, args) =>
+            {
+                if (m.Name != "GetIpcSubscriber") return null;
+                var endpoint = (string)args![0]!;
+                return Proxy(m.ReturnType, (call, _) => call.Name == "InvokeFunc" && call.ReturnType == typeof(bool)
+                    ? endpoint == "Lifestream.IsBusy" && busy : null);
+            }),
+            ["Log"] = Proxy<IPluginLog>((_, _) => null),
+            ["ObjectTable"] = Proxy<IObjectTable>((m, _) => m.Name switch
+            { "get_LocalPlayer" => player, "GetEnumerator" => ((IEnumerable<IGameObject>)new[] { crystal }).GetEnumerator(), _ => null }),
+            ["ClientState"] = Proxy<IClientState>((m, _) => m.Name == "get_TerritoryType" ? territory : null),
+            ["Condition"] = Proxy<ICondition>((m, args) => m.Name == "get_Item" &&
+                (ConditionFlag)args![0]! == ConditionFlag.BetweenAreas && loading),
+        };
+        const BindingFlags statics = BindingFlags.Static | BindingFlags.NonPublic;
+        const BindingFlags instance = BindingFlags.Instance | BindingFlags.NonPublic;
+        var previous = replacements.Keys.ToDictionary(key => key, key => typeof(Plugin).GetProperty(key, statics)!.GetValue(null));
+        try
+        {
+            foreach (var (key, value) in replacements) typeof(Plugin).GetProperty(key, statics)!.SetValue(null, value);
+            var service = new CoppeliaTravelService(new Configuration(), null!, null!);
+            void Set(string name, object value) => typeof(CoppeliaTravelService).GetField(name, instance)!.SetValue(service, value);
+            Set("instanceReader", (Func<uint?>)(() => loading ? null : 0));
+            var policy = (CoppeliaLifestreamRequestPolicy)typeof(CoppeliaTravelService).GetField("lifestreamPolicy", instance)!.GetValue(service)!;
+            var travel = new CoppeliaQstCommand("TravelUpdate", "session", "Test Quester", 1, 1, 141,
+                0, 0, 0, 1, null, null, null, false, false, false, "Quester", 0, 0, 0, InstanceId: 0);
+            void Arm()
+            {
+                var type = typeof(CoppeliaTravelService).GetNestedType("LifestreamRequest", BindingFlags.NonPublic)!;
+                Set("lifestreamRequest", Activator.CreateInstance(type,
+                    false, (ushort)0, 141U, "Teleporting", "Teleport failed", true, 8U, "Test Crystal")!);
+                Set("lifestreamObservedLoading", false);
+                policy.Begin(1, true, DateTime.UtcNow - CoppeliaLifestreamRequestPolicy.BusyStartupTimeout);
+            }
+            bool Held() => (bool)typeof(CoppeliaTravelService).GetMethod("ObserveLifestreamRequest", instance)!
+                .Invoke(service, new object[] { player, travel })!;
+            Arm(); Assert.True(Held()); Assert.Equal(CoppeliaLifestreamActivity.Failed, policy.Activity);
+            crystalPosition = new Vector3(3, 0, 0); crystalId = 9;
+            Assert.True(Held()); // Another crystal in the same territory is insufficient.
+            crystalId = 8; territory = 142; Assert.True(Held());
+            territory = 141; loading = true; Assert.True(Held());
+            loading = false; busy = true; Assert.True(Held());
+            busy = false; Assert.False(Held()); Assert.False(policy.HasRequest);
+
+            Arm(); crystalPosition = new Vector3(100, 0, 0);
+            Assert.True(Held()); // Same territory alone cannot prove a same-territory teleport.
+            Set("lifestreamObservedLoading", true);
+            Assert.False(Held()); Assert.False(policy.HasRequest);
+        }
+        finally
+        {
+            foreach (var (key, value) in previous) typeof(Plugin).GetProperty(key, statics)!.SetValue(null, value);
+        }
+    }
+
     [Fact]
     public void InstanceContractsPreserveUnknownZeroAndNumberAndRejectThePreviousRideVersion()
     {
@@ -222,7 +434,11 @@ public sealed class HealRiderTransportTests
         {
             ["PluginInterface"] = pi,
             ["Log"] = Proxy<IPluginLog>((_, _) => null),
-            ["ObjectTable"] = Proxy<IObjectTable>((m, _) => m.Name == "get_LocalPlayer" ? player : null),
+            ["ObjectTable"] = Proxy<IObjectTable>((m, _) => m.Name switch
+            {
+                "get_LocalPlayer" => player,
+                "GetEnumerator" => Enumerable.Empty<IGameObject>().GetEnumerator(), _ => null,
+            }),
             ["ClientState"] = Proxy<IClientState>((m, _) => m.Name == "get_TerritoryType" ? 141U : null),
             ["Condition"] = Proxy<ICondition>((m, a) => m.Name == "get_Item" &&
                 (flags.Contains((ConditionFlag)a![0]!) || (ConditionFlag)a[0]! == ConditionFlag.Mounted && mounted)),
