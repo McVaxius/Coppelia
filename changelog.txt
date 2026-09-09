@@ -1,5 +1,24 @@
 # Changelog
 
+- HealRider following now starts beyond nine yalms and uses nine yalms for on-foot stopping and navigation tolerance,
+  allowing physical rendezvous from ten to twenty yalms apart. Mounted stopping remains five yalms, and ordinary
+  following outside HealRider keeps its existing distances.
+
+- HealRider now verifies live world, territory, public instance, and the visible paired Quester before pickup. Unknown
+  instance data cannot prove rendezvous; verified zero means non-instanced. Instance mismatches reuse aetheryte travel
+  and retry /li after five idle seconds, waiting through Lifestream activity and loading and following the latest target.
+- QST contract 4 and HealRider contract 2 carry instance observations and reject older peers with an update blocker.
+  Boarding requires five continuous landed seconds under ten yalms on the selected mount, the exact party, and both
+  passenger confirmations; the immediate three-yalm bypass has been removed.
+- Final arrival escalates once after five airborne seconds to the captured quest-step XYZ with an explicit 0.5-yalm
+  three-dimensional navigation tolerance. Its route can leave the original arrival radius; arrival requires reaching
+  the precise target and observed grounding. Rejection or failed landing retains the hold and
+  the original 60-second cleanup allowance; intermediate mounted continuation remains unchanged.
+
+- Failed or timed-out HealRider passenger-mount preparation no longer permanently stops ordinary Helper following.
+  The transport blocker still refuses pickup, while following uses its normal movement and mount rules. Actual action
+  pauses, duty ownership, and active-ride cleanup retain their holds; focused transport regressions cover these paths.
+
 - HealRider prepares the selected passenger mount before flying to the stationary pickup position. Ordinary rendezvous
   preserves that mount instead of dismounting and summoning it again. Boarding requires a landed selected mount and the
   exact party: within three yalms immediately, or continuously under ten yalms for five seconds when geometry obstructs approach.

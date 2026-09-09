@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace Coppelia.Models;
 
-// Separate from QST v3: old follow/duty peers remain compatible.
+// QST v4 and HealRider v2 require verified live instance metadata.
 internal sealed record HealRiderCommand
 {
     public int Version { get; init; }
@@ -15,6 +15,7 @@ internal sealed record HealRiderCommand
     public ushort QuesterWorldId { get; init; }
     public ushort CurrentWorldId { get; init; }
     public uint TerritoryId { get; init; }
+    public uint? InstanceId { get; init; }
     public long LegId { get; init; }
     public float X { get; init; }
     public float Y { get; init; }
@@ -27,6 +28,7 @@ internal sealed record HealRiderCommand
     public uint TargetTerritoryId { get; init; }
     public long ContinuationId { get; init; }
     public uint QuesterTerritoryId { get; init; }
+    public uint? QuesterInstanceId { get; init; }
     public bool QuesterLoading { get; init; }
     public float DestinationTolerance { get; init; } = 5f;
     public float WalkingThreshold { get; init; } = 50;
@@ -39,7 +41,7 @@ internal sealed record HealRiderCommand
 
 internal sealed record HealRiderStatus
 {
-    public int Version { get; init; } = 1;
+    public int Version { get; init; } = 2;
     public string SessionId { get; init; } = string.Empty;
     public long LegId { get; init; }
     public bool Accepted { get; init; }
@@ -51,11 +53,15 @@ internal sealed record HealRiderStatus
     public bool BoardingReady { get; init; }
     public bool TransportOwnsMount { get; init; }
     public bool Mounted { get; init; }
+    public bool Flying { get; init; }
+    public bool Mounting { get; init; }
     public bool PartyReady { get; init; }
     public bool PartyReleased { get; init; }
     public bool PartyOwned { get; init; }
     public long ContinuationId { get; init; }
     public uint TerritoryId { get; init; }
+    public ushort CurrentWorldId { get; init; }
+    public uint? InstanceId { get; init; }
     public bool PassengerConfirmed { get; init; }
 }
 
@@ -64,7 +70,7 @@ internal static class HealRiderPolicy
     public static (string State, string Blocker) AdvanceTransport(string state, float pickupDistance,
         float destinationDistance, bool mounted, bool mounting, bool flying, bool selectedMount,
         bool passengerConfirmed, bool nativePassenger, bool partyReady, Func<string, string> issue,
-        bool settledPickupRange = false)
+        bool settledPickupRange = false, bool preciseLanding = false)
     {
         switch (state)
         {
@@ -75,7 +81,7 @@ internal static class HealRiderPolicy
                     return issue("PrepareTravelMount") == "Blocked"
                         ? ("Cancelling", "The selected passenger mount could not be prepared.") : (state, string.Empty);
                 }
-                if (pickupDistance > BoardingTolerance && !settledPickupRange)
+                if (pickupDistance >= 10f)
                 {
                     issue("Approach");
                     return (state, string.Empty);
@@ -83,7 +89,7 @@ internal static class HealRiderPolicy
                 issue("Stop");
                 return issue("PrepareMount") switch
                 {
-                    "Ready" => ("Boarding", string.Empty),
+                    "Ready" when settledPickupRange => ("Boarding", string.Empty),
                     "Blocked" => ("Cancelling", "The selected passenger mount could not be prepared."),
                     _ => (state, string.Empty),
                 };
@@ -113,10 +119,13 @@ internal static class HealRiderPolicy
                 issue("Stop");
                 return ("Arriving", string.Empty);
             case "Arriving":
-                if (destinationDistance > ArrivalTolerance)
+                if (!preciseLanding && destinationDistance > ArrivalTolerance)
                     return ("Cancelling", "Landing moved outside the arrival tolerance.");
-                if (!mounted && !mounting)
+                if (preciseLanding && (flying || destinationDistance > ArrivalTolerance))
+                    return (state, "Waiting for observed grounding at the captured destination.");
+                if (!flying && !mounted && !mounting)
                     return ("Arrived", string.Empty);
+                issue("Stop");
                 issue("Dismount");
                 return (state, string.Empty);
             default:
@@ -137,6 +146,7 @@ internal static class HealRiderPolicy
     }
 
     public const float ArrivalTolerance = 5f;
+    public const float PreciseLandingTolerance = 0.5f;
     public const float BoardingTolerance = 3f;
 
     public static bool AcknowledgementExpired(DateTime sent, DateTime now) => now - sent >= TimeSpan.FromSeconds(5);
@@ -178,12 +188,12 @@ internal static class HealRiderPolicy
 
     public static bool GroundedForBoarding(float distance, bool flying, bool mounting, bool selectedMount,
         bool settledPickupRange = false) =>
-        float.IsFinite(distance) && (distance <= BoardingTolerance || settledPickupRange && distance < 10f) &&
+        float.IsFinite(distance) && settledPickupRange && distance < 10f &&
         !flying && !mounting && selectedMount;
 
-    public static bool ObservePickupRange(float distance, DateTime now, ref DateTime? nearSince)
+    public static bool ObservePickupRange(float distance, DateTime now, ref DateTime? nearSince, bool grounded = true)
     {
-        if (!float.IsFinite(distance) || distance >= 10f)
+        if (!grounded || !float.IsFinite(distance) || distance >= 10f)
         {
             nearSince = null;
             return false;
@@ -209,6 +219,7 @@ internal static class HealRiderPolicy
     public static bool SameLeg(HealRiderCommand active, HealRiderCommand next) =>
         SameRide(active, next) && active.ContinuationId == next.ContinuationId &&
         active.CurrentWorldId == next.CurrentWorldId && active.TerritoryId == next.TerritoryId &&
+        active.InstanceId == next.InstanceId &&
         active.X == next.X && active.Y == next.Y && active.Z == next.Z &&
         active.HasPickupLocation == next.HasPickupLocation &&
         active.PickupX == next.PickupX && active.PickupY == next.PickupY && active.PickupZ == next.PickupZ &&
@@ -222,4 +233,7 @@ internal static class HealRiderPolicy
     public static Vector3 Pickup(HealRiderCommand command) => new(command.PickupX, command.PickupY, command.PickupZ);
 
     public static Vector3 Destination(HealRiderCommand command) => new(command.X, command.Y, command.Z);
+
+    public static bool SameInstance(uint? expected, uint? observed) =>
+        expected.HasValue && observed.HasValue && expected.Value == observed.Value;
 }

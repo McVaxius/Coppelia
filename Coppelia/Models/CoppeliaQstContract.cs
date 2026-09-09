@@ -5,7 +5,7 @@ namespace Coppelia.Models;
 
 internal static class CoppeliaQstContract
 {
-    public const int Version = 3;
+    public const int Version = 4;
 
     public static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -31,7 +31,8 @@ internal sealed record CoppeliaQstStatus(
     string TravelState,
     string DutyState,
     string DutyInviter,
-    bool DutyOwned);
+    bool DutyOwned,
+    uint? InstanceId = null);
 
 internal sealed record CoppeliaQstCommand(
     string Action,
@@ -54,7 +55,8 @@ internal sealed record CoppeliaQstCommand(
     long DutySequence,
     uint DutyTerritoryId,
     uint ContentFinderConditionId,
-    int ContractVersion = CoppeliaQstContract.Version);
+    int ContractVersion = CoppeliaQstContract.Version,
+    uint? InstanceId = null);
 
 internal sealed record CoppeliaQstCommandResponse(
     bool Accepted,

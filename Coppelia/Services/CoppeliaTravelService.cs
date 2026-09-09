@@ -3,6 +3,7 @@ using Coppelia.Models;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Plugin.Ipc;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
@@ -51,6 +52,34 @@ internal sealed partial class CoppeliaTravelService
     private Vector3 lineOfSightRescueDestination;
     private bool lineOfSightRescueHasDestination;
     private bool lineOfSightRescueOwnStopPending;
+    private Func<uint?> instanceReader = ReadCurrentInstanceId;
+    private Func<uint, bool> isMainAetheryte = IsMainAetheryte;
+    private DateTime nextInstanceAttemptUtc;
+    private bool instanceSwitchPending;
+
+    public uint? CurrentInstanceId => instanceReader();
+
+    private static unsafe uint? ReadCurrentInstanceId()
+    {
+        if (!Plugin.ClientState.IsLoggedIn || !Plugin.PlayerState.IsLoaded || Plugin.ObjectTable.LocalPlayer == null ||
+            Plugin.ClientState.TerritoryType == 0 || IsBetweenAreas())
+            return null;
+        try
+        {
+            var state = UIState.Instance();
+            return state == null ? null : state->PublicInstance.InstanceId;
+        }
+        catch (Exception) { return null; }
+    }
+
+    private static bool IsMainAetheryte(uint baseId)
+    {
+        try
+        {
+            return Plugin.DataManager.GetExcelSheet<Aetheryte>().TryGetRow(baseId, out var aetheryte) && aetheryte.IsAetheryte;
+        }
+        catch (Exception) { return false; }
+    }
 
     public CoppeliaTravelService(
         Configuration configuration,
@@ -246,8 +275,15 @@ internal sealed partial class CoppeliaTravelService
             ClearHinterlandsRoute();
         var worldChanged = previousTravel != null &&
                            command.QuesterCurrentWorldId != previousTravel.QuesterCurrentWorldId;
-        if (command.AetheryteId.HasValue || worldChanged)
+        var instanceChanged = previousTravel != null && command.InstanceId != previousTravel.InstanceId;
+        if (command.AetheryteId.HasValue || worldChanged || instanceChanged)
             ResetTerritoryHandoff();
+        if (instanceChanged)
+        {
+            ReleaseOwnedRoute();
+            // Preserve an in-flight command's quiet period while following the newest target.
+            if (!instanceSwitchPending) nextInstanceAttemptUtc = DateTime.MinValue;
+        }
 
         travelSequencePolicy.TryAccept(command.TravelSequence);
 
@@ -275,6 +311,7 @@ internal sealed partial class CoppeliaTravelService
         var prioritySnapshot = previousTravel == null ||
                                command.AetheryteId.HasValue ||
                                worldChanged ||
+                               instanceChanged ||
                                command.TerritoryId != previousTravel.TerritoryId;
         if (prioritySnapshot)
         {
@@ -299,16 +336,30 @@ internal sealed partial class CoppeliaTravelService
             State = "HealRider following suspended for duty ownership";
             return;
         }
-        if (ordinaryMountDeadline.HasValue && DateTime.UtcNow >= ordinaryMountDeadline.Value)
-            ordinaryMountBlocker = "Selected passenger mount preparation exceeded the pickup allowance.";
-        if (rideMode != null && !string.IsNullOrEmpty(ordinaryMountBlocker))
+        if (ordinaryMountDeadline.HasValue && RideNow >= ordinaryMountDeadline.Value)
         {
-            PauseOwnedRoute();
-            State = $"HealRider Blocked: {ordinaryMountBlocker}";
-            return;
+            ordinaryMountBlocker = "Selected passenger mount preparation exceeded the pickup allowance.";
+            ordinaryMountDeadline = null;
         }
         if (latestTravel == null)
             return;
+
+        if (instanceSwitchPending)
+        {
+            PauseOwnedRoute();
+            if (IsBetweenAreas() || !TryGetLifestreamBusy(out var instanceBusy) || instanceBusy)
+            {
+                nextInstanceAttemptUtc = RideNow.AddSeconds(5);
+                State = "Waiting for Lifestream instance switching and loading to finish";
+                return;
+            }
+            if (RideNow < nextInstanceAttemptUtc)
+            {
+                State = "Verifying the Helper public instance after /li";
+                return;
+            }
+            instanceSwitchPending = false;
+        }
 
         if (travelSequencePolicy.WaitingForFreshSnapshot)
         {
@@ -521,7 +572,10 @@ internal sealed partial class CoppeliaTravelService
             return;
         }
 
-        MarkPriorityDestinationReached(travel, "the helper is loaded in the requested world and territory");
+        if (UpdateInstanceRendezvous(localPlayer, travel))
+            return;
+
+        MarkPriorityDestinationReached(travel, "the helper is loaded in the requested world, territory, and instance");
 
         var destination = routePolicy.LatestDestination;
         var distance = Vector3.Distance(localPlayer.Position, destination);
@@ -545,7 +599,8 @@ internal sealed partial class CoppeliaTravelService
             mounting,
             flying,
             flightAvailable,
-            keepPassengerMount: rideMode != null && !rideMountsSuspended);
+            keepPassengerMount: rideMode != null && !rideMountsSuspended && string.IsNullOrEmpty(ordinaryMountBlocker),
+            healRiderActive: rideMode != null);
 
         if (UpdateOrdinaryRideMount(decision.Phase == CoppeliaFollowPhase.Mount))
             return;
@@ -585,9 +640,6 @@ internal sealed partial class CoppeliaTravelService
             {
                 Phase = CoppeliaFollowPhase.Follow,
                 UseFlight = false,
-                RouteRange = travel.QuesterMounted
-                    ? CoppeliaFollowPolicy.MountedStopDistance
-                    : CoppeliaFollowPolicy.OnFootStopDistance,
             };
         }
         else if (decision.Phase == CoppeliaFollowPhase.WaitForMount)
@@ -762,6 +814,8 @@ internal sealed partial class CoppeliaTravelService
         rideMode = null;
         ordinaryMountDeadline = null;
         ordinaryMountBlocker = string.Empty;
+        instanceSwitchPending = false;
+        nextInstanceAttemptUtc = DateTime.MinValue;
         ClearHinterlandsRoute();
         ClearLineOfSightRescue();
         ResetTerritoryHandoff();
@@ -784,6 +838,92 @@ internal sealed partial class CoppeliaTravelService
 
     private static string BuildFollowState(string state, string blocker) =>
         string.IsNullOrWhiteSpace(blocker) ? state : $"{state}; safe ground fallback ({blocker})";
+
+    private bool UpdateInstanceRendezvous(IPlayerCharacter local, CoppeliaQstCommand travel)
+    {
+        // Legacy direct following has no instance target. HealRider must always verify one.
+        if (rideMode == null && !travel.InstanceId.HasValue)
+            return false;
+        var currentInstance = CurrentInstanceId;
+        if (HealRiderPolicy.SameInstance(travel.InstanceId, currentInstance))
+            return false;
+        ReleaseOwnedRoute();
+        RearmLatestTravelRoute();
+        ClearLineOfSightRescue();
+        if (!travel.InstanceId.HasValue || !currentInstance.HasValue)
+        {
+            State = "Waiting for verified Helper and Quester public-instance metadata";
+            return true;
+        }
+        if (travel.InstanceId.Value == 0)
+        {
+            State = "Waiting for the Quester's verified non-instanced area";
+            return true;
+        }
+        if (IsBetweenAreas() || local.IsDead || Plugin.Condition[ConditionFlag.InCombat] ||
+            Plugin.Condition[ConditionFlag.BoundByDuty] || Plugin.Condition[ConditionFlag.Casting] ||
+            Plugin.Condition[ConditionFlag.Occupied] || Plugin.Condition[ConditionFlag.OccupiedInEvent] ||
+            Plugin.Condition[ConditionFlag.Mounting71] || Plugin.Condition[ConditionFlag.OccupiedInQuestEvent] ||
+            Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.Occupied33] ||
+            Plugin.Condition[ConditionFlag.Occupied39] || Plugin.Condition[ConditionFlag.WatchingCutscene] ||
+            Plugin.Condition[ConditionFlag.Occupied30] || Plugin.Condition[ConditionFlag.Occupied38] ||
+            Plugin.Condition[ConditionFlag.OccupiedSummoningBell] || Plugin.Condition[ConditionFlag.WatchingCutscene78] ||
+            RideNow < actionHoldUntilUtc ||
+            !TryGetLifestreamBusy(out var busy) || busy)
+        {
+            State = "Waiting for safe idle travel before changing public instance";
+            return true;
+        }
+        if (RideNow < nextInstanceAttemptUtc)
+        {
+            State = $"Waiting to retry public instance {travel.InstanceId.Value}";
+            return true;
+        }
+        if (!TryGetRouteActivity(out var finding, out var running) || finding || running)
+        {
+            State = "Waiting for navigation to stop before changing public instance";
+            return true;
+        }
+
+        var besideAetheryte = Plugin.ObjectTable.Any(obj => obj.ObjectKind == ObjectKind.Aetheryte &&
+            Vector3.Distance(local.Position, obj.Position) < 10f && isMainAetheryte(obj.BaseId));
+        if (!besideAetheryte)
+        {
+            if (!TryResolveTeleport(travel, out var aetheryteId, out var subIndex, out var name,
+                    out _, out var blocker))
+            {
+                State = $"Public-instance rendezvous: {blocker}";
+                return true;
+            }
+            BeginLifestreamRequest(travel.TravelSequence,
+                new LifestreamRequest(false, 0, travel.TerritoryId,
+                    $"Travelling to {name} to change public instance", $"Instance-change aetheryte {name} was not reached",
+                    RequireBusyCompletion: true, AetheryteId: aetheryteId, AetheryteName: name),
+                () => teleport.InvokeFunc(aetheryteId, subIndex));
+            return true;
+        }
+        if (Plugin.Condition[ConditionFlag.InFlight] || Plugin.Condition[ConditionFlag.Mounted])
+        {
+            if (RideNow >= nextMountActionUtc)
+            {
+                nextMountActionUtc = RideNow.AddSeconds(2);
+                TryUseGeneralAction(DismountGeneralActionId, out _);
+            }
+            State = "Landing and dismounting beside the aetheryte before /li";
+            return true;
+        }
+        nextInstanceAttemptUtc = RideNow.AddSeconds(5);
+        instanceSwitchPending = true;
+        try
+        {
+            var accepted = Plugin.CommandManager.ProcessCommand($"/li {travel.InstanceId.Value}");
+            State = accepted ? $"Verifying public instance {travel.InstanceId.Value} after /li" :
+                $"Lifestream rejected /li {travel.InstanceId.Value}; waiting five seconds to retry";
+            Plugin.Log.Information($"[Coppelia][HealRider] Issued /li {travel.InstanceId.Value}; actual instance verification remains pending.");
+        }
+        catch (Exception) { State = "Lifestream instance command failed; waiting five seconds to retry"; }
+        return true;
+    }
 
     private bool TryProbeFailedFollow(IPlayerCharacter localPlayer, CoppeliaQstCommand travel)
     {
@@ -895,6 +1035,9 @@ internal sealed partial class CoppeliaTravelService
 
     private void MarkPriorityDestinationReached(CoppeliaQstCommand travel, string evidence)
     {
+        if ((rideMode != null || travel.InstanceId.HasValue) &&
+            !HealRiderPolicy.SameInstance(travel.InstanceId, CurrentInstanceId))
+            return;
         if (pendingPriorityDestinationSequence == 0 ||
             travel.TravelSequence < pendingPriorityDestinationSequence)
         {

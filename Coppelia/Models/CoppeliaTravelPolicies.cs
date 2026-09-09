@@ -30,6 +30,7 @@ internal sealed class CoppeliaFollowPolicy
     public const float MountedStopDistance = 5f;
     public const float OnFootResumeDistance = 20f;
     public const float OnFootStopDistance = 10f;
+    public const float HealRiderFollowDistance = 9f;
     public const float MountCatchUpDistance = 50f;
 
     public bool IsFollowing { get; private set; }
@@ -42,10 +43,14 @@ internal sealed class CoppeliaFollowPolicy
         bool helperMounting,
         bool helperFlying,
         bool flightAvailable,
-        bool keepPassengerMount = false)
+        bool keepPassengerMount = false,
+        bool healRiderActive = false)
     {
-        var resumeDistance = questerMounted ? MountedResumeDistance : OnFootResumeDistance;
-        var stopDistance = questerMounted ? MountedStopDistance : OnFootStopDistance;
+        // Rendezvous requires physical separation strictly below ten yalms.
+        var onFootStopDistance = healRiderActive ? HealRiderFollowDistance : OnFootStopDistance;
+        var resumeDistance = healRiderActive ? HealRiderFollowDistance
+            : questerMounted ? MountedResumeDistance : OnFootResumeDistance;
+        var stopDistance = questerMounted ? MountedStopDistance : onFootStopDistance;
         IsFollowing = IsFollowing ? distance > stopDistance : distance > resumeDistance;
 
         if (helperMounting)
@@ -87,7 +92,7 @@ internal sealed class CoppeliaFollowPolicy
                 CoppeliaFollowPhase.Dismount,
                 IsFollowing,
                 UseFlight: false,
-                RouteRange: OnFootStopDistance);
+                RouteRange: onFootStopDistance);
         }
 
         if (!IsFollowing)
@@ -106,7 +111,7 @@ internal sealed class CoppeliaFollowPolicy
             UseFlight: mountedChase && flightAvailable,
             RouteRange: mountedChase || questerMounted
                 ? MountedStopDistance
-                : OnFootStopDistance);
+                : onFootStopDistance);
     }
 
     public void Reset() => IsFollowing = false;

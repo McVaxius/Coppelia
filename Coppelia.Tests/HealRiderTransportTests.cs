@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Party;
 using Dalamud.Game.Text.SeStringHandling;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
@@ -20,6 +21,267 @@ namespace Coppelia.Tests;
 public sealed class HealRiderTransportTests
 {
     private static readonly DateTime Started = new(2026, 9, 7, 0, 0, 0, DateTimeKind.Utc);
+
+    [Fact]
+    public void InstanceRendezvousRetriesUntilVerifiedAndSupersedesOldTargetsWithoutBoardingDeadline()
+    {
+        var commands = new List<string>();
+        var busy = false;
+        var loading = false;
+        var occupied = false;
+        var mainAetheryte = true;
+        uint? helperInstance = 1;
+        var clock = new TransportClock();
+        var player = Proxy<IPlayerCharacter>((m, _) => m.Name switch
+        {
+            "get_CurrentWorld" => new RowRef<World>(null!, 1), "get_Position" => Vector3.Zero,
+            "get_IsCasting" => false, "get_IsDead" => false, "get_ObjectKind" => (ObjectKind)1, _ => null,
+        });
+        var aetheryte = Proxy<IGameObject>((m, _) => m.Name switch
+        {
+            "get_ObjectKind" => ObjectKind.Aetheryte, "get_Position" => new Vector3(3, 0, 0), "get_BaseId" => 8U, _ => null,
+        });
+        var pi = Proxy<IDalamudPluginInterface>((m, args) =>
+        {
+            if (m.Name != "GetIpcSubscriber") return null;
+            var endpoint = (string)args![0]!;
+            return Proxy(m.ReturnType, (call, _) => call.Name == "InvokeFunc" && call.ReturnType == typeof(bool)
+                ? endpoint == "Lifestream.IsBusy" && busy : null);
+        });
+        var replacements = new Dictionary<string, object?>
+        {
+            ["PluginInterface"] = pi,
+            ["Log"] = Proxy<IPluginLog>((_, _) => null),
+            ["ObjectTable"] = Proxy<IObjectTable>((m, _) => m.Name switch
+            {
+                "get_LocalPlayer" => loading ? null : player,
+                "GetEnumerator" => ((IEnumerable<IGameObject>)new[] { player, aetheryte }).GetEnumerator(), _ => null,
+            }),
+            ["ClientState"] = Proxy<IClientState>((m, _) => m.Name switch
+            {
+                "get_TerritoryType" => 141U, "get_IsLoggedIn" => true, _ => null,
+            }),
+            ["Condition"] = Proxy<ICondition>((m, args) => m.Name == "get_Item" && ((ConditionFlag)args![0]! switch
+            { ConditionFlag.BetweenAreas => loading, ConditionFlag.Occupied39 => occupied, _ => false })),
+            ["CommandManager"] = Proxy<ICommandManager>((m, args) =>
+            {
+                if (m.Name != "ProcessCommand") return null;
+                commands.Add((string)args![0]!);
+                return commands.Count > 1; // rejection and accepted-but-ineffective attempts are both retried
+            }),
+            ["DataManager"] = null,
+        };
+        const BindingFlags statics = BindingFlags.Static | BindingFlags.NonPublic;
+        const BindingFlags instance = BindingFlags.Instance | BindingFlags.NonPublic;
+        var previous = replacements.Keys.ToDictionary(key => key, key => typeof(Plugin).GetProperty(key, statics)!.GetValue(null));
+        try
+        {
+            foreach (var (key, value) in replacements) typeof(Plugin).GetProperty(key, statics)!.SetValue(null, value);
+            var service = new CoppeliaTravelService(new Configuration(), null!, null!);
+            void Set(string field, object? value) => typeof(CoppeliaTravelService).GetField(field, instance)!.SetValue(service, value);
+            object? Get(string field) => typeof(CoppeliaTravelService).GetField(field, instance)!.GetValue(service);
+            Set("rideClock", clock);
+            Set("instanceReader", (Func<uint?>)(() => loading ? null : helperInstance));
+            Set("isMainAetheryte", (Func<uint, bool>)(id => id == 8 && mainAetheryte));
+            Set("rideMode", new HealRiderCommand { SessionId = "session", MountId = 10 });
+            var travel = new CoppeliaQstCommand("TravelUpdate", "session", "Test Quester", 1, 1, 141,
+                0, 0, 0, 1, null, null, null, false, false, false, "Quester", 0, 0, 0, InstanceId: 2);
+            Assert.True(service.Apply(travel).Accepted);
+            void Tick(double seconds) { clock.Now = Started.AddSeconds(seconds); service.Update(); }
+            occupied = true; Tick(0); Assert.Empty(commands);
+            occupied = false;
+            mainAetheryte = false; Tick(0); Assert.Empty(commands);
+            Assert.Contains("teleport list", service.State); // a nearby shard cannot start /li; main-crystal travel is needed
+            mainAetheryte = true;
+            Tick(0);
+            Assert.Equal(new[] { "/li 2" }, commands);
+            Assert.Equal(1L, Get("pendingPriorityDestinationSequence"));
+            Tick(4.99); Assert.Single(commands);
+            Tick(5); Assert.Equal(2, commands.Count);
+            busy = true; Tick(6); Tick(10);
+            busy = false; loading = true; Tick(11);
+            Assert.Equal(2, commands.Count);
+            loading = false; Tick(15.99); Assert.Equal(2, commands.Count);
+            Tick(16); Assert.Equal(3, commands.Count);
+            Assert.Equal(1L, Get("pendingPriorityDestinationSequence"));
+            travel = travel with { TravelSequence = 2, InstanceId = 3 };
+            service.Apply(travel);
+            Assert.Equal(2L, Get("pendingPriorityDestinationSequence"));
+            Tick(20.99); Assert.Equal(3, commands.Count);
+            Tick(21); Assert.Equal("/li 3", commands.Last());
+            helperInstance = 2; Tick(26); // old target success cannot satisfy the newest target
+            Assert.Equal(5, commands.Count);
+            Assert.Equal("/li 3", commands.Last());
+            Assert.Equal(2L, Get("pendingPriorityDestinationSequence"));
+            helperInstance = 3; Tick(31);
+            Assert.Equal(5, commands.Count);
+            Assert.Equal(0L, Get("pendingPriorityDestinationSequence"));
+            Assert.Null(Get("ordinaryMountDeadline"));
+            Assert.Null(Get("ride"));
+            travel = travel with { TravelSequence = 3, InstanceId = null };
+            service.Apply(travel); helperInstance = 0; Tick(32);
+            Assert.Contains("metadata", service.State);
+            Assert.Equal(3L, Get("pendingPriorityDestinationSequence"));
+            service.Apply(travel with { TravelSequence = 4, InstanceId = 0 }); Tick(33);
+            Assert.Equal(0L, Get("pendingPriorityDestinationSequence"));
+            Assert.Equal(5, commands.Count); // verified zero is non-instanced, never /li 0
+            service.Apply(travel with { TravelSequence = 5, InstanceId = 2 }); Tick(34);
+            Assert.Equal(6, commands.Count);
+            service.Release(); Tick(100);
+            Assert.Equal(6, commands.Count);
+            Assert.Null(Get("latestTravel"));
+            Assert.False((bool)Get("instanceSwitchPending")!);
+        }
+        finally
+        {
+            foreach (var (key, value) in previous) typeof(Plugin).GetProperty(key, statics)!.SetValue(null, value);
+        }
+    }
+
+    [Fact]
+    public void InstanceContractsPreserveUnknownZeroAndNumberAndRejectThePreviousRideVersion()
+    {
+        foreach (var instanceId in new uint?[] { null, 0, 3 })
+        {
+            var command = new HealRiderCommand { Version = 2, InstanceId = instanceId, QuesterInstanceId = instanceId };
+            var status = new HealRiderStatus { InstanceId = instanceId, CurrentWorldId = 5, Flying = true, Mounting = true };
+            Assert.Equal(command, JsonSerializer.Deserialize<HealRiderCommand>(JsonSerializer.Serialize(command, CoppeliaQstContract.JsonOptions), CoppeliaQstContract.JsonOptions));
+            Assert.Equal(status, JsonSerializer.Deserialize<HealRiderStatus>(JsonSerializer.Serialize(status, CoppeliaQstContract.JsonOptions), CoppeliaQstContract.JsonOptions));
+            var travel = new CoppeliaQstCommand("TravelUpdate", "session", "Test Quester", 1, 1, 141,
+                1, 2, 3, 1, null, null, null, false, false, false, "Quester", 0, 0, 0, InstanceId: instanceId);
+            Assert.Equal(travel, JsonSerializer.Deserialize<CoppeliaQstCommand>(JsonSerializer.Serialize(travel, CoppeliaQstContract.JsonOptions), CoppeliaQstContract.JsonOptions));
+            var qstStatus = new CoppeliaQstStatus(4, true, true, "", true, "", true, "", "", "", "session", "", "", "", false, instanceId);
+            Assert.Equal(qstStatus, JsonSerializer.Deserialize<CoppeliaQstStatus>(JsonSerializer.Serialize(qstStatus, CoppeliaQstContract.JsonOptions), CoppeliaQstContract.JsonOptions));
+        }
+        Assert.False(HealRiderPolicy.SameInstance(null, null));
+        Assert.False(HealRiderPolicy.SameInstance(0, null));
+        Assert.False(HealRiderPolicy.SameInstance(1, 2));
+        Assert.True(HealRiderPolicy.SameInstance(0, 0));
+        Assert.Equal(4, CoppeliaQstContract.Version);
+        Assert.Equal(2, new HealRiderStatus().Version);
+        var service = (CoppeliaTravelService)System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(typeof(CoppeliaTravelService));
+        var rejected = service.ApplyHealRider(new HealRiderCommand { Version = 1, SessionId = "old-session", LegId = 4 });
+        Assert.False(rejected.Accepted);
+        Assert.Equal("Blocked", rejected.State);
+        Assert.Contains("Update both", rejected.Blocker);
+        var qstService = (CoppeliaQstIpcService)System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(typeof(CoppeliaQstIpcService));
+        const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
+        typeof(CoppeliaQstIpcService).GetField("gate", fields)!.SetValue(qstService, new object());
+        var oldQst = new CoppeliaQstCommand("Activate", "session", "Test Quester", 1, 1, 141,
+            0, 0, 0, 1, null, null, null, false, false, false, "Quester", 0, 0, 0, ContractVersion: 3);
+        var qstRejected = (CoppeliaQstCommandResponse)typeof(CoppeliaQstIpcService).GetMethod("HandleCommand", fields)!
+            .Invoke(qstService, new object[] { oldQst })!;
+        Assert.False(qstRejected.Accepted);
+        Assert.Contains("v4 is required", qstRejected.Reason);
+    }
+
+    [Theory]
+    [InlineData(false, 10f)]
+    [InlineData(false, 15f)]
+    [InlineData(false, 20f)]
+    [InlineData(false, 100f)]
+    [InlineData(true, 10f)]
+    [InlineData(true, 15f)]
+    [InlineData(true, 20f)]
+    [InlineData(true, 100f)]
+    public void OrdinaryFollowingSurvivesRejectedOrTimedOutPassengerMountPreparation(bool timeout, float distance)
+    {
+        var submitted = new List<Vector3>();
+        var ranges = new List<float>();
+        var running = false;
+        var stops = 0;
+        var casting = false;
+        var mounted = false;
+        var flags = new HashSet<ConditionFlag>();
+        var pi = Proxy<IDalamudPluginInterface>((method, args) =>
+        {
+            if (method.Name != "GetIpcSubscriber") return null;
+            var endpoint = (string)args![0]!;
+            return Proxy(method.ReturnType, (call, values) =>
+            {
+                if (call.Name == "InvokeAction" && endpoint == "vnavmesh.Path.Stop") { running = false; stops++; return null; }
+                if (call.Name != "InvokeFunc") return null;
+                switch (endpoint)
+                {
+                    case "vnavmesh.Nav.IsReady": return true;
+                    case "vnavmesh.Path.IsRunning": return running;
+                    case "vnavmesh.SimpleMove.PathfindAndMoveCloseTo":
+                        ranges.Add((float)values![2]!);
+                        submitted.Add((Vector3)values![0]!); running = true; return true;
+                    default: return call.ReturnType == typeof(bool) ? false : null;
+                }
+            });
+        });
+        var player = Proxy<IPlayerCharacter>((m, _) => m.Name switch
+        {
+            "get_CurrentWorld" => new RowRef<World>(null!, 1), "get_Position" => Vector3.Zero,
+            "get_IsCasting" => casting, "get_CastActionId" => 1U, "get_Address" => (nint)0,
+            _ => null,
+        });
+        var replacements = new Dictionary<string, object?>
+        {
+            ["PluginInterface"] = pi,
+            ["Log"] = Proxy<IPluginLog>((_, _) => null),
+            ["ObjectTable"] = Proxy<IObjectTable>((m, _) => m.Name == "get_LocalPlayer" ? player : null),
+            ["ClientState"] = Proxy<IClientState>((m, _) => m.Name == "get_TerritoryType" ? 141U : null),
+            ["Condition"] = Proxy<ICondition>((m, a) => m.Name == "get_Item" &&
+                (flags.Contains((ConditionFlag)a![0]!) || (ConditionFlag)a[0]! == ConditionFlag.Mounted && mounted)),
+            ["DataManager"] = null, // Unavailable mount data uses the existing ordinary ground-follow rules.
+        };
+        const BindingFlags statics = BindingFlags.Static | BindingFlags.NonPublic;
+        const BindingFlags instance = BindingFlags.Instance | BindingFlags.NonPublic;
+        var previous = replacements.Keys.ToDictionary(key => key, key => typeof(Plugin).GetProperty(key, statics)!.GetValue(null));
+        try
+        {
+            foreach (var (key, value) in replacements) typeof(Plugin).GetProperty(key, statics)!.SetValue(null, value);
+            var service = new CoppeliaTravelService(new Configuration(), null!, null!);
+            void Set(string field, object? value) => typeof(CoppeliaTravelService).GetField(field, instance)!.SetValue(service, value);
+            Set("rideClock", new TransportClock());
+            Set("instanceReader", (Func<uint?>)(() => 0));
+            Set("rideMode", new HealRiderCommand { SessionId = "session", MountId = 10 });
+            if (timeout) Set("ordinaryMountDeadline", Started);
+            else Set("ordinaryMountBlocker", "Selected passenger mount preparation was rejected.");
+            var travel = new CoppeliaQstCommand("TravelUpdate", "session", "Test Quester", 1, 1, 141,
+                distance, 0, 0, 1, null, null, null, false, false, false, "Quester", 0, 0, 0, InstanceId: 0);
+            Assert.True(service.Apply(travel).Accepted);
+            service.Update();
+            Assert.Equal(new Vector3(distance, 0, 0), Assert.Single(submitted));
+            Assert.Equal(9f, Assert.Single(ranges));
+            Assert.Contains("ground follow", service.State);
+            for (var i = 0; i < 100; i++) service.Update();
+            Assert.Single(submitted);
+            Assert.Equal(0, stops);
+            Assert.NotEmpty((string)typeof(CoppeliaTravelService).GetField("ordinaryMountBlocker", instance)!.GetValue(service)!);
+            Assert.False((bool)typeof(CoppeliaTravelService).GetMethod("UpdateOrdinaryRideMount", instance)!.Invoke(service, new object[] { true })!);
+
+            casting = true; service.Update();
+            Assert.Contains("Paused for cast", service.State);
+            Assert.Equal(1, stops);
+            casting = false; Set("actionHoldUntilUtc", DateTime.MinValue); service.Update();
+            Assert.Equal(2, submitted.Count);
+            service.PauseForAction(); service.Update();
+            Assert.Equal("Paused for a HealBot action", service.State);
+            Set("actionHoldUntilUtc", DateTime.MinValue);
+            service.SuspendHealRiderMounts(true); service.Update();
+            Assert.Contains("duty ownership", service.State);
+            service.SuspendHealRiderMounts(false);
+
+            mounted = true;
+            Set("nextMountActionUtc", DateTime.UtcNow.AddMinutes(1));
+            service.Apply(travel with { TravelSequence = 2, X = 3 }); service.Update();
+            Assert.Contains("Waiting to dismount", service.State); // Failed preparation no longer preserves a transport mount.
+            Assert.Equal(2, submitted.Count);
+            Set("ride", new HealRiderCommand());
+            Set("rideStatus", new HealRiderStatus { State = "Blocked", Blocker = "Verified active-ride cleanup required" });
+            service.Update();
+            Assert.Contains("active-ride cleanup", service.State);
+            Assert.Equal(2, submitted.Count);
+        }
+        finally
+        {
+            foreach (var (key, value) in previous) typeof(Plugin).GetProperty(key, statics)!.SetValue(null, value);
+        }
+    }
 
     [Fact]
     public void SelectedPassengerMountSurvivesOrdinaryRendezvousLandingAndPickup()
@@ -59,6 +321,12 @@ public sealed class HealRiderTransportTests
         Assert.False(HealRiderPolicy.ObservePickupRange(float.NaN, Started.AddSeconds(12), ref nearSince));
         Assert.Null(nearSince);
         Assert.False(HealRiderPolicy.CanDepart(true, false, true));
+        Assert.False(HealRiderPolicy.GroundedForBoarding(1, false, false, true));
+        Assert.False(HealRiderPolicy.ObservePickupRange(1, Started.AddSeconds(20), ref nearSince, grounded: false));
+        Assert.False(HealRiderPolicy.ObservePickupRange(1, Started.AddSeconds(25), ref nearSince));
+        Assert.True(HealRiderPolicy.ObservePickupRange(1, Started.AddSeconds(30), ref nearSince));
+        Assert.False(HealRiderPolicy.ObservePickupRange(1, Started.AddSeconds(31), ref nearSince, grounded: false));
+        Assert.Null(nearSince);
     }
 
     [Theory]
@@ -75,6 +343,8 @@ public sealed class HealRiderTransportTests
         ((Character*)helperAddress)->Mount.MountId = 10;
         if (staleSeats) ((Character*)helperAddress)->Mount.MountedEntityIds[0] = 999;
         var submitted = new List<Vector3>();
+        var tolerances = new List<float>();
+        var rejectNavigation = false;
         var logs = new List<string>();
         var running = false;
         var partyReady = true;
@@ -83,6 +353,8 @@ public sealed class HealRiderTransportTests
         uint territory = 399;
         uint questerWorld = 1;
         var mounted = true;
+        var flying = false;
+        uint? helperInstance = 0;
         var helperLoading = false;
         var questerLoading = false;
         var questerPresent = true;
@@ -106,8 +378,9 @@ public sealed class HealRiderTransportTests
                         Assert.Equal(CharacterModes.RidingPillion, ((Character*)questerAddress)->Mode);
                         Assert.True((bool)values![1]!);
                         submitted.Add((Vector3)values[0]!);
-                        running = true;
-                        return true;
+                        tolerances.Add((float)values[2]!);
+                        running = !rejectNavigation;
+                        return !rejectNavigation;
                     default: return call.ReturnType == typeof(bool) ? false : null;
                 }
             });
@@ -142,7 +415,8 @@ public sealed class HealRiderTransportTests
             ["ClientState"] = Proxy<IClientState>((m, _) => m.Name switch
             { "get_TerritoryType" => territory, "get_IsLoggedIn" => true, _ => null }),
             ["Condition"] = Proxy<ICondition>((m, a) => m.Name == "get_Item" && ((ConditionFlag)a![0]! switch
-            { ConditionFlag.Mounted => mounted, ConditionFlag.BetweenAreas => helperLoading, _ => false })),
+            { ConditionFlag.Mounted => mounted, ConditionFlag.InFlight => flying,
+                ConditionFlag.BetweenAreas => helperLoading, _ => false })),
             ["PartyList"] = Proxy<IPartyList>((m, _) => m.Name switch
             {
                 "get_Length" => partyReady ? 2 : 3,
@@ -160,12 +434,14 @@ public sealed class HealRiderTransportTests
             void Set(string field, object value) => typeof(CoppeliaTravelService).GetField(field, instance)!.SetValue(service, value);
             var captured = new HealRiderCommand
             {
-                Version = 1, SessionId = "session", LegId = 1, QuesterName = "Test Quester", QuesterWorldId = 1,
+                Version = 2, SessionId = "session", LegId = 1, QuesterName = "Test Quester", QuesterWorldId = 1,
                 CurrentWorldId = 1, TerritoryId = 399, MountId = 10, X = 120, Y = 15, Z = -30,
+                InstanceId = 0, QuesterInstanceId = 0,
                 ContinueMounted = true, TargetTerritoryId = 400,
                 PickupDeadlineUtc = Started.AddSeconds(60),
             };
             Set("rideClock", clock); Set("ride", captured); Set("lastRide", captured);
+            Set("instanceReader", (Func<uint?>)(() => helperLoading ? null : helperInstance));
             Set("rideHelperContentId", 1UL); Set("rideUpdatedUtc", Started); Set("rideExpiresUtc", Started.AddMinutes(3));
             Set("rideStatus", new HealRiderStatus { SessionId = "session", LegId = 1, State = "Boarding" });
             var update = typeof(CoppeliaTravelService).GetMethod("UpdateHealRider", instance)!;
@@ -195,6 +471,11 @@ public sealed class HealRiderTransportTests
             partyReady = false; Assert.False(Native()); partyReady = true;
             questerWorld = 2; Assert.False(Native()); questerWorld = 1;
             territory = 400; Assert.False(Native()); territory = 399;
+            helperInstance = 2; Assert.False(Native()); helperInstance = null; Assert.False(Native()); helperInstance = 0;
+            var pickupReady = typeof(CoppeliaTravelService).GetMethod("RidePickupLocationReady", instance)!;
+            Assert.True((bool)pickupReady.Invoke(service, new object[] { captured })!);
+            Assert.False((bool)pickupReady.Invoke(service, new object[] { captured with { InstanceId = 2, QuesterInstanceId = 2 } })!);
+            Assert.False((bool)pickupReady.Invoke(service, new object[] { captured with { QuesterInstanceId = null } })!);
             mounted = false; Assert.False(Native()); mounted = true;
             ((Character*)helperAddress)->Mount.MountId = 11; Assert.False(Native());
             ((Character*)helperAddress)->Mount.MountId = 10;
@@ -246,16 +527,56 @@ public sealed class HealRiderTransportTests
             Tick(true, 60);
             Assert.Equal(2, submitted.Count);
             Assert.DoesNotContain("Transit", service.State);
-            // A final action destination finishes only after an observed dismount.
+            // Final landing escalates once after five seconds, retaining its original deadline.
             Set("ride", captured); Set("rideCleanupDeadline", null!);
             Set("rideStatus", new HealRiderStatus { State = "Transit" });
-            position = HealRiderPolicy.Destination(captured);
+            position = HealRiderPolicy.Destination(captured) + new Vector3(0, 3, 0);
+            flying = true;
             Tick(true, 61);
             Assert.Contains("Arriving", service.State);
+            Set("nextRideActionUtc", Started.AddSeconds(66)); // accepted landing actions remain ineffective
+            Tick(true, 65.99);
+            Assert.Equal(2, submitted.Count);
+            Tick(true, 66);
+            Assert.Equal(3, submitted.Count);
+            Assert.Equal(HealRiderPolicy.Destination(captured), submitted.Last());
+            Assert.Equal(0.5f, tolerances.Last());
+            Assert.Equal(Started.AddSeconds(121), typeof(CoppeliaTravelService).GetField("rideCleanupDeadline", instance)!.GetValue(service));
+            position += new Vector3(12, 0, 0); // the precise descent may leave the original five-yalm radius
+            Tick(true, 66.1);
+            Assert.True(running);
+            for (var i = 0; i < 100; i++) Tick(true, 66.2 + i / 100d);
+            Assert.Equal(3, submitted.Count);
+            Assert.True(running);
+            position = HealRiderPolicy.Destination(captured) + new Vector3(0, 3, 0);
+            mounted = false; flying = false;
+            Tick(false, 68);
+            Assert.True(service.HealRiderActive); // grounding outside 0.5 cannot complete arrival
+            Assert.True(running);
+            position = HealRiderPolicy.Destination(captured);
+            flying = true;
+            running = false; // reaching XYZ and stopping still does not prove grounding
+            Tick(false, 68.5);
+            Assert.True(service.HealRiderActive);
+            Assert.Contains("Arriving", service.State);
+            flying = false;
             mounted = false;
-            Tick(false, 61.1);
+            Tick(false, 69);
             Assert.False(service.HealRiderActive);
             Assert.Contains("Arrived", service.State);
+
+            // A rejected precise route keeps the original 60-second cleanup allowance and remains held.
+            Set("ride", captured); Set("rideStatus", new HealRiderStatus { State = "Arriving" });
+            Set("ridePreciseLandingSubmitted", false);
+            rejectNavigation = true; mounted = true; flying = true;
+            Tick(true, 70);
+            Assert.Contains("Precise landing navigation rejected", service.State);
+            Assert.True(service.HealRiderActive);
+            Assert.Equal(Started.AddSeconds(121), typeof(CoppeliaTravelService).GetField("rideCleanupDeadline", instance)!.GetValue(service));
+            Tick(true, 121);
+            Assert.Contains("Blocked", service.State);
+            Assert.Contains("landing", service.State);
+            Assert.True(service.HealRiderActive);
         }
         finally
         {
@@ -415,7 +736,7 @@ public sealed class HealRiderTransportTests
                 {
                     issued.Add(action);
                     return action == "PrepareMount" ? preparation : "Waiting";
-                });
+                }, settledPickupRange: pickup < 10 && !flying);
             state = next.State;
         }
         Tick(50, 100, selected: false);
@@ -534,7 +855,7 @@ public sealed class HealRiderTransportTests
     [InlineData(3f, false, false, true, true)]
     public void MountedPickupMustApproachLandAndFinishMountingBeforeBoarding(
         float distance, bool flying, bool mounting, bool selectedMount, bool expected) =>
-        Assert.Equal(expected, HealRiderPolicy.GroundedForBoarding(distance, flying, mounting, selectedMount));
+        Assert.Equal(expected, HealRiderPolicy.GroundedForBoarding(distance, flying, mounting, selectedMount, true));
 
     [Fact]
     public void FailedPreparationCanReleasePartyWhileOrdinaryMountedButTransportMustDismount()
@@ -591,7 +912,7 @@ public sealed class HealRiderTransportTests
     {
         var command = new HealRiderCommand
         {
-            Version = 1, Action = "Pickup", SessionId = "test-session", LegId = 1,
+            Version = 2, Action = "Pickup", SessionId = "test-session", LegId = 1,
             QuesterName = "Test Quester", QuesterWorldId = 1, CurrentWorldId = 1,
             TerritoryId = 399, X = 60, Y = 4, Z = 10,
         };
@@ -602,11 +923,12 @@ public sealed class HealRiderTransportTests
         Assert.False(HealRiderPolicy.SameLeg(command, command with { LegId = 2 }));
         Assert.False(HealRiderPolicy.SameLeg(command, command with { CurrentWorldId = 2 }));
         Assert.False(HealRiderPolicy.SameLeg(command, command with { TerritoryId = 398 }));
+        Assert.False(HealRiderPolicy.SameLeg(command, command with { InstanceId = 2 }));
         Assert.False(HealRiderPolicy.SameLeg(command, command with { X = 61 }));
 
         var requestJson = JsonSerializer.Serialize(command, CoppeliaQstContract.JsonOptions);
         Assert.Equal(command, JsonSerializer.Deserialize<HealRiderCommand>(requestJson, CoppeliaQstContract.JsonOptions));
-        Assert.Equal(3, CoppeliaQstContract.Version);
+        Assert.Equal(4, CoppeliaQstContract.Version);
     }
 
     [Fact]

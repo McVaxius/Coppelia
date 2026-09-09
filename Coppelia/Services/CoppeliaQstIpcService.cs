@@ -440,7 +440,8 @@ internal sealed class CoppeliaQstIpcService : IDisposable
                     travelService.State,
                     assignment?.DutyState ?? "Idle",
                     assignment?.DutyInviter ?? string.Empty,
-                    assignment?.DutyOwned == true && IsAdsDutyOwned()),
+                    assignment?.DutyOwned == true && IsAdsDutyOwned(),
+                    travelService.CurrentInstanceId),
                 CoppeliaQstContract.JsonOptions);
         }
     }
@@ -478,7 +479,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             try
             {
                 var command = JsonSerializer.Deserialize<HealRiderCommand>(requestJson, CoppeliaQstContract.JsonOptions);
-                if (command == null || command.Version != 1 || !travelService.OwnsHealRiderCleanup(command) &&
+                if (command == null || command.Version != 2 || !travelService.OwnsHealRiderCleanup(command) &&
                     (assignment?.Source != AssignmentSource.Qst ||
                     assignment.SessionId != command.SessionId || assignment.QuesterName != command.QuesterName ||
                     assignment.QuesterWorldId != command.QuesterWorldId ||
@@ -491,7 +492,9 @@ internal sealed class CoppeliaQstIpcService : IDisposable
                         SessionId = command?.SessionId ?? string.Empty,
                         LegId = command?.LegId ?? 0,
                         State = "Blocked",
-                        Blocker = "HealRider requires the exact active QST assignment outside duty ownership.",
+                        Blocker = command != null && command.Version != 2
+                            ? "HealRider v2 is required. Update both Helper and Quester."
+                            : "HealRider requires the exact active QST assignment outside duty ownership.",
                     };
                 }
                 else
@@ -513,7 +516,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             if (command.ContractVersion != CoppeliaQstContract.Version)
             {
                 return command.ContractVersion < CoppeliaQstContract.Version
-                    ? Failed("Coppelia.QST v3 is required. Update QST before pairing this helper.")
+                    ? Failed("Coppelia.QST v4 is required. Update QST before pairing this helper.")
                     : Failed("This HealBot build does not support the QST contract. Update HealBot before pairing this helper.");
             }
 

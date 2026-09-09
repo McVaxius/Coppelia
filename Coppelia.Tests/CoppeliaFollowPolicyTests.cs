@@ -42,6 +42,38 @@ public sealed class CoppeliaFollowPolicyTests
         Assert.False(Evaluate(policy, 20f).IsFollowing);
     }
 
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void HealRiderApproachesBeyondNineAndKeepsMountedStoppingTighter(bool questerMounted, bool keepPassengerMount)
+    {
+        var policy = new CoppeliaFollowPolicy();
+        CoppeliaFollowDecision Decide(float distance, bool healRiderActive = true) => policy.Evaluate(
+            distance, questerMounted, false, questerMounted, false, false, false,
+            keepPassengerMount: keepPassengerMount, healRiderActive: healRiderActive);
+
+        Assert.False(Decide(9f).IsFollowing);
+        foreach (var distance in new[] { 9.1f, 10f, 15f, 20f })
+        {
+            policy.Reset();
+            var approach = Decide(distance);
+            Assert.Equal(CoppeliaFollowPhase.Follow, approach.Phase);
+            Assert.True(approach.IsFollowing);
+            Assert.Equal(questerMounted ? 5f : 9f, approach.RouteRange);
+        }
+
+        var stopDistance = questerMounted ? 5f : 9f;
+        Assert.True(Decide(stopDistance + .1f).IsFollowing);
+        Assert.False(Decide(stopDistance).IsFollowing);
+        Assert.False(Decide(9f).IsFollowing);
+        Assert.False(Decide(20f, healRiderActive: false).IsFollowing);
+        var ordinary = Decide(31f, healRiderActive: false);
+        Assert.True(ordinary.IsFollowing);
+        Assert.Equal(questerMounted ? 5f : 10f, ordinary.RouteRange);
+    }
+
     [Fact]
     public void LatchSurvivesMountFlightLandingAndDismountTransitions()
     {
