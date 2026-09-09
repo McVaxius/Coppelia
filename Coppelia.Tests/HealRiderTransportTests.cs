@@ -22,9 +22,11 @@ public sealed class HealRiderTransportTests
     private static readonly DateTime Started = new(2026, 9, 7, 0, 0, 0, DateTimeKind.Utc);
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public unsafe void NativeRidingModeDrivesProductionDepartureWithEmptyOrStaleSeatArrays(bool staleSeats)
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public unsafe void NativeRidingModeDrivesProductionDepartureWithEmptyOrStaleSeatArrays(bool staleSeats, bool helperLoadsFirst)
     {
         var helperAddress = Marshal.AllocHGlobal(sizeof(Character));
         var questerAddress = Marshal.AllocHGlobal(sizeof(Character));
@@ -41,6 +43,11 @@ public sealed class HealRiderTransportTests
         uint territory = 399;
         uint questerWorld = 1;
         var mounted = true;
+        var helperLoading = false;
+        var questerLoading = false;
+        var questerPresent = true;
+        uint questerTerritory = 399;
+        var position = Vector3.Zero;
         var clock = new TransportClock();
         var pi = Proxy<IDalamudPluginInterface>((method, args) =>
         {
@@ -71,7 +78,7 @@ public sealed class HealRiderTransportTests
             "get_HomeWorld" => new RowRef<World>(null!, 1),
             "get_CurrentWorld" => new RowRef<World>(null!, id == 2 ? questerWorld : 1),
             "get_Address" => address, "get_EntityId" => id,
-            "get_Position" => Vector3.Zero, "get_IsDead" => false,
+            "get_Position" => position, "get_IsDead" => false,
             _ => null,
         });
         var helper = Player("Test Helper", 1, helperAddress);
@@ -88,13 +95,14 @@ public sealed class HealRiderTransportTests
             ["Log"] = Proxy<IPluginLog>((m, a) => { if (m.Name == "Information") logs.Add(a![0]!.ToString()!); return null; }),
             ["ObjectTable"] = Proxy<IObjectTable>((m, _) => m.Name switch
             {
-                "get_LocalPlayer" => helper,
-                "GetEnumerator" => ((IEnumerable<IGameObject>)new IGameObject[] { helper, quester }).GetEnumerator(), _ => null,
+                "get_LocalPlayer" => helperLoading ? null : helper,
+                "GetEnumerator" => ((IEnumerable<IGameObject>)(questerPresent ? new IGameObject[] { helper, quester } : new IGameObject[] { helper })).GetEnumerator(), _ => null,
             }),
             ["PlayerState"] = Proxy<IPlayerState>((m, _) => m.Name == "get_ContentId" ? helperId : null),
             ["ClientState"] = Proxy<IClientState>((m, _) => m.Name switch
             { "get_TerritoryType" => territory, "get_IsLoggedIn" => true, _ => null }),
-            ["Condition"] = Proxy<ICondition>((m, a) => m.Name == "get_Item" && (ConditionFlag)a![0]! == ConditionFlag.Mounted && mounted),
+            ["Condition"] = Proxy<ICondition>((m, a) => m.Name == "get_Item" && ((ConditionFlag)a![0]! switch
+            { ConditionFlag.Mounted => mounted, ConditionFlag.BetweenAreas => helperLoading, _ => false })),
             ["PartyList"] = Proxy<IPartyList>((m, _) => m.Name switch
             {
                 "get_Length" => partyReady ? 2 : 3,
@@ -114,6 +122,7 @@ public sealed class HealRiderTransportTests
             {
                 Version = 1, SessionId = "session", LegId = 1, QuesterName = "Test Quester", QuesterWorldId = 1,
                 CurrentWorldId = 1, TerritoryId = 399, MountId = 10, X = 120, Y = 15, Z = -30,
+                ContinueMounted = true, TargetTerritoryId = 400,
                 PickupDeadlineUtc = Started.AddSeconds(60),
             };
             Set("rideClock", clock); Set("ride", captured); Set("lastRide", captured);
@@ -127,7 +136,8 @@ public sealed class HealRiderTransportTests
             {
                 clock.Now = Started.AddSeconds(seconds);
                 var wire = JsonSerializer.Deserialize<HealRiderCommand>(JsonSerializer.Serialize(captured with
-                    { Action = "Inspect", PassengerConfirmed = confirmed }, CoppeliaQstContract.JsonOptions), CoppeliaQstContract.JsonOptions)!;
+                    { Action = "Inspect", PassengerConfirmed = confirmed, QuesterLoading = questerLoading,
+                        QuesterTerritoryId = questerTerritory }, CoppeliaQstContract.JsonOptions), CoppeliaQstContract.JsonOptions)!;
                 forward.Invoke(service, new object[] { wire });
                 update.Invoke(service, null);
             }
@@ -161,18 +171,51 @@ public sealed class HealRiderTransportTests
             for (var i = 0; i < 1000; i++) Tick(true, 1 + i / 100d);
             Assert.Single(submitted);
             Assert.Equal(count, logs.Count);
+            helperLoading = helperLoadsFirst;
+            questerLoading = !helperLoadsFirst;
+            if (!helperLoadsFirst) questerTerritory = 400;
+            Tick(false, 12);
+            Assert.True(service.HealRiderActive);
+            Assert.Equal("ZoneTransition", ((HealRiderStatus)typeof(CoppeliaTravelService).GetField("rideStatus", instance)!.GetValue(service)!).State);
+            helperLoading = false; territory = 400; questerPresent = false; questerLoading = true;
+            Tick(false, 12.1);
+            Assert.True(service.HealRiderActive);
+            Assert.Single(submitted);
+            questerPresent = true; questerLoading = false; questerTerritory = 400;
+            Tick(true, 12.2);
+            var continuation = captured with { Action = "Continue", ContinuationId = 1, TerritoryId = 400,
+                QuesterTerritoryId = 400, PassengerConfirmed = true, X = 200, ContinueMounted = false, TargetTerritoryId = 0 };
+            var advance = typeof(CoppeliaTravelService).GetMethod("TryContinueRide", instance)!;
+            Assert.False((bool)advance.Invoke(service, new object[] { continuation with { PassengerConfirmed = false } })!);
+            Assert.False((bool)advance.Invoke(service, new object[] { continuation with { ContinuationId = 2 } })!);
+            Assert.True((bool)advance.Invoke(service, new object[] { continuation })!);
+            Assert.False((bool)advance.Invoke(service, new object[] { continuation })!);
+            captured = continuation;
+            Tick(true, 12.3);
+            Assert.Equal(2, submitted.Count);
+            Assert.Equal(HealRiderPolicy.Destination(continuation), submitted.Last());
             ((Character*)questerAddress)->Mode = default;
-            Tick(true, 12);
+            Tick(true, 12.4);
             Assert.Contains("Cancelling", service.State);
             Assert.False(running);
             // A late native confirmation cannot revive cancelled or expired boarding.
             ((Character*)questerAddress)->Mode = CharacterModes.RidingPillion;
             Tick(true, 13);
-            Assert.Single(submitted);
+            Assert.Equal(2, submitted.Count);
             Set("ride", captured); Set("rideStatus", new HealRiderStatus { State = "Boarding" });
             Tick(true, 60);
-            Assert.Single(submitted);
+            Assert.Equal(2, submitted.Count);
             Assert.DoesNotContain("Transit", service.State);
+            // A final action destination finishes only after an observed dismount.
+            Set("ride", captured); Set("rideCleanupDeadline", null!);
+            Set("rideStatus", new HealRiderStatus { State = "Transit" });
+            position = HealRiderPolicy.Destination(captured);
+            Tick(true, 61);
+            Assert.Contains("Arriving", service.State);
+            mounted = false;
+            Tick(false, 61.1);
+            Assert.False(service.HealRiderActive);
+            Assert.Contains("Arrived", service.State);
         }
         finally
         {
@@ -336,7 +379,9 @@ public sealed class HealRiderTransportTests
             state = next.State;
         }
         Tick(50, 100, selected: false);
-        Assert.Equal(new[] { "Approach" }, issued);
+        Assert.Equal(new[] { "Stop", "PrepareTravelMount" }, issued);
+        Tick(50, 100);
+        Assert.Equal("Approach", issued.Last());
         Tick(3, 100, selected: false);
         Assert.Equal("Preparing", state);
         preparation = "Ready";

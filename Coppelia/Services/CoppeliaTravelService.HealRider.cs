@@ -19,6 +19,9 @@ internal sealed partial class CoppeliaTravelService
     private DateTime nextRideActionUtc;
     private bool rideOwnsMount;
     private bool boardingConfirmed;
+    private uint passengerTerritory;
+    private bool passengerLoading;
+    private bool rideCrossing;
     private (bool Quester, bool Native)? lastPassengerObservation;
     private long ridePathSequence;
     private DateTime? rideCleanupDeadline;
@@ -136,12 +139,18 @@ internal sealed partial class CoppeliaTravelService
     public HealRiderStatus ApplyHealRider(HealRiderCommand command)
     {
         if (command.Version != 1 || command.LegId < 0 ||
-            !float.IsFinite(command.X) || !float.IsFinite(command.Y) || !float.IsFinite(command.Z))
+            !float.IsFinite(command.X) || !float.IsFinite(command.Y) || !float.IsFinite(command.Z) ||
+            !float.IsFinite(command.PickupX) || !float.IsFinite(command.PickupY) || !float.IsFinite(command.PickupZ) ||
+            !float.IsFinite(command.DestinationTolerance) || command.DestinationTolerance <= 0 || command.DestinationTolerance > 5)
             return RiderReply(command, false, "Blocked", "Invalid HealRider v1 request.");
         if (command.LegId == 0)
             return ApplyRideMode(command);
         if (lastRide?.SessionId == command.SessionId && command.LegId < lastRide.LegId)
             return RiderReply(command, false, "Blocked", "This ride leg was retired by a newer leg.");
+        if (command.Action == "Continue" && TryContinueRide(command))
+            return RiderReply(command, true);
+        if (command.Action == "Continue" && ride != null && HealRiderPolicy.SameLeg(ride, command))
+            return RiderReply(command, true);
         if (ride != null && (!HealRiderPolicy.SameLeg(ride, command) || ride.MountId != command.MountId))
         {
             CancelHealRider("The destination or ride leg changed");
@@ -207,9 +216,8 @@ internal sealed partial class CoppeliaTravelService
             return RiderReply(command, false, "Blocked", "The shared pickup wait expired before pickup was accepted.");
 
         var local = Plugin.ObjectTable.LocalPlayer;
-        var quester = FindRideQuester(command);
         var sameLocation = RidePickupLocationReady(command);
-        var distance = quester == null ? 0 : Vector3.Distance(quester.Position, HealRiderPolicy.Destination(command));
+        var distance = command.HasPickupLocation ? Vector3.Distance(HealRiderPolicy.Pickup(command), HealRiderPolicy.Destination(command)) : 0;
         if (!HealRiderPolicy.Eligible(distance, command.WalkingThreshold, CanFlyInTerritory(command.TerritoryId),
                 command.QuesterCanFly, IsPassengerMountUnlocked(command.MountId), sameLocation) ||
             !RidePartyContains(command) || Plugin.Condition[ConditionFlag.InCombat] ||
@@ -230,6 +238,9 @@ internal sealed partial class CoppeliaTravelService
         nextRideActionUtc = DateTime.MinValue;
         rideOwnsMount = Plugin.Condition[ConditionFlag.Mounted] || Plugin.Condition[ConditionFlag.Mounting71];
         boardingConfirmed = false;
+        passengerTerritory = command.QuesterTerritoryId;
+        passengerLoading = command.QuesterLoading;
+        rideCrossing = false;
         lastPassengerObservation = null;
         return RiderReply(command, true);
     }
@@ -238,6 +249,26 @@ internal sealed partial class CoppeliaTravelService
     {
         rideUpdatedUtc = RideNow;
         boardingConfirmed = command.PassengerConfirmed;
+        passengerTerritory = command.QuesterTerritoryId == 0 ? command.TerritoryId : command.QuesterTerritoryId;
+        passengerLoading = command.QuesterLoading;
+    }
+
+    private bool TryContinueRide(HealRiderCommand command)
+    {
+        if (ride is not { } previous || !HealRiderPolicy.SameRide(previous, command) ||
+            command.MountId != previous.MountId || command.ContinuationId != previous.ContinuationId + 1 ||
+            rideStatus.State is not ("WaitingContinuation" or "ZoneTransition") ||
+            command.TerritoryId != Plugin.ClientState.TerritoryType || command.QuesterLoading ||
+            command.QuesterTerritoryId != command.TerritoryId || !command.PassengerConfirmed ||
+            FindRideQuester(command) is not { } passenger || !ExactPassengerIsAboard(command, passenger))
+            return false;
+        StopRidePath();
+        ResetTerritoryHandoff();
+        ride = lastRide = command;
+        rideCrossing = false;
+        ObserveRidePassenger(command);
+        SetRideState("Transit", string.Empty);
+        return true;
     }
 
     private HealRiderStatus RiderReply(HealRiderCommand command, bool accepted, string? state = null, string? blocker = null)
@@ -249,13 +280,16 @@ internal sealed partial class CoppeliaTravelService
         {
             SessionId = command.SessionId,
             LegId = command.LegId,
+            ContinuationId = matching ? lastRide?.ContinuationId ?? 0 : command.ContinuationId,
+            TerritoryId = Plugin.ClientState.TerritoryType,
+            PassengerConfirmed = quester != null && ExactPassengerIsAboard(command with { TerritoryId = Plugin.ClientState.TerritoryType }, quester),
             Accepted = accepted,
             State = state ?? (matching ? rideStatus.State : "Idle"),
             Blocker = blocker ?? (matching ? rideStatus.Blocker : string.Empty),
             CanFly = CanFlyInTerritory(command.TerritoryId),
             MountReady = IsPassengerMountUnlocked(command.MountId),
             PickupReady = RidePickupLocationReady(command),
-            BoardingReady = matching && rideStatus.State == "Boarding" && local != null && quester != null &&
+            BoardingReady = matching && rideStatus.State == "Boarding" && RidePartyContains(command) && local != null && quester != null &&
                 HealRiderPolicy.GroundedForBoarding(Vector3.Distance(local.Position, quester.Position),
                     Plugin.Condition[ConditionFlag.InFlight], Plugin.Condition[ConditionFlag.Mounting71],
                     Plugin.Condition[ConditionFlag.Mounted] && SelectedMountIsActive(command.MountId)),
@@ -269,7 +303,7 @@ internal sealed partial class CoppeliaTravelService
     private bool RidePickupLocationReady(HealRiderCommand command)
     {
         var local = Plugin.ObjectTable.LocalPlayer;
-        if (local == null || FindRideQuester(command) == null ||
+        if (local == null ||
             local.CurrentWorld.RowId != command.CurrentWorldId || Plugin.ClientState.TerritoryType != command.TerritoryId ||
             IsBetweenAreas() || Plugin.Condition[ConditionFlag.InCombat] || Plugin.Condition[ConditionFlag.Casting] ||
             Plugin.Condition[ConditionFlag.BoundByDuty] || lifestreamRequest != null || hinterlandsRoute != null ||
@@ -284,6 +318,7 @@ internal sealed partial class CoppeliaTravelService
         if (ride == null || rideStatus.State is "Cancelling" or "Blocked")
             return;
         StopRidePath();
+        ResetTerritoryHandoff();
         rideCleanupDeadline = HealRiderPolicy.BeginCleanup(rideCleanupDeadline, RideNow);
         SetRideState("Cancelling", reason);
         State = $"HealRider: {reason}";
@@ -311,12 +346,11 @@ internal sealed partial class CoppeliaTravelService
             State = $"HealRider Blocked: {rideStatus.Blocker}";
             return true;
         }
-        if (local == null || !Plugin.ClientState.IsLoggedIn || IsBetweenAreas() ||
-            Plugin.ClientState.TerritoryType != command.TerritoryId ||
-            local.CurrentWorld.RowId != command.CurrentWorldId ||
+        if (!Plugin.ClientState.IsLoggedIn && !IsBetweenAreas() ||
+            local != null && local.CurrentWorld.RowId != command.CurrentWorldId ||
             Plugin.Condition[ConditionFlag.BoundByDuty] || Plugin.Condition[ConditionFlag.InCombat] ||
-            Plugin.PlayerState.ContentId != rideHelperContentId ||
-            local.IsDead || now - rideUpdatedUtc > TimeSpan.FromSeconds(10) || now >= rideExpiresUtc)
+            Plugin.PlayerState.ContentId != 0 && Plugin.PlayerState.ContentId != rideHelperContentId ||
+            local?.IsDead == true || now - rideUpdatedUtc > TimeSpan.FromSeconds(10) || now >= rideExpiresUtc)
             CancelHealRider("Ride context lost, blocked, or timed out");
         if (HealRiderPolicy.PickupExpired(command.PickupDeadlineUtc, now, rideStatus.State))
             CancelHealRider("The shared pickup wait expired during approach or boarding");
@@ -338,11 +372,52 @@ internal sealed partial class CoppeliaTravelService
             }
             return true;
         }
-        if (local == null)
+        if (local == null || IsBetweenAreas())
+        {
+            StopRidePath();
+            StopForwardProbePath();
+            if (rideStatus.State is "Transit" or "WaitingContinuation" or "ZoneTransition")
+            {
+                rideCrossing = true;
+                SetRideState("ZoneTransition", "Waiting for both clients to load on the mounted ride.");
+            }
             return true;
+        }
 
         var quester = FindRideQuester(command);
-        if (quester == null || !RidePartyContains(command))
+        if (command.ContinueMounted && command.TargetTerritoryId != 0 &&
+            Plugin.ClientState.TerritoryType == command.TerritoryId &&
+            rideStatus.State is "WaitingContinuation" or "ZoneTransition" && !passengerLoading &&
+            HealRiderPolicy.CanDepart(boardingConfirmed,
+                quester != null && ExactPassengerIsAboard(command, quester), RidePartyContains(command)))
+        {
+            // Reuse the travel engine's single bounded boundary probe, retaining
+            // mount/party ownership. A failed probe cancels; it cannot teleport a passenger.
+            if (!territoryHandoffPolicy.IsActive)
+                territoryHandoffPolicy.TryArm(true, false, false, command.TerritoryId, command.TargetTerritoryId);
+            var crossing = new CoppeliaQstCommand("TravelUpdate", command.SessionId, command.QuesterName,
+                command.QuesterWorldId, command.CurrentWorldId, command.TargetTerritoryId,
+                command.X, command.Y, command.Z, command.ContinuationId + 1, null, null, null,
+                true, false, false, command.PartyInviter, 0, 0, 0);
+            if (!HandleTerritoryHandoff(local, crossing))
+                CancelHealRider("The mounted boundary crossing could not be verified");
+            return true;
+        }
+        if (rideStatus.State is "Transit" or "WaitingContinuation" or "ZoneTransition" &&
+            (passengerLoading || passengerTerritory != Plugin.ClientState.TerritoryType ||
+             Plugin.ClientState.TerritoryType != command.TerritoryId || rideCrossing))
+        {
+            StopRidePath();
+            rideCrossing = true;
+            SetRideState("ZoneTransition", "Waiting for mounted continuation and both passenger confirmations.");
+            State = $"HealRider: {rideStatus.State}: {rideStatus.Blocker}";
+            return true;
+        }
+        if (rideStatus.State == "Preparing" && quester == null)
+        {
+            // Rendezvous uses the captured stationary position, even outside object range.
+        }
+        else if (quester == null || !RidePartyContains(command))
         {
             CancelHealRider("The exact Quester or party is no longer available");
             return true;
@@ -350,7 +425,14 @@ internal sealed partial class CoppeliaTravelService
         var destination = HealRiderPolicy.Destination(command);
         var mounted = Plugin.Condition[ConditionFlag.Mounted];
         var mounting = Plugin.Condition[ConditionFlag.Mounting71];
-        var nativePassenger = ExactPassengerIsAboard(command, quester);
+        var nativePassenger = quester != null && ExactPassengerIsAboard(command, quester);
+        if (rideStatus.State == "WaitingContinuation")
+        {
+            StopRidePath();
+            if (!HealRiderPolicy.CanDepart(boardingConfirmed, nativePassenger, RidePartyContains(command)))
+                CancelHealRider("Passenger verification was lost while waiting for the next movement step");
+            return true;
+        }
         if (rideStatus.State is "Boarding" or "Transit" &&
             lastPassengerObservation != (boardingConfirmed, nativePassenger))
         {
@@ -358,14 +440,15 @@ internal sealed partial class CoppeliaTravelService
             Plugin.Log.Information($"[HealRider] Leg {command.LegId}: passenger observations: Quester={boardingConfirmed}, Helper native={nativePassenger}.");
         }
         var transition = HealRiderPolicy.AdvanceTransport(rideStatus.State,
-            Vector3.Distance(local.Position, quester.Position), Vector3.Distance(local.Position, destination),
+            Vector3.Distance(local.Position, command.HasPickupLocation ? HealRiderPolicy.Pickup(command) : quester!.Position),
+            Vector3.Distance(local.Position, destination) + HealRiderPolicy.ArrivalTolerance - command.DestinationTolerance,
             mounted, mounting, Plugin.Condition[ConditionFlag.InFlight], SelectedMountIsActive(command.MountId),
             boardingConfirmed, nativePassenger, RidePartyContains(command), action =>
             {
                 switch (action)
                 {
                     case "Approach":
-                        MoveRideTo(quester.Position, Plugin.Condition[ConditionFlag.InFlight], HealRiderPolicy.BoardingTolerance);
+                        MoveRideTo(HealRiderPolicy.Pickup(command), true, HealRiderPolicy.BoardingTolerance);
                         break;
                     case "Stop":
                         StopRidePath();
@@ -373,8 +456,11 @@ internal sealed partial class CoppeliaTravelService
                     case "PrepareMount":
                         rideOwnsMount = true;
                         return PreparePassengerMount(command.MountId, command.PickupDeadlineUtc, true);
+                    case "PrepareTravelMount":
+                        rideOwnsMount = true;
+                        return PreparePassengerMount(command.MountId, command.PickupDeadlineUtc, false);
                     case "Travel":
-                        MoveRideTo(destination, true, HealRiderPolicy.ArrivalTolerance);
+                        MoveRideTo(destination, true, command.DestinationTolerance);
                         break;
                     case "Dismount":
                         if (now >= nextRideActionUtc)
@@ -396,7 +482,15 @@ internal sealed partial class CoppeliaTravelService
         else
         {
             if (transition.State == "Arriving")
+            {
+                if (command.ContinueMounted)
+                {
+                    SetRideState("WaitingContinuation", "Movement destination reached; waiting for the next verified step.");
+                    State = "HealRider: WaitingContinuation";
+                    return true;
+                }
                 rideCleanupDeadline = HealRiderPolicy.BeginCleanup(rideCleanupDeadline, now);
+            }
             SetRideState(transition.State, transition.Blocker);
         }
         State = $"HealRider: {rideStatus.State}" +

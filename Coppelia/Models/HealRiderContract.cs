@@ -19,6 +19,16 @@ internal sealed record HealRiderCommand
     public float X { get; init; }
     public float Y { get; init; }
     public float Z { get; init; }
+    public bool HasPickupLocation { get; init; }
+    public float PickupX { get; init; }
+    public float PickupY { get; init; }
+    public float PickupZ { get; init; }
+    public bool ContinueMounted { get; init; }
+    public uint TargetTerritoryId { get; init; }
+    public long ContinuationId { get; init; }
+    public uint QuesterTerritoryId { get; init; }
+    public bool QuesterLoading { get; init; }
+    public float DestinationTolerance { get; init; } = 5f;
     public float WalkingThreshold { get; init; } = 50;
     public bool QuesterCanFly { get; init; }
     public bool PassengerConfirmed { get; init; }
@@ -44,6 +54,9 @@ internal sealed record HealRiderStatus
     public bool PartyReady { get; init; }
     public bool PartyReleased { get; init; }
     public bool PartyOwned { get; init; }
+    public long ContinuationId { get; init; }
+    public uint TerritoryId { get; init; }
+    public bool PassengerConfirmed { get; init; }
 }
 
 internal static class HealRiderPolicy
@@ -55,9 +68,15 @@ internal static class HealRiderPolicy
         switch (state)
         {
             case "Preparing":
+                if (!mounted || !selectedMount || mounting)
+                {
+                    issue("Stop");
+                    return issue("PrepareTravelMount") == "Blocked"
+                        ? ("Cancelling", "The selected passenger mount could not be prepared.") : (state, string.Empty);
+                }
                 if (pickupDistance > BoardingTolerance)
                 {
-                    if (!mounting) issue("Approach");
+                    issue("Approach");
                     return (state, string.Empty);
                 }
                 issue("Stop");
@@ -150,7 +169,7 @@ internal static class HealRiderPolicy
         !MustWaitForDismount(ownsMount, mounted) && !passenger && localComplete && statusFresh;
 
     public static bool PickupExpired(DateTime deadlineUtc, DateTime now, string state) =>
-        now >= deadlineUtc && state is not ("Transit" or "Arriving" or "Arrived");
+        now >= deadlineUtc && state is not ("Transit" or "ZoneTransition" or "WaitingContinuation" or "Arriving" or "Arrived");
 
     public static bool ShouldInvite(DateTime now, DateTime deadlineUtc, DateTime nextInviteUtc,
         bool travelReady, bool partyReady, bool solo) =>
@@ -174,10 +193,19 @@ internal static class HealRiderPolicy
         !mounted && !passenger && partyReleased;
 
     public static bool SameLeg(HealRiderCommand active, HealRiderCommand next) =>
-        active.SessionId == next.SessionId && active.QuesterName == next.QuesterName &&
-        active.QuesterWorldId == next.QuesterWorldId && active.LegId == next.LegId &&
+        SameRide(active, next) && active.ContinuationId == next.ContinuationId &&
         active.CurrentWorldId == next.CurrentWorldId && active.TerritoryId == next.TerritoryId &&
-        active.X == next.X && active.Y == next.Y && active.Z == next.Z;
+        active.X == next.X && active.Y == next.Y && active.Z == next.Z &&
+        active.HasPickupLocation == next.HasPickupLocation &&
+        active.PickupX == next.PickupX && active.PickupY == next.PickupY && active.PickupZ == next.PickupZ &&
+        active.ContinueMounted == next.ContinueMounted && active.TargetTerritoryId == next.TargetTerritoryId &&
+        active.DestinationTolerance == next.DestinationTolerance;
+
+    public static bool SameRide(HealRiderCommand active, HealRiderCommand next) =>
+        active.SessionId == next.SessionId && active.QuesterName == next.QuesterName &&
+        active.QuesterWorldId == next.QuesterWorldId && active.LegId == next.LegId;
+
+    public static Vector3 Pickup(HealRiderCommand command) => new(command.PickupX, command.PickupY, command.PickupZ);
 
     public static Vector3 Destination(HealRiderCommand command) => new(command.X, command.Y, command.Z);
 }
