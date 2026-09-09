@@ -790,9 +790,19 @@ public sealed class HealRiderTransportTests
             Assert.True(service.HealRiderActive);
             Assert.Equal(Started.AddSeconds(121), typeof(CoppeliaTravelService).GetField("rideCleanupDeadline", instance)!.GetValue(service));
             Tick(true, 121);
-            Assert.Contains("Blocked", service.State);
+            Assert.Contains("cleanup", service.State);
             Assert.Contains("landing", service.State);
             Assert.True(service.HealRiderActive);
+            service.RetryHealRiderCleanup();
+            Assert.Equal(Started.AddSeconds(181), typeof(CoppeliaTravelService).GetField("rideCleanupDeadline", instance)!.GetValue(service));
+            Tick(true, 122);
+            service.RetryHealRiderCleanup();
+            Assert.Equal(Started.AddSeconds(181), typeof(CoppeliaTravelService).GetField("rideCleanupDeadline", instance)!.GetValue(service));
+            flying = false; mounted = false;
+            Tick(false, 125);
+            Assert.False(service.HealRiderActive);
+            Assert.Contains("Cancelled", service.State);
+            Assert.Equal(4, submitted.Count); // retry only cleans up; it never submits the failed destination again
         }
         finally
         {

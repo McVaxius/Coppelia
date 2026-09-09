@@ -1,5 +1,9 @@
 # Changelog
 
+- HealRider accepts Companion's coordinated automatic cleanup retry after terminal transport failure. Repeated retries
+  preserve cleanup already in progress, stop only owned movement, and finish landing/dismount without replaying the
+  failed destination. Status now describes cleanup instead of asking for Helper activation.
+
 - All paired Helper following now starts at ten yalms, with or without HealRider, and stops at nine yalms on foot
   or five yalms mounted. Mount selection, landing, boarding, action ranges, and combat ownership are unchanged.
 - Ordinary following uses the visible exact pair's live position after location checks, retaining authenticated

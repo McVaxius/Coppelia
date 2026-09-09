@@ -135,8 +135,11 @@ internal sealed partial class CoppeliaTravelService
             Plugin.PlayerState.ContentId != rideHelperContentId ||
             Plugin.PartyList.Length > 1 && !RidePartyContains(ride))
             return;
+        // Repeated coordinated retries must not extend cleanup already in progress.
+        if (rideStatus.State == "Cancelling" && RideNow < rideCleanupDeadline) return;
+        StopRidePath();
         rideCleanupDeadline = RideNow.AddSeconds(60);
-        SetRideState("Cancelling", "Explicit activation is retrying cleanup");
+        SetRideState("Cancelling", "Dismounting for transport cleanup");
     }
 
     public HealRiderStatus ApplyHealRider(HealRiderCommand command)
@@ -364,7 +367,7 @@ internal sealed partial class CoppeliaTravelService
         var local = Plugin.ObjectTable.LocalPlayer;
         if (rideStatus.State == "Blocked")
         {
-            State = $"HealRider Blocked: {rideStatus.Blocker}";
+            State = $"HealRider cleanup: {rideStatus.Blocker}";
             return true;
         }
         if (rideCleanupDeadline.HasValue && now >= rideCleanupDeadline.Value)
@@ -374,8 +377,8 @@ internal sealed partial class CoppeliaTravelService
                 ? "the captured character to become ready" : Plugin.Condition[ConditionFlag.InFlight] ? "landing" :
                 Plugin.Condition[ConditionFlag.Mounting71] || Plugin.Condition[ConditionFlag.Casting] ||
                 now < nextRideActionUtc || now < nextMountActionUtc ? "the mount action to finish" : "dismount";
-            SetRideState("Blocked", $"Helper cleanup timed out waiting for {pending}; activate Helper to retry.");
-            State = $"HealRider Blocked: {rideStatus.Blocker}";
+            SetRideState("Blocked", $"Helper cleanup timed out waiting for {pending}; waiting for coordinated cleanup retry.");
+            State = $"HealRider cleanup: {rideStatus.Blocker}";
             return true;
         }
         if (!Plugin.ClientState.IsLoggedIn && !IsBetweenAreas() ||
@@ -389,6 +392,7 @@ internal sealed partial class CoppeliaTravelService
 
         if (rideStatus.State == "Cancelling")
         {
+            State = Plugin.Condition[ConditionFlag.InFlight] ? "HealRider: Landing for cleanup" : "HealRider: Dismounting for cleanup";
             StopRidePath();
             if (local == null || IsBetweenAreas() || Plugin.PlayerState.ContentId != rideHelperContentId)
                 return true;
@@ -639,6 +643,7 @@ internal sealed partial class CoppeliaTravelService
     {
         StopRidePath();
         SetRideState(state);
+        State = $"HealRider: {state}";
         ride = null;
         rideOwnsMount = false;
         boardingConfirmed = false;
