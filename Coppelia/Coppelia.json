@@ -10,7 +10,7 @@
   "DownloadLinkUpdate": "https://github.com/McVaxius/Coppelia/releases/download/v1.0.0.8/latest.zip",
   "DownloadLinkTesting": "https://github.com/McVaxius/Coppelia/releases/download/v1.0.0.8/latest.zip",
   "RepoUrl": "https://github.com/McVaxius/Coppelia",
-  "AssemblyVersion": "2.2.0.0",
+  "AssemblyVersion": "2.3.0.0",
   "ApplicableVersion": "any",
   "DalamudApiLevel": 15,
   "Tags": [
