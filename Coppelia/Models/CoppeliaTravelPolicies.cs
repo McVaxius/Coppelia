@@ -33,6 +33,36 @@ internal sealed class CoppeliaFollowPolicy
     public const float MountCatchUpDistance = 50f;
 
     public bool IsFollowing { get; private set; }
+    private Vector3 approachAnchor;
+    private DateTime? approachSince;
+    private Vector3 lastApproachPosition;
+    private DateTime? stationarySince;
+
+    public bool ObserveApproach(Vector3 position, DateTime utcNow)
+    {
+        if (!approachSince.HasValue || Vector3.DistanceSquared(approachAnchor, position) > 25f)
+        {
+            approachAnchor = position;
+            approachSince = utcNow;
+        }
+        if (!stationarySince.HasValue || position != lastApproachPosition)
+        {
+            lastApproachPosition = position;
+            stationarySince = utcNow;
+        }
+        return utcNow - approachSince.Value >= TimeSpan.FromSeconds(10);
+    }
+
+    public bool CanLand(CoppeliaRouteActivity activity, DateTime utcNow) =>
+        activity is CoppeliaRouteActivity.Completed or CoppeliaRouteActivity.Idle ||
+        activity != CoppeliaRouteActivity.Other && stationarySince.HasValue &&
+        utcNow - stationarySince.Value >= TimeSpan.FromSeconds(2);
+
+    public void ResetApproach()
+    {
+        approachSince = null;
+        stationarySince = null;
+    }
 
     public CoppeliaFollowDecision Evaluate(
         float distance,
@@ -108,7 +138,11 @@ internal sealed class CoppeliaFollowPolicy
                 : OnFootStopDistance);
     }
 
-    public void Reset() => IsFollowing = false;
+    public void Reset()
+    {
+        IsFollowing = false;
+        ResetApproach();
+    }
 }
 
 internal enum CoppeliaRouteActivity

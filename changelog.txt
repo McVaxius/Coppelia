@@ -1,5 +1,12 @@
 # Changelog
 
+- Helper approach recovery measures actual XYZ displacement. Failing to move more than five yalms in ten
+  seconds stops owned navigation and uses the existing aetheryte resolver and Lifestream teleport path.
+  Quester snapshots and route reissues do not renew the observation; loading, location changes, and approach
+  completion reset it. Active passenger rides retain their existing transport and cancellation cleanup.
+- Normal catch-up landing lets a moving navmesh route continue. Route completion or two continuous seconds
+  at unchanged XYZ permits landing with the existing distances and action cadence.
+
 - HealRider accepts Companion's coordinated automatic cleanup retry after terminal transport failure. Repeated retries
   preserve cleanup already in progress, stop only owned movement, and finish landing/dismount without replaying the
   failed destination. Status now describes cleanup instead of asking for Helper activation.

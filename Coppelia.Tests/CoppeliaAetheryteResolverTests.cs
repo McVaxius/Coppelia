@@ -250,7 +250,8 @@ public sealed class CoppeliaAetheryteResolverTests
 
         Assert.DoesNotContain("IsAetheryteUnlocked", travelSource, StringComparison.Ordinal);
         Assert.Equal(1, CountOccurrences(travelSource, "telepo->UpdateAetheryteList();"));
-        Assert.Equal(3, CountOccurrences(travelSource, "TryGetTeleportListSnapshot("));
+        Assert.Contains("teleportListReader = TryGetTeleportListSnapshot;", travelSource, StringComparison.Ordinal);
+        Assert.Equal(2, CountOccurrences(travelSource, "TryGetTeleportListSnapshot("));
         Assert.Contains("TryResolveTeleport(travel, teleportList", travelSource, StringComparison.Ordinal);
         Assert.Contains("TryResolveTeleport(fallbackTravel, teleportList", travelSource, StringComparison.Ordinal);
     }

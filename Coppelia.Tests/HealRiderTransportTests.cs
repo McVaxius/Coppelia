@@ -60,7 +60,7 @@ public sealed class HealRiderTransportTests
             }),
             ["ClientState"] = Proxy<IClientState>((m, _) => m.Name switch
             {
-                "get_TerritoryType" => 141U, "get_IsLoggedIn" => true, _ => null,
+                "get_MapId" => 105U, "get_TerritoryType" => 141U, "get_IsLoggedIn" => true, _ => null,
             }),
             ["Condition"] = Proxy<ICondition>((m, args) => m.Name == "get_Item" && ((ConditionFlag)args![0]! switch
             { ConditionFlag.BetweenAreas => loading, ConditionFlag.Occupied39 => occupied, _ => false })),
@@ -201,7 +201,7 @@ public sealed class HealRiderTransportTests
                 _ => null,
             }),
             ["ClientState"] = Proxy<IClientState>((m, _) => m.Name switch
-            { "get_TerritoryType" => 141U, "get_IsLoggedIn" => true, _ => null }),
+            { "get_MapId" => 105U, "get_TerritoryType" => 141U, "get_IsLoggedIn" => true, _ => null }),
             ["Condition"] = Proxy<ICondition>((m, args) => m.Name == "get_Item" &&
                 (ConditionFlag)args![0]! == ConditionFlag.Mounted && mounted),
             ["DataManager"] = null,
@@ -439,7 +439,7 @@ public sealed class HealRiderTransportTests
                 "get_LocalPlayer" => player,
                 "GetEnumerator" => Enumerable.Empty<IGameObject>().GetEnumerator(), _ => null,
             }),
-            ["ClientState"] = Proxy<IClientState>((m, _) => m.Name == "get_TerritoryType" ? 141U : null),
+            ["ClientState"] = Proxy<IClientState>((m, _) => m.Name is "get_TerritoryType" or "get_MapId" ? 141U : null),
             ["Condition"] = Proxy<ICondition>((m, a) => m.Name == "get_Item" &&
                 (flags.Contains((ConditionFlag)a![0]!) || (ConditionFlag)a[0]! == ConditionFlag.Mounted && mounted)),
             ["DataManager"] = null, // Unavailable mount data uses the existing ordinary ground-follow rules.
@@ -629,7 +629,7 @@ public sealed class HealRiderTransportTests
             }),
             ["PlayerState"] = Proxy<IPlayerState>((m, _) => m.Name == "get_ContentId" ? helperId : null),
             ["ClientState"] = Proxy<IClientState>((m, _) => m.Name switch
-            { "get_TerritoryType" => territory, "get_IsLoggedIn" => true, _ => null }),
+            { "get_MapId" => 105U, "get_TerritoryType" => territory, "get_IsLoggedIn" => true, _ => null }),
             ["Condition"] = Proxy<ICondition>((m, a) => m.Name == "get_Item" && ((ConditionFlag)a![0]! switch
             { ConditionFlag.Mounted => mounted, ConditionFlag.InFlight => flying,
                 ConditionFlag.BetweenAreas => helperLoading, _ => false })),
@@ -895,6 +895,147 @@ public sealed class HealRiderTransportTests
     {
         public DateTime Now = Started;
         public override DateTimeOffset GetUtcNow() => Now;
+    }
+
+    private static bool ApproachTeleportList(out IReadOnlyList<CoppeliaTeleportListEntry> entries, out string blocker)
+    {
+        entries = new[] { new CoppeliaTeleportListEntry(8, 0, 100) };
+        blocker = string.Empty;
+        return true;
+    }
+
+    [Fact]
+    public void ApproachRecoveryUsesExistingTeleportAndLandingRespectsRouteMovement()
+    {
+        var clock = new TransportClock();
+        var position = Vector3.Zero;
+        var flying = false;
+        var loading = false;
+        var running = false;
+        var pathfinding = false;
+        var crystalVisible = false;
+        uint map = 105;
+        var teleports = 0;
+        var stops = 0;
+        var cancels = 0;
+        var routes = 0;
+        var player = Proxy<IPlayerCharacter>((m, _) => m.Name switch
+        {
+            "get_CurrentWorld" => new RowRef<World>(null!, 1), "get_Position" => position,
+            "get_IsCasting" => false, _ => null,
+        });
+        var crystal = Proxy<IGameObject>((m, _) => m.Name switch
+        { "get_ObjectKind" => ObjectKind.Aetheryte, "get_BaseId" => 8U, "get_Position" => position, _ => null });
+        var replacements = new Dictionary<string, object?>
+        {
+            ["PluginInterface"] = Proxy<IDalamudPluginInterface>((m, args) =>
+            {
+                if (m.Name != "GetIpcSubscriber") return null;
+                var endpoint = (string)args![0]!;
+                return Proxy(m.ReturnType, (call, values) =>
+                {
+                    if (call.Name == "get_HasFunction" || call.Name == "get_HasAction") return true;
+                    if (call.Name == "InvokeAction")
+                    {
+                        if (endpoint == "vnavmesh.Path.Stop") { stops++; running = false; }
+                        if (endpoint == "vnavmesh.Nav.PathfindCancelAll") { cancels++; pathfinding = false; }
+                    }
+                    if (call.Name != "InvokeFunc") return null;
+                    switch (endpoint)
+                    {
+                        case "vnavmesh.Nav.IsReady": return true;
+                        case "vnavmesh.Path.IsRunning": return running;
+                        case "vnavmesh.SimpleMove.PathfindInProgress": return pathfinding;
+                        case "vnavmesh.SimpleMove.PathfindAndMoveCloseTo": routes++; running = true; return true;
+                        case "Lifestream.Teleport":
+                            Assert.Equal(8U, values![0]); Assert.Equal((byte)0, values[1]); teleports++; return true;
+                        default: return call.ReturnType == typeof(bool) ? false : null;
+                    }
+                });
+            }),
+            ["Log"] = Proxy<IPluginLog>((_, _) => null),
+            ["ObjectTable"] = Proxy<IObjectTable>((m, _) => m.Name switch
+            {
+                "get_LocalPlayer" => loading ? null : player,
+                "GetEnumerator" => ((IEnumerable<IGameObject>)(crystalVisible ? new[] { crystal } : Array.Empty<IGameObject>())).GetEnumerator(),
+                _ => null,
+            }),
+            ["ClientState"] = Proxy<IClientState>((m, _) => m.Name switch
+            { "get_MapId" => map, "get_TerritoryType" => 141U, "get_IsLoggedIn" => true, _ => null }),
+            ["Condition"] = Proxy<ICondition>((m, args) => m.Name == "get_Item" && ((ConditionFlag)args![0]! switch
+            { ConditionFlag.BetweenAreas => loading, ConditionFlag.Mounted or ConditionFlag.InFlight => flying, _ => false })),
+            ["DataManager"] = null,
+        };
+        const BindingFlags statics = BindingFlags.Static | BindingFlags.NonPublic;
+        const BindingFlags instance = BindingFlags.Instance | BindingFlags.NonPublic;
+        var previous = replacements.Keys.ToDictionary(key => key, key => typeof(Plugin).GetProperty(key, statics)!.GetValue(null));
+        try
+        {
+            foreach (var (key, value) in replacements) typeof(Plugin).GetProperty(key, statics)!.SetValue(null, value);
+            var service = new CoppeliaTravelService(new Configuration(), null!, null!);
+            void Set(string field, object value) => typeof(CoppeliaTravelService).GetField(field, instance)!.SetValue(service, value);
+            Set("rideClock", clock);
+            Set("instanceReader", (Func<uint?>)(() => 0));
+            var reader = typeof(CoppeliaTravelService).GetField("teleportListReader", instance)!;
+            reader.SetValue(service, Delegate.CreateDelegate(reader.FieldType,
+                typeof(HealRiderTransportTests).GetMethod(nameof(ApproachTeleportList), BindingFlags.Static | BindingFlags.NonPublic)!));
+            var travel = new CoppeliaQstCommand("TravelUpdate", "session", "Test Quester", 1, 1, 141,
+                40, 0, 0, 1, 8, 0, "Test Crystal", false, false, false, "Quester", 0, 0, 0, InstanceId: 0);
+            void Tick(double seconds) { clock.Now = Started.AddSeconds(seconds); service.Update(); }
+            service.Apply(travel);
+            Set("pendingExactTravel", null!); // The prior forwarded teleport has already completed.
+            Tick(0);
+            Assert.Equal(0, teleports);
+            Assert.Equal(1, routes);
+            Tick(1); position.Y = 5; Tick(9.999); Assert.Equal(0, teleports);
+            Tick(10); Assert.Equal(1, teleports); Assert.Equal(1, stops);
+            for (var second = 11; second <= 20; second++)
+            {
+                service.Apply(travel with { TravelSequence = second, AetheryteId = null });
+                Tick(second);
+            }
+            Assert.Equal(1, teleports); // New snapshots cannot duplicate an in-flight recovery.
+            Assert.Contains("Teleporting", service.State);
+            crystalVisible = true; Tick(20); crystalVisible = false;
+            Assert.Equal(2, routes); // Same-territory physical arrival resumes the approach.
+
+            // Repeated snapshots and owned route reissues do not renew the displacement window.
+            for (var second = 21; second <= 29; second++)
+            {
+                running = false;
+                service.Apply(travel with { TravelSequence = second, AetheryteId = null, X = 40 + second });
+                Tick(second);
+                Tick(second + 0.01); // Observe each reissued route before the next completion.
+            }
+            Tick(30);
+            Assert.Contains("Aetheryte resolution failed", service.State); // Same existing fallback resolver, no fake data sheet.
+            Assert.Equal(1, teleports);
+
+            // Loading and a map change inside one territory both discard the old observations.
+            loading = true; Tick(31); loading = false;
+            service.Apply(travel with { TravelSequence = 31, AetheryteId = null }); Tick(40);
+            map = 106; Tick(49);
+            Assert.DoesNotContain("resolution failed", service.State);
+            Tick(58.999); Assert.DoesNotContain("resolution failed", service.State);
+
+            // Landing has its own exact-position observation and preserves a moving route.
+            map = 107; flying = true; position = new(25, 0, 0);
+            service.Apply(travel with { TravelSequence = 60, AetheryteId = null });
+            Set("nextMountActionUtc", DateTime.MaxValue);
+            Tick(60); position.Y = 0.1f; Tick(61); position.Y = 0.2f; Tick(62);
+            Assert.Equal("Following the active route before landing", service.State);
+            var stopsBeforeLanding = stops;
+            Tick(63.999); Assert.Equal("Following the active route before landing", service.State);
+            Tick(64); Assert.StartsWith("Landing within", service.State);
+            Assert.Equal(stopsBeforeLanding, stops);
+            position.Y = 0.3f; Tick(65); Assert.Equal("Following the active route before landing", service.State);
+            running = false; Tick(65.1); Assert.StartsWith("Landing within", service.State);
+            Assert.Equal(0, cancels);
+        }
+        finally
+        {
+            foreach (var (key, value) in previous) typeof(Plugin).GetProperty(key, statics)!.SetValue(null, value);
+        }
     }
 
     private static T Proxy<T>(Func<MethodInfo, object?[]?, object?> handler) where T : class => (T)Proxy(typeof(T), handler);

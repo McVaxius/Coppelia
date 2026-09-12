@@ -5,6 +5,48 @@ namespace Coppelia.Tests;
 public sealed class CoppeliaFollowPolicyTests
 {
     [Theory]
+    [InlineData(5f, 9.999, false)]
+    [InlineData(5f, 10, true)]
+    [InlineData(5.001f, 10, false)]
+    public void ApproachRecoveryMeasuresActualDisplacement(float displacement, double seconds, bool stalled)
+    {
+        var policy = new CoppeliaFollowPolicy();
+        var now = DateTime.UtcNow;
+        Assert.False(policy.ObserveApproach(System.Numerics.Vector3.Zero, now));
+        Assert.Equal(stalled, policy.ObserveApproach(new(0, displacement, 0), now.AddSeconds(seconds)));
+    }
+
+    [Fact]
+    public void MovementAndApproachEndRestartObservations()
+    {
+        var policy = new CoppeliaFollowPolicy();
+        var now = DateTime.UtcNow;
+        Assert.False(policy.ObserveApproach(new(1, 2, 3), now));
+        Assert.False(policy.ObserveApproach(new(1, 2, 9), now.AddSeconds(9)));
+        Assert.False(policy.ObserveApproach(new(1, 2, 9), now.AddSeconds(18.999)));
+        Assert.True(policy.ObserveApproach(new(1, 2, 9), now.AddSeconds(19)));
+        policy.ResetApproach();
+        Assert.False(policy.ObserveApproach(new(1, 2, 9), now.AddSeconds(100)));
+    }
+
+    [Fact]
+    public void LandingWaitsForRouteCompletionOrTwoContinuousStationarySeconds()
+    {
+        var policy = new CoppeliaFollowPolicy();
+        var now = DateTime.UtcNow;
+        policy.ObserveApproach(new(1, 2, 3), now);
+        Assert.False(policy.CanLand(CoppeliaRouteActivity.Owned, now.AddSeconds(1.999)));
+        policy.ObserveApproach(new(1, 2.001f, 3), now.AddSeconds(1.999));
+        Assert.False(policy.CanLand(CoppeliaRouteActivity.Owned, now.AddSeconds(2)));
+        Assert.False(policy.CanLand(CoppeliaRouteActivity.Owned, now.AddSeconds(3.998)));
+        Assert.True(policy.CanLand(CoppeliaRouteActivity.Owned, now.AddSeconds(3.999)));
+        Assert.False(policy.CanLand(CoppeliaRouteActivity.Other, now.AddSeconds(10)));
+        Assert.True(policy.CanLand(CoppeliaRouteActivity.Completed, now.AddSeconds(2)));
+        policy.ResetApproach();
+        Assert.False(policy.CanLand(CoppeliaRouteActivity.Owned, now.AddSeconds(20)));
+    }
+
+    [Theory]
     [InlineData(true, true, false, true)]
     [InlineData(true, false, true, true)]
     [InlineData(true, false, false, false)]

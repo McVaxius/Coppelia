@@ -54,8 +54,11 @@ internal sealed partial class CoppeliaTravelService
     private bool lineOfSightRescueOwnStopPending;
     private Func<uint?> instanceReader = ReadCurrentInstanceId;
     private Func<uint, bool> isMainAetheryte = IsMainAetheryte;
+    private delegate bool TeleportListReader(out IReadOnlyList<CoppeliaTeleportListEntry> entries, out string blocker);
+    private TeleportListReader teleportListReader = TryGetTeleportListSnapshot;
     private DateTime nextInstanceAttemptUtc;
     private bool instanceSwitchPending;
+    private (uint World, uint Territory, uint Map, uint? Instance)? approachLocation;
 
     public uint? CurrentInstanceId => instanceReader();
 
@@ -276,6 +279,8 @@ internal sealed partial class CoppeliaTravelService
         var worldChanged = previousTravel != null &&
                            command.QuesterCurrentWorldId != previousTravel.QuesterCurrentWorldId;
         var instanceChanged = previousTravel != null && command.InstanceId != previousTravel.InstanceId;
+        if (worldChanged || instanceChanged || previousTravel?.TerritoryId != command.TerritoryId)
+            followPolicy.ResetApproach();
         if (command.AetheryteId.HasValue || worldChanged || instanceChanged)
             ResetTerritoryHandoff();
         if (instanceChanged)
@@ -328,6 +333,14 @@ internal sealed partial class CoppeliaTravelService
 
     public void Update()
     {
+        var observationPlayer = Plugin.ObjectTable.LocalPlayer;
+        var location = observationPlayer == null || IsBetweenAreas()
+            ? ((uint World, uint Territory, uint Map, uint? Instance)?)null
+            : (observationPlayer.CurrentWorld.RowId, Plugin.ClientState.TerritoryType, Plugin.ClientState.MapId, CurrentInstanceId);
+        if (location == null || location != approachLocation || HealRiderActive ||
+            latestTravel == null || Plugin.Condition[ConditionFlag.BoundByDuty] || rideMountsSuspended)
+            followPolicy.ResetApproach();
+        approachLocation = location;
         if (UpdateHealRider())
             return;
         if (rideMode != null && rideMountsSuspended)
@@ -534,41 +547,7 @@ internal sealed partial class CoppeliaTravelService
 
         if (Plugin.ClientState.TerritoryType != travel.TerritoryId)
         {
-            PauseOwnedRoute();
-            if (!TryResolveTeleport(
-                    travel,
-                    out var aetheryteId,
-                    out var subIndex,
-                    out var name,
-                    out var teleportListUnavailable,
-                    out var blocker))
-            {
-                if (teleportListUnavailable)
-                {
-                    State = blocker;
-                    return;
-                }
-
-                BlockTravel(travel.TravelSequence, blocker);
-                return;
-            }
-
-            var startResult = BeginLifestreamRequest(
-                travel.TravelSequence,
-                new LifestreamRequest(
-                    IsWorld: false,
-                    WorldId: 0,
-                    TerritoryId: travel.TerritoryId,
-                    ActiveState: $"Teleporting to {name}",
-                    FailureState: $"Teleport to {name} did not reach territory {travel.TerritoryId}",
-                    AetheryteId: aetheryteId,
-                    AetheryteName: name),
-                () => teleport.InvokeFunc(aetheryteId, subIndex));
-            if (startResult == LifestreamStartResult.Attempted)
-            {
-                Plugin.Log.Information(
-                    $"[Coppelia][QST] Selected fallback aetheryte {name} ({aetheryteId}) in latest destination territory {travel.TerritoryId}.");
-            }
+            TeleportToQuester(travel);
             return;
         }
 
@@ -610,12 +589,33 @@ internal sealed partial class CoppeliaTravelService
             flightAvailable,
             keepPassengerMount: rideMode != null && !rideMountsSuspended && string.IsNullOrEmpty(ordinaryMountBlocker));
 
+        var approachStalled = false;
+        if (location.HasValue && (decision.IsFollowing || decision.Phase == CoppeliaFollowPhase.Land))
+            approachStalled = followPolicy.ObserveApproach(localPlayer.Position, RideNow);
+        else
+            followPolicy.ResetApproach();
+
+        if (IsBetweenAreas()) return;
         if (UpdateOrdinaryRideMount(decision.Phase == CoppeliaFollowPhase.Mount))
             return;
         if (DateTime.UtcNow < actionHoldUntilUtc)
         {
             PauseOwnedRoute();
             State = "Paused for a HealBot action";
+            return;
+        }
+
+        if (approachStalled)
+        {
+            if (!TryGetRouteActivity(out var recoveryPathfinding, out var recoveryPathRunning) ||
+                !routePolicy.OwnsRoute && (recoveryPathfinding || recoveryPathRunning))
+            {
+                State = "Waiting for existing vnavmesh activity to clear";
+                return;
+            }
+            ReleaseOwnedRoute();
+            routePolicy.AcceptSnapshot(travel.TravelSequence, destination);
+            TeleportToQuester(travel);
             return;
         }
 
@@ -663,6 +663,12 @@ internal sealed partial class CoppeliaTravelService
 
         if (decision.Phase == CoppeliaFollowPhase.Land)
         {
+            if (!TryGetRouteActivity(out var landingPathfinding, out var landingPathRunning) ||
+                !followPolicy.CanLand(routePolicy.Observe(landingPathfinding, landingPathRunning, RideNow), RideNow))
+            {
+                State = "Following the active route before landing";
+                return;
+            }
             if (DateTime.UtcNow < nextMountActionUtc)
             {
                 State = travel.QuesterMounted
@@ -816,6 +822,34 @@ internal sealed partial class CoppeliaTravelService
         }
     }
 
+    private void TeleportToQuester(CoppeliaQstCommand travel)
+    {
+        PauseOwnedRoute();
+        if (!TryResolveTeleport(travel, out var aetheryteId, out var subIndex, out var name,
+                out var teleportListUnavailable, out var blocker))
+        {
+            if (teleportListUnavailable) State = blocker;
+            else BlockTravel(travel.TravelSequence, blocker);
+            return;
+        }
+
+        var startResult = BeginLifestreamRequest(
+            travel.TravelSequence,
+            new LifestreamRequest(
+                IsWorld: false,
+                WorldId: 0,
+                TerritoryId: travel.TerritoryId,
+                ActiveState: $"Teleporting to {name}",
+                FailureState: $"Teleport to {name} did not reach territory {travel.TerritoryId}",
+                RequireBusyCompletion: Plugin.ClientState.TerritoryType == travel.TerritoryId,
+                AetheryteId: aetheryteId,
+                AetheryteName: name),
+            () => teleport.InvokeFunc(aetheryteId, subIndex));
+        if (startResult == LifestreamStartResult.Attempted)
+            Plugin.Log.Information(
+                $"[Coppelia][QST] Selected fallback aetheryte {name} ({aetheryteId}) in latest destination territory {travel.TerritoryId}.");
+    }
+
     public void Release()
     {
         CancelHealRider("Assignment released");
@@ -824,6 +858,8 @@ internal sealed partial class CoppeliaTravelService
         ordinaryMountBlocker = string.Empty;
         instanceSwitchPending = false;
         nextInstanceAttemptUtc = DateTime.MinValue;
+        approachLocation = null;
+        followPolicy.ResetApproach();
         ClearHinterlandsRoute();
         ClearLineOfSightRescue();
         ResetTerritoryHandoff();
@@ -1390,6 +1426,7 @@ internal sealed partial class CoppeliaTravelService
             request = request with { FailureState = $"Lifestream rejected the request: {request.FailureState}" };
 
         lifestreamRequest = request;
+        followPolicy.ResetApproach();
         lifestreamObservedLoading = false;
         if (accepted)
             pendingAetheryteArrival = null;
@@ -1444,7 +1481,7 @@ internal sealed partial class CoppeliaTravelService
         teleportListUnavailable = false;
         blocker = string.Empty;
 
-        if (!TryGetTeleportListSnapshot(out var teleportList, out blocker))
+        if (!teleportListReader(out var teleportList, out blocker))
         {
             teleportListUnavailable = true;
             return false;
