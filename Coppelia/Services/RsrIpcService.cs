@@ -102,6 +102,24 @@ internal sealed class RsrIpcService
         lastRequestedMode = null;
     }
 
+    internal void RestoreHealingAfterOff()
+    {
+        // Stop again even when Off was cached before another owner changed RSR.
+        lastRequestedMode = null;
+        TrySetMode(RsrStateCommandType.Off);
+        TrySetSetting("AutoHeal", "true");
+        TrySetSetting("UseGroundBeneficialAbility", "true");
+        TrySetSetting("HealWhenNothingTodo", "true");
+        TrySetSetting("HealthAreaAbilityHot", "0.70");
+        TrySetSetting("HealthAreaSpellHot", "0.70");
+        TrySetSetting("HealthAreaAbility", "0.90");
+        TrySetSetting("HealthAreaSpell", "0.80");
+        TrySetSetting("HealthSingleAbilityHot", "0.80");
+        TrySetSetting("HealthSingleSpellHot", "0.70");
+        TrySetSetting("HealthSingleAbility", "0.85");
+        TrySetSetting("HealthSingleSpell", "0.80");
+    }
+
     public bool TryTriggerSingleTargetHeal()
         => TryTriggerSpecial(RsrSpecialCommandType.HealSingle);
 

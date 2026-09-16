@@ -241,6 +241,9 @@ public sealed class Plugin : IDalamudPlugin
         {
             case OperatingRole.Off:
                 ApplyProviderState(pluginEnabled: false, automationEnabled: false, Configuration.BotMode);
+                // Loading an already-Off role is not an explicit Off request.
+                if (runtimeStarted)
+                    RsrIpcService.RestoreHealingAfterOff();
                 LastAutomationBlocker = string.Empty;
                 started = true;
                 break;

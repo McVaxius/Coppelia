@@ -1,5 +1,7 @@
 # Changelog
 
+- Explicit HealBot Off, including repeated Off, restores the approved current-job RSR healing settings after cleanup and snapshot restoration, replacing customized thresholds and leaving RSR stopped. IPC failures are logged without blocking Off.
+
 - Helper approach recovery measures actual XYZ displacement. Failing to move more than five yalms in ten
   seconds stops owned navigation and uses the existing aetheryte resolver and Lifestream teleport path.
   Quester snapshots and route reissues do not renew the observation; loading, location changes, and approach
