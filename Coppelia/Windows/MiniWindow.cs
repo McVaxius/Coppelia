@@ -11,6 +11,9 @@ namespace Coppelia.Windows;
 public sealed class MiniWindow : Window, IDisposable
 {
     private readonly Plugin plugin;
+    private bool qstMiniOpen;
+
+    internal bool IsCloseProtected => plugin.Configuration.OperatingRole != OperatingRole.Off && !qstMiniOpen;
 
     public MiniWindow(Plugin plugin)
         : base($"{PluginInfo.DisplayName} Mini###CoppeliaMini")
@@ -31,6 +34,20 @@ public sealed class MiniWindow : Window, IDisposable
 
     public void RefreshDrafts()
     {
+    }
+
+    public override void PreOpenCheck()
+    {
+        // Sample only while drawing; command callbacks must not access native ImGui windows.
+        var qstMini = ImGuiP.FindWindowByName("QSTComp Mini###QSTCompMini");
+        // The previous frame accounts for either plugin drawing first. Old closed windows do not count.
+        qstMiniOpen = !qstMini.IsNull && (qstMini.Active || qstMini.WasActive);
+
+        var protect = IsCloseProtected;
+        ShowCloseButton = !protect;
+        RespectCloseHotkey = !protect;
+        if (protect)
+            IsOpen = true;
     }
 
     public override void Draw()

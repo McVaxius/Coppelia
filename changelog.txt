@@ -1,5 +1,9 @@
 # Changelog
 
+- HealBot Mini automatically opens and cannot be closed while the role is not Off and QST Mini is closed or
+  unavailable on the same client. Off or an open QST Mini restores the close button, Escape, and command toggles.
+  Manual opening remains available, both Mini windows may stay open, and normal game-wide UI hiding is respected.
+
 - Explicit HealBot Off, including repeated Off, restores the approved current-job RSR healing settings after cleanup and snapshot restoration, replacing customized thresholds and leaving RSR stopped. IPC failures are logged without blocking Off.
 
 - Helper approach recovery measures actual XYZ displacement. Failing to move more than five yalms in ten

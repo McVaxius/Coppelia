@@ -427,6 +427,9 @@ public sealed class Plugin : IDalamudPlugin
 
     public void ToggleMiniUi()
     {
+        if (miniWindow.IsOpen && miniWindow.IsCloseProtected)
+            return;
+
         if (!miniWindow.IsOpen)
             miniWindow.RefreshDrafts();
         miniWindow.Toggle();
