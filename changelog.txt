@@ -1,5 +1,7 @@
 # Changelog
 
+- Build only the plugin project in GitHub Actions so test and regression projects do not block production artifacts.
+
 - HealBot Mini automatically opens and cannot be closed while the role is not Off and QST Mini is closed or
   unavailable on the same client. Off or an open QST Mini restores the close button, Escape, and command toggles.
   Manual opening remains available, both Mini windows may stay open, and normal game-wide UI hiding is respected.
