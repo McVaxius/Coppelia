@@ -1,5 +1,62 @@
 # Changelog
 
+## 2026-10-06 - Hindi interface
+
+- Append Hindi after the fourteen existing language choices and translate all 865 interface and displayed service messages. Preserve the configuration path, existing language order, native control IDs, command tokens, opaque identities and automation actions.
+- Shape Hindi through the consumer-owned Windows text host in Main, Mini, Settings, Watch, fields, tabs, tables, tooltips and owner titles. Retain all seven original font roles, files, heights, symbols and selected-first CJK merges. The game-owned DTR keeps English text when Hindi is selected.
+- Preserve complete shaped radio-caption ink with the native window clip; retain the original item rectangle, control identity and font metrics.
+- Debug/x64 source compilation passes with no warnings or errors against the frozen AethertekUI core and adapter. Hindi catalogs and appearance/save checks pass; Watch covers 48 scenes and 3,120 complete text runs. Main, Mini and Settings pass 144 scenes across reference, narrow and non-default caller-scale matrices, preserving complete ink, 456 original radio hit identities and 387 safe navigation/draft actions. English appearance checks also pass. Managed-host, game, GPU and IME acceptance remain separate.
+
+## 2026-10-06 - Window appearance and transparency
+
+- Move colour configuration into the existing Settings Window appearance section, retaining compact/language access there. Independently hide or show the main-window compact and language controls, both visible by default. Add the main Transparency toggle without changing automation actions or native control identities.
+- Persist full-window opacity through the existing configuration: 100% normal opacity, automatic fade enabled, 50% unfocused opacity after 10 seconds. Clamp opacity to 10-100% and delay to 0-3600 seconds. Apply one shared opacity pass per owner after native drawing and motion restoration, including collapsed and font-status windows; retain native chrome, image alpha and owned child/pop-up content.
+- Translate the eight new appearance labels in all 14 existing catalogs. Current-version compilation, focused persistence/focus checks and game acceptance remain pending for this source change.
+
+## 2026-10-05 - HealBot presentation completion (locally verified)
+
+- Add the approved Main and Mini subtitles in all fourteen interface languages, preserving the existing catalog keys and appending two messages.
+- Adjust Main, Mini and Watch branding, body text and status values through local window font scopes. Keep every original font role, file, atlas height and merge order, and restore the caller's window font scale exactly.
+- Match radio artwork to the approved smaller circles while retaining native labels, IDs and hit areas. Keep all four regular Main role tiles on one row, reserve their heights, and reduce Mini role-grid padding.
+- Measure translated Mini role, name-toggle, healing-context and status captions before choosing columns; reflow narrow layouts and keep wider tables reachable through native scrolling.
+- Draw translated table headings through their native column clips and inset Main/Mini role captions so descenders and leading glyph bearings remain visible.
+- Pass 2,016 native-window scenes across all fourteen languages, both densities, 100%/150% scales and normal/minimum sizes, plus 96 English scenes with a non-default caller font scale. Verify complete rendered text, original native control identities, safe navigation/draft actions and unchanged font roles without service constructors, runtime actions or saves. Managed-host, game and GPU acceptance remain separate.
+
+## 2026-10-05 - Rounded window chrome and native minimize (source adoption)
+
+- Adopt rounded chrome and animated native minimize/restore through the native lifecycle for Main, Config, Mini, Watch and font status. Preserve control identities, layout, saved geometry, actions and existing NoCollapse behavior.
+- Compilation, native interaction and game acceptance for this source adoption remain pending verification.
+
+## 2026-10-05 - Watch target table sizing
+
+- Keep retained and absent targets available at the Watch window's default and minimum heights; use native scrolling when the header leaves little room.
+- Measure live and retained columns from their translated headings and displayed row values, and add horizontal table scrolling so names and target states remain readable in narrow windows. Preserve native table and control identities, saved settings, target actions, and version 2.3.0.4.
+- Compose each retained-target state through its exact translated template and format live-target distances with the selected interface culture. This restores displayed translations for absent, hidden, retained, dead and healthy targets without changing target status rules.
+
+
+## 2026-10-04 - Additional interface languages
+
+- Add Vietnamese, Brazilian Portuguese, Indonesian, Polish, and Turkish to every existing language selector and all 855 authored interface and displayed status messages. Keep the original language order, saved settings, commands, external names, and raw service values intact.
+- Continue using the existing embedded-resource, configuration-save, and host-managed font routes; plugin and configuration versions remain unchanged.
+- Restore four Japanese and Simplified Chinese trailing separators used by joined QST ownership messages, found by compiled catalog checks.
+
+## 2026-10-03 - AethertekUI presentation
+
+- Add the approved HealBot dashboard, compact density, role tiles, and Mini watched-target summary. Watch retains its live target editing and Ctrl-removal behavior; Settings and Quick Setup retain their save and ownership rules.
+- Share compact mode, relative accent colours, and nine embedded interface languages across the windows. Keep readiness colours explicit and use host-managed fonts with glyph coverage checks.
+- Reference sibling AethertekUI for local and GitHub builds and include the library in the plugin package. Plugin and configuration versions stay unchanged.
+- Preserve empty and reordered service-message arguments and leading zeroes in UI translations. Localize nested dependency labels while keeping product names and runtime messages intact.
+- Translate the chat-status action and BMR/VBM choice in all interface languages, and restore the French and Spanish settings-title text.
+- Preserve opaque exception details and raw action names, scope leading-placeholder service summaries, and display the assembly version in the main title without changing native window IDs.
+- Reflow single-line native controls and measure text, numeric editors, optional step buttons, and translated choices. Preserve native no-step input defaults; give the healer rule grid readable columns and horizontal scrolling while retaining its native control identities.
+- Add the approved heart, clock and identity artwork to Main/Mini status summaries, plus sword/star artwork for the main action/rule summaries. Keep operational colours tied to readiness while preserving raw displayed identities and actions.
+
+## 2026-10-02 - Build and release repair
+
+- Pin GitHub builds to SDK 10.0.201 and pass the downloaded Dalamud library path. Restore and build plugin projects with matching configuration, platform and runtime; stop on restore failure.
+- Keep build tokens read-only and release writes in a separate job. Use packaged manifest versions for untagged releases.
+- Local launchers build the plugin directly in the pinned environment and return its exit status.
+
 - Build only the plugin project in GitHub Actions so test and regression projects do not block production artifacts.
 
 - HealBot Mini automatically opens and cannot be closed while the role is not Off and QST Mini is closed or

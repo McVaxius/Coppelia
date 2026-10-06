@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="K015" xml:space="preserve"><value>{0} 設定</value></data>
+  <data name="K017" xml:space="preserve"><value>{0}%</value></data>
+  <data name="K018" xml:space="preserve"><value>{0}% HP</value></data>
+  <data name="K024" xml:space="preserve"><value>操作</value></data>
+  <data name="K035" xml:space="preserve"><value>アタッカースタンス</value></data>
+  <data name="K041" xml:space="preserve"><value>更新あり</value></data>
+  <data name="K043" xml:space="preserve"><value>戻る</value></data>
+  <data name="K046" xml:space="preserve"><value>BMR または VBM</value></data>
+  <data name="K050" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="K052" xml:space="preserve"><value>チョコボ</value></data>
+  <data name="K059" xml:space="preserve"><value>バディ</value></data>
+  <data name="K062" xml:space="preserve"><value>バディのスタンス</value></data>
+  <data name="K068" xml:space="preserve"><value>設定済み</value></data>
+  <data name="K071" xml:space="preserve"><value>コピー</value></data>
+  <data name="K074" xml:space="preserve"><value>戦闘不能</value></data>
+  <data name="K076" xml:space="preserve"><value>ディフェンダースタンス</value></data>
+  <data name="K078" xml:space="preserve"><value>詳細</value></data>
+  <data name="K079" xml:space="preserve"><value>無効</value></data>
+  <data name="K080" xml:space="preserve"><value>Discord</value></data>
+  <data name="K082" xml:space="preserve"><value>距離</value></data>
+  <data name="K085" xml:space="preserve"><value>DTRバー</value></data>
+  <data name="K086" xml:space="preserve"><value>DTR表示モード</value></data>
+  <data name="K088" xml:space="preserve"><value>有効</value></data>
+  <data name="K098" xml:space="preserve"><value>追従</value></data>
+  <data name="K100" xml:space="preserve"><value>フリースタンス</value></data>
+  <data name="K102" xml:space="preserve"><value>FrenRider</value></data>
+  <data name="K108" xml:space="preserve"><value>一般</value></data>
+  <data name="K113" xml:space="preserve"><value>HealBot</value></data>
+  <data name="K124" xml:space="preserve"><value>ヒーラースタンス</value></data>
+  <data name="K147" xml:space="preserve"><value>HP</value></data>
+  <data name="K149" xml:space="preserve"><value>HP%</value></data>
+  <data name="K153" xml:space="preserve"><value>アイコン＋テキスト</value></data>
+  <data name="K154" xml:space="preserve"><value>アイコンのみ</value></data>
+  <data name="K157" xml:space="preserve"><value>Jacqueline of All Trades (JOAT)</value></data>
+  <data name="K159" xml:space="preserve"><value>JOAT</value></data>
+  <data name="K170" xml:space="preserve"><value>ジョブ</value></data>
+  <data name="K173" xml:space="preserve"><value>Ko-fi</value></data>
+  <data name="K174" xml:space="preserve"><value>Krangle</value></data>
+  <data name="K175" xml:space="preserve"><value>名前をランダム化</value></data>
+  <data name="K179" xml:space="preserve"><value>言語</value></data>
+  <data name="K183" xml:space="preserve"><value>読み込み済み</value></data>
+  <data name="K196" xml:space="preserve"><value>未所有</value></data>
+  <data name="K198" xml:space="preserve"><value>MP%</value></data>
+  <data name="K200" xml:space="preserve"><value>名前</value></data>
+  <data name="K208" xml:space="preserve"><value>次のアクション</value></data>
+  <data name="K209" xml:space="preserve"><value>次の操作: {0}</value></data>
+  <data name="K214" xml:space="preserve"><value>なし</value></data>
+  <data name="K219" xml:space="preserve"><value>未表示</value></data>
+  <data name="K222" xml:space="preserve"><value>オフ</value></data>
+  <data name="K223" xml:space="preserve"><value>オン</value></data>
+  <data name="K225" xml:space="preserve"><value>OOC</value></data>
+  <data name="K242" xml:space="preserve"><value>PowerlevelBot</value></data>
+  <data name="K250" xml:space="preserve"><value>優先度</value></data>
+  <data name="K256" xml:space="preserve"><value>クイック設定</value></data>
+  <data name="K258" xml:space="preserve"><value>準備完了</value></data>
+  <data name="K260" xml:space="preserve"><value>リフレッシュ</value></data>
+  <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
+  <data name="K277" xml:space="preserve"><value>RSR</value></data>
+  <data name="K283" xml:space="preserve"><value>クイック設定を再実行</value></data>
+  <data name="K290" xml:space="preserve"><value>保存しました</value></data>
+  <data name="K300" xml:space="preserve"><value>選択中</value></data>
+  <data name="K304" xml:space="preserve"><value>自己修理</value></data>
+  <data name="K308" xml:space="preserve"><value>設定</value></data>
+  <data name="K309" xml:space="preserve"><value>共有シークレット</value></data>
+  <data name="K311" xml:space="preserve"><value>DTRバーに表示</value></data>
+  <data name="K319" xml:space="preserve"><value>状態</value></data>
+  <data name="K322" xml:space="preserve"><value>状態をチャットに表示</value></data>
+  <data name="K323" xml:space="preserve"><value>ステップ {0} / 3</value></data>
+  <data name="K332" xml:space="preserve"><value>テキストのみ</value></data>
+  <data name="K343" xml:space="preserve"><value>追跡中</value></data>
+  <data name="K346" xml:space="preserve"><value>トリガー</value></data>
+  <data name="K347" xml:space="preserve"><value>種類</value></data>
+  <data name="K348" xml:space="preserve"><value>利用不可</value></data>
+  <data name="K356" xml:space="preserve"><value>表示</value></data>
+  <data name="K359" xml:space="preserve"><value>vnavmesh</value></data>
+  <data name="K000" xml:space="preserve"><value>%d秒</value></data>
+  <data name="K001" xml:space="preserve"><value>%dヤルム</value></data>
+  <data name="K002" xml:space="preserve"><value>…ほか{0}体の監視対象。</value></data>
+  <data name="K003" xml:space="preserve"><value>{0} - {1}を追跡</value></data>
+  <data name="K004" xml:space="preserve"><value>{0} / HP {1}%</value></data>
+  <data name="K005" xml:space="preserve"><value>{0} / 不在 / Ctrlで解除</value></data>
+  <data name="K006" xml:space="preserve"><value>{0} / 戦闘不能</value></data>
+  <data name="K007" xml:space="preserve"><value>{0} / フィルターで非表示</value></data>
+  <data name="K008" xml:space="preserve"><value>{0} / リスト保持</value></data>
+  <data name="K010" xml:space="preserve"><value>{0}の直接接続</value></data>
+  <data name="K011" xml:space="preserve"><value>{0}に着替え済み</value></data>
+  <data name="K012" xml:space="preserve"><value>{0}は未開放</value></data>
+  <data name="K013" xml:space="preserve"><value>{0} ミニ</value></data>
+  <data name="K016" xml:space="preserve"><value>{0} 監視</value></data>
+  <data name="K020" xml:space="preserve"><value>47789は予約済み</value></data>
+  <data name="K025" xml:space="preserve"><value>呼び出し中 - 帰還させてください</value></data>
+  <data name="K026" xml:space="preserve"><value>稼働中 / 接続先の識別情報</value></data>
+  <data name="K027" xml:space="preserve"><value>稼働中 / 接続先: {0}</value></data>
+  <data name="K028" xml:space="preserve"><value>稼働: {0}/{1} | 表示: {2} | 保存: {3}</value></data>
+  <data name="K029" xml:space="preserve"><value>稼働: 1/{0} | 表示: {1} | 保存内容は変更なし</value></data>
+  <data name="K031" xml:space="preserve"><value>占星術師 (AST)</value></data>
+  <data name="K032" xml:space="preserve"><value>16文字以上</value></data>
+  <data name="K033" xml:space="preserve"><value>攻撃アクション: {0}</value></data>
+  <data name="K034" xml:space="preserve"><value>攻撃対象: {0}</value></data>
+  <data name="K036" xml:space="preserve"><value>攻撃の準備状況</value></data>
+  <data name="K037" xml:space="preserve"><value>攻撃: {0}</value></data>
+  <data name="K040" xml:space="preserve"><value>ログイン時に地図の位置を更新</value></data>
+  <data name="K042" xml:space="preserve"><value>利用可能・互換性あり</value></data>
+  <data name="K044" xml:space="preserve"><value>吟遊詩人 (BRD)</value></data>
+  <data name="K045" xml:space="preserve"><value>バトルNPC</value></data>
+  <data name="K056" xml:space="preserve"><value>監視リストを消去</value></data>
+  <data name="K057" xml:space="preserve"><value>監視対象と保存済み対象を消去しました。</value></data>
+  <data name="K058" xml:space="preserve"><value>コマンドとウィンドウ</value></data>
+  <data name="K060" xml:space="preserve"><value>バディチョコボ</value></data>
+  <data name="K061" xml:space="preserve"><value>バディチョコボ</value></data>
+  <data name="K069" xml:space="preserve"><value>設定済みFren</value></data>
+  <data name="K070" xml:space="preserve"><value>続行</value></data>
+  <data name="K072" xml:space="preserve"><value>共有シークレットをコピー</value></data>
+  <data name="K073" xml:space="preserve"><value>現在のジョブID {0}は選択と不一致</value></data>
+  <data name="K075" xml:space="preserve"><value>標準</value></data>
+  <data name="K077" xml:space="preserve"><value>依存関係の準備状況</value></data>
+  <data name="K081" xml:space="preserve"><value>帰還済み</value></data>
+  <data name="K083" xml:space="preserve"><value>タマミズのエーテライトを避ける</value></data>
+  <data name="K084" xml:space="preserve"><value>DoTのみ</value></data>
+  <data name="K087" xml:space="preserve"><value>{0}を有効にする</value></data>
+  <data name="K089" xml:space="preserve"><value>有効・設定済み・表示中</value></data>
+  <data name="K090" xml:space="preserve"><value>接続先: {0}</value></data>
+  <data name="K092" xml:space="preserve"><value>装備済み</value></data>
+  <data name="K093" xml:space="preserve"><value>名前・種類・ジョブで絞り込み</value></data>
+  <data name="K094" xml:space="preserve"><value>名前で検索…</value></data>
+  <data name="K097" xml:space="preserve"><value>設定を完了</value></data>
+  <data name="K099" xml:space="preserve"><value>前進してエリアを探す時間</value></data>
+  <data name="K101" xml:space="preserve"><value>Frenの表示状態</value></data>
+  <data name="K103" xml:space="preserve"><value>FrenRider攻撃IPC</value></data>
+  <data name="K104" xml:space="preserve"><value>FrenRiderの攻撃元</value></data>
+  <data name="K105" xml:space="preserve"><value>FrenRider IPC</value></data>
+  <data name="K009" xml:space="preserve"><value>{0} [{1}] - {2}</value></data>
+  <data name="K019" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="K373" xml:space="preserve"><value>青緑</value></data>
+  <data name="K402" xml:space="preserve"><value>停止中</value></data>
+  <data name="K400" xml:space="preserve"><value>停止: {0}</value></data>
+  <data name="K425" xml:space="preserve"><value>がブロックされました</value></data>
+  <data name="K415" xml:space="preserve"><value>待機</value></data>
+  <data name="K376" xml:space="preserve"><value>カスタムRGB</value></data>
+  <data name="K375" xml:space="preserve"><value>ピンク</value></data>
+  <data name="K586" xml:space="preserve"><value>不明</value></data>
+  <data name="K378" xml:space="preserve"><value>UIフォントを読み込み中...</value></data>
+  <data name="K718" xml:space="preserve"><value>プラグインの問題や提案は「The Dumpster Fire」チャンネルでご相談ください。</value></data>
+  <data name="K372" xml:space="preserve"><value>色</value></data>
+  <data name="K413" xml:space="preserve"><value>いいえ</value></data>
+  <data name="K374" xml:space="preserve"><value>青</value></data>
+  <data name="K713" xml:space="preserve"><value>チョコボ</value></data>
+  <data name="K412" xml:space="preserve"><value>はい</value></data>
+  <data name="K504" xml:space="preserve"><value>操作中またはカットシーン</value></data>
+  <data name="K389" xml:space="preserve"><value>ターゲット</value></data>
+  <data name="K431" xml:space="preserve"><value>詠唱中</value></data>
+  <data name="K377" xml:space="preserve"><value>コンパクトモード</value></data>
+  <data name="K502" xml:space="preserve"><value>エリア移動中</value></data>
+  <data name="K379" xml:space="preserve"><value>UIフォントの読み込みに失敗しました。プラグインのログを確認してください。</value></data>
+  <data name="K380" xml:space="preserve"><value>未実行</value></data>
+  <data name="K106" xml:space="preserve"><value>友好的なバトルNPC</value></data>
+  <data name="K107" xml:space="preserve"><value>RSRの全ローテーション</value></data>
+  <data name="K109" xml:space="preserve"><value>64桁の16進シークレットを生成</value></data>
+  <data name="K110" xml:space="preserve"><value>シークレットを生成</value></data>
+  <data name="K111" xml:space="preserve"><value>ギサールの野菜 (NQ + HQ): {0}</value></data>
+  <data name="K112" xml:space="preserve"><value>ギサールの野菜 (NQ + HQ): 取得不可</value></data>
+  <data name="K115" xml:space="preserve"><value>HealBotアクション</value></data>
+  <data name="K118" xml:space="preserve"><value>HealBot ミニ</value></data>
+  <data name="K119" xml:space="preserve"><value>HealBotの任意連携</value></data>
+  <data name="K120" xml:space="preserve"><value>HealBotの処理経路</value></data>
+  <data name="K122" xml:space="preserve"><value>HealBot 監視</value></data>
+  <data name="K123" xml:space="preserve"><value>ヒーラーのアクション設定</value></data>
+  <data name="K125" xml:space="preserve"><value>回復アクション: {0} | 攻撃アクション: {1}</value></data>
+  <data name="K126" xml:space="preserve"><value>回復設定</value></data>
+  <data name="K127" xml:space="preserve"><value>回復対象の状況</value></data>
+  <data name="K128" xml:space="preserve"><value>回復の依存関係</value></data>
+  <data name="K129" xml:space="preserve"><value>回復の実行条件</value></data>
+  <data name="K130" xml:space="preserve"><value>回復の準備状況</value></data>
+  <data name="K132" xml:space="preserve"><value>回復: {0}</value></data>
+  <data name="K133" xml:space="preserve"><value>ヘルパー</value></data>
+  <data name="K134" xml:space="preserve"><value>ヘルパー / 初心者の接続要件</value></data>
+  <data name="K135" xml:space="preserve"><value>ヘルパーのアドレス</value></data>
+  <data name="K136" xml:space="preserve"><value>ヘルパーの接続先: {0}:{1}。</value></data>
+  <data name="K137" xml:space="preserve"><value>ヘルパーのIPv4アドレス</value></data>
+  <data name="K138" xml:space="preserve"><value>ヘルパーの待受ポート: {0}。</value></data>
+  <data name="K143" xml:space="preserve"><value>フィルターで非表示</value></data>
+  <data name="K144" xml:space="preserve"><value>Ctrlを押して監視対象と保存済み対象をすべて消去します。</value></data>
+  <data name="K145" xml:space="preserve"><value>不在の対象{0}を解除するにはCtrlを押してください。</value></data>
+  <data name="K148" xml:space="preserve"><value>HP取得不可</value></data>
+  <data name="K150" xml:space="preserve"><value>HP: {0}</value></data>
+  <data name="K151" xml:space="preserve"><value>HP: 取得不可</value></data>
+  <data name="K152" xml:space="preserve"><value>HP: 対象が非表示</value></data>
+  <data name="K155" xml:space="preserve"><value>互換性なし</value></data>
+  <data name="K156" xml:space="preserve"><value>無効なIPv4アドレス</value></data>
+  <data name="K158" xml:space="preserve"><value>JOATの要件</value></data>
+  <data name="K160" xml:space="preserve"><value>JOATの攻撃モード</value></data>
+  <data name="K162" xml:space="preserve"><value>JOAT攻撃の準備状況</value></data>
+  <data name="K164" xml:space="preserve"><value>JOATヒーラー設定</value></data>
+  <data name="K165" xml:space="preserve"><value>JOATの回復経路</value></data>
+  <data name="K167" xml:space="preserve"><value>JOATの準備状況は未確認です。</value></data>
+  <data name="K168" xml:space="preserve"><value>JOATの監視対象</value></data>
+  <data name="K171" xml:space="preserve"><value>ジョブ装備済み</value></data>
+  <data name="K172" xml:space="preserve"><value>ジョブ開放済み</value></data>
+  <data name="K176" xml:space="preserve"><value>名前を難読化: 無効</value></data>
+  <data name="K177" xml:space="preserve"><value>名前を難読化: 有効</value></data>
+  <data name="K180" xml:space="preserve"><value>直前のアクション</value></data>
+  <data name="K181" xml:space="preserve"><value>直前のルール</value></data>
+  <data name="K182" xml:space="preserve"><value>現在の対象候補 ({0})</value></data>
+  <data name="K185" xml:space="preserve"><value>ローカルヒーラー: {0} ({1})</value></data>
+  <data name="K186" xml:space="preserve"><value>ローカル初心者のHP: {0}</value></data>
+  <data name="K187" xml:space="preserve"><value>ローカル初心者の識別情報</value></data>
+  <data name="K188" xml:space="preserve"><value>初心者モードを開始する前にログインを完了してください</value></data>
+  <data name="K189" xml:space="preserve"><value>見通し: {0}</value></data>
+  <data name="K190" xml:space="preserve"><value>見通し: 対象が非表示</value></data>
+  <data name="K191" xml:space="preserve"><value>機工士 (MCH)</value></data>
+  <data name="K192" xml:space="preserve"><value>メイン</value></data>
+  <data name="K193" xml:space="preserve"><value>監視対象を管理し、味方を検索します。</value></data>
+  <data name="K195" xml:space="preserve"><value>ミニ</value></data>
+  <data name="K197" xml:space="preserve"><value>未導入 (任意)</value></data>
+  <data name="K199" xml:space="preserve"><value>監視上限: 稼働{0}体・保存{1}体。</value></data>
+  <data name="K201" xml:space="preserve"><value>バフ不在を条件にする</value></data>
+  <data name="K202" xml:space="preserve"><value>ネットワーク設定は保存済みです。</value></data>
+  <data name="K203" xml:space="preserve"><value>ネットワーク設定を保存し、直接接続を1回再起動しました。</value></data>
+  <data name="K204" xml:space="preserve"><value>初心者</value></data>
+  <data name="K210" xml:space="preserve"><value>稼働中のヘルパー / クエスト担当なし</value></data>
+  <data name="K211" xml:space="preserve"><value>稼働中の監視対象なし</value></data>
+  <data name="K212" xml:space="preserve"><value>フィルターに一致する対象候補がありません。</value></data>
+  <data name="K213" xml:space="preserve"><value>監視対象がまだ選択されていません。</value></data>
+  <data name="K215" xml:space="preserve"><value>未選択</value></data>
+  <data name="K216" xml:space="preserve"><value>未取得</value></data>
+  <data name="K217" xml:space="preserve"><value>未設定</value></data>
+  <data name="K218" xml:space="preserve"><value>未開放</value></data>
+  <data name="K220" xml:space="preserve"><value>NPCパーティ</value></data>
+  <data name="K221" xml:space="preserve"><value>NPCパーティメンバー</value></data>
+  <data name="K114" xml:space="preserve"><value>HealBot {0}</value></data>
+  <data name="K169" xml:space="preserve"><value>JOAT: {0}</value></data>
+  <data name="K226" xml:space="preserve"><value>メインを開く</value></data>
+  <data name="K227" xml:space="preserve"><value>ミニを開く</value></data>
+  <data name="K229" xml:space="preserve"><value>監視を開く</value></data>
+  <data name="K230" xml:space="preserve"><value>監視ウィンドウを開く</value></data>
+  <data name="K231" xml:space="preserve"><value>動作ロール</value></data>
+  <data name="K233" xml:space="preserve"><value>稼働状況</value></data>
+  <data name="K234" xml:space="preserve"><value>接続ポート</value></data>
+  <data name="K235" xml:space="preserve"><value>接続中のヘルパー: {0}</value></data>
+  <data name="K236" xml:space="preserve"><value>直接接続のTCPポート</value></data>
+  <data name="K237" xml:space="preserve"><value>接続: {0} - {1}</value></data>
+  <data name="K238" xml:space="preserve"><value>プレイヤー</value></data>
+  <data name="K239" xml:space="preserve"><value>パワーレベリングのジョブ</value></data>
+  <data name="K241" xml:space="preserve"><value>パワーレベリングの準備状況は未確認です。</value></data>
+  <data name="K246" xml:space="preserve"><value>PowerlevelBotの処理経路</value></data>
+  <data name="K247" xml:space="preserve"><value>PowerlevelBotの要件</value></data>
+  <data name="K248" xml:space="preserve"><value>主な状態</value></data>
+  <data name="K251" xml:space="preserve"><value>プロバイダー: {0}</value></data>
+  <data name="K252" xml:space="preserve"><value>QSTがJOATの攻撃を管理中 ({0})。 </value></data>
+  <data name="K253" xml:space="preserve"><value>QSTが召喚を管理中 ({0})。 </value></data>
+  <data name="K255" xml:space="preserve"><value>QSTの移動</value></data>
+  <data name="K259" xml:space="preserve"><value>回復処理が待機中なら実行可能</value></data>
+  <data name="K261" xml:space="preserve"><value>準備状況を更新</value></data>
+  <data name="K263" xml:space="preserve"><value>再参加の検索範囲</value></data>
+  <data name="K264" xml:space="preserve"><value>リモート追跡: {0}</value></data>
+  <data name="K265" xml:space="preserve"><value>リモート回復: {0}</value></data>
+  <data name="K266" xml:space="preserve"><value>要件 / ヘルプ</value></data>
+  <data name="K267" xml:space="preserve"><value>要件とヘルプ</value></data>
+  <data name="K268" xml:space="preserve"><value>見通しの回復: {0}</value></data>
+  <data name="K269" xml:space="preserve"><value>見通しの回復: 待機</value></data>
+  <data name="K270" xml:space="preserve"><value>敵の選択制限</value></data>
+  <data name="K271" xml:space="preserve"><value>保持中 - 不在</value></data>
+  <data name="K272" xml:space="preserve"><value>保持中または不在の対象 ({0})</value></data>
+  <data name="K273" xml:space="preserve"><value>確認して完了</value></data>
+  <data name="K274" xml:space="preserve"><value>ロールのネットワーク</value></data>
+  <data name="K275" xml:space="preserve"><value>ロール: {0}</value></data>
+  <data name="K278" xml:space="preserve"><value>RSR制御</value></data>
+  <data name="K282" xml:space="preserve"><value>クイック設定を開始</value></data>
+  <data name="K285" xml:space="preserve"><value>賢者 (SGE)</value></data>
+  <data name="K286" xml:space="preserve"><value>明示的に選んだ回復対象を保存</value></data>
+  <data name="K287" xml:space="preserve"><value>回復対象を保存</value></data>
+  <data name="K289" xml:space="preserve"><value>設定を保存し、ロールを無効のままにする</value></data>
+  <data name="K291" xml:space="preserve"><value>保存済み対象の検索範囲</value></data>
+  <data name="K293" xml:space="preserve"><value>対象の保存は無効。</value></data>
+  <data name="K294" xml:space="preserve"><value>対象を保存・{0}ヤルム以内で再参加。</value></data>
+  <data name="K295" xml:space="preserve"><value>検索範囲 (ヤルム)</value></data>
+  <data name="K296" xml:space="preserve"><value>学者 (SCH)</value></data>
+  <data name="K297" xml:space="preserve"><value>BRDかMCHを選択</value></data>
+  <data name="K299" xml:space="preserve"><value>直接接続の設定を編集するにはヘルパーか初心者を選択してください。</value></data>
+  <data name="K301" xml:space="preserve"><value>選択済み - 遠隔</value></data>
+  <data name="K302" xml:space="preserve"><value>選択ジョブ</value></data>
+  <data name="K305" xml:space="preserve"><value>ヘルパーを設定</value></data>
+  <data name="K306" xml:space="preserve"><value>初心者を設定</value></data>
+  <data name="K307" xml:space="preserve"><value>単独モードを設定</value></data>
+  <data name="K310" xml:space="preserve"><value>依存関係の通知を表示</value></data>
+  <data name="K312" xml:space="preserve"><value>QSTのテレポ先でタマミズを除外します。</value></data>
+  <data name="K313" xml:space="preserve"><value>単独</value></data>
+  <data name="K314" xml:space="preserve"><value>単独モードの動作</value></data>
+  <data name="K315" xml:space="preserve"><value>単独HealBotの要件</value></data>
+  <data name="K318" xml:space="preserve"><value>このロールを今すぐ開始</value></data>
+  <data name="K320" xml:space="preserve"><value>状態と動作</value></data>
+  <data name="K321" xml:space="preserve"><value>ステータス概要</value></data>
+  <data name="K324" xml:space="preserve"><value>バディチョコボを呼び出す</value></data>
+  <data name="K327" xml:space="preserve"><value>対応ヒーラー</value></data>
+  <data name="K328" xml:space="preserve"><value>現在のターゲットを追加</value></data>
+  <data name="K329" xml:space="preserve"><value>対象の検索と保存</value></data>
+  <data name="K330" xml:space="preserve"><value>対象が非表示</value></data>
+  <data name="K331" xml:space="preserve"><value>TCPポート</value></data>
+  <data name="K342" xml:space="preserve"><value>短すぎます</value></data>
+  <data name="K345" xml:space="preserve"><value>移動: {0}</value></data>
+  <data name="K349" xml:space="preserve"><value>開放済み</value></data>
+  <data name="K351" xml:space="preserve"><value>1024～65535を指定</value></data>
+  <data name="K354" xml:space="preserve"><value>有効</value></data>
+  <data name="K355" xml:space="preserve"><value>有効なIPv4</value></data>
+  <data name="K357" xml:space="preserve"><value>表示中 - HealBotの回復対象</value></data>
+  <data name="K358" xml:space="preserve"><value>表示される共有シークレット</value></data>
+  <data name="K360" xml:space="preserve"><value>監視</value></data>
+  <data name="K361" xml:space="preserve"><value>監視フィルター</value></data>
+  <data name="K362" xml:space="preserve"><value>監視中</value></data>
+  <data name="K363" xml:space="preserve"><value>監視中の初心者</value></data>
+  <data name="K364" xml:space="preserve"><value>監視中のクエスト担当</value></data>
+  <data name="K365" xml:space="preserve"><value>監視対象</value></data>
+  <data name="K367" xml:space="preserve"><value>監視対象</value></data>
+  <data name="K369" xml:space="preserve"><value>白魔道士 (WHM)</value></data>
+  <data name="K381" xml:space="preserve"><value>詠唱GCD</value></data>
+  <data name="K382" xml:space="preserve"><value>即時oGCD</value></data>
+  <data name="K383" xml:space="preserve"><value>詠唱バフ</value></data>
+  <data name="K384" xml:space="preserve"><value>即時バフ</value></data>
+  <data name="K385" xml:space="preserve"><value>HP未満</value></data>
+  <data name="K386" xml:space="preserve"><value>戦闘不能の対象</value></data>
+  <data name="K387" xml:space="preserve"><value>バフなし</value></data>
+  <data name="K388" xml:space="preserve"><value>常に</value></data>
+  <data name="K390" xml:space="preserve"><value>プレイヤー</value></data>
+  <data name="K391" xml:space="preserve"><value>パーティNPC</value></data>
+  <data name="K392" xml:space="preserve"><value>友好的なNPC</value></data>
+  <data name="K723" xml:space="preserve"><value>接続中のヘルパー</value></data>
+  <data name="K724" xml:space="preserve"><value>見通し</value></data>
+  <data name="K725" xml:space="preserve"><value>見通しの回復</value></data>
+  <data name="K232" xml:space="preserve"><value>動作ロール: {0}</value></data>
+  <data name="K240" xml:space="preserve"><value>パワーレベリングのジョブ: {0}。</value></data>
+  <data name="K249" xml:space="preserve"><value>主な状態: {0}</value></data>
+  <data name="K303" xml:space="preserve"><value>選択ジョブ: {0}</value></data>
+  <data name="K366" xml:space="preserve"><value>監視対象: {0}</value></data>
+  <data name="K014" xml:space="preserve"><value>保持・保存中の{0}体が非表示または不在です。監視ウィンドウで管理してください。</value></data>
+  <data name="K021" xml:space="preserve"><value>設定済みで表示中のFrenと、未召喚のバディチョコボ。</value></data>
+  <data name="K022" xml:space="preserve"><value>開放済みのBRDかMCHを装備中であること。</value></data>
+  <data name="K023" xml:space="preserve"><value>不在の対象はCtrlを押して解除してください。保存済みのコピーも削除されます。</value></data>
+  <data name="K030" xml:space="preserve"><value>生存時: 即時バフ → 即時oGCD → 詠唱バフ → 詠唱GCD。蘇生前には即時バフを確認します。</value></data>
+  <data name="K038" xml:space="preserve"><value>認証付き直接接続には、表示される共有シークレットを使います。</value></data>
+  <data name="K039" xml:space="preserve"><value>LAN通信は認証されますが暗号化されません。名前や座標はネットワーク上で見えます。</value></data>
+  <data name="K047" xml:space="preserve"><value>どちらもRSR Manualを使用します。DoTのみはヒーラーのDoTだけを有効にし、全ローテーションは記録済みの攻撃・範囲設定を戻します。自動ターゲット選択は有効にしません。</value></data>
+  <data name="K048" xml:space="preserve"><value>どちらもRSR Manualを使用します。全ローテーションは攻撃と範囲設定だけを変更します。</value></data>
+  <data name="K049" xml:space="preserve"><value>両側で互換性のある直接接続v2、同じポート、同じ共有シークレットを使用してください。</value></data>
+  <data name="K051" xml:space="preserve"><value>設定した回復アクションを監視中の友好対象に実行します。</value></data>
+  <data name="K053" xml:space="preserve"><value>動作ロールを選び、単独の場合は動作を選択します。完了まで下書きに留まり、キャンセルで破棄します。</value></data>
+  <data name="K054" xml:space="preserve"><value>現在装備中の遠隔ジョブを選んでください。このモードではギアセットを変更せず、監視リストも使用しません。</value></data>
+  <data name="K055" xml:space="preserve"><value>監視に表示する友好オブジェクトを選択します。明示的にチェックした対象だけを回復・保存します。</value></data>
+  <data name="K063" xml:space="preserve"><value>互換性のあるFrenRider Powerlevel IPC、有効なFrenRider、表示中の設定済みFren。</value></data>
+  <data name="K064" xml:space="preserve"><value>互換性のあるFrenRider Powerlevel IPCと有効なFrenRider。</value></data>
+  <data name="K065" xml:space="preserve"><value>認証付きのHealBot TCP接続先を1つ設定します。初心者はローカルで回復・攻撃しません。</value></data>
+  <data name="K066" xml:space="preserve"><value>認証用の待受ポートと、表示される共有シークレットを設定します。</value></data>
+  <data name="K067" xml:space="preserve"><value>ネットワークを使用せず、HealBot・JOAT・PowerlevelBotの動作を設定します。</value></data>
+  <data name="K091" xml:space="preserve"><value>Frenかローカルプレイヤーをすでに狙っている、ダメージを受けた敵だけを選択します。</value></data>
+  <data name="K095" xml:space="preserve"><value>フィルター: プレイヤー {0}、チョコボ {1}、NPCパーティ {2}、友好バトルNPC {3}。</value></data>
+  <data name="K096" xml:space="preserve"><value>完了時にロールを開始するか、無効のまま /healbot on で再開するロールとして保存します。</value></data>
+  <data name="K116" xml:space="preserve"><value>HealBotとJOATはジョブごとの回復設定を共有します。PowerlevelBotはこれらのルールを使用しません。</value></data>
+  <data name="K117" xml:space="preserve"><value>HealBotはWHM・SCH・AST・SGEの設定で最大{0}体を監視します。パーティ外の友好プレイヤーも対象にできます。</value></data>
+  <data name="K121" xml:space="preserve"><value>/healbot・/hb・/copellia に off、on、standalone、helper、newb、heal、joat（jotも可）、powerlevel、mini、status、config、watch、ws、j を指定できます。</value></data>
+  <data name="K131" xml:space="preserve"><value>900msごとの判断では回復が優先されます。監視ルール実行前にRSRを停止し、回復の予約・阻止・詠唱中は停止を維持します。回復が完全に待機中のときだけRSR Manualを使います。接続中のJOATは30ヤルム以内で待機し、交戦中の敵はCoppeliaが選びます。</value></data>
+  <data name="K139" xml:space="preserve"><value>ヘルパーは認証済みの初心者1人を待ち受け、互換性のある状態要求後にJOATを開始します。</value></data>
+  <data name="K140" xml:space="preserve"><value>ヘルパーには有効なTCPポートと表示される共有シークレットが必要です。初心者にはヘルパーのIPv4アドレスも必要です。</value></data>
+  <data name="K141" xml:space="preserve"><value>ヘルパーにはHealBot / JOATの依存関係と、接続先との移動用のLifestream・vnavmeshが必要です。</value></data>
+  <data name="K142" xml:space="preserve"><value>ヘルパーは待受ポートと共有シークレットを設定し、初心者はヘルパーのIPv4も設定します。</value></data>
+  <data name="K146" xml:space="preserve"><value>初心者 / クエスト担当がテレポせずにエリア移動した際、ヘルパーが前進する時間です。</value></data>
+  <data name="K161" xml:space="preserve"><value>JOAT攻撃モード: {0}。どちらも回復処理が完全に待機中のときだけRSR Manualを使います。</value></data>
+  <data name="K163" xml:space="preserve"><value>JOATはFrenを自動追加しません。回復で守る低レベル対象なら、監視でFrenを明示的に選択してください。</value></data>
+  <data name="K166" xml:space="preserve"><value>回復で守るFrenを監視で選んでください。JOATは自動追加せず、表示中のFrenかローカルヒーラーを狙う敵だけを攻撃します。</value></data>
+  <data name="K178" xml:space="preserve"><value>LAN通信は認証されますが暗号化されず、名前や座標は見えます。接続・認証・割り当て・再接続は非同期です。</value></data>
+  <data name="K184" xml:space="preserve"><value>動作するRotation Solver Rebornが必要です。JOATの攻撃はRSRだけが実行します。</value></data>
+  <data name="K194" xml:space="preserve"><value>対象は監視ウィンドウで管理してください。Ctrlでの全消去は稼働中と保存済みの両方を削除します。</value></data>
+  <data name="K205" xml:space="preserve"><value>初心者は指定したヘルパーのIPv4に非同期接続し、ローカルで回復・攻撃しません。</value></data>
+  <data name="K206" xml:space="preserve"><value>初心者はローカルで回復・攻撃せず、単独モードの監視リストも変更しません。</value></data>
+  <data name="K207" xml:space="preserve"><value>初心者はローカルで回復・攻撃しません。監視リストは後のHealBot・JOAT用に保持します。</value></data>
+  <data name="K224" xml:space="preserve"><value>表示中のFrenかローカルプレイヤーをすでに狙う、ダメージを受けた敵だけが対象です。</value></data>
+  <data name="K228" xml:space="preserve"><value>監視ウィンドウを開きます。下書きのフィルターは完了後に適用します。</value></data>
+  <data name="K243" xml:space="preserve"><value>PowerlevelBotは表示中の設定済みFrenかローカルプレイヤーを狙う、生存・ターゲット可能・負傷中の敵だけを選びます。BRD / MCHの即時単体攻撃を使い、未交戦の敵は引きません。</value></data>
+  <data name="K244" xml:space="preserve"><value>PowerlevelBotはHealBotの監視リストを使わず、設定済みのFrenをリーダーにします。</value></data>
+  <data name="K245" xml:space="preserve"><value>PowerlevelBotはギアセットを変更しません。現在のジョブが選択と一致する必要があります。</value></data>
+  <data name="K254" xml:space="preserve"><value>QSTが攻撃モードを管理しています。解放後にローカルの選択へ戻ります。</value></data>
+  <data name="K257" xml:space="preserve"><value>クイック設定が完了しました。このタブからいつでも再実行できます。</value></data>
+  <data name="K262" xml:space="preserve"><value>最寄りエーテライトの選択用に、HealBotのバージョンごとに1回LootGoblinの共同地図データを更新します。</value></data>
+  <data name="K279" xml:space="preserve"><value>JOATの攻撃にはRSRが必要で、攻撃はRSRだけが実行します。Coppeliaは監視対象を直接回復し、RSRの停止と回復待機時の再開を管理します。</value></data>
+  <data name="K280" xml:space="preserve"><value>RSRがある場合は隔離とセッションの復元を使用します。HealBotの回復は引き続き直接実行します。</value></data>
+  <data name="K281" xml:space="preserve"><value>単独・ヘルパー・初心者を案内に沿って設定します。完了するまで変更しません。</value></data>
+  <data name="K284" xml:space="preserve"><value>監視対象の回復を優先し、回復が完全に待機中のときだけRSRが攻撃します。</value></data>
+  <data name="K288" xml:space="preserve"><value>明示的にチェックした対象だけを保存します。チェック解除で保存済みのコピーも削除します。</value></data>
+  <data name="K292" xml:space="preserve"><value>検索範囲は戻ってきた保存済み対象の再参加だけに影響します。新しい対象は探しません。</value></data>
+  <data name="K298" xml:space="preserve"><value>回復する低レベルのFrenを明示的に選んでください。JOATは自動で追加しません。</value></data>
+  <data name="K316" xml:space="preserve"><value>単独ではネットワークなしでHealBot・JOAT・PowerlevelBotを実行します。ヘルパーは認証済みの初心者1人を待ち受けてJOATを遠隔開始します。初心者は非同期接続し、ローカルで回復・攻撃しません。</value></data>
+  <data name="K317" xml:space="preserve"><value>単独ではネットワークなしでHealBot・JOAT・PowerlevelBotを実行します。ヘルパーは認証済みの初心者1人を待ち受け、初心者は非同期接続し、ローカルで回復・攻撃しません。</value></data>
+  <data name="K333" xml:space="preserve"><value>この一時的な対象はQSTまたは初心者のセッションだけが管理します。保存済み対象は変更せず、解放後に再開します。</value></data>
+  <data name="K334" xml:space="preserve"><value>Frenは自動追加しません。回復する低レベル対象なら明示的に選んでください。</value></data>
+  <data name="K335" xml:space="preserve"><value>HealBotの依存関係、対応ヒーラーの装備、有効な回復設定、明示的な監視対象が必要です。</value></data>
+  <data name="K336" xml:space="preserve"><value>解放後は保存済みのローカル選択へ戻ります。</value></data>
+  <data name="K337" xml:space="preserve"><value>解放後は保存済みのローカル設定へ戻ります。</value></data>
+  <data name="K338" xml:space="preserve"><value>範囲内に戻った保存済み対象だけが再参加します。新しい対象の検索や自動選択はしません。</value></data>
+  <data name="K339" xml:space="preserve"><value>これらはすぐに反映します。クイック設定は別の下書きを使い、完了まで変更しません。</value></data>
+  <data name="K340" xml:space="preserve"><value>これらのフィルターでHealBot / JOATの監視に表示する友好オブジェクトを選びます。</value></data>
+  <data name="K325" xml:space="preserve"><value>バディチョコボを呼び出す (ギサールの野菜 : {0})</value></data>
+  <data name="K326" xml:space="preserve"><value>バディチョコボを呼び出す (ギサールの野菜 : 取得不可)</value></data>
+  <data name="K341" xml:space="preserve"><value>保存した選択は単独JOATとQST解放後に使用します。どちらもRSR Manualで対象を選び、全ローテーションは記録済みの攻撃・範囲設定だけを変更します。</value></data>
+  <data name="K344" xml:space="preserve"><value>通信は認証されますが暗号化されません。名前や座標はネットワーク上で見えます。</value></data>
+  <data name="K350" xml:space="preserve"><value>チェック解除やCtrlでの全消去は保存済み対象も削除します。範囲は戻った保存済み対象の再参加だけに影響します。</value></data>
+  <data name="K352" xml:space="preserve"><value>対象の追加・解除は監視で行います。明示的に監視した対象だけを保存します。</value></data>
+  <data name="K353" xml:space="preserve"><value>Frenかローカルプレイヤーと交戦中の敵に、BRD / MCHの即時遠隔単体攻撃を使います。</value></data>
+  <data name="K368" xml:space="preserve"><value>監視中: {0}/{1}体。保存済み: {2}。</value></data>
+  <data name="K370" xml:space="preserve"><value>QSTが解放すると、保存済みのローカル選択へ戻ります。</value></data>
+  <data name="K371" xml:space="preserve"><value>QSTが解放すると、保存済みのローカル設定へ戻ります。</value></data>
+  <data name="K393" xml:space="preserve"><value>ヘルパー稼働中 (QST管理)</value></data>
+  <data name="K394" xml:space="preserve"><value>このプロバイダーセッションはQSTで解放・停止してください。</value></data>
+  <data name="K395" xml:space="preserve"><value>/healbot on で{0}を再開します。</value></data>
+  <data name="K397" xml:space="preserve"><value>主な状態に表示された問題を解消してください。</value></data>
+  <data name="K398" xml:space="preserve"><value>操作は不要です。</value></data>
+  <data name="K399" xml:space="preserve"><value>解消してください: {0}</value></data>
+  <data name="K401" xml:space="preserve"><value>実行保留: {0}</value></data>
+  <data name="K403" xml:space="preserve"><value>見通し取得不可</value></data>
+  <data name="K404" xml:space="preserve"><value>見通し良好</value></data>
+  <data name="K405" xml:space="preserve"><value>見通しが遮断</value></data>
+  <data name="K406" xml:space="preserve"><value>HealBotの輸送中は見通し回復の移動を保留</value></data>
+  <data name="K407" xml:space="preserve"><value>見通し遮断・1ヤルムまで接近中</value></data>
+  <data name="K408" xml:space="preserve"><value>見通し遮断・現在の移動管理者を待機</value></data>
+  <data name="K409" xml:space="preserve"><value>QSTが稼働モードを管理中 ({0})。解放後に保存済みのローカル選択へ戻ります。</value></data>
+  <data name="K410" xml:space="preserve"><value>QSTが召喚を管理中 ({0})。解放後に保存済みのローカル設定へ戻ります。</value></data>
+  <data name="K411" xml:space="preserve"><value>このセッション専用の対象が自動化での保存済み対象より優先されます。保存済み対象を変更・保存しません。</value></data>
+  <data name="K396" xml:space="preserve"><value>回復: {0} 攻撃: {1}</value></data>
+  <data name="K414" xml:space="preserve"><value>HealBotモードは無効です。</value></data>
+  <data name="K416" xml:space="preserve"><value>一致するルールなし。</value></data>
+  <data name="K417" xml:space="preserve"><value>プラグインを終了中。</value></data>
+  <data name="K418" xml:space="preserve"><value>HealBotはWHM・SCH・AST・SGEだけに対応します。</value></data>
+  <data name="K419" xml:space="preserve"><value>HealRiderの輸送中はアクションを保留。</value></data>
+  <data name="K420" xml:space="preserve"><value>移動</value></data>
+  <data name="K421" xml:space="preserve"><value>HealRiderが移動を管理中。</value></data>
+  <data name="K422" xml:space="preserve"><value>エリア移動中は実行を保留。</value></data>
+  <data name="K423" xml:space="preserve"><value>エリア移動中。</value></data>
+  <data name="K424" xml:space="preserve"><value>プラグインは無効です。</value></data>
+  <data name="K426" xml:space="preserve"><value>依存関係が未導入。</value></data>
+  <data name="K427" xml:space="preserve"><value>ローカルジョブは未対応。</value></data>
+  <data name="K428" xml:space="preserve"><value>ヘルパーの騎乗中・騎乗動作中は接続先の回復を保留。</value></data>
+  <data name="K429" xml:space="preserve"><value>接続中のヘルパーが騎乗中または騎乗動作中。</value></data>
+  <data name="K430" xml:space="preserve"><value>アクション{0}の詠唱中は保留。</value></data>
+  <data name="K432" xml:space="preserve"><value>現在の詠唱終了を待機。</value></data>
+  <data name="K433" xml:space="preserve"><value>{0}のHealBot設定が準備済みです。JOATの攻撃にはRSRが必要です。</value></data>
+  <data name="K434" xml:space="preserve"><value>{0}のHealBot設定が準備済みです。RSRの隔離は利用できません。</value></data>
+  <data name="K435" xml:space="preserve"><value>{0}のHealBot設定が準備済みです。RSRのJOAT制御は有効です。</value></data>
+  <data name="K436" xml:space="preserve"><value>{0}のHealBot設定が準備済みです。RSRの隔離は有効です。</value></data>
+  <data name="K437" xml:space="preserve"><value>{0}のHealBot設定が準備済みです。RSR制御に失敗しJOAT攻撃は停止していますが、直接回復は有効です。</value></data>
+  <data name="K438" xml:space="preserve"><value>{0}のHealBot設定が準備済みです。RSRの隔離に失敗しましたが、直接回復は有効です。</value></data>
+  <data name="K439" xml:space="preserve"><value>稼働中の監視対象がありません。</value></data>
+  <data name="K440" xml:space="preserve"><value>監視対象なし。</value></data>
+  <data name="K441" xml:space="preserve"><value>HealBot設定で{0}の自動化が無効です。</value></data>
+  <data name="K442" xml:space="preserve"><value>{0}タブは無効です。</value></data>
+  <data name="K443" xml:space="preserve"><value>{0}の対象{1}は選択済みですが遠隔にいます。</value></data>
+  <data name="K444" xml:space="preserve"><value>{0}体を監視中です。現在表示されている対象はいません。</value></data>
+  <data name="K445" xml:space="preserve"><value>指定した{0}の対象は遠隔にいます。</value></data>
+  <data name="K446" xml:space="preserve"><value>表示中の監視対象なし。</value></data>
+  <data name="K447" xml:space="preserve"><value>移動</value></data>
+  <data name="K448" xml:space="preserve"><value>{0} - 見通し遮断。</value></data>
+  <data name="K449" xml:space="preserve"><value>{0}体を監視中。{1}</value></data>
+  <data name="K451" xml:space="preserve"><value>{0}体を監視中。{1}に使える戦闘不能向けルールがありません。</value></data>
+  <data name="K452" xml:space="preserve"><value>{0} - 戦闘不能向けルールに一致せず。</value></data>
+  <data name="K453" xml:space="preserve"><value>{0}体を監視中。最もHPが低い対象は{1}で、HP {2}%です。</value></data>
+  <data name="K454" xml:space="preserve"><value>{0} - 生存対象向けルールに一致せず。</value></data>
+  <data name="K456" xml:space="preserve"><value>{1}の蘇生準備に{0}を予約。</value></data>
+  <data name="K457" xml:space="preserve"><value>{1}に{0}を予約。</value></data>
+  <data name="K458" xml:space="preserve"><value>{1} (HP {2}%)を監視し、{0}を予約。</value></data>
+  <data name="K459" xml:space="preserve"><value>{1} (HP {2}%)に{0}を予約。</value></data>
+  <data name="K450" xml:space="preserve"><value>{0} - {1}</value></data>
+  <data name="K455" xml:space="preserve"><value>{0}: {1} [{2}]</value></data>
+  <data name="K460" xml:space="preserve"><value>JOATの攻撃は無効です。</value></data>
+  <data name="K461" xml:space="preserve"><value>回復不要の判断を待機。</value></data>
+  <data name="K462" xml:space="preserve"><value>JOATの攻撃は回復の待機を待っています。</value></data>
+  <data name="K463" xml:space="preserve"><value>FrenRiderの制御権維持に失敗。</value></data>
+  <data name="K464" xml:space="preserve"><value>実行保留: 回復が{0}を予約済み。</value></data>
+  <data name="K465" xml:space="preserve"><value>実行保留</value></data>
+  <data name="K466" xml:space="preserve"><value>この判断では回復が優先されました。</value></data>
+  <data name="K467" xml:space="preserve"><value>実行保留: 現在の詠唱が攻撃を阻止しています。{0}</value></data>
+  <data name="K468" xml:space="preserve"><value>実行保留: 回復が阻止されています。{0}</value></data>
+  <data name="K469" xml:space="preserve"><value>現在の詠唱により、この攻撃判断は停止。</value></data>
+  <data name="K470" xml:space="preserve"><value>一致する回復アクションが阻止されています。</value></data>
+  <data name="K471" xml:space="preserve"><value>停止: 回復の準備ができていません。{0}</value></data>
+  <data name="K472" xml:space="preserve"><value>回復の依存関係・設定・監視対象が利用できません。</value></data>
+  <data name="K473" xml:space="preserve"><value>停止: Rotation Solver Rebornの制御が無効で、JOATは攻撃できません。</value></data>
+  <data name="K474" xml:space="preserve"><value>Rotation Solver Rebornの制御に失敗。</value></data>
+  <data name="K475" xml:space="preserve"><value>実行保留: {0}。</value></data>
+  <data name="K476" xml:space="preserve"><value>FrenRider IPCが利用不可。</value></data>
+  <data name="K477" xml:space="preserve"><value>FrenRiderの攻撃条件に失敗。</value></data>
+  <data name="K478" xml:space="preserve"><value>FrenRiderの制御権取得に失敗。</value></data>
+  <data name="K479" xml:space="preserve"><value>停止: ローカルヒーラーが利用できません。</value></data>
+  <data name="K480" xml:space="preserve"><value>ローカルヒーラーが利用不可。</value></data>
+  <data name="K481" xml:space="preserve"><value>対応するローカルヒーラーが利用不可。</value></data>
+  <data name="K482" xml:space="preserve"><value>待機: 指定した接続先対象は選択済みですが遠隔にいます。</value></data>
+  <data name="K483" xml:space="preserve"><value>指定した接続先対象は遠隔にいます。</value></data>
+  <data name="K484" xml:space="preserve"><value>実行保留: 接続先対象まで{0:0.0}ヤルム。</value></data>
+  <data name="K485" xml:space="preserve"><value>指定した接続先対象は30ヤルムより遠くにいます。</value></data>
+  <data name="K486" xml:space="preserve"><value>RSR Manualに失敗。</value></data>
+  <data name="K487" xml:space="preserve"><value>停止: RSRが接続中のJOAT割り当てでManualモードを拒否しました。</value></data>
+  <data name="K488" xml:space="preserve"><value>RSR Manual</value></data>
+  <data name="K489" xml:space="preserve"><value>友好接続先を狙う交戦中の敵を待機。</value></data>
+  <data name="K490" xml:space="preserve"><value>RSR Manual ({0})待機中。接続範囲内に攻撃可能な交戦中の敵はいません。</value></data>
+  <data name="K491" xml:space="preserve"><value>選択した接続先側の敵が消えました。</value></data>
+  <data name="K492" xml:space="preserve"><value>RSR Manual ({0})待機中。選択した敵が消えました。</value></data>
+  <data name="K493" xml:space="preserve"><value>接続先対象</value></data>
+  <data name="K494" xml:space="preserve"><value>接続先 / ヒーラーと交戦中</value></data>
+  <data name="K495" xml:space="preserve"><value>RSR Manual ({0}): {1}、HP {2:P0}。</value></data>
+  <data name="K496" xml:space="preserve"><value>待機: 回復は不要ですが、Frenかローカルヒーラーを狙う負傷中の敵がいません。</value></data>
+  <data name="K497" xml:space="preserve"><value>攻撃可能な交戦中の敵なし。</value></data>
+  <data name="K498" xml:space="preserve"><value>待機: 選択した敵が消えました。</value></data>
+  <data name="K499" xml:space="preserve"><value>対象が消えました。</value></data>
+  <data name="K500" xml:space="preserve"><value>{0} - RSR Manual失敗</value></data>
+  <data name="K501" xml:space="preserve"><value>停止: RSRが{0}のManualモードを拒否しました。</value></data>
+  <data name="K503" xml:space="preserve"><value>騎乗中・騎乗動作中</value></data>
+  <data name="K505" xml:space="preserve"><value>アクション{0}を詠唱中</value></data>
+  <data name="K506" xml:space="preserve"><value>必要な回復の依存関係が未導入です。</value></data>
+  <data name="K507" xml:space="preserve"><value>装備中のヒーラーの設定が無効です。</value></data>
+  <data name="K508" xml:space="preserve"><value>監視で対象を1体以上選ぶか、QSTの割り当てを待ってください。</value></data>
+  <data name="K509" xml:space="preserve"><value>JOATの回復は準備完了。</value></data>
+  <data name="K510" xml:space="preserve"><value>攻撃は回復の準備を待機: {0}</value></data>
+  <data name="K511" xml:space="preserve"><value>JOATの攻撃にはRSRの読み込みが必要です。</value></data>
+  <data name="K512" xml:space="preserve"><value>Coppeliaは動作するRSR制御を取得できませんでした。</value></data>
+  <data name="K513" xml:space="preserve"><value>回復が待機中ならJOATの攻撃は実行可能。</value></data>
+  <data name="K514" xml:space="preserve"><value>指定したQST対象は選択済みですが遠隔にいます。</value></data>
+  <data name="K515" xml:space="preserve"><value>FrenRiderを有効にしてください。</value></data>
+  <data name="K516" xml:space="preserve"><value>FrenRiderでFrenを設定してください。</value></data>
+  <data name="K517" xml:space="preserve"><value>設定済みのFrenを表示できる必要があります。</value></data>
+  <data name="K518" xml:space="preserve"><value>PowerlevelBotモードは無効です。</value></data>
+  <data name="K519" xml:space="preserve"><value>対象は未選択です。</value></data>
+  <data name="K520" xml:space="preserve"><value>PowerlevelBotを準備中。</value></data>
+  <data name="K521" xml:space="preserve"><value>パワーレベリングの条件に失敗。</value></data>
+  <data name="K522" xml:space="preserve"><value>ローカルプレイヤーが利用不可。</value></data>
+  <data name="K523" xml:space="preserve"><value>ローカルプレイヤーなし。</value></data>
+  <data name="K524" xml:space="preserve"><value>Frenかローカルプレイヤーを狙う負傷中の敵がいません。</value></data>
+  <data name="K525" xml:space="preserve"><value>対象候補なし。</value></data>
+  <data name="K526" xml:space="preserve"><value>選択した対象が消えました。</value></data>
+  <data name="K527" xml:space="preserve"><value>{1} (HP {2:P0})に{0}を予約。</value></data>
+  <data name="K528" xml:space="preserve"><value>対象{0}は停止: {1}</value></data>
+  <data name="K529" xml:space="preserve"><value>Helperは接続せず待ち受けます。</value></data>
+  <data name="K530" xml:space="preserve"><value>Newbは待ち受けず接続します。</value></data>
+  <data name="K531" xml:space="preserve"><value>動作ロールはオフです。</value></data>
+  <data name="K532" xml:space="preserve"><value>スタンドアロンは直接ペアリングを使用しません。</value></data>
+  <data name="K533" xml:space="preserve"><value>ローカルNewbの識別情報がありません。ログイン完了後にNewbロールを開始してください。</value></data>
+  <data name="K534" xml:space="preserve"><value>有効なHelperのIPv4アドレスを1つ入力してください。</value></data>
+  <data name="K535" xml:space="preserve"><value>ペアリング設定を保存しました。再起動中。</value></data>
+  <data name="K536" xml:space="preserve"><value>HealBot direct pairing v2が必要です。ペアリング前に古い側を更新してください。</value></data>
+  <data name="K537" xml:space="preserve"><value>ローカルHealBotの識別情報がありません。</value></data>
+  <data name="K538" xml:space="preserve"><value>HealBotには有効なQST割り当てがあります。</value></data>
+  <data name="K539" xml:space="preserve"><value>ペアリング済み</value></data>
+  <data name="K540" xml:space="preserve"><value>待ち受け中</value></data>
+  <data name="K541" xml:space="preserve"><value>ペアリングコマンドの内容が無効です。</value></data>
+  <data name="K542" xml:space="preserve"><value>コマンドの対象がこのHealBotの正確な名前とホームワールドに一致しません。</value></data>
+  <data name="K543" xml:space="preserve"><value>Newbが割り当てを解除しました。</value></data>
+  <data name="K544" xml:space="preserve"><value>不明なNewbペアリング操作です。</value></data>
+  <data name="K545" xml:space="preserve"><value>HealBotをアンロード中です。</value></data>
+  <data name="K546" xml:space="preserve"><value>TCP {0}</value></data>
+  <data name="K547" xml:space="preserve"><value>HealBotの待ち受けを再起動中。</value></data>
+  <data name="K548" xml:space="preserve"><value>接続済み</value></data>
+  <data name="K549" xml:space="preserve"><value>認証済みの割り当てを待ってください。</value></data>
+  <data name="K550" xml:space="preserve"><value>このポートと共有シークレットでNewbを開始してください。</value></data>
+  <data name="K551" xml:space="preserve"><value>待ち受けの開始を待ってください。</value></data>
+  <data name="K552" xml:space="preserve"><value>認証済みNewb状態を待機中</value></data>
+  <data name="K553" xml:space="preserve"><value>JOATプロバイダー有効</value></data>
+  <data name="K554" xml:space="preserve"><value>リモートプロバイダー利用不可</value></data>
+  <data name="K555" xml:space="preserve"><value>リモートJOAT利用不可</value></data>
+  <data name="K556" xml:space="preserve"><value>リモート移動利用不可</value></data>
+  <data name="K557" xml:space="preserve"><value>Newb接続を再起動中。</value></data>
+  <data name="K558" xml:space="preserve"><value>認証中</value></data>
+  <data name="K559" xml:space="preserve"><value>接続中</value></data>
+  <data name="K560" xml:space="preserve"><value>割り当ての確認を待ってください。</value></data>
+  <data name="K561" xml:space="preserve"><value>新しい認証済み状態と割り当てを待ってください。</value></data>
+  <data name="K562" xml:space="preserve"><value>非同期の接続または再接続を待ってください。</value></data>
+  <data name="K563" xml:space="preserve"><value>リモートプロバイダーの状態を待機中</value></data>
+  <data name="K564" xml:space="preserve"><value>リモートプロバイダー準備完了</value></data>
+  <data name="K565" xml:space="preserve"><value>リモートJOATの状態を待機中</value></data>
+  <data name="K566" xml:space="preserve"><value>リモート移動の状態を待機中</value></data>
+  <data name="K567" xml:space="preserve"><value>古い側を互換性のあるHealBot direct pairing v2ビルドに更新してください。</value></data>
+  <data name="K568" xml:space="preserve"><value>設定でHelperとNewbに同じ共有シークレットを入力してください。</value></data>
+  <data name="K569" xml:space="preserve"><value>ローカルNewbの識別情報がありません。</value></data>
+  <data name="K570" xml:space="preserve"><value>ペアリングしたHealBotの接続または認証済み状態が失われました。</value></data>
+  <data name="K571" xml:space="preserve"><value>設定された接続先またはHealBotの識別情報が変わりました。</value></data>
+  <data name="K572" xml:space="preserve"><value>ペアリングしたHealBotが解除済みセッション{0}をまだ報告しています。</value></data>
+  <data name="K573" xml:space="preserve"><value>ペアリングしたHealBotには有効なQST割り当てがあります。</value></data>
+  <data name="K574" xml:space="preserve"><value>ペアリングしたHealBotは別のNewbセッションに属しています。</value></data>
+  <data name="K575" xml:space="preserve"><value>ペアリングしたHealBotがこのNewbの古いセッションを報告しています。</value></data>
+  <data name="K576" xml:space="preserve"><value>ペアリングしたHealBotの準備ができていません。</value></data>
+  <data name="K577" xml:space="preserve"><value>ペアリングしたHealBotがNewbセッションの欠落または不一致を報告しました。</value></data>
+  <data name="K578" xml:space="preserve"><value>ペアリングしたHealBotによる正確なNewbセッションの確認を待機中。</value></data>
+  <data name="K579" xml:space="preserve"><value>ペアリングしたHealBotがNewbの割り当てを拒否しました。</value></data>
+  <data name="K580" xml:space="preserve"><value>ペアリングしたHealBotが{0}を拒否しました。</value></data>
+  <data name="K581" xml:space="preserve"><value>ペアリングしたHealBotが有効なセッションの{0}を受け入れませんでした。</value></data>
+  <data name="K582" xml:space="preserve"><value>ペアリングしたHealBotが古いセッションの解除を確認しませんでした。</value></data>
+  <data name="K583" xml:space="preserve"><value>直接ペアリングを使用するにはHelperまたはNewbを選択してください。</value></data>
+  <data name="K584" xml:space="preserve"><value>TCPポート{0}は使用中です。</value></data>
+  <data name="K585" xml:space="preserve"><value>ペアリングの待ち受けを開始できませんでした: {0}</value></data>
+  <data name="K587" xml:space="preserve"><value>ペアリングエンベロープの形式が不正です。</value></data>
+  <data name="K588" xml:space="preserve"><value>ペアリングしたNewbの接続が失われました。</value></data>
+  <data name="K589" xml:space="preserve"><value>HealBotのペアリング待ち受けを停止中です。</value></data>
+  <data name="K590" xml:space="preserve"><value>ペアリングメッセージの種類がコマンドと一致しません。</value></data>
+  <data name="K591" xml:space="preserve"><value>この接続は別のNewbセッションを所有しています。</value></data>
+  <data name="K592" xml:space="preserve"><value>Newbセッションは別の有効な接続に属しています。</value></data>
+  <data name="K593" xml:space="preserve"><value>この接続は有効なNewbセッションを所有していません。</value></data>
+  <data name="K594" xml:space="preserve"><value>Newbセッションはまだ別の有効な接続に属しています。</value></data>
+  <data name="K595" xml:space="preserve"><value>切断済み</value></data>
+  <data name="K596" xml:space="preserve"><value>ペアリングしたHealBotは接続されていません。</value></data>
+  <data name="K597" xml:space="preserve"><value>ペアリングしたHealBotがコマンドを確認しませんでした。</value></data>
+  <data name="K598" xml:space="preserve"><value>ペアリングした接続が閉じられました。</value></data>
+  <data name="K599" xml:space="preserve"><value>HealBot direct pairing v2が必要です。ペアリング前に古いHelperを更新してください。</value></data>
+  <data name="K600" xml:space="preserve"><value>接続済み・待機中</value></data>
+  <data name="K601" xml:space="preserve"><value>ペアリングしたHealBotから対応する認証済み状態が返されませんでした。共有シークレットとプロトコルを確認してください。</value></data>
+  <data name="K602" xml:space="preserve"><value>ペアリング監視に失敗: {0}</value></data>
+  <data name="K603" xml:space="preserve"><value>接続済み。認証済みHealBot状態を待機中。</value></data>
+  <data name="K604" xml:space="preserve"><value>{0}:{1}への接続がタイムアウトしました。</value></data>
+  <data name="K605" xml:space="preserve"><value>{0}:{1}でHealBotが待ち受けていません。</value></data>
+  <data name="K606" xml:space="preserve"><value>{0}:{1}への接続に失敗: {2}</value></data>
+  <data name="K607" xml:space="preserve"><value>ペアリング先から不正な形式のペアリングJSONが返されました。</value></data>
+  <data name="K608" xml:space="preserve"><value>ペアリングしたHealBotの接続が失われました: {0}</value></data>
+  <data name="K609" xml:space="preserve"><value>ペアリングしたHealBotの接続が失われました。</value></data>
+  <data name="K610" xml:space="preserve"><value>ペアリングしたHealBotからコマンドと一致しない応答が返されました。</value></data>
+  <data name="K611" xml:space="preserve"><value>ペアリング接続に失敗: {0}</value></data>
+  <data name="K612" xml:space="preserve"><value>{0}秒後に再接続</value></data>
+  <data name="K613" xml:space="preserve"><value>HealBotの必須依存関係はすべて準備完了です。</value></data>
+  <data name="K614" xml:space="preserve"><value>HealBotには{0}が必要です。不足するプラグインをインストールするか設定で自動化を無効にしてください。</value></data>
+  <data name="K615" xml:space="preserve"><value>ローカルプレイヤーを取得できません。</value></data>
+  <data name="K616" xml:space="preserve"><value>すでに詠唱中です。</value></data>
+  <data name="K617" xml:space="preserve"><value>アクションデータに{0}が見つかりません。</value></data>
+  <data name="K618" xml:space="preserve"><value>{0}に必要なMPが不足しています。</value></data>
+  <data name="K619" xml:space="preserve"><value>ActionManagerを利用できません。</value></data>
+  <data name="K620" xml:space="preserve"><value>{0}はリキャスト中です。</value></data>
+  <data name="K621" xml:space="preserve"><value>選択した対象を取得できません。</value></data>
+  <data name="K622" xml:space="preserve"><value>{0}は対象にできません。</value></data>
+  <data name="K623" xml:space="preserve"><value>{0}は射程外です。</value></data>
+  <data name="K624" xml:space="preserve"><value>UseActionが{0}を拒否しました。</value></data>
+  <data name="K625" xml:space="preserve"><value>現在使用可能なPowerlevelBotのアクションがありません。</value></data>
+  <data name="K626" xml:space="preserve"><value>HealBotのアクションのため一時停止</value></data>
+  <data name="K627" xml:space="preserve"><value>コンテンツ制御のためHealRider追従を中断</value></data>
+  <data name="K628" xml:space="preserve"><value>選択した相乗りマウントの準備が乗車待機時間を超えました。</value></data>
+  <data name="K629" xml:space="preserve"><value>Lifestreamのインスタンス切り替えとロード完了を待機中</value></data>
+  <data name="K630" xml:space="preserve"><value>/li後にHelperの公開インスタンスを確認中</value></data>
+  <data name="K631" xml:space="preserve"><value>HealRider後の新しいQuester移動スナップショットを待機中</value></data>
+  <data name="K632" xml:space="preserve"><value>Helperキャラクターを待機中</value></data>
+  <data name="K633" xml:space="preserve"><value>{0}の詠唱のため一時停止</value></data>
+  <data name="K634" xml:space="preserve"><value>ワールド{0}を訪問中</value></data>
+  <data name="K635" xml:space="preserve"><value>ワールド訪問で{0}に到着できませんでした</value></data>
+  <data name="K636" xml:space="preserve"><value>{0}へテレポ中</value></data>
+  <data name="K637" xml:space="preserve"><value>{0}へのテレポでエリア{1}に到着できませんでした</value></data>
+  <data name="K638" xml:space="preserve"><value>このエリアではARR飛行確認が拒否されました</value></data>
+  <data name="K639" xml:space="preserve"><value>既存のvnavmesh動作の終了を待機中</value></data>
+  <data name="K640" xml:space="preserve"><value>マウント利用不可: {0}</value></data>
+  <data name="K641" xml:space="preserve"><value>マウントルーレットの再試行を待機中</value></data>
+  <data name="K642" xml:space="preserve"><value>マウントルーレットでQuesterの騎乗に合わせています</value></data>
+  <data name="K643" xml:space="preserve"><value>{0:F0}ヤルム以上の追走のため騎乗中</value></data>
+  <data name="K644" xml:space="preserve"><value>Questerの騎乗に合わせるため待機中</value></data>
+  <data name="K645" xml:space="preserve"><value>追走のための騎乗を待機中</value></data>
+  <data name="K646" xml:space="preserve"><value>降りる前に騎乗完了を待機中</value></data>
+  <data name="K647" xml:space="preserve"><value>着地前に有効な経路を追従中</value></data>
+  <data name="K648" xml:space="preserve"><value>騎乗したまま着地中</value></data>
+  <data name="K649" xml:space="preserve"><value>降りる前に{0:F0}ヤルム以内で着地中</value></data>
+  <data name="K650" xml:space="preserve"><value>着地利用不可: {0}</value></data>
+  <data name="K651" xml:space="preserve"><value>{0:F0}ヤルム以内で降りるため待機中</value></data>
+  <data name="K652" xml:space="preserve"><value>{0:F0}ヤルム以内で降りています</value></data>
+  <data name="K653" xml:space="preserve"><value>降りる操作利用不可: {0}</value></data>
+  <data name="K654" xml:space="preserve"><value>飛行利用不可: {0}</value></data>
+  <data name="K655" xml:space="preserve"><value>vnavmesh追従IPCに失敗</value></data>
+  <data name="K656" xml:space="preserve"><value>近距離追従 ({0:F1}ヤルム)</value></data>
+  <data name="K657" xml:space="preserve"><value>Questerの最新目的地を更新中</value></data>
+  <data name="K658" xml:space="preserve"><value>{0:F1}ヤルムの距離で飛行中</value></data>
+  <data name="K659" xml:space="preserve"><value>{0:F1}ヤルムの距離で地上追従中</value></data>
+  <data name="K660" xml:space="preserve"><value>vnavmeshが経路開始を拒否。動作終了または新しい移動スナップショットを待機中</value></data>
+  <data name="K661" xml:space="preserve"><value>vnavmeshを待機中</value></data>
+  <data name="K662" xml:space="preserve"><value>{1:F1}ヤルムで{0}を予約中</value></data>
+  <data name="K663" xml:space="preserve"><value>vnavmeshが{0}経路の開始を拒否。動作終了または新しい移動スナップショットを待機中</value></data>
+  <data name="K664" xml:space="preserve"><value>vnavmesh追従IPCに失敗。新しい移動スナップショットを待機中</value></data>
+  <data name="K665" xml:space="preserve"><value>HelperとQuesterの確認済み公開インスタンス情報を待機中</value></data>
+  <data name="K666" xml:space="preserve"><value>Questerの確認済み非インスタンスエリアを待機中</value></data>
+  <data name="K667" xml:space="preserve"><value>公開インスタンス変更前に安全な移動待機状態を待っています</value></data>
+  <data name="K668" xml:space="preserve"><value>公開インスタンス{0}の再試行を待機中</value></data>
+  <data name="K669" xml:space="preserve"><value>公開インスタンス変更前にナビゲーション停止を待機中</value></data>
+  <data name="K670" xml:space="preserve"><value>公開インスタンスでの合流: {0}</value></data>
+  <data name="K671" xml:space="preserve"><value>/li前にエーテライトの横で着地して降りています</value></data>
+  <data name="K672" xml:space="preserve"><value>/li後に公開インスタンス{0}を確認中</value></data>
+  <data name="K673" xml:space="preserve"><value>Lifestreamが/li {0}を拒否。5秒後に再試行</value></data>
+  <data name="K674" xml:space="preserve"><value>Lifestreamのインスタンスコマンドに失敗。5秒後に再試行</value></data>
+  <data name="K675" xml:space="preserve"><value>観測したエリア境界を前進して確認中</value></data>
+  <data name="K676" xml:space="preserve"><value>エリア移動を確認。Helperの安全なロードを待機中</value></data>
+  <data name="K677" xml:space="preserve"><value>エリア{0}では騎乗できません</value></data>
+  <data name="K678" xml:space="preserve"><value>エリアの騎乗確認に失敗: {0}</value></data>
+  <data name="K679" xml:space="preserve"><value>エリア{0}では飛行できません</value></data>
+  <data name="K680" xml:space="preserve"><value>Helperはこのエリアの飛行を解放していません</value></data>
+  <data name="K681" xml:space="preserve"><value>ARR飛行の可否を確認中</value></data>
+  <data name="K682" xml:space="preserve"><value>飛行確認に失敗: {0}</value></data>
+  <data name="K683" xml:space="preserve"><value>ActionManagerを利用できません</value></data>
+  <data name="K684" xml:space="preserve"><value>ジェネラルアクション{0}は利用不可 (状態{1})</value></data>
+  <data name="K685" xml:space="preserve"><value>ジェネラルアクション{0}が拒否されました</value></data>
+  <data name="K686" xml:space="preserve"><value>ジェネラルアクション{0}に失敗: {1}</value></data>
+  <data name="K687" xml:space="preserve"><value>Lifestream移動状態IPCに失敗</value></data>
+  <data name="K688" xml:space="preserve"><value>{0}。新しい移動スナップショットを待機中</value></data>
+  <data name="K689" xml:space="preserve"><value>既存のLifestream移動完了を待機中</value></data>
+  <data name="K690" xml:space="preserve"><value>Lifestream移動IPCに失敗</value></data>
+  <data name="K691" xml:space="preserve"><value>Lifestreamがリクエストを拒否: {0}</value></data>
+  <data name="K692" xml:space="preserve"><value>Questerの正確なテレポ先がこのHelperのテレポ一覧にありません。</value></data>
+  <data name="K693" xml:space="preserve"><value>QuesterのエリアのエーテライトがこのHelperのテレポ一覧にありません。</value></data>
+  <data name="K694" xml:space="preserve"><value>エーテライトの特定に失敗: {0}</value></data>
+  <data name="K695" xml:space="preserve"><value>受け付けたQuesterのテレポ先を利用できません。</value></data>
+  <data name="K696" xml:space="preserve"><value>最寄りエーテライトへの代替移動のため、目的エリアのQuesterの位置を待機中。</value></data>
+  <data name="K697" xml:space="preserve"><value>Helperのテレポ一覧が利用不可またはロード中です。</value></data>
+  <data name="K698" xml:space="preserve"><value>PowerlevelBot準備完了。</value></data>
+  <data name="K699" xml:space="preserve"><value>PowerlevelBotを有効にする前にBRDまたはMCHを選択してください。</value></data>
+  <data name="K700" xml:space="preserve"><value>{0}は未解放です。</value></data>
+  <data name="K701" xml:space="preserve"><value>現在のジョブがPowerlevelBotで選択した{0}と一致する必要があります。</value></data>
+  <data name="K702" xml:space="preserve"><value>FrenRiderで設定したFrenが表示範囲にいません。</value></data>
+  <data name="K703" xml:space="preserve"><value>PowerlevelBotを使用する前にバディチョコボを帰還させてください。</value></data>
+  <data name="K704" xml:space="preserve"><value>{0}は敵専用アクションではありません。</value></data>
+  <data name="K705" xml:space="preserve"><value>{0}には詠唱時間があります。</value></data>
+  <data name="K706" xml:space="preserve"><value>{0}は範囲攻撃です。</value></data>
+  <data name="K707" xml:space="preserve"><value>{0}は利用できません。</value></data>
+  <data name="K708" xml:space="preserve"><value>{0}はリキャスト中です。</value></data>
+  <data name="K709" xml:space="preserve"><value>ポート47789は予約済みです。別のペアリングポートを選択してください。</value></data>
+  <data name="K710" xml:space="preserve"><value>ペアリングポートは1024～65535である必要があります。</value></data>
+  <data name="K711" xml:space="preserve"><value>共有シークレットは16文字以上必要です。</value></data>
+  <data name="K712" xml:space="preserve"><value>127.0.0.1や192.168.1.25など、有効なHelperのIPv4アドレスを1つ入力してください。</value></data>
+  <data name="K714" xml:space="preserve"><value>NPCパーティメンバー</value></data>
+  <data name="K715" xml:space="preserve"><value>手動対象</value></data>
+  <data name="K716" xml:space="preserve"><value>Jacqueline of All Tradesの攻撃にはRotation Solver Rebornが必要です。</value></data>
+  <data name="K717" xml:space="preserve"><value>Newbは動作ロールであり、スタンドアロンの動作ではありません。</value></data>
+  <data name="K719" xml:space="preserve"><value>BossMod Reborn (BMR)またはVBM</value></data>
+  <data name="K720" xml:space="preserve"><value>Rotation Solver Reborn (RSR) - 任意の隔離・復元補助</value></data>
+  <data name="K721" xml:space="preserve"><value>{0}。安全な地上移動に切り替え ({1})</value></data>
+  <data name="K722" xml:space="preserve"><value>味方バトルNPC</value></data>
+  <data name="K726" xml:space="preserve"><value>目的地へ飛行</value></data>
+  <data name="K727" xml:space="preserve"><value>地上追従</value></data>
+  <data name="K728" xml:space="preserve"><value>接近</value></data>
+  <data name="K729" xml:space="preserve"><value>到着</value></data>
+  <data name="K730" xml:space="preserve"><value>到着処理中</value></data>
+  <data name="K731" xml:space="preserve"><value>乗車待ち</value></data>
+  <data name="K732" xml:space="preserve"><value>キャンセル済み</value></data>
+  <data name="K733" xml:space="preserve"><value>キャンセル中</value></data>
+  <data name="K734" xml:space="preserve"><value>準備中</value></data>
+  <data name="K735" xml:space="preserve"><value>移動中</value></data>
+  <data name="K736" xml:space="preserve"><value>待機中</value></data>
+  <data name="K737" xml:space="preserve"><value>継続を待機中</value></data>
+  <data name="K738" xml:space="preserve"><value>エリア切り替え</value></data>
+  <data name="K739" xml:space="preserve"><value>着地</value></data>
+  <data name="K740" xml:space="preserve"><value>降りる操作</value></data>
+  <data name="K741" xml:space="preserve"><value>HealRider停止: {0}</value></data>
+  <data name="K742" xml:space="preserve"><value>HealRider終了処理: {0}</value></data>
+  <data name="K743" xml:space="preserve"><value>HealRider: {0}</value></data>
+  <data name="K744" xml:space="preserve"><value>HealRider: {0}: {1}</value></data>
+  <data name="K745" xml:space="preserve"><value>{0}を待つHelper終了処理がタイムアウト。連携した終了処理の再試行を待機中。</value></data>
+  <data name="K746" xml:space="preserve"><value>記録されたキャラクターの準備完了</value></data>
+  <data name="K747" xml:space="preserve"><value>マウント操作の完了</value></data>
+  <data name="K748" xml:space="preserve"><value>終了処理のため着地中</value></data>
+  <data name="K749" xml:space="preserve"><value>終了処理のため降りています</value></data>
+  <data name="K750" xml:space="preserve"><value>輸送の終了処理のため降りています</value></data>
+  <data name="K751" xml:space="preserve"><value>追従用の選択した相乗りマウントを準備中</value></data>
+  <data name="K752" xml:space="preserve"><value>割り当てのマウント方針が変更されました</value></data>
+  <data name="K753" xml:space="preserve"><value>目的地または乗車区間が変更されました</value></data>
+  <data name="K754" xml:space="preserve"><value>コンテンツ引き継ぎ</value></data>
+  <data name="K755" xml:space="preserve"><value>迎えをキャンセルしました</value></data>
+  <data name="K756" xml:space="preserve"><value>未対応の割り当てマウントモード操作です。</value></data>
+  <data name="K757" xml:space="preserve"><value>マウント方針を変える前に現在の乗車を終了してください。</value></data>
+  <data name="K758" xml:space="preserve"><value>Helperで解放済みの相乗りマウントを選択してください。</value></data>
+  <data name="K759" xml:space="preserve"><value>選択した相乗りマウントの準備が拒否されたか、乗車待機時間を超えました。</value></data>
+  <data name="K760" xml:space="preserve"><value>HealRider v2が必要です。HelperとQuesterを更新してください。</value></data>
+  <data name="K761" xml:space="preserve"><value>無効なHealRider v2リクエストです。</value></data>
+  <data name="K762" xml:space="preserve"><value>この乗車区間は新しい区間に置き換えられました。</value></data>
+  <data name="K763" xml:space="preserve"><value>この騎乗継続は終了済みです。</value></data>
+  <data name="K764" xml:space="preserve"><value>前の乗車から降りるのを待機中。</value></data>
+  <data name="K765" xml:space="preserve"><value>終了処理の再試行には記録されたキャラクターとパーティが必要です。</value></data>
+  <data name="K766" xml:space="preserve"><value>未対応のHealRider操作です。</value></data>
+  <data name="K767" xml:space="preserve"><value>割り当ての相乗りマウント方針の準備ができていません。</value></data>
+  <data name="K768" xml:space="preserve"><value>この乗車区間は終了しています。</value></data>
+  <data name="K769" xml:space="preserve"><value>迎えが受け付けられる前に共有乗車待機時間が切れました。</value></data>
+  <data name="K770" xml:space="preserve"><value>迎えには解放済み相乗りマウント、Helperの飛行、徒歩閾値より遠い非飛行Quester、このエリアの正確なパーティが必要です。</value></data>
+  <data name="K771" xml:space="preserve"><value>乗車状態が失われた、停止した、またはタイムアウトしました</value></data>
+  <data name="K772" xml:space="preserve"><value>接近または乗車中に共有乗車待機時間が切れました</value></data>
+  <data name="K773" xml:space="preserve"><value>騎乗移動中の両クライアントのロードを待機中。</value></data>
+  <data name="K774" xml:space="preserve"><value>騎乗継続と両側の乗車確認を待機中。</value></data>
+  <data name="K775" xml:space="preserve"><value>騎乗したままの境界通過を確認できませんでした</value></data>
+  <data name="K776" xml:space="preserve"><value>HelperとQuesterのエリアと公開インスタンスの一致を確認できなくなりました</value></data>
+  <data name="K777" xml:space="preserve"><value>正確なQuesterまたはパーティを取得できなくなりました</value></data>
+  <data name="K778" xml:space="preserve"><value>次の移動を待つ間に乗車確認が失われました</value></data>
+  <data name="K779" xml:space="preserve"><value>着地または降りる操作が拒否されました</value></data>
+  <data name="K780" xml:space="preserve"><value>移動先に到着。次の確認済みステップを待機中。</value></data>
+  <data name="K781" xml:space="preserve"><value>精密着地ナビゲーションが記録された目的地を拒否しました</value></data>
+  <data name="K782" xml:space="preserve"><value>精密着地ナビゲーションIPCに失敗</value></data>
+  <data name="K783" xml:space="preserve"><value>精密着地ナビゲーション状態を取得できません</value></data>
+  <data name="K784" xml:space="preserve"><value>記録されたXYZに到着する前に精密着地経路が失敗しました</value></data>
+  <data name="K785" xml:space="preserve"><value>乗車ナビゲーション状態を取得できません</value></data>
+  <data name="K786" xml:space="preserve"><value>到着前に相乗り経路が失敗しました</value></data>
+  <data name="K787" xml:space="preserve"><value>乗車ナビゲーションが目的地を拒否しました</value></data>
+  <data name="K788" xml:space="preserve"><value>乗車ナビゲーションIPCに失敗</value></data>
+  <data name="K789" xml:space="preserve"><value>着地位置が到着許容範囲外に移動しました。</value></data>
+  <data name="K790" xml:space="preserve"><value>正確なQuesterが相乗り席またはパーティを離れました。</value></data>
+  <data name="K791" xml:space="preserve"><value>乗車前に選択したマウントから降りました。</value></data>
+  <data name="K792" xml:space="preserve"><value>選択した相乗りマウントを準備できませんでした。</value></data>
+  <data name="K793" xml:space="preserve"><value>両側の乗車確認を待機中。</value></data>
+  <data name="K794" xml:space="preserve"><value>記録された目的地での接地確認を待機中。</value></data>
+  <data name="K795" xml:space="preserve"><value>Helperのネイティブ乗車確認を待機中。</value></data>
+  <data name="K796" xml:space="preserve"><value>Questerの乗車確認を待機中。</value></data>
+  <data name="K797" xml:space="preserve"><value>Epilogue Gate経路がキャンセルまたはタイムアウトしました</value></data>
+  <data name="K798" xml:space="preserve"><value>IdyllshireのEpilogue Gateを通って移動中</value></data>
+  <data name="K799" xml:space="preserve"><value>LifestreamのEpilogue Gateコマンドを利用できません</value></data>
+  <data name="K800" xml:space="preserve"><value>LifestreamがEpilogue Gate経路を拒否しました</value></data>
+  <data name="K801" xml:space="preserve"><value>公開インスタンス変更のため{0}へ移動中</value></data>
+  <data name="K802" xml:space="preserve"><value>インスタンス変更用エーテライト{0}に到着できませんでした</value></data>
+  <data name="K803" xml:space="preserve"><value>割り当て解除済み</value></data>
+  <data name="K804" xml:space="preserve"><value>Dravanian Hinterlandsへの移動にはこのHelperの飛行が必要です</value></data>
+  <data name="K805" xml:space="preserve"><value>Lifestream移動IPCを利用できません。</value></data>
+  <data name="K806" xml:space="preserve"><value>vnavmesh移動IPCを利用できません。</value></data>
+  <data name="K807" xml:space="preserve"><value>必須のLifestream移動IPCを利用できません。</value></data>
+  <data name="K808" xml:space="preserve"><value>必須のvnavmesh移動IPCを利用できません。</value></data>
+  <data name="K809" xml:space="preserve"><value>LOS遮断・ペア移動有効</value></data>
+  <data name="K810" xml:space="preserve"><value>LOS遮断・ペア移動でリモート位置を解決中</value></data>
+  <data name="K811" xml:space="preserve"><value>LOS遮断・対象が救出範囲外</value></data>
+  <data name="K812" xml:space="preserve"><value>コンテンツ内で中断</value></data>
+  <data name="K813" xml:space="preserve"><value>FrenRider Powerlevel IPCに互換性がありません。FrenRiderを更新してください。</value></data>
+  <data name="K814" xml:space="preserve"><value>FrenRider Powerlevel IPCを利用できません。</value></data>
+  <data name="K815" xml:space="preserve"><value>FrenRider Powerlevel状態が空です。</value></data>
+  <data name="K816" xml:space="preserve"><value>FrenRider Powerlevel IPCはまだ照会されていません。</value></data>
+  <data name="K817" xml:space="preserve"><value>FrenRiderから空の応答が返されました。</value></data>
+  <data name="K818" xml:space="preserve"><value>FrenRider Powerlevel状態に互換性がありません。</value></data>
+  <data name="K819" xml:space="preserve"><value>ペアリングTCPフレームが不完全です。</value></data>
+  <data name="K820" xml:space="preserve"><value>ペアリング認証タグが無効です。</value></data>
+  <data name="K821" xml:space="preserve"><value>ペアリングの時刻情報が無効です。</value></data>
+  <data name="K822" xml:space="preserve"><value>ペアリング認証に失敗しました。</value></data>
+  <data name="K823" xml:space="preserve"><value>ペアリングTCPフレームが64 KiBを超えています。</value></data>
+  <data name="K824" xml:space="preserve"><value>ペアリングエンベロープが再送されました。</value></data>
+  <data name="K825" xml:space="preserve"><value>ペアリングエンベロープが古すぎます。</value></data>
+  <data name="K826" xml:space="preserve"><value>共有シークレットが設定されていません。</value></data>
+  <data name="K827" xml:space="preserve"><value>ペアリングエンベロープが未署名または非互換です。</value></data>
+  <data name="K828" xml:space="preserve"><value>HealBotのペアリングをアンロード中です。</value></data>
+  <data name="K829" xml:space="preserve"><value>回復側クライアントでHelperロールを選択してください。</value></data>
+  <data name="K830" xml:space="preserve"><value>Helperプロバイダーは直接Newbペアリングの制御下にありません。</value></data>
+  <data name="K831" xml:space="preserve"><value>現在QSTがプロバイダーの有効化を制御しています。</value></data>
+  <data name="K832" xml:space="preserve"><value>直接NewbペアリングはHelper有効化を制御していません。</value></data>
+  <data name="K833" xml:space="preserve"><value>NewbセッションIDが無効です。</value></data>
+  <data name="K834" xml:space="preserve"><value>HealBotには有効なQSTまたはNewb割り当てがあります。</value></data>
+  <data name="K835" xml:space="preserve"><value>Newbの識別情報が無効です。</value></data>
+  <data name="K836" xml:space="preserve"><value>Newbセッションは有効な割り当てを所有していません。</value></data>
+  <data name="K837" xml:space="preserve"><value>Newbセッションには有効な割り当てがありません。</value></data>
+  <data name="K838" xml:space="preserve"><value>移動更新が正確な割り当てNewbと一致しません。</value></data>
+  <data name="K839" xml:space="preserve"><value>HealBotでJOATを有効にできませんでした。</value></data>
+  <data name="K840" xml:space="preserve"><value>HealBotは無効です。</value></data>
+  <data name="K841" xml:space="preserve"><value>HealBot自動化は無効です。</value></data>
+  <data name="K842" xml:space="preserve"><value>Jacqueline of All Trades (JOAT)を選択してください。</value></data>
+  <data name="K843" xml:space="preserve"><value>JOATの攻撃にはRotation Solver Rebornが必要です。</value></data>
+  <data name="K844" xml:space="preserve"><value>自動化はオフです。</value></data>
+  <data name="K845" xml:space="preserve"><value>自動化を今有効にするか、オフのままにするか選択してください。</value></data>
+  <data name="K846" xml:space="preserve"><value>HealBotで選択したロールを開始できませんでした。</value></data>
+  <data name="K847" xml:space="preserve"><value>{0}設定を保存しました。動作ロールはオフのままです。</value></data>
+  <data name="K848" xml:space="preserve"><value>{0}設定を保存して開始しました。</value></data>
+  <data name="K849" xml:space="preserve"><value>不明な動作ロールです。</value></data>
+  <data name="K850" xml:space="preserve"><value>QSTペアリング済み</value></data>
+  <data name="K851" xml:space="preserve"><value>回復 {0}・攻撃 {1}</value></data>
+  <data name="K852" xml:space="preserve"><value>{0}: {1} クリックでメインウィンドウを開きます。</value></data>
+  <data name="K853" xml:space="preserve"><value> 動作: {0}。</value></data>
+  <data name="K854" xml:space="preserve"><value>ロール: {0}。{1} 状態: {2} 次: {3} 識別情報: {4}</value></data>
+  <data name="K855" xml:space="preserve"><value>冒険を支える自動サポート</value></data>
+  <data name="K856" xml:space="preserve"><value>日々のプレイを支えるコンパクトな相棒</value></data>
+  <data name="Window appearance" xml:space="preserve">
+    <value>ウィンドウの外観</value>
+  </data>
+  <data name="Compact visible on main window" xml:space="preserve">
+    <value>メインウィンドウにコンパクト切替を表示</value>
+  </data>
+  <data name="Language visible on main window" xml:space="preserve">
+    <value>メインウィンドウに言語選択を表示</value>
+  </data>
+  <data name="Transparency" xml:space="preserve">
+    <value>透明度</value>
+  </data>
+  <data name="Opacity (%)" xml:space="preserve">
+    <value>不透明度 (%)</value>
+  </data>
+  <data name="Auto-fade when unfocused" xml:space="preserve">
+    <value>フォーカスがないときに自動で薄くする</value>
+  </data>
+  <data name="Unfocused opacity (%)" xml:space="preserve">
+    <value>非フォーカス時の不透明度 (%)</value>
+  </data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve">
+    <value>非フォーカス時の待機時間 (秒)</value>
+  </data>
+</root>

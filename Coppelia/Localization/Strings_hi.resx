@@ -1,0 +1,2610 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="K000" xml:space="preserve">
+    <value>%d सेकंड</value>
+  </data>
+  <data name="K001" xml:space="preserve">
+    <value>%d y</value>
+  </data>
+  <data name="K002" xml:space="preserve">
+    <value>...और {0} निगरानी वाले लक्ष्य।</value>
+  </data>
+  <data name="K003" xml:space="preserve">
+    <value>{0} - {1} को ट्रैक करता है</value>
+  </data>
+  <data name="K004" xml:space="preserve">
+    <value>{0} / {1}% HP</value>
+  </data>
+  <data name="K005" xml:space="preserve">
+    <value>{0} / अनुपस्थित / Ctrl से हटाएँ</value>
+  </data>
+  <data name="K006" xml:space="preserve">
+    <value>{0} / मृत</value>
+  </data>
+  <data name="K007" xml:space="preserve">
+    <value>{0} / फ़िल्टर से छिपा</value>
+  </data>
+  <data name="K008" xml:space="preserve">
+    <value>{0} / बरकरार</value>
+  </data>
+  <data name="K009" xml:space="preserve">
+    <value>{0} [{1}] - {2}</value>
+  </data>
+  <data name="K010" xml:space="preserve">
+    <value>{0} सीधी पेयरिंग</value>
+  </data>
+  <data name="K011" xml:space="preserve">
+    <value>{0} सुसज्जित</value>
+  </data>
+  <data name="K012" xml:space="preserve">
+    <value>{0} अनलॉक नहीं है</value>
+  </data>
+  <data name="K013" xml:space="preserve">
+    <value>{0} मिनी</value>
+  </data>
+  <data name="K014" xml:space="preserve">
+    <value>{0} बरकरार/सहेजे गए लक्ष्य छिपे या अनुपस्थित हैं। उन्हें सँभालने के लिए निगरानी विंडो खोलें।</value>
+  </data>
+  <data name="K015" xml:space="preserve">
+    <value>{0} सेटिंग</value>
+  </data>
+  <data name="K016" xml:space="preserve">
+    <value>{0} निगरानी</value>
+  </data>
+  <data name="K017" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="K018" xml:space="preserve">
+    <value>{0}% HP</value>
+  </data>
+  <data name="K019" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="K020" xml:space="preserve">
+    <value>47789 आरक्षित है</value>
+  </data>
+  <data name="K021" xml:space="preserve">
+    <value>कॉन्फ़िगर किया हुआ, दिखाई देने वाला Fren और कोई सक्रिय साथी चोकोबो नहीं।</value>
+  </data>
+  <data name="K022" xml:space="preserve">
+    <value>वर्तमान में सुसज्जित और अनलॉक किया हुआ BRD या MCH।</value>
+  </data>
+  <data name="K023" xml:space="preserve">
+    <value>अनुपस्थित पंक्तियों के लिए Ctrl दबाकर टिक हटाना ज़रूरी है। यहाँ हटाने से उसकी सहेजी हुई कॉपी भी हटती है।</value>
+  </data>
+  <data name="K024" xml:space="preserve">
+    <value>एक्शन</value>
+  </data>
+  <data name="K025" xml:space="preserve">
+    <value>सक्रिय - उसे विदा करें</value>
+  </data>
+  <data name="K026" xml:space="preserve">
+    <value>सक्रिय / पेयर की गई पहचान</value>
+  </data>
+  <data name="K027" xml:space="preserve">
+    <value>सक्रिय / पेयर की गई पहचान: {0}</value>
+  </data>
+  <data name="K028" xml:space="preserve">
+    <value>सक्रिय: {0}/{1} | लाइव: {2} | सहेजे गए: {3}</value>
+  </data>
+  <data name="K029" xml:space="preserve">
+    <value>सक्रिय: 1/{0} | लाइव: {1} | सहेजे गए: अपरिवर्तित</value>
+  </data>
+  <data name="K030" xml:space="preserve">
+    <value>जीवित लक्ष्य का क्रम: Instant BUFF -&gt; Instant oGCD -&gt; Casted BUFF -&gt; Casted GCD। मृत लक्ष्य की तैयारी में रेज़ से पहले इंस्टेंट बफ़ जाँचे जाते हैं।</value>
+  </data>
+  <data name="K031" xml:space="preserve">
+    <value>Astrologian (AST)</value>
+  </data>
+  <data name="K032" xml:space="preserve">
+    <value>कम से कम 16 अक्षर</value>
+  </data>
+  <data name="K033" xml:space="preserve">
+    <value>अटैक एक्शन: {0}</value>
+  </data>
+  <data name="K034" xml:space="preserve">
+    <value>अटैक लक्ष्य: {0}</value>
+  </data>
+  <data name="K035" xml:space="preserve">
+    <value>Attacker Stance</value>
+  </data>
+  <data name="K036" xml:space="preserve">
+    <value>अटैक की तैयारी</value>
+  </data>
+  <data name="K037" xml:space="preserve">
+    <value>अटैक: {0}</value>
+  </data>
+  <data name="K038" xml:space="preserve">
+    <value>प्रमाणित सीधी पेयरिंग दिखाई देने वाले साझा सीक्रेट का उपयोग करती है।</value>
+  </data>
+  <data name="K039" xml:space="preserve">
+    <value>प्रमाणित LAN ट्रैफ़िक एन्क्रिप्टेड नहीं है; कैरेक्टर के नाम और निर्देशांक नेटवर्क पर दिखाई देते हैं।</value>
+  </data>
+  <data name="K040" xml:space="preserve">
+    <value>लॉगिन पर मानचित्र स्थान अपने आप अपडेट करें</value>
+  </data>
+  <data name="K041" xml:space="preserve">
+    <value>उपलब्ध</value>
+  </data>
+  <data name="K042" xml:space="preserve">
+    <value>उपलब्ध और संगत</value>
+  </data>
+  <data name="K043" xml:space="preserve">
+    <value>पीछे</value>
+  </data>
+  <data name="K044" xml:space="preserve">
+    <value>Bard (BRD)</value>
+  </data>
+  <data name="K045" xml:space="preserve">
+    <value>बैटल NPC</value>
+  </data>
+  <data name="K046" xml:space="preserve">
+    <value>BMR या VBM</value>
+  </data>
+  <data name="K047" xml:space="preserve">
+    <value>दोनों विकल्प RSR Manual टार्गेटिंग इस्तेमाल करते हैं। DoTs only केवल सुसज्जित हीलर के समय के साथ क्षति देने वाले एक्शन चालू करता है; Full RSR अपने आप टार्गेटिंग चालू किए बिना कैप्चर किए गए आक्रामक एक्शन और AoE मोड बहाल करता है।</value>
+  </data>
+  <data name="K048" xml:space="preserve">
+    <value>दोनों विकल्प RSR Manual टार्गेटिंग इस्तेमाल करते हैं। Full RSR केवल आक्रामक एक्शन और AoE बदलता है।</value>
+  </data>
+  <data name="K049" xml:space="preserve">
+    <value>दोनों सिरों पर संगत direct-pairing protocol v2 चलना चाहिए और एक ही पोर्ट तथा साझा सीक्रेट इस्तेमाल होना चाहिए।</value>
+  </data>
+  <data name="K050" xml:space="preserve">
+    <value>रद्द करें</value>
+  </data>
+  <data name="K051" xml:space="preserve">
+    <value>कॉन्फ़िगर किए गए हीलर एक्शन निगरानी वाले मित्रवत लक्ष्यों पर कास्ट करता है।</value>
+  </data>
+  <data name="K052" xml:space="preserve">
+    <value>चोकोबो</value>
+  </data>
+  <data name="K053" xml:space="preserve">
+    <value>संचालन की भूमिका चुनें। Stand-alone फिर एक स्थानीय व्यवहार इस्तेमाल करता है। Finish तक सेटिंग इस ड्राफ़्ट में रहती हैं; Cancel ड्राफ़्ट हटा देता है।</value>
+  </data>
+  <data name="K054" xml:space="preserve">
+    <value>पहले से सुसज्जित रेंज्ड जॉब चुनें। HealBot कभी गियरसेट नहीं बदलता और इस मोड में निगरानी वाले लक्ष्यों की सूची इस्तेमाल नहीं करता।</value>
+  </data>
+  <data name="K055" xml:space="preserve">
+    <value>चुनें कि निगरानी में कौन सी मित्रवत वस्तुएँ दिखाई दें। केवल आपके द्वारा स्पष्ट रूप से टिक किए गए लक्ष्य ही हील या सहेजे जाते हैं।</value>
+  </data>
+  <data name="K056" xml:space="preserve">
+    <value>निगरानी सूची साफ़ करें</value>
+  </data>
+  <data name="K057" xml:space="preserve">
+    <value>निगरानी वाले और सहेजे गए लक्ष्य साफ़ किए।</value>
+  </data>
+  <data name="K058" xml:space="preserve">
+    <value>कमांड और विंडो</value>
+  </data>
+  <data name="K059" xml:space="preserve">
+    <value>साथी</value>
+  </data>
+  <data name="K060" xml:space="preserve">
+    <value>साथी चोकोबो</value>
+  </data>
+  <data name="K061" xml:space="preserve">
+    <value>साथी चोकोबो</value>
+  </data>
+  <data name="K062" xml:space="preserve">
+    <value>साथी की मुद्रा</value>
+  </data>
+  <data name="K063" xml:space="preserve">
+    <value>संगत FrenRider Powerlevel IPC, FrenRider चालू और उसका कॉन्फ़िगर किया हुआ Fren दिखाई देता हो।</value>
+  </data>
+  <data name="K064" xml:space="preserve">
+    <value>संगत FrenRider Powerlevel IPC और FrenRider चालू हो।</value>
+  </data>
+  <data name="K065" xml:space="preserve">
+    <value>एक प्रमाणित direct-TCP HealBot एंडपॉइंट कॉन्फ़िगर करें। Newb कभी स्थानीय रूप से हील या अटैक नहीं करता।</value>
+  </data>
+  <data name="K066" xml:space="preserve">
+    <value>प्रमाणित लिसनर पोर्ट और दिखाई देने वाला साझा सीक्रेट कॉन्फ़िगर करें।</value>
+  </data>
+  <data name="K067" xml:space="preserve">
+    <value>नेटवर्किंग के बिना चयनित HealBot, JOAT या PowerlevelBot व्यवहार कॉन्फ़िगर करें।</value>
+  </data>
+  <data name="K068" xml:space="preserve">
+    <value>कॉन्फ़िगर किया गया</value>
+  </data>
+  <data name="K069" xml:space="preserve">
+    <value>कॉन्फ़िगर किया हुआ Fren</value>
+  </data>
+  <data name="K070" xml:space="preserve">
+    <value>जारी रखें</value>
+  </data>
+  <data name="K071" xml:space="preserve">
+    <value>कॉपी करें</value>
+  </data>
+  <data name="K072" xml:space="preserve">
+    <value>सीक्रेट कॉपी करें</value>
+  </data>
+  <data name="K073" xml:space="preserve">
+    <value>वर्तमान जॉब ID {0} मेल नहीं खाता</value>
+  </data>
+  <data name="K074" xml:space="preserve">
+    <value>मृत</value>
+  </data>
+  <data name="K075" xml:space="preserve">
+    <value>डिफ़ॉल्ट</value>
+  </data>
+  <data name="K076" xml:space="preserve">
+    <value>Defender Stance</value>
+  </data>
+  <data name="K077" xml:space="preserve">
+    <value>निर्भरताओं की तैयारी</value>
+  </data>
+  <data name="K078" xml:space="preserve">
+    <value>विवरण</value>
+  </data>
+  <data name="K079" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="K080" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="K081" xml:space="preserve">
+    <value>विदा किया</value>
+  </data>
+  <data name="K082" xml:space="preserve">
+    <value>दूरी</value>
+  </data>
+  <data name="K083" xml:space="preserve">
+    <value>Tamamizu एथराइट इस्तेमाल न करें</value>
+  </data>
+  <data name="K084" xml:space="preserve">
+    <value>केवल DoTs</value>
+  </data>
+  <data name="K085" xml:space="preserve">
+    <value>DTR बार</value>
+  </data>
+  <data name="K086" xml:space="preserve">
+    <value>DTR मोड</value>
+  </data>
+  <data name="K087" xml:space="preserve">
+    <value>{0} चालू करें</value>
+  </data>
+  <data name="K088" xml:space="preserve">
+    <value>चालू</value>
+  </data>
+  <data name="K089" xml:space="preserve">
+    <value>चालू, कॉन्फ़िगर किया हुआ और दिखाई देता है</value>
+  </data>
+  <data name="K090" xml:space="preserve">
+    <value>एंडपॉइंट: {0}</value>
+  </data>
+  <data name="K091" xml:space="preserve">
+    <value>शत्रु चयन केवल उन क्षतिग्रस्त शत्रुओं तक सीमित रहता है जो पहले से Fren या स्थानीय खिलाड़ी से लड़ रहे हैं।</value>
+  </data>
+  <data name="K092" xml:space="preserve">
+    <value>सुसज्जित</value>
+  </data>
+  <data name="K093" xml:space="preserve">
+    <value>नाम, प्रकार या जॉब से फ़िल्टर करें</value>
+  </data>
+  <data name="K094" xml:space="preserve">
+    <value>नाम फ़िल्टर करें...</value>
+  </data>
+  <data name="K095" xml:space="preserve">
+    <value>फ़िल्टर: खिलाड़ी {0}, चोकोबो {1}, NPC पार्टी {2}, मित्रवत बैटल NPC {3}।</value>
+  </data>
+  <data name="K096" xml:space="preserve">
+    <value>Finish को चयनित भूमिका अभी शुरू करनी चाहिए या उसे /healbot on द्वारा बहाल होने वाली भूमिका के रूप में सहेजना चाहिए, जबकि वर्तमान भूमिका Off रहे।</value>
+  </data>
+  <data name="K097" xml:space="preserve">
+    <value>सेटअप पूरा करें</value>
+  </data>
+  <data name="K098" xml:space="preserve">
+    <value>फ़ॉलो</value>
+  </data>
+  <data name="K099" xml:space="preserve">
+    <value>आगे बढ़कर क्षेत्र जाँचने की अवधि</value>
+  </data>
+  <data name="K100" xml:space="preserve">
+    <value>Free Stance</value>
+  </data>
+  <data name="K101" xml:space="preserve">
+    <value>Fren की दृश्यता</value>
+  </data>
+  <data name="K102" xml:space="preserve">
+    <value>FrenRider</value>
+  </data>
+  <data name="K103" xml:space="preserve">
+    <value>FrenRider अटैक IPC</value>
+  </data>
+  <data name="K104" xml:space="preserve">
+    <value>FrenRider अटैक स्रोत</value>
+  </data>
+  <data name="K105" xml:space="preserve">
+    <value>FrenRider IPC</value>
+  </data>
+  <data name="K106" xml:space="preserve">
+    <value>मित्रवत बैटल NPC</value>
+  </data>
+  <data name="K107" xml:space="preserve">
+    <value>पूरा RSR रोटेशन</value>
+  </data>
+  <data name="K108" xml:space="preserve">
+    <value>सामान्य</value>
+  </data>
+  <data name="K109" xml:space="preserve">
+    <value>64 अक्षरों का हेक्स सीक्रेट बनाएँ</value>
+  </data>
+  <data name="K110" xml:space="preserve">
+    <value>सीक्रेट बनाएँ</value>
+  </data>
+  <data name="K111" xml:space="preserve">
+    <value>Gysahl Greens (NQ + HQ): {0}</value>
+  </data>
+  <data name="K112" xml:space="preserve">
+    <value>Gysahl Greens (NQ + HQ): अनुपलब्ध</value>
+  </data>
+  <data name="K113" xml:space="preserve">
+    <value>HealBot</value>
+  </data>
+  <data name="K114" xml:space="preserve">
+    <value>HealBot {0}</value>
+  </data>
+  <data name="K115" xml:space="preserve">
+    <value>HealBot एक्शन</value>
+  </data>
+  <data name="K116" xml:space="preserve">
+    <value>HealBot और JOAT प्रत्येक जॉब का यह हीलिंग एक्शन मैट्रिक्स साझा करते हैं। PowerlevelBot इन नियमों का उपयोग नहीं करता।</value>
+  </data>
+  <data name="K117" xml:space="preserve">
+    <value>HealBot कॉन्फ़िगर की गई {0} लक्ष्यों की निगरानी सूची जाँचता है और मौजूदा WHM, SCH, AST या SGE एक्शन मैट्रिक्स इस्तेमाल करता है। लक्ष्य आपकी पार्टी के बाहर के मित्रवत खिलाड़ी भी हो सकते हैं।</value>
+  </data>
+  <data name="K118" xml:space="preserve">
+    <value>HealBot मिनी</value>
+  </data>
+  <data name="K119" xml:space="preserve">
+    <value>HealBot का वैकल्पिक इंटीग्रेशन</value>
+  </data>
+  <data name="K120" xml:space="preserve">
+    <value>HealBot पाथ</value>
+  </data>
+  <data name="K121" xml:space="preserve">
+    <value>HealBot /healbot, /hb और /copellia का समर्थन करता है, जिनके साथ off, on, standalone, helper, newb, heal, joat (या jot), powerlevel, mini, status, config, watch, ws और j इस्तेमाल होते हैं।</value>
+  </data>
+  <data name="K122" xml:space="preserve">
+    <value>HealBot निगरानी</value>
+  </data>
+  <data name="K123" xml:space="preserve">
+    <value>हीलर एक्शन मैट्रिक्स</value>
+  </data>
+  <data name="K124" xml:space="preserve">
+    <value>Healer Stance</value>
+  </data>
+  <data name="K125" xml:space="preserve">
+    <value>हीलिंग एक्शन: {0} | अटैक एक्शन: {1}</value>
+  </data>
+  <data name="K126" xml:space="preserve">
+    <value>हीलिंग कॉन्फ़िगरेशन</value>
+  </data>
+  <data name="K127" xml:space="preserve">
+    <value>हीलिंग संदर्भ</value>
+  </data>
+  <data name="K128" xml:space="preserve">
+    <value>हीलिंग निर्भरताएँ</value>
+  </data>
+  <data name="K129" xml:space="preserve">
+    <value>हीलिंग गेट</value>
+  </data>
+  <data name="K130" xml:space="preserve">
+    <value>हीलिंग की तैयारी</value>
+  </data>
+  <data name="K131" xml:space="preserve">
+    <value>हर 900-ms निर्णय चक्र में हीलिंग को प्राथमिकता मिलती है। निगरानी का मेल खाता नियम काम करने से पहले Coppelia RSR बंद करता है, हीलिंग कतार में हो, अवरुद्ध हो या कास्ट हो रही हो तब उसे बंद रखता है, और हीलिंग का निर्णय वास्तव में निष्क्रिय होने पर ही RSR Manual इस्तेमाल करता है। पेयर किया हुआ JOAT 30 याल्म या कम दूरी पर Manual में प्रतीक्षा करता है, जबकि केवल Coppelia लड़ रहे शत्रु का चयन करता है।</value>
+  </data>
+  <data name="K132" xml:space="preserve">
+    <value>हीलिंग: {0}</value>
+  </data>
+  <data name="K133" xml:space="preserve">
+    <value>सहायक</value>
+  </data>
+  <data name="K134" xml:space="preserve">
+    <value>Helper / Newb पेयरिंग आवश्यकताएँ</value>
+  </data>
+  <data name="K135" xml:space="preserve">
+    <value>सहायक का पता</value>
+  </data>
+  <data name="K136" xml:space="preserve">
+    <value>सहायक एंडपॉइंट: {0}:{1}।</value>
+  </data>
+  <data name="K137" xml:space="preserve">
+    <value>सहायक का IPv4 पता</value>
+  </data>
+  <data name="K138" xml:space="preserve">
+    <value>सहायक लिसनर पोर्ट: {0}।</value>
+  </data>
+  <data name="K139" xml:space="preserve">
+    <value>Helper एक प्रमाणित Newb की प्रतीक्षा करता है और केवल संगत स्थिति अनुरोध के बाद JOAT सक्रिय करता है।</value>
+  </data>
+  <data name="K140" xml:space="preserve">
+    <value>Helper को मान्य TCP पोर्ट और दिखाई देने वाला साझा सीक्रेट चाहिए; Newb को सहायक का IPv4 पता भी चाहिए।</value>
+  </data>
+  <data name="K141" xml:space="preserve">
+    <value>Helper को HealBot/JOAT निर्भरताओं के साथ पेयर की गई यात्रा के लिए Lifestream और vnavmesh चाहिए।</value>
+  </data>
+  <data name="K142" xml:space="preserve">
+    <value>Helper अपने लिसनर पोर्ट और साझा सीक्रेट का स्वामी है। Newb सहायक के IPv4 पते का भी स्वामी है।</value>
+  </data>
+  <data name="K143" xml:space="preserve">
+    <value>फ़िल्टर से छिपा</value>
+  </data>
+  <data name="K144" xml:space="preserve">
+    <value>सभी निगरानी वाले और सहेजे गए लक्ष्य साफ़ करने के लिए Ctrl दबाए रखें।</value>
+  </data>
+  <data name="K145" xml:space="preserve">
+    <value>अनुपस्थित बरकरार लक्ष्य {0} का टिक हटाते समय Ctrl दबाए रखें।</value>
+  </data>
+  <data name="K146" xml:space="preserve">
+    <value>पेयर किया हुआ Newb/Quester बिना टेलीपोर्ट किए क्षेत्र बदले तो सहायक कितनी देर आगे चलता है।</value>
+  </data>
+  <data name="K147" xml:space="preserve">
+    <value>HP</value>
+  </data>
+  <data name="K148" xml:space="preserve">
+    <value>HP अनुपलब्ध</value>
+  </data>
+  <data name="K149" xml:space="preserve">
+    <value>HP%</value>
+  </data>
+  <data name="K150" xml:space="preserve">
+    <value>HP: {0}</value>
+  </data>
+  <data name="K151" xml:space="preserve">
+    <value>HP: HP अनुपलब्ध</value>
+  </data>
+  <data name="K152" xml:space="preserve">
+    <value>HP: लक्ष्य दिखाई नहीं देता</value>
+  </data>
+  <data name="K153" xml:space="preserve">
+    <value>आइकन + पाठ</value>
+  </data>
+  <data name="K154" xml:space="preserve">
+    <value>केवल आइकन</value>
+  </data>
+  <data name="K155" xml:space="preserve">
+    <value>असंगत</value>
+  </data>
+  <data name="K156" xml:space="preserve">
+    <value>अमान्य IPv4 पता</value>
+  </data>
+  <data name="K157" xml:space="preserve">
+    <value>Jacqueline of All Trades (JOAT)</value>
+  </data>
+  <data name="K158" xml:space="preserve">
+    <value>Jacqueline of All Trades (JOAT) आवश्यकताएँ</value>
+  </data>
+  <data name="K159" xml:space="preserve">
+    <value>JOAT</value>
+  </data>
+  <data name="K160" xml:space="preserve">
+    <value>JOAT अटैक मोड</value>
+  </data>
+  <data name="K161" xml:space="preserve">
+    <value>JOAT अटैक मोड: {0}; दोनों वास्तव में निष्क्रिय हीलिंग चक्रों के दौरान RSR Manual टार्गेटिंग इस्तेमाल करते हैं।</value>
+  </data>
+  <data name="K162" xml:space="preserve">
+    <value>JOAT अटैक की तैयारी</value>
+  </data>
+  <data name="K163" xml:space="preserve">
+    <value>JOAT FrenRider के Fren को अपने आप नहीं जोड़ता। हीलिंग को जिस निम्न-स्तर लक्ष्य की रक्षा करनी है, उसके रूप में निगरानी में वह Fren स्पष्ट रूप से चुनें।</value>
+  </data>
+  <data name="K164" xml:space="preserve">
+    <value>JOAT हीलर एक्शन मैट्रिक्स</value>
+  </data>
+  <data name="K165" xml:space="preserve">
+    <value>JOAT हीलिंग पाथ</value>
+  </data>
+  <data name="K166" xml:space="preserve">
+    <value>JOAT कभी FrenRider के Fren को निगरानी में नहीं जोड़ता। वहाँ Fren को स्पष्ट रूप से चुनें ताकि हीलिंग उसकी रक्षा कर सके; अटैक केवल उन शत्रुओं तक सीमित रहते हैं जो पहले से उस दिखाई देने वाले Fren या स्थानीय हीलर को टार्गेट कर रहे हैं।</value>
+  </data>
+  <data name="K167" xml:space="preserve">
+    <value>JOAT की तैयारी अभी जाँची नहीं गई है।</value>
+  </data>
+  <data name="K168" xml:space="preserve">
+    <value>JOAT के निगरानी वाले लक्ष्य</value>
+  </data>
+  <data name="K169" xml:space="preserve">
+    <value>JOAT: {0}</value>
+  </data>
+  <data name="K170" xml:space="preserve">
+    <value>जॉब</value>
+  </data>
+  <data name="K171" xml:space="preserve">
+    <value>जॉब सुसज्जित</value>
+  </data>
+  <data name="K172" xml:space="preserve">
+    <value>जॉब अनलॉक</value>
+  </data>
+  <data name="K173" xml:space="preserve">
+    <value>Ko-fi</value>
+  </data>
+  <data name="K174" xml:space="preserve">
+    <value>Krangle</value>
+  </data>
+  <data name="K175" xml:space="preserve">
+    <value>नाम Krangle करें</value>
+  </data>
+  <data name="K176" xml:space="preserve">
+    <value>नाम Krangle: बंद</value>
+  </data>
+  <data name="K177" xml:space="preserve">
+    <value>नाम Krangle: चालू</value>
+  </data>
+  <data name="K178" xml:space="preserve">
+    <value>LAN ट्रैफ़िक प्रमाणित है लेकिन एन्क्रिप्टेड नहीं है। कैरेक्टर के नाम और निर्देशांक स्थानीय नेटवर्क पर दिखाई देते हैं। कनेक्शन, प्रमाणीकरण, असाइनमेंट और फिर जुड़ने का काम असिंक्रोनस रहता है।</value>
+  </data>
+  <data name="K179" xml:space="preserve">
+    <value>भाषा</value>
+  </data>
+  <data name="K180" xml:space="preserve">
+    <value>पिछला एक्शन</value>
+  </data>
+  <data name="K181" xml:space="preserve">
+    <value>पिछला नियम</value>
+  </data>
+  <data name="K182" xml:space="preserve">
+    <value>लाइव पात्र लक्ष्य ({0})</value>
+  </data>
+  <data name="K183" xml:space="preserve">
+    <value>लोड किया गया</value>
+  </data>
+  <data name="K184" xml:space="preserve">
+    <value>लोड किया हुआ, काम करता Rotation Solver Reborn; JOAT की क्षति केवल RSR के ज़रिए दी जाती है।</value>
+  </data>
+  <data name="K185" xml:space="preserve">
+    <value>स्थानीय हीलर: {0} ({1})</value>
+  </data>
+  <data name="K186" xml:space="preserve">
+    <value>स्थानीय Newb HP: {0}</value>
+  </data>
+  <data name="K187" xml:space="preserve">
+    <value>स्थानीय Newb की पहचान</value>
+  </data>
+  <data name="K188" xml:space="preserve">
+    <value>Newb शुरू करने से पहले पूरी तरह लॉगिन करें</value>
+  </data>
+  <data name="K189" xml:space="preserve">
+    <value>LOS: {0}</value>
+  </data>
+  <data name="K190" xml:space="preserve">
+    <value>LOS: लक्ष्य दिखाई नहीं देता</value>
+  </data>
+  <data name="K191" xml:space="preserve">
+    <value>Machinist (MCH)</value>
+  </data>
+  <data name="K192" xml:space="preserve">
+    <value>मुख्य</value>
+  </data>
+  <data name="K193" xml:space="preserve">
+    <value>निगरानी वाले लक्ष्य सँभालें और साथियों को खोजें।</value>
+  </data>
+  <data name="K194" xml:space="preserve">
+    <value>निगरानी वाले लक्ष्य केवल निगरानी विंडो में सँभालें। वहाँ Ctrl दबाकर साफ़ करने से सक्रिय निगरानी वाले और सहेजे गए दोनों लक्ष्य हटते हैं।</value>
+  </data>
+  <data name="K195" xml:space="preserve">
+    <value>मिनी</value>
+  </data>
+  <data name="K196" xml:space="preserve">
+    <value>अनुपलब्ध</value>
+  </data>
+  <data name="K197" xml:space="preserve">
+    <value>अनुपलब्ध (वैकल्पिक)</value>
+  </data>
+  <data name="K198" xml:space="preserve">
+    <value>MP%</value>
+  </data>
+  <data name="K199" xml:space="preserve">
+    <value>कई लक्ष्यों की निगरानी सीमा: {0} सक्रिय और {1} सहेजे गए लक्ष्य।</value>
+  </data>
+  <data name="K200" xml:space="preserve">
+    <value>नाम</value>
+  </data>
+  <data name="K201" xml:space="preserve">
+    <value>अनुपलब्ध बफ़ चाहिए</value>
+  </data>
+  <data name="K202" xml:space="preserve">
+    <value>नेटवर्किंग पहले से सहेजी गई है।</value>
+  </data>
+  <data name="K203" xml:space="preserve">
+    <value>नेटवर्किंग सहेजी गई; सीधी पेयरिंग एक बार फिर शुरू हुई।</value>
+  </data>
+  <data name="K204" xml:space="preserve">
+    <value>नौसिखिया</value>
+  </data>
+  <data name="K205" xml:space="preserve">
+    <value>Newb एक सटीक Helper IPv4 एंडपॉइंट से असिंक्रोनस रूप से जुड़ता है और कभी स्थानीय रूप से हील या अटैक नहीं करता।</value>
+  </data>
+  <data name="K206" xml:space="preserve">
+    <value>Newb कोई स्थानीय हीलिंग या अटैक नहीं करता और Stand-alone की निगरानी सूची नहीं बदलता।</value>
+  </data>
+  <data name="K207" xml:space="preserve">
+    <value>Newb कोई स्थानीय हीलिंग या अटैक नहीं करता। निगरानी वाले लक्ष्यों की यह सूची बाद में HealBot या JOAT के लिए अपरिवर्तित रहती है।</value>
+  </data>
+  <data name="K208" xml:space="preserve">
+    <value>अगला एक्शन</value>
+  </data>
+  <data name="K209" xml:space="preserve">
+    <value>अगला एक्शन: {0}</value>
+  </data>
+  <data name="K210" xml:space="preserve">
+    <value>कोई सक्रिय helper/quester नहीं</value>
+  </data>
+  <data name="K211" xml:space="preserve">
+    <value>कोई सक्रिय निगरानी वाला लक्ष्य नहीं</value>
+  </data>
+  <data name="K212" xml:space="preserve">
+    <value>वर्तमान फ़िल्टर से कोई पात्र लक्ष्य मेल नहीं खाता।</value>
+  </data>
+  <data name="K213" xml:space="preserve">
+    <value>अभी कोई निगरानी वाला लक्ष्य नहीं चुना गया।</value>
+  </data>
+  <data name="K214" xml:space="preserve">
+    <value>कोई नहीं</value>
+  </data>
+  <data name="K215" xml:space="preserve">
+    <value>कुछ नहीं चुना</value>
+  </data>
+  <data name="K216" xml:space="preserve">
+    <value>प्राप्त नहीं</value>
+  </data>
+  <data name="K217" xml:space="preserve">
+    <value>कॉन्फ़िगर नहीं किया गया</value>
+  </data>
+  <data name="K218" xml:space="preserve">
+    <value>अनलॉक नहीं</value>
+  </data>
+  <data name="K219" xml:space="preserve">
+    <value>दिखाई नहीं देता</value>
+  </data>
+  <data name="K220" xml:space="preserve">
+    <value>NPC पार्टी</value>
+  </data>
+  <data name="K221" xml:space="preserve">
+    <value>NPC पार्टी सदस्य</value>
+  </data>
+  <data name="K222" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="K223" xml:space="preserve">
+    <value>चालू</value>
+  </data>
+  <data name="K224" xml:space="preserve">
+    <value>केवल वे क्षतिग्रस्त शत्रु पात्र हैं जो पहले से कॉन्फ़िगर किए गए दिखाई देने वाले Fren या स्थानीय खिलाड़ी को टार्गेट कर रहे हैं।</value>
+  </data>
+  <data name="K225" xml:space="preserve">
+    <value>OOC</value>
+  </data>
+  <data name="K226" xml:space="preserve">
+    <value>मुख्य विंडो खोलें</value>
+  </data>
+  <data name="K227" xml:space="preserve">
+    <value>मिनी खोलें</value>
+  </data>
+  <data name="K228" xml:space="preserve">
+    <value>मौजूदा निगरानी विंडो अभी खोलें। ड्राफ़्ट के फ़िल्टर बदलाव केवल Finish के बाद लागू होते हैं।</value>
+  </data>
+  <data name="K229" xml:space="preserve">
+    <value>निगरानी खोलें</value>
+  </data>
+  <data name="K230" xml:space="preserve">
+    <value>निगरानी विंडो खोलें</value>
+  </data>
+  <data name="K231" xml:space="preserve">
+    <value>संचालन भूमिका</value>
+  </data>
+  <data name="K232" xml:space="preserve">
+    <value>संचालन भूमिका: {0}</value>
+  </data>
+  <data name="K233" xml:space="preserve">
+    <value>संचालन स्थिति</value>
+  </data>
+  <data name="K234" xml:space="preserve">
+    <value>पेयर पोर्ट</value>
+  </data>
+  <data name="K235" xml:space="preserve">
+    <value>पेयर किया हुआ सहायक: {0}</value>
+  </data>
+  <data name="K236" xml:space="preserve">
+    <value>पेयरिंग TCP पोर्ट</value>
+  </data>
+  <data name="K237" xml:space="preserve">
+    <value>पेयरिंग: {0} - {1}</value>
+  </data>
+  <data name="K238" xml:space="preserve">
+    <value>खिलाड़ी</value>
+  </data>
+  <data name="K239" xml:space="preserve">
+    <value>पावरलेवल जॉब</value>
+  </data>
+  <data name="K240" xml:space="preserve">
+    <value>पावरलेवल जॉब: {0}।</value>
+  </data>
+  <data name="K241" xml:space="preserve">
+    <value>पावरलेवल की तैयारी अभी जाँची नहीं गई है।</value>
+  </data>
+  <data name="K242" xml:space="preserve">
+    <value>PowerlevelBot</value>
+  </data>
+  <data name="K243" xml:space="preserve">
+    <value>PowerlevelBot केवल जीवित, टार्गेट किए जा सकने वाले, क्षतिग्रस्त लड़ाकू शत्रुओं पर विचार करता है जो पहले से FrenRider के कॉन्फ़िगर किए गए दिखाई देने वाले Fren या स्थानीय खिलाड़ी को टार्गेट कर रहे हों। यह BRD/MCH के इंस्टेंट, केवल शत्रु पर, एक लक्ष्य वाले एक्शन इस्तेमाल करता है और अछूते शत्रुओं को नहीं खींचता।</value>
+  </data>
+  <data name="K244" xml:space="preserve">
+    <value>PowerlevelBot HealBot की निगरानी सूची को अनदेखा करता है और FrenRider के कॉन्फ़िगर किए गए Fren को लीडर मानता है।</value>
+  </data>
+  <data name="K245" xml:space="preserve">
+    <value>PowerlevelBot कभी गियरसेट नहीं बदलता; आपका वर्तमान जॉब इस चयन से मेल खाना चाहिए।</value>
+  </data>
+  <data name="K246" xml:space="preserve">
+    <value>PowerlevelBot पाथ</value>
+  </data>
+  <data name="K247" xml:space="preserve">
+    <value>PowerlevelBot आवश्यकताएँ</value>
+  </data>
+  <data name="K248" xml:space="preserve">
+    <value>मुख्य अवस्था</value>
+  </data>
+  <data name="K249" xml:space="preserve">
+    <value>मुख्य अवस्था: {0}</value>
+  </data>
+  <data name="K250" xml:space="preserve">
+    <value>प्राथमिकता</value>
+  </data>
+  <data name="K251" xml:space="preserve">
+    <value>प्रदाता: {0}</value>
+  </data>
+  <data name="K252" xml:space="preserve">
+    <value>अभी QST JOAT अटैक नियंत्रित करता है ({0})। </value>
+  </data>
+  <data name="K253" xml:space="preserve">
+    <value>अभी QST समन नियंत्रित करता है ({0})। </value>
+  </data>
+  <data name="K254" xml:space="preserve">
+    <value>अभी QST सक्रिय अटैक मोड नियंत्रित करता है; नियंत्रण छोड़े जाने पर सहेजा हुआ स्थानीय चयन फिर लागू होगा।</value>
+  </data>
+  <data name="K255" xml:space="preserve">
+    <value>QST यात्रा</value>
+  </data>
+  <data name="K256" xml:space="preserve">
+    <value>त्वरित सेटअप</value>
+  </data>
+  <data name="K257" xml:space="preserve">
+    <value>त्वरित सेटअप पूरा है। आप इस स्थायी टैब से इसे कभी भी फिर चला सकते हैं।</value>
+  </data>
+  <data name="K258" xml:space="preserve">
+    <value>तैयार</value>
+  </data>
+  <data name="K259" xml:space="preserve">
+    <value>हीलिंग निष्क्रिय हो तो तैयार</value>
+  </data>
+  <data name="K260" xml:space="preserve">
+    <value>रिफ़्रेश</value>
+  </data>
+  <data name="K261" xml:space="preserve">
+    <value>तैयारी रिफ़्रेश करें</value>
+  </data>
+  <data name="K262" xml:space="preserve">
+    <value>निकटतम एथराइट चुनने के लिए प्रत्येक HealBot संस्करण पर एक बार LootGoblin का कम्युनिटी मानचित्र स्थान डेटा रिफ़्रेश करता है।</value>
+  </data>
+  <data name="K263" xml:space="preserve">
+    <value>फिर जुड़ने की खोज दूरी</value>
+  </data>
+  <data name="K264" xml:space="preserve">
+    <value>दूरस्थ पीछा: {0}</value>
+  </data>
+  <data name="K265" xml:space="preserve">
+    <value>दूरस्थ हीलिंग: {0}</value>
+  </data>
+  <data name="K266" xml:space="preserve">
+    <value>आवश्यकताएँ / मदद</value>
+  </data>
+  <data name="K267" xml:space="preserve">
+    <value>आवश्यकताएँ और मदद</value>
+  </data>
+  <data name="K268" xml:space="preserve">
+    <value>Rescue: {0}</value>
+  </data>
+  <data name="K269" xml:space="preserve">
+    <value>Rescue: निष्क्रिय</value>
+  </data>
+  <data name="K270" xml:space="preserve">
+    <value>सीमित शत्रु नीति</value>
+  </data>
+  <data name="K271" xml:space="preserve">
+    <value>बरकरार - अनुपस्थित</value>
+  </data>
+  <data name="K272" xml:space="preserve">
+    <value>बरकरार या अनुपस्थित लक्ष्य ({0})</value>
+  </data>
+  <data name="K273" xml:space="preserve">
+    <value>समीक्षा करके पूरा करें</value>
+  </data>
+  <data name="K274" xml:space="preserve">
+    <value>भूमिका नेटवर्किंग</value>
+  </data>
+  <data name="K275" xml:space="preserve">
+    <value>भूमिका: {0}</value>
+  </data>
+  <data name="K276" xml:space="preserve">
+    <value>Rotation Solver Reborn</value>
+  </data>
+  <data name="K277" xml:space="preserve">
+    <value>RSR</value>
+  </data>
+  <data name="K278" xml:space="preserve">
+    <value>RSR नियंत्रण</value>
+  </data>
+  <data name="K279" xml:space="preserve">
+    <value>RSR आवश्यक है और केवल वही JOAT की क्षति लागू करता है। Coppelia निगरानी की हीलिंग सीधे करता रहता है और RSR को बंद करने/निष्क्रिय होने पर बहाल करने के हस्तांतरण का स्वामी है।</value>
+  </data>
+  <data name="K280" xml:space="preserve">
+    <value>RSR लोड हो तो RSR का अलगाव और सटीक सत्र बहाली इस्तेमाल होती है; HealBot की हीलिंग फिर भी सीधे होती है।</value>
+  </data>
+  <data name="K281" xml:space="preserve">
+    <value>Finish तक कुछ बदले बिना निर्देशित Stand-alone, Helper या Newb सेटअप चलाएँ।</value>
+  </data>
+  <data name="K282" xml:space="preserve">
+    <value>त्वरित सेटअप चलाएँ</value>
+  </data>
+  <data name="K283" xml:space="preserve">
+    <value>त्वरित सेटअप फिर चलाएँ</value>
+  </data>
+  <data name="K284" xml:space="preserve">
+    <value>पहले निगरानी वाले लक्ष्यों की हीलिंग करता है, फिर केवल वास्तव में निष्क्रिय हीलिंग चक्रों के दौरान RSR को अटैक करने देता है।</value>
+  </data>
+  <data name="K285" xml:space="preserve">
+    <value>Sage (SGE)</value>
+  </data>
+  <data name="K286" xml:space="preserve">
+    <value>स्पष्ट रूप से निगरानी वाले हील लक्ष्य सहेजें</value>
+  </data>
+  <data name="K287" xml:space="preserve">
+    <value>हील लक्ष्य सहेजें</value>
+  </data>
+  <data name="K288" xml:space="preserve">
+    <value>हील लक्ष्य सहेजना केवल उन लक्ष्यों को सहेजता है जिन्हें आप स्पष्ट रूप से टिक करते हैं। लक्ष्य का टिक हटाने से वह सहेजे गए सेट से भी हटता है।</value>
+  </data>
+  <data name="K289" xml:space="preserve">
+    <value>सेटअप सहेजें और भूमिका बंद रखें</value>
+  </data>
+  <data name="K290" xml:space="preserve">
+    <value>सहेजा गया</value>
+  </data>
+  <data name="K291" xml:space="preserve">
+    <value>सहेजे गए लक्ष्यों की खोज दूरी</value>
+  </data>
+  <data name="K292" xml:space="preserve">
+    <value>सहेजे गए लक्ष्यों की खोज दूरी केवल यह तय करती है कि वापस आने के बाद सहेजा हुआ लक्ष्य कब अपने आप फिर जुड़ सकता है; इससे नए लक्ष्य नहीं खोजे जाते।</value>
+  </data>
+  <data name="K293" xml:space="preserve">
+    <value>सहेजे गए लक्ष्य बंद।</value>
+  </data>
+  <data name="K294" xml:space="preserve">
+    <value>सहेजे गए लक्ष्य चालू; फिर जुड़ने की खोज {0} y।</value>
+  </data>
+  <data name="K295" xml:space="preserve">
+    <value>खोज y</value>
+  </data>
+  <data name="K296" xml:space="preserve">
+    <value>Scholar (SCH)</value>
+  </data>
+  <data name="K297" xml:space="preserve">
+    <value>BRD या MCH चुनें</value>
+  </data>
+  <data name="K298" xml:space="preserve">
+    <value>यदि FrenRider का कॉन्फ़िगर किया हुआ Fren हील करने वाला निम्न-स्तर लक्ष्य है तो उसे स्पष्ट रूप से चुनें। JOAT उसे कभी इस सूची में नहीं डालता।</value>
+  </data>
+  <data name="K299" xml:space="preserve">
+    <value>सीधी पेयरिंग सेटिंग बदलने के लिए Helper या Newb चुनें।</value>
+  </data>
+  <data name="K300" xml:space="preserve">
+    <value>चयनित</value>
+  </data>
+  <data name="K301" xml:space="preserve">
+    <value>चयनित - दूरस्थ</value>
+  </data>
+  <data name="K302" xml:space="preserve">
+    <value>चयनित जॉब</value>
+  </data>
+  <data name="K303" xml:space="preserve">
+    <value>चयनित जॉब: {0}</value>
+  </data>
+  <data name="K304" xml:space="preserve">
+    <value>स्वयं</value>
+  </data>
+  <data name="K305" xml:space="preserve">
+    <value>सहायक सेट करें</value>
+  </data>
+  <data name="K306" xml:space="preserve">
+    <value>नौसिखिया सेट करें</value>
+  </data>
+  <data name="K307" xml:space="preserve">
+    <value>स्वतंत्र सेट करें</value>
+  </data>
+  <data name="K308" xml:space="preserve">
+    <value>सेटिंग</value>
+  </data>
+  <data name="K309" xml:space="preserve">
+    <value>साझा सीक्रेट</value>
+  </data>
+  <data name="K310" xml:space="preserve">
+    <value>निर्भरता टोस्ट दिखाएँ</value>
+  </data>
+  <data name="K311" xml:space="preserve">
+    <value>DTR बार प्रविष्टि दिखाएँ</value>
+  </data>
+  <data name="K312" xml:space="preserve">
+    <value>QST के टेलीपोर्ट गंतव्य का चयन करते समय Tamamizu छोड़ता है।</value>
+  </data>
+  <data name="K313" xml:space="preserve">
+    <value>स्वतंत्र</value>
+  </data>
+  <data name="K314" xml:space="preserve">
+    <value>स्वतंत्र व्यवहार</value>
+  </data>
+  <data name="K315" xml:space="preserve">
+    <value>स्वतंत्र HealBot आवश्यकताएँ</value>
+  </data>
+  <data name="K316" xml:space="preserve">
+    <value>Stand-alone नेटवर्किंग के बिना HealBot, JOAT या PowerlevelBot चलाता है। Helper एक प्रमाणित Newb की प्रतीक्षा करता है और उसके लिए JOAT को दूरस्थ रूप से सक्रिय करता है। Newb असिंक्रोनस रूप से जुड़ता है और कोई स्थानीय हीलिंग या अटैक नहीं करता।</value>
+  </data>
+  <data name="K317" xml:space="preserve">
+    <value>Stand-alone नेटवर्किंग के बिना HealBot, JOAT या PowerlevelBot चलाता है। Helper एक प्रमाणित Newb की प्रतीक्षा करता है। Newb असिंक्रोनस रूप से जुड़ता है और कोई स्थानीय हीलिंग या अटैक नहीं करता।</value>
+  </data>
+  <data name="K318" xml:space="preserve">
+    <value>यह भूमिका अभी शुरू करें</value>
+  </data>
+  <data name="K319" xml:space="preserve">
+    <value>अवस्था</value>
+  </data>
+  <data name="K320" xml:space="preserve">
+    <value>स्थिति और व्यवहार</value>
+  </data>
+  <data name="K321" xml:space="preserve">
+    <value>स्थिति डैशबोर्ड</value>
+  </data>
+  <data name="K322" xml:space="preserve">
+    <value>स्थिति चैट में भेजें</value>
+  </data>
+  <data name="K323" xml:space="preserve">
+    <value>3 में से चरण {0}</value>
+  </data>
+  <data name="K324" xml:space="preserve">
+    <value>साथी चोकोबो समन करें</value>
+  </data>
+  <data name="K325" xml:space="preserve">
+    <value>साथी चोकोबो समन करें (Gysahl Greens: {0})</value>
+  </data>
+  <data name="K326" xml:space="preserve">
+    <value>साथी चोकोबो समन करें (Gysahl Greens: अनुपलब्ध)</value>
+  </data>
+  <data name="K327" xml:space="preserve">
+    <value>समर्थित हीलर</value>
+  </data>
+  <data name="K328" xml:space="preserve">
+    <value>वर्तमान को टार्गेट करें</value>
+  </data>
+  <data name="K329" xml:space="preserve">
+    <value>लक्ष्य खोज और संग्रहण</value>
+  </data>
+  <data name="K330" xml:space="preserve">
+    <value>लक्ष्य दिखाई नहीं देता</value>
+  </data>
+  <data name="K331" xml:space="preserve">
+    <value>TCP पोर्ट</value>
+  </data>
+  <data name="K332" xml:space="preserve">
+    <value>केवल पाठ</value>
+  </data>
+  <data name="K333" xml:space="preserve">
+    <value>सक्रिय QST या Newb सत्र ही इस मेमोरी के लक्ष्य का स्वामी है। सहेजे गए निगरानी वाले लक्ष्य अपरिवर्तित हैं और नियंत्रण छोड़े जाने पर फिर लागू होते हैं।</value>
+  </data>
+  <data name="K334" xml:space="preserve">
+    <value>Fren कभी अपने आप निगरानी में नहीं जुड़ता; निम्न-स्तर हील लक्ष्य हो तो उसे स्पष्ट रूप से चुनें।</value>
+  </data>
+  <data name="K335" xml:space="preserve">
+    <value>HealBot की निर्भरताएँ, सुसज्जित समर्थित हीलर, चालू हीलर एक्शन मैट्रिक्स और स्पष्ट रूप से निगरानी वाला लक्ष्य।</value>
+  </data>
+  <data name="K336" xml:space="preserve">
+    <value>नियंत्रण छोड़े जाने पर सहेजा हुआ स्थानीय चयन फिर लागू होगा।</value>
+  </data>
+  <data name="K337" xml:space="preserve">
+    <value>नियंत्रण छोड़े जाने पर सहेजी हुई स्थानीय सेटिंग फिर लागू होगी।</value>
+  </data>
+  <data name="K338" xml:space="preserve">
+    <value>खोज दूरी केवल पहले से सहेजे हुए लक्ष्य को लौटने के बाद फिर जुड़ने देती है। यह कभी नया लक्ष्य खोजती या अपने आप चुनती नहीं है।</value>
+  </data>
+  <data name="K339" xml:space="preserve">
+    <value>ये कंट्रोल तुरंत लागू होते हैं। त्वरित सेटअप अलग ड्राफ़्ट इस्तेमाल करता है और Finish तक कुछ नहीं बदलता।</value>
+  </data>
+  <data name="K340" xml:space="preserve">
+    <value>ये फ़िल्टर नियंत्रित करते हैं कि HealBot/JOAT की निगरानी विंडो में कौन सी मित्रवत वस्तुएँ दिखें।</value>
+  </data>
+  <data name="K341" xml:space="preserve">
+    <value>यह सहेजा हुआ स्थानीय चयन Stand-alone JOAT इस्तेमाल करता है और QST द्वारा अस्थायी ओवरराइड छोड़ने के बाद फिर लागू होता है। दोनों विकल्प RSR Manual टार्गेटिंग इस्तेमाल करते हैं; Full RSR कैप्चर किए गए आक्रामक एक्शन और AoE बदलता है, टार्गेटिंग नहीं।</value>
+  </data>
+  <data name="K342" xml:space="preserve">
+    <value>बहुत छोटा</value>
+  </data>
+  <data name="K343" xml:space="preserve">
+    <value>ट्रैक किया गया</value>
+  </data>
+  <data name="K344" xml:space="preserve">
+    <value>ट्रैफ़िक प्रमाणित है लेकिन एन्क्रिप्टेड नहीं है; नाम और निर्देशांक नेटवर्क पर दिखाई देते हैं।</value>
+  </data>
+  <data name="K345" xml:space="preserve">
+    <value>यात्रा: {0}</value>
+  </data>
+  <data name="K346" xml:space="preserve">
+    <value>ट्रिगर</value>
+  </data>
+  <data name="K347" xml:space="preserve">
+    <value>प्रकार</value>
+  </data>
+  <data name="K348" xml:space="preserve">
+    <value>अनुपलब्ध</value>
+  </data>
+  <data name="K349" xml:space="preserve">
+    <value>अनलॉक</value>
+  </data>
+  <data name="K350" xml:space="preserve">
+    <value>निगरानी वाले लक्ष्य का टिक हटाने या Ctrl दबाकर निगरानी सेट साफ़ करने से वह सहेजे गए सेट से भी हटता है। खोज दूरी केवल सहेजे गए लक्ष्यों के लौटने पर फिर जुड़ने को प्रभावित करती है।</value>
+  </data>
+  <data name="K351" xml:space="preserve">
+    <value>1024-65535 इस्तेमाल करें</value>
+  </data>
+  <data name="K352" xml:space="preserve">
+    <value>लक्ष्य जोड़ने या हटाने के लिए निगरानी विंडो इस्तेमाल करें। हील लक्ष्य सहेजना केवल उन लक्ष्यों को सहेजता है जिन्हें आप स्पष्ट रूप से निगरानी में रखते हैं।</value>
+  </data>
+  <data name="K353" xml:space="preserve">
+    <value>पहले से Fren/स्थानीय खिलाड़ी से लड़ रहे शत्रुओं पर BRD/MCH के इंस्टेंट रेंज्ड एक लक्ष्य वाले एक्शन इस्तेमाल करता है।</value>
+  </data>
+  <data name="K354" xml:space="preserve">
+    <value>मान्य</value>
+  </data>
+  <data name="K355" xml:space="preserve">
+    <value>मान्य IPv4</value>
+  </data>
+  <data name="K356" xml:space="preserve">
+    <value>दिखाई देता है</value>
+  </data>
+  <data name="K357" xml:space="preserve">
+    <value>दिखाई देता है - नेटिव HealBot लक्ष्य</value>
+  </data>
+  <data name="K358" xml:space="preserve">
+    <value>दिखाई देने वाला साझा सीक्रेट</value>
+  </data>
+  <data name="K359" xml:space="preserve">
+    <value>vnavmesh</value>
+  </data>
+  <data name="K360" xml:space="preserve">
+    <value>निगरानी</value>
+  </data>
+  <data name="K361" xml:space="preserve">
+    <value>निगरानी फ़िल्टर</value>
+  </data>
+  <data name="K362" xml:space="preserve">
+    <value>निगरानी में</value>
+  </data>
+  <data name="K363" xml:space="preserve">
+    <value>निगरानी वाला Newb</value>
+  </data>
+  <data name="K364" xml:space="preserve">
+    <value>निगरानी वाला Quester</value>
+  </data>
+  <data name="K365" xml:space="preserve">
+    <value>निगरानी वाला लक्ष्य</value>
+  </data>
+  <data name="K366" xml:space="preserve">
+    <value>निगरानी वाला लक्ष्य: {0}</value>
+  </data>
+  <data name="K367" xml:space="preserve">
+    <value>निगरानी वाले लक्ष्य</value>
+  </data>
+  <data name="K368" xml:space="preserve">
+    <value>{0}/{1} सक्रिय लक्ष्यों की निगरानी। सहेजे गए लक्ष्य: {2}।</value>
+  </data>
+  <data name="K369" xml:space="preserve">
+    <value>White Mage (WHM)</value>
+  </data>
+  <data name="K370" xml:space="preserve">
+    <value>QST के नियंत्रण छोड़ने पर आपका सहेजा हुआ स्थानीय चयन फिर लागू होगा।</value>
+  </data>
+  <data name="K371" xml:space="preserve">
+    <value>QST के नियंत्रण छोड़ने पर आपकी सहेजी हुई स्थानीय सेटिंग फिर लागू होगी।</value>
+  </data>
+  <data name="K372" xml:space="preserve">
+    <value>रंग</value>
+  </data>
+  <data name="K373" xml:space="preserve">
+    <value>टील</value>
+  </data>
+  <data name="K374" xml:space="preserve">
+    <value>नीला</value>
+  </data>
+  <data name="K375" xml:space="preserve">
+    <value>गुलाबी</value>
+  </data>
+  <data name="K376" xml:space="preserve">
+    <value>कस्टम RGB</value>
+  </data>
+  <data name="K377" xml:space="preserve">
+    <value>कॉम्पैक्ट मोड</value>
+  </data>
+  <data name="K378" xml:space="preserve">
+    <value>UI फ़ॉन्ट लोड हो रहे हैं...</value>
+  </data>
+  <data name="K379" xml:space="preserve">
+    <value>UI फ़ॉन्ट लोड नहीं हो सके। प्लगइन लॉग देखें।</value>
+  </data>
+  <data name="K380" xml:space="preserve">
+    <value>कभी नहीं</value>
+  </data>
+  <data name="K381" xml:space="preserve">
+    <value>कास्ट किया हुआ GCD</value>
+  </data>
+  <data name="K382" xml:space="preserve">
+    <value>इंस्टेंट oGCD</value>
+  </data>
+  <data name="K383" xml:space="preserve">
+    <value>कास्ट किया हुआ बफ़</value>
+  </data>
+  <data name="K384" xml:space="preserve">
+    <value>इंस्टेंट बफ़</value>
+  </data>
+  <data name="K385" xml:space="preserve">
+    <value>HP इससे कम</value>
+  </data>
+  <data name="K386" xml:space="preserve">
+    <value>मृत लक्ष्य</value>
+  </data>
+  <data name="K387" xml:space="preserve">
+    <value>अनुपलब्ध बफ़</value>
+  </data>
+  <data name="K388" xml:space="preserve">
+    <value>हमेशा</value>
+  </data>
+  <data name="K389" xml:space="preserve">
+    <value>लक्ष्य</value>
+  </data>
+  <data name="K390" xml:space="preserve">
+    <value>खिलाड़ी</value>
+  </data>
+  <data name="K391" xml:space="preserve">
+    <value>पार्टी NPC</value>
+  </data>
+  <data name="K392" xml:space="preserve">
+    <value>मित्रवत NPC</value>
+  </data>
+  <data name="K393" xml:space="preserve">
+    <value>सहायक सक्रिय (QST के नियंत्रण में)</value>
+  </data>
+  <data name="K394" xml:space="preserve">
+    <value>इस प्रदाता सत्र का नियंत्रण छोड़ने या उसे बंद करने के लिए QST इस्तेमाल करें।</value>
+  </data>
+  <data name="K395" xml:space="preserve">
+    <value>{0} बहाल करने के लिए /healbot on इस्तेमाल करें।</value>
+  </data>
+  <data name="K396" xml:space="preserve">
+    <value>हीलिंग: {0} अटैक: {1}</value>
+  </data>
+  <data name="K397" xml:space="preserve">
+    <value>मुख्य अवस्था में दिखाया गया अवरोध दूर करें।</value>
+  </data>
+  <data name="K398" xml:space="preserve">
+    <value>कोई एक्शन आवश्यक नहीं।</value>
+  </data>
+  <data name="K399" xml:space="preserve">
+    <value>समाधान: {0}</value>
+  </data>
+  <data name="K400" xml:space="preserve">
+    <value>अवरुद्ध: {0}</value>
+  </data>
+  <data name="K401" xml:space="preserve">
+    <value>रुका हुआ: {0}</value>
+  </data>
+  <data name="K402" xml:space="preserve">
+    <value>निष्क्रिय</value>
+  </data>
+  <data name="K403" xml:space="preserve">
+    <value>LOS अनुपलब्ध</value>
+  </data>
+  <data name="K404" xml:space="preserve">
+    <value>LOS साफ़</value>
+  </data>
+  <data name="K405" xml:space="preserve">
+    <value>LOS अवरुद्ध</value>
+  </data>
+  <data name="K406" xml:space="preserve">
+    <value>HealBot ट्रांसपोर्ट के लिए LOS मूवमेंट रोका गया</value>
+  </data>
+  <data name="K407" xml:space="preserve">
+    <value>LOS अवरुद्ध; 1y तक जा रहे हैं</value>
+  </data>
+  <data name="K408" xml:space="preserve">
+    <value>LOS अवरुद्ध; वर्तमान मूवमेंट स्वामी की प्रतीक्षा</value>
+  </data>
+  <data name="K409" xml:space="preserve">
+    <value>QST सक्रिय मोड नियंत्रित करता है ({0}); नियंत्रण छोड़े जाने पर सहेजा हुआ स्थानीय चयन फिर लागू होगा।</value>
+  </data>
+  <data name="K410" xml:space="preserve">
+    <value>QST समन नियंत्रित करता है ({0}); नियंत्रण छोड़े जाने पर सहेजी हुई स्थानीय सेटिंग फिर लागू होगी।</value>
+  </data>
+  <data name="K411" xml:space="preserve">
+    <value>केवल इस सत्र का सटीक लक्ष्य ऑटोमेशन के लिए सहेजे गए निगरानी वाले लक्ष्यों को बिना बदले या सहेजे ओवरराइड करता है।</value>
+  </data>
+  <data name="K412" xml:space="preserve">
+    <value>हाँ</value>
+  </data>
+  <data name="K413" xml:space="preserve">
+    <value>नहीं</value>
+  </data>
+  <data name="K414" xml:space="preserve">
+    <value>Healbot मोड बंद है।</value>
+  </data>
+  <data name="K415" xml:space="preserve">
+    <value>निष्क्रिय</value>
+  </data>
+  <data name="K416" xml:space="preserve">
+    <value>कोई नियम मेल नहीं खाता।</value>
+  </data>
+  <data name="K417" xml:space="preserve">
+    <value>प्लगइन अनलोड हो रहा है।</value>
+  </data>
+  <data name="K418" xml:space="preserve">
+    <value>HealBot केवल WHM, SCH, AST और SGE का समर्थन करता है।</value>
+  </data>
+  <data name="K419" xml:space="preserve">
+    <value>HealRider ट्रांसपोर्ट के दौरान एक्शन रोके गए।</value>
+  </data>
+  <data name="K420" xml:space="preserve">
+    <value>यात्रा</value>
+  </data>
+  <data name="K421" xml:space="preserve">
+    <value>मूवमेंट HealRider के नियंत्रण में है।</value>
+  </data>
+  <data name="K422" xml:space="preserve">
+    <value>क्षेत्र ट्रांज़िशन के दौरान रुके हुए हैं।</value>
+  </data>
+  <data name="K423" xml:space="preserve">
+    <value>क्षेत्र ट्रांज़िशन जारी है।</value>
+  </data>
+  <data name="K424" xml:space="preserve">
+    <value>प्लगइन बंद है।</value>
+  </data>
+  <data name="K425" xml:space="preserve">
+    <value>अवरुद्ध</value>
+  </data>
+  <data name="K426" xml:space="preserve">
+    <value>निर्भरताएँ अनुपलब्ध।</value>
+  </data>
+  <data name="K427" xml:space="preserve">
+    <value>असमर्थित स्थानीय जॉब।</value>
+  </data>
+  <data name="K428" xml:space="preserve">
+    <value>सहायक माउंट पर है या माउंट कर रहा है, इसलिए पेयर की गई हीलिंग रुकी है।</value>
+  </data>
+  <data name="K429" xml:space="preserve">
+    <value>पेयर किया हुआ सहायक माउंट पर है या माउंट कर रहा है।</value>
+  </data>
+  <data name="K430" xml:space="preserve">
+    <value>एक्शन {0} कास्ट करते समय रुके हुए हैं।</value>
+  </data>
+  <data name="K431" xml:space="preserve">
+    <value>कास्ट हो रहा है</value>
+  </data>
+  <data name="K432" xml:space="preserve">
+    <value>वर्तमान कास्ट समाप्त होने की प्रतीक्षा।</value>
+  </data>
+  <data name="K433" xml:space="preserve">
+    <value>{0} के लिए Healbot एक्शन मैट्रिक्स तैयार है। JOAT के अटैक से पहले RSR आवश्यक है।</value>
+  </data>
+  <data name="K434" xml:space="preserve">
+    <value>{0} के लिए Healbot एक्शन मैट्रिक्स तैयार है। RSR का अलगाव अनुपलब्ध है।</value>
+  </data>
+  <data name="K435" xml:space="preserve">
+    <value>{0} के लिए Healbot एक्शन मैट्रिक्स तैयार है। RSR JOAT नियंत्रण सक्रिय है।</value>
+  </data>
+  <data name="K436" xml:space="preserve">
+    <value>{0} के लिए Healbot एक्शन मैट्रिक्स तैयार है। RSR का अलगाव सक्रिय है।</value>
+  </data>
+  <data name="K437" xml:space="preserve">
+    <value>{0} के लिए Healbot एक्शन मैट्रिक्स तैयार है। RSR नियंत्रण विफल; JOAT अटैक अवरुद्ध है और सीधी हीलिंग सक्रिय रहती है।</value>
+  </data>
+  <data name="K438" xml:space="preserve">
+    <value>{0} के लिए Healbot एक्शन मैट्रिक्स तैयार है। RSR का अलगाव विफल; सीधी हीलिंग सक्रिय रहती है।</value>
+  </data>
+  <data name="K439" xml:space="preserve">
+    <value>कोई निगरानी वाला लक्ष्य सक्रिय नहीं है।</value>
+  </data>
+  <data name="K440" xml:space="preserve">
+    <value>कोई निगरानी वाला लक्ष्य नहीं।</value>
+  </data>
+  <data name="K441" xml:space="preserve">
+    <value>HealBot सेटिंग में {0} ऑटोमेशन बंद है।</value>
+  </data>
+  <data name="K442" xml:space="preserve">
+    <value>{0} टैब बंद है।</value>
+  </data>
+  <data name="K443" xml:space="preserve">
+    <value>{0} लक्ष्य {1} चयनित है लेकिन दूरस्थ है।</value>
+  </data>
+  <data name="K444" xml:space="preserve">
+    <value>{0} लक्ष्यों की निगरानी। अभी कोई लाइव निगरानी वाला लक्ष्य उपलब्ध नहीं है।</value>
+  </data>
+  <data name="K445" xml:space="preserve">
+    <value>सटीक {0} लक्ष्य दूरस्थ है।</value>
+  </data>
+  <data name="K446" xml:space="preserve">
+    <value>कोई लाइव निगरानी वाला लक्ष्य नहीं।</value>
+  </data>
+  <data name="K447" xml:space="preserve">
+    <value>मूवमेंट</value>
+  </data>
+  <data name="K448" xml:space="preserve">
+    <value>{0} - LOS अवरुद्ध।</value>
+  </data>
+  <data name="K449" xml:space="preserve">
+    <value>{0} लक्ष्यों की निगरानी। {1}</value>
+  </data>
+  <data name="K450" xml:space="preserve">
+    <value>{0} - {1}</value>
+  </data>
+  <data name="K451" xml:space="preserve">
+    <value>{0} लक्ष्यों की निगरानी। कोई चालू मृत-लक्ष्य नियम {1} पर काम नहीं कर सकता।</value>
+  </data>
+  <data name="K452" xml:space="preserve">
+    <value>{0} - कोई मृत-लक्ष्य नियम मेल नहीं खाता।</value>
+  </data>
+  <data name="K453" xml:space="preserve">
+    <value>{0} लक्ष्यों की निगरानी। सबसे कम HP वाला निगरानी का लक्ष्य {1} है, {2}% HP पर।</value>
+  </data>
+  <data name="K454" xml:space="preserve">
+    <value>{0} - कोई जीवित-लक्ष्य नियम मेल नहीं खाता।</value>
+  </data>
+  <data name="K455" xml:space="preserve">
+    <value>{0}: {1} [{2}]</value>
+  </data>
+  <data name="K456" xml:space="preserve">
+    <value>{1} की मृत-लक्ष्य तैयारी के लिए {0} कतार में रखा।</value>
+  </data>
+  <data name="K457" xml:space="preserve">
+    <value>{1} के लिए {0} कतार में रखा।</value>
+  </data>
+  <data name="K458" xml:space="preserve">
+    <value>{2}% HP वाले {1} की निगरानी करते समय {0} कतार में रखा।</value>
+  </data>
+  <data name="K459" xml:space="preserve">
+    <value>{2}% HP वाले {1} के लिए {0} कतार में रखा।</value>
+  </data>
+  <data name="K460" xml:space="preserve">
+    <value>JOAT अटैक बंद है।</value>
+  </data>
+  <data name="K461" xml:space="preserve">
+    <value>निष्क्रिय हीलिंग निर्णय की प्रतीक्षा।</value>
+  </data>
+  <data name="K462" xml:space="preserve">
+    <value>JOAT अटैक हीलिंग के निष्क्रिय होने की प्रतीक्षा कर रहा है।</value>
+  </data>
+  <data name="K463" xml:space="preserve">
+    <value>FrenRider लीज़ हार्टबीट विफल।</value>
+  </data>
+  <data name="K464" xml:space="preserve">
+    <value>रुका हुआ: हीलिंग ने {0} कतार में रखा।</value>
+  </data>
+  <data name="K465" xml:space="preserve">
+    <value>रुका हुआ</value>
+  </data>
+  <data name="K466" xml:space="preserve">
+    <value>इस निर्णय चक्र में हीलिंग एक्शन को प्राथमिकता मिली।</value>
+  </data>
+  <data name="K467" xml:space="preserve">
+    <value>रुका हुआ: वर्तमान कास्ट अटैक रोकता है। {0}</value>
+  </data>
+  <data name="K468" xml:space="preserve">
+    <value>रुका हुआ: हीलिंग अवरुद्ध है। {0}</value>
+  </data>
+  <data name="K469" xml:space="preserve">
+    <value>वर्तमान कास्ट यह अटैक चक्र रोकता है।</value>
+  </data>
+  <data name="K470" xml:space="preserve">
+    <value>मेल खाता हीलिंग एक्शन अवरुद्ध है।</value>
+  </data>
+  <data name="K471" xml:space="preserve">
+    <value>अवरुद्ध: हीलिंग तैयार नहीं है। {0}</value>
+  </data>
+  <data name="K472" xml:space="preserve">
+    <value>हीलिंग निर्भरताएँ, कॉन्फ़िगरेशन या निगरानी वाले लक्ष्य अनुपलब्ध हैं।</value>
+  </data>
+  <data name="K473" xml:space="preserve">
+    <value>अवरुद्ध: Rotation Solver Reborn नियंत्रण सक्रिय नहीं है, इसलिए JOAT अटैक नहीं कर सकता।</value>
+  </data>
+  <data name="K474" xml:space="preserve">
+    <value>Rotation Solver Reborn नियंत्रण विफल।</value>
+  </data>
+  <data name="K475" xml:space="preserve">
+    <value>रुका हुआ: {0}।</value>
+  </data>
+  <data name="K476" xml:space="preserve">
+    <value>FrenRider IPC अनुपलब्ध।</value>
+  </data>
+  <data name="K477" xml:space="preserve">
+    <value>FrenRider अटैक गेट विफल।</value>
+  </data>
+  <data name="K478" xml:space="preserve">
+    <value>FrenRider लीज़ लेना विफल।</value>
+  </data>
+  <data name="K479" xml:space="preserve">
+    <value>अवरुद्ध: स्थानीय हीलर अनुपलब्ध है।</value>
+  </data>
+  <data name="K480" xml:space="preserve">
+    <value>स्थानीय हीलर अनुपलब्ध।</value>
+  </data>
+  <data name="K481" xml:space="preserve">
+    <value>समर्थित स्थानीय हीलर अनुपलब्ध।</value>
+  </data>
+  <data name="K482" xml:space="preserve">
+    <value>निष्क्रिय: सटीक पेयर किया हुआ लक्ष्य चयनित है लेकिन दूरस्थ है।</value>
+  </data>
+  <data name="K483" xml:space="preserve">
+    <value>सटीक पेयर किया हुआ लक्ष्य दूरस्थ है।</value>
+  </data>
+  <data name="K484" xml:space="preserve">
+    <value>रुका हुआ: सटीक पेयर किया हुआ लक्ष्य {0:0.0} याल्म दूर है।</value>
+  </data>
+  <data name="K485" xml:space="preserve">
+    <value>सटीक पेयर किया हुआ लक्ष्य 30 याल्म से दूर है।</value>
+  </data>
+  <data name="K486" xml:space="preserve">
+    <value>RSR Manual विफल।</value>
+  </data>
+  <data name="K487" xml:space="preserve">
+    <value>अवरुद्ध: Rotation Solver Reborn ने पेयर किए गए JOAT असाइनमेंट के लिए Manual मोड अस्वीकार किया।</value>
+  </data>
+  <data name="K488" xml:space="preserve">
+    <value>RSR Manual</value>
+  </data>
+  <data name="K489" xml:space="preserve">
+    <value>लड़ रहे शत्रु के लिए मित्रवत पेयर किए हुए लक्ष्य पर प्रतीक्षा।</value>
+  </data>
+  <data name="K490" xml:space="preserve">
+    <value>RSR Manual ({0}) प्रतीक्षा; पेयर की दूरी के भीतर कोई लड़ रहा शत्रु पात्र नहीं है।</value>
+  </data>
+  <data name="K491" xml:space="preserve">
+    <value>चयनित पेयर किया हुआ शत्रु गायब हो गया।</value>
+  </data>
+  <data name="K492" xml:space="preserve">
+    <value>RSR Manual ({0}) प्रतीक्षा; चयनित शत्रु गायब हो गया।</value>
+  </data>
+  <data name="K493" xml:space="preserve">
+    <value>पेयर किया हुआ लक्ष्य</value>
+  </data>
+  <data name="K494" xml:space="preserve">
+    <value>पेयर/हीलर से लड़ रहा</value>
+  </data>
+  <data name="K495" xml:space="preserve">
+    <value>{2:P0} HP वाले {1} पर RSR Manual ({0})।</value>
+  </data>
+  <data name="K496" xml:space="preserve">
+    <value>निष्क्रिय: हीलिंग साफ़ है, लेकिन कोई क्षतिग्रस्त शत्रु Fren या स्थानीय हीलर को टार्गेट नहीं कर रहा।</value>
+  </data>
+  <data name="K497" xml:space="preserve">
+    <value>कोई पात्र टैग किया हुआ शत्रु नहीं।</value>
+  </data>
+  <data name="K498" xml:space="preserve">
+    <value>निष्क्रिय: चयनित शत्रु गायब हो गया।</value>
+  </data>
+  <data name="K499" xml:space="preserve">
+    <value>लक्ष्य गायब हो गया।</value>
+  </data>
+  <data name="K500" xml:space="preserve">
+    <value>{0} - RSR Manual विफल</value>
+  </data>
+  <data name="K501" xml:space="preserve">
+    <value>अवरुद्ध: Rotation Solver Reborn ने {0} के लिए Manual मोड अस्वीकार किया।</value>
+  </data>
+  <data name="K502" xml:space="preserve">
+    <value>क्षेत्रों के बीच</value>
+  </data>
+  <data name="K503" xml:space="preserve">
+    <value>माउंट पर या माउंट कर रहे हैं</value>
+  </data>
+  <data name="K504" xml:space="preserve">
+    <value>व्यस्त या कटसीन में</value>
+  </data>
+  <data name="K505" xml:space="preserve">
+    <value>एक्शन {0} कास्ट हो रहा है</value>
+  </data>
+  <data name="K506" xml:space="preserve">
+    <value>आवश्यक हीलिंग निर्भरताएँ अनुपलब्ध हैं।</value>
+  </data>
+  <data name="K507" xml:space="preserve">
+    <value>सुसज्जित हीलर का एक्शन मैट्रिक्स बंद है।</value>
+  </data>
+  <data name="K508" xml:space="preserve">
+    <value>निगरानी में कम से कम एक लक्ष्य चुनें या QST असाइनमेंट की प्रतीक्षा करें।</value>
+  </data>
+  <data name="K509" xml:space="preserve">
+    <value>JOAT हीलिंग तैयार है।</value>
+  </data>
+  <data name="K510" xml:space="preserve">
+    <value>अटैक हीलिंग की तैयारी की प्रतीक्षा करता है: {0}</value>
+  </data>
+  <data name="K511" xml:space="preserve">
+    <value>JOAT अटैक के लिए Rotation Solver Reborn लोड होना चाहिए।</value>
+  </data>
+  <data name="K512" xml:space="preserve">
+    <value>Coppelia काम करता Rotation Solver Reborn नियंत्रण प्राप्त नहीं कर सका।</value>
+  </data>
+  <data name="K513" xml:space="preserve">
+    <value>हीलिंग निष्क्रिय हो तो JOAT अटैक तैयार है।</value>
+  </data>
+  <data name="K514" xml:space="preserve">
+    <value>सटीक QST लक्ष्य चयनित है लेकिन दूरस्थ है।</value>
+  </data>
+  <data name="K515" xml:space="preserve">
+    <value>FrenRider चालू होना चाहिए।</value>
+  </data>
+  <data name="K516" xml:space="preserve">
+    <value>FrenRider में Fren कॉन्फ़िगर होना चाहिए।</value>
+  </data>
+  <data name="K517" xml:space="preserve">
+    <value>FrenRider का कॉन्फ़िगर किया हुआ Fren दिखाई देना चाहिए।</value>
+  </data>
+  <data name="K518" xml:space="preserve">
+    <value>PowerlevelBot मोड बंद है।</value>
+  </data>
+  <data name="K519" xml:space="preserve">
+    <value>कोई लक्ष्य नहीं चुना।</value>
+  </data>
+  <data name="K520" xml:space="preserve">
+    <value>PowerlevelBot तैयार हो रहा है।</value>
+  </data>
+  <data name="K521" xml:space="preserve">
+    <value>पावरलेवल गेट विफल।</value>
+  </data>
+  <data name="K522" xml:space="preserve">
+    <value>स्थानीय खिलाड़ी अनुपलब्ध।</value>
+  </data>
+  <data name="K523" xml:space="preserve">
+    <value>कोई स्थानीय खिलाड़ी नहीं।</value>
+  </data>
+  <data name="K524" xml:space="preserve">
+    <value>कोई क्षतिग्रस्त शत्रु Fren या स्थानीय खिलाड़ी को टार्गेट नहीं कर रहा।</value>
+  </data>
+  <data name="K525" xml:space="preserve">
+    <value>कोई पात्र लक्ष्य नहीं।</value>
+  </data>
+  <data name="K526" xml:space="preserve">
+    <value>चयनित लक्ष्य गायब हो गया।</value>
+  </data>
+  <data name="K527" xml:space="preserve">
+    <value>{2:P0} HP वाले {1} पर {0} कतार में रखा।</value>
+  </data>
+  <data name="K528" xml:space="preserve">
+    <value>लक्ष्य {0} अवरुद्ध: {1}</value>
+  </data>
+  <data name="K529" xml:space="preserve">
+    <value>Helper जुड़ने के बजाय कनेक्शन की प्रतीक्षा करता है।</value>
+  </data>
+  <data name="K530" xml:space="preserve">
+    <value>Newb कनेक्शन की प्रतीक्षा करने के बजाय जुड़ता है।</value>
+  </data>
+  <data name="K531" xml:space="preserve">
+    <value>संचालन भूमिका बंद है।</value>
+  </data>
+  <data name="K532" xml:space="preserve">
+    <value>Stand-alone सीधी पेयरिंग इस्तेमाल नहीं करता।</value>
+  </data>
+  <data name="K533" xml:space="preserve">
+    <value>स्थानीय Newb पहचान अनुपलब्ध है। Newb भूमिका शुरू करने से पहले पूरी तरह लॉगिन करें।</value>
+  </data>
+  <data name="K534" xml:space="preserve">
+    <value>सहायक का एक मान्य IPv4 पता दर्ज करें।</value>
+  </data>
+  <data name="K535" xml:space="preserve">
+    <value>पेयरिंग सेटिंग सहेजी गईं; फिर शुरू हो रहा है।</value>
+  </data>
+  <data name="K536" xml:space="preserve">
+    <value>HealBot direct pairing v2 आवश्यक है। पेयरिंग से पहले पुराने सिरे को अपडेट करें।</value>
+  </data>
+  <data name="K537" xml:space="preserve">
+    <value>स्थानीय HealBot पहचान अनुपलब्ध है।</value>
+  </data>
+  <data name="K538" xml:space="preserve">
+    <value>HealBot का पहले से सक्रिय QST असाइनमेंट है।</value>
+  </data>
+  <data name="K539" xml:space="preserve">
+    <value>पेयर किया गया</value>
+  </data>
+  <data name="K540" xml:space="preserve">
+    <value>कनेक्शन की प्रतीक्षा</value>
+  </data>
+  <data name="K541" xml:space="preserve">
+    <value>पेयरिंग कमांड का पेलोड अमान्य है।</value>
+  </data>
+  <data name="K542" xml:space="preserve">
+    <value>कमांड इस सटीक HealBot नाम और होम वर्ल्ड को टार्गेट नहीं करता।</value>
+  </data>
+  <data name="K543" xml:space="preserve">
+    <value>Newb ने असाइनमेंट छोड़ दिया।</value>
+  </data>
+  <data name="K544" xml:space="preserve">
+    <value>अज्ञात Newb पेयरिंग एक्शन।</value>
+  </data>
+  <data name="K545" xml:space="preserve">
+    <value>HealBot अनलोड हो रहा है।</value>
+  </data>
+  <data name="K546" xml:space="preserve">
+    <value>TCP {0}</value>
+  </data>
+  <data name="K547" xml:space="preserve">
+    <value>HealBot लिसनर फिर शुरू हो रहा है।</value>
+  </data>
+  <data name="K548" xml:space="preserve">
+    <value>जुड़ा हुआ</value>
+  </data>
+  <data name="K549" xml:space="preserve">
+    <value>प्रमाणित असाइनमेंट की प्रतीक्षा करें।</value>
+  </data>
+  <data name="K550" xml:space="preserve">
+    <value>इस पोर्ट और साझा सीक्रेट के साथ Newb शुरू करें।</value>
+  </data>
+  <data name="K551" xml:space="preserve">
+    <value>लिसनर शुरू होने की प्रतीक्षा करें।</value>
+  </data>
+  <data name="K552" xml:space="preserve">
+    <value>प्रमाणित Newb स्थिति की प्रतीक्षा</value>
+  </data>
+  <data name="K553" xml:space="preserve">
+    <value>JOAT प्रदाता सक्रिय</value>
+  </data>
+  <data name="K554" xml:space="preserve">
+    <value>दूरस्थ प्रदाता अनुपलब्ध</value>
+  </data>
+  <data name="K555" xml:space="preserve">
+    <value>दूरस्थ JOAT अनुपलब्ध</value>
+  </data>
+  <data name="K556" xml:space="preserve">
+    <value>दूरस्थ यात्रा अनुपलब्ध</value>
+  </data>
+  <data name="K557" xml:space="preserve">
+    <value>Newb कनेक्शन फिर शुरू हो रहा है।</value>
+  </data>
+  <data name="K558" xml:space="preserve">
+    <value>प्रमाणीकरण</value>
+  </data>
+  <data name="K559" xml:space="preserve">
+    <value>जुड़ रहे हैं</value>
+  </data>
+  <data name="K560" xml:space="preserve">
+    <value>असाइनमेंट की पुष्टि की प्रतीक्षा करें।</value>
+  </data>
+  <data name="K561" xml:space="preserve">
+    <value>नई प्रमाणित स्थिति और असाइनमेंट की प्रतीक्षा करें।</value>
+  </data>
+  <data name="K562" xml:space="preserve">
+    <value>असिंक्रोनस कनेक्शन या फिर जुड़ने की प्रतीक्षा करें।</value>
+  </data>
+  <data name="K563" xml:space="preserve">
+    <value>दूरस्थ प्रदाता स्थिति की प्रतीक्षा</value>
+  </data>
+  <data name="K564" xml:space="preserve">
+    <value>दूरस्थ प्रदाता तैयार</value>
+  </data>
+  <data name="K565" xml:space="preserve">
+    <value>दूरस्थ JOAT स्थिति की प्रतीक्षा</value>
+  </data>
+  <data name="K566" xml:space="preserve">
+    <value>दूरस्थ यात्रा स्थिति की प्रतीक्षा</value>
+  </data>
+  <data name="K567" xml:space="preserve">
+    <value>पुराने सिरे को संगत HealBot direct-pairing v2 बिल्ड पर अपडेट करें।</value>
+  </data>
+  <data name="K568" xml:space="preserve">
+    <value>सेटिंग में Helper और Newb पर एक ही साझा सीक्रेट दर्ज करें।</value>
+  </data>
+  <data name="K569" xml:space="preserve">
+    <value>स्थानीय Newb पहचान अनुपलब्ध है।</value>
+  </data>
+  <data name="K570" xml:space="preserve">
+    <value>पेयर किए हुए HealBot का कनेक्शन या प्रमाणित स्थिति खो गई।</value>
+  </data>
+  <data name="K571" xml:space="preserve">
+    <value>कॉन्फ़िगर किया हुआ एंडपॉइंट या HealBot पहचान बदल गई।</value>
+  </data>
+  <data name="K572" xml:space="preserve">
+    <value>पेयर किया हुआ HealBot अभी भी छोड़ा गया सत्र {0} रिपोर्ट करता है।</value>
+  </data>
+  <data name="K573" xml:space="preserve">
+    <value>पेयर किए हुए HealBot का सक्रिय QST असाइनमेंट है।</value>
+  </data>
+  <data name="K574" xml:space="preserve">
+    <value>पेयर किया हुआ HealBot दूसरे Newb सत्र का है।</value>
+  </data>
+  <data name="K575" xml:space="preserve">
+    <value>पेयर किया हुआ HealBot इस Newb के लिए पुराना सत्र रिपोर्ट करता है।</value>
+  </data>
+  <data name="K576" xml:space="preserve">
+    <value>पेयर किया हुआ HealBot तैयार नहीं है।</value>
+  </data>
+  <data name="K577" xml:space="preserve">
+    <value>पेयर किए हुए HealBot ने अनुपलब्ध या बेमेल Newb सत्र रिपोर्ट किया।</value>
+  </data>
+  <data name="K578" xml:space="preserve">
+    <value>सटीक Newb सत्र की पेयर किए हुए HealBot द्वारा पुष्टि की प्रतीक्षा।</value>
+  </data>
+  <data name="K579" xml:space="preserve">
+    <value>पेयर किए हुए HealBot ने Newb असाइनमेंट अस्वीकार किया।</value>
+  </data>
+  <data name="K580" xml:space="preserve">
+    <value>पेयर किए हुए HealBot ने {0} अस्वीकार किया।</value>
+  </data>
+  <data name="K581" xml:space="preserve">
+    <value>पेयर किए हुए HealBot ने सक्रिय सत्र के लिए {0} स्वीकार नहीं किया।</value>
+  </data>
+  <data name="K582" xml:space="preserve">
+    <value>पेयर किए हुए HealBot ने अपने पुराने सत्र को छोड़ने की पुष्टि नहीं की।</value>
+  </data>
+  <data name="K583" xml:space="preserve">
+    <value>सीधी पेयरिंग इस्तेमाल करने के लिए Helper या Newb चुनें।</value>
+  </data>
+  <data name="K584" xml:space="preserve">
+    <value>TCP पोर्ट {0} पहले से इस्तेमाल हो रहा है।</value>
+  </data>
+  <data name="K585" xml:space="preserve">
+    <value>पेयरिंग लिसनर शुरू नहीं हो सका: {0}</value>
+  </data>
+  <data name="K586" xml:space="preserve">
+    <value>अज्ञात</value>
+  </data>
+  <data name="K587" xml:space="preserve">
+    <value>पेयरिंग एनवेलप का प्रारूप गलत है।</value>
+  </data>
+  <data name="K588" xml:space="preserve">
+    <value>पेयर किए हुए Newb का कनेक्शन खो गया।</value>
+  </data>
+  <data name="K589" xml:space="preserve">
+    <value>HealBot पेयरिंग लिसनर रुक रहा है।</value>
+  </data>
+  <data name="K590" xml:space="preserve">
+    <value>पेयरिंग संदेश का प्रकार उसके कमांड से मेल नहीं खाता।</value>
+  </data>
+  <data name="K591" xml:space="preserve">
+    <value>इस कनेक्शन के पास पहले से दूसरा Newb सत्र है।</value>
+  </data>
+  <data name="K592" xml:space="preserve">
+    <value>Newb सत्र पहले से दूसरे सक्रिय कनेक्शन का है।</value>
+  </data>
+  <data name="K593" xml:space="preserve">
+    <value>इस कनेक्शन के पास सक्रिय Newb सत्र नहीं है।</value>
+  </data>
+  <data name="K594" xml:space="preserve">
+    <value>Newb सत्र अभी भी दूसरे सक्रिय कनेक्शन का है।</value>
+  </data>
+  <data name="K595" xml:space="preserve">
+    <value>कनेक्शन टूटा</value>
+  </data>
+  <data name="K596" xml:space="preserve">
+    <value>पेयर किया हुआ HealBot जुड़ा नहीं है।</value>
+  </data>
+  <data name="K597" xml:space="preserve">
+    <value>पेयर किए हुए HealBot ने कमांड की पुष्टि नहीं की।</value>
+  </data>
+  <data name="K598" xml:space="preserve">
+    <value>पेयर किया हुआ कनेक्शन बंद हुआ।</value>
+  </data>
+  <data name="K599" xml:space="preserve">
+    <value>HealBot direct pairing v2 आवश्यक है। पेयरिंग से पहले पुराने Helper को अपडेट करें।</value>
+  </data>
+  <data name="K600" xml:space="preserve">
+    <value>जुड़ा हुआ; प्रतीक्षा</value>
+  </data>
+  <data name="K601" xml:space="preserve">
+    <value>पेयर किए हुए HealBot ने संबंधित प्रमाणित स्थिति नहीं लौटाई। साझा सीक्रेट और प्रोटोकॉल जाँचें।</value>
+  </data>
+  <data name="K602" xml:space="preserve">
+    <value>पेयरिंग मॉनिटर विफल: {0}</value>
+  </data>
+  <data name="K603" xml:space="preserve">
+    <value>जुड़ा हुआ; प्रमाणित HealBot स्थिति की प्रतीक्षा।</value>
+  </data>
+  <data name="K604" xml:space="preserve">
+    <value>{0}:{1} से जुड़ने की समय-सीमा समाप्त।</value>
+  </data>
+  <data name="K605" xml:space="preserve">
+    <value>{0}:{1} पर कोई HealBot कनेक्शन की प्रतीक्षा नहीं कर रहा।</value>
+  </data>
+  <data name="K606" xml:space="preserve">
+    <value>{0}:{1} से जुड़ना विफल: {2}</value>
+  </data>
+  <data name="K607" xml:space="preserve">
+    <value>पेयर किए हुए एंडपॉइंट ने गलत प्रारूप वाला पेयरिंग JSON लौटाया।</value>
+  </data>
+  <data name="K608" xml:space="preserve">
+    <value>पेयर किए हुए HealBot का कनेक्शन खो गया: {0}</value>
+  </data>
+  <data name="K609" xml:space="preserve">
+    <value>पेयर किए हुए HealBot का कनेक्शन खो गया।</value>
+  </data>
+  <data name="K610" xml:space="preserve">
+    <value>पेयर किए हुए HealBot ने बेमेल कमांड जवाब लौटाया।</value>
+  </data>
+  <data name="K611" xml:space="preserve">
+    <value>पेयर किया हुआ कनेक्शन विफल: {0}</value>
+  </data>
+  <data name="K612" xml:space="preserve">
+    <value>{0}s में फिर जुड़ें</value>
+  </data>
+  <data name="K613" xml:space="preserve">
+    <value>HealBot की सभी आवश्यक निर्भरताएँ तैयार हैं।</value>
+  </data>
+  <data name="K614" xml:space="preserve">
+    <value>HealBot को {0} चाहिए। अनुपलब्ध प्लगइन स्थापित करें या सेटिंग में ऑटोमेशन बंद करें।</value>
+  </data>
+  <data name="K615" xml:space="preserve">
+    <value>स्थानीय खिलाड़ी अनुपलब्ध है।</value>
+  </data>
+  <data name="K616" xml:space="preserve">
+    <value>पहले से कास्ट हो रहा है।</value>
+  </data>
+  <data name="K617" xml:space="preserve">
+    <value>एक्शन शीट में एक्शन {0} नहीं मिला।</value>
+  </data>
+  <data name="K618" xml:space="preserve">
+    <value>{0} के लिए अपर्याप्त MP।</value>
+  </data>
+  <data name="K619" xml:space="preserve">
+    <value>ActionManager अनुपलब्ध है।</value>
+  </data>
+  <data name="K620" xml:space="preserve">
+    <value>{0} कूलडाउन पर है।</value>
+  </data>
+  <data name="K621" xml:space="preserve">
+    <value>चयनित लक्ष्य अनुपलब्ध है।</value>
+  </data>
+  <data name="K622" xml:space="preserve">
+    <value>{0} को टार्गेट नहीं किया जा सकता।</value>
+  </data>
+  <data name="K623" xml:space="preserve">
+    <value>{0} दूरी से बाहर है।</value>
+  </data>
+  <data name="K624" xml:space="preserve">
+    <value>UseAction ने {0} अस्वीकार किया।</value>
+  </data>
+  <data name="K625" xml:space="preserve">
+    <value>अभी PowerlevelBot का कोई एक्शन उपयोग योग्य नहीं है।</value>
+  </data>
+  <data name="K626" xml:space="preserve">
+    <value>HealBot एक्शन के लिए विराम</value>
+  </data>
+  <data name="K627" xml:space="preserve">
+    <value>ड्यूटी नियंत्रण के लिए HealRider फ़ॉलो निलंबित</value>
+  </data>
+  <data name="K628" xml:space="preserve">
+    <value>चयनित यात्री माउंट की तैयारी पिकअप की अनुमति से अधिक हो गई।</value>
+  </data>
+  <data name="K629" xml:space="preserve">
+    <value>Lifestream का इंस्टेंस बदलना और लोड होना पूरा होने की प्रतीक्षा</value>
+  </data>
+  <data name="K630" xml:space="preserve">
+    <value>/li के बाद सहायक का सार्वजनिक इंस्टेंस सत्यापित कर रहे हैं</value>
+  </data>
+  <data name="K631" xml:space="preserve">
+    <value>HealRider के बाद नए Quester यात्रा स्नैपशॉट की प्रतीक्षा</value>
+  </data>
+  <data name="K632" xml:space="preserve">
+    <value>सहायक कैरेक्टर की प्रतीक्षा</value>
+  </data>
+  <data name="K633" xml:space="preserve">
+    <value>कास्ट {0} के लिए विराम</value>
+  </data>
+  <data name="K634" xml:space="preserve">
+    <value>वर्ल्ड {0} पर जा रहे हैं</value>
+  </data>
+  <data name="K635" xml:space="preserve">
+    <value>{0} की वर्ल्ड यात्रा अपने लक्ष्य तक नहीं पहुँची</value>
+  </data>
+  <data name="K636" xml:space="preserve">
+    <value>{0} पर टेलीपोर्ट</value>
+  </data>
+  <data name="K637" xml:space="preserve">
+    <value>{0} तक टेलीपोर्ट क्षेत्र {1} में नहीं पहुँचा</value>
+  </data>
+  <data name="K638" xml:space="preserve">
+    <value>इस क्षेत्र के लिए ARR फ़्लाइट जाँच अस्वीकार हुई</value>
+  </data>
+  <data name="K639" xml:space="preserve">
+    <value>मौजूदा vnavmesh गतिविधि समाप्त होने की प्रतीक्षा</value>
+  </data>
+  <data name="K640" xml:space="preserve">
+    <value>माउंट अनुपलब्ध: {0}</value>
+  </data>
+  <data name="K641" xml:space="preserve">
+    <value>Mount Roulette फिर आज़माने की प्रतीक्षा</value>
+  </data>
+  <data name="K642" xml:space="preserve">
+    <value>Mount Roulette से Quester जैसा माउंट</value>
+  </data>
+  <data name="K643" xml:space="preserve">
+    <value>{0:F0} याल्म से दूर होने पर पहुँचने के लिए माउंट कर रहे हैं</value>
+  </data>
+  <data name="K644" xml:space="preserve">
+    <value>Quester के माउंट जैसा माउंट करने की प्रतीक्षा</value>
+  </data>
+  <data name="K645" xml:space="preserve">
+    <value>पहुँचने के लिए माउंट करने की प्रतीक्षा</value>
+  </data>
+  <data name="K646" xml:space="preserve">
+    <value>उतरने से पहले माउंटिंग पूरी होने की प्रतीक्षा</value>
+  </data>
+  <data name="K647" xml:space="preserve">
+    <value>लैंड करने से पहले सक्रिय रूट फ़ॉलो कर रहे हैं</value>
+  </data>
+  <data name="K648" xml:space="preserve">
+    <value>माउंट पर रहते हुए लैंड कर रहे हैं</value>
+  </data>
+  <data name="K649" xml:space="preserve">
+    <value>माउंट से उतरने से पहले {0:F0} याल्म के भीतर लैंड कर रहे हैं</value>
+  </data>
+  <data name="K650" xml:space="preserve">
+    <value>लैंडिंग अनुपलब्ध: {0}</value>
+  </data>
+  <data name="K651" xml:space="preserve">
+    <value>{0:F0} याल्म के भीतर माउंट से उतरने की प्रतीक्षा</value>
+  </data>
+  <data name="K652" xml:space="preserve">
+    <value>{0:F0} याल्म के भीतर माउंट से उतर रहे हैं</value>
+  </data>
+  <data name="K653" xml:space="preserve">
+    <value>माउंट से उतरना अनुपलब्ध: {0}</value>
+  </data>
+  <data name="K654" xml:space="preserve">
+    <value>फ़्लाइट अनुपलब्ध: {0}</value>
+  </data>
+  <data name="K655" xml:space="preserve">
+    <value>vnavmesh फ़ॉलो IPC विफल</value>
+  </data>
+  <data name="K656" xml:space="preserve">
+    <value>पास से फ़ॉलो ({0:F1} याल्म)</value>
+  </data>
+  <data name="K657" xml:space="preserve">
+    <value>Quester का नवीनतम गंतव्य रिफ़्रेश कर रहे हैं</value>
+  </data>
+  <data name="K658" xml:space="preserve">
+    <value>{0:F1} याल्म पर उड़ रहे हैं</value>
+  </data>
+  <data name="K659" xml:space="preserve">
+    <value>{0:F1} याल्म पर ज़मीन से फ़ॉलो</value>
+  </data>
+  <data name="K660" xml:space="preserve">
+    <value>vnavmesh ने रूट स्टार्ट अस्वीकार किया; गतिविधि समाप्त होने या नए यात्रा स्नैपशॉट की प्रतीक्षा</value>
+  </data>
+  <data name="K661" xml:space="preserve">
+    <value>vnavmesh की प्रतीक्षा</value>
+  </data>
+  <data name="K662" xml:space="preserve">
+    <value>{1:F1} याल्म पर {0} कतार में लगा रहे हैं</value>
+  </data>
+  <data name="K663" xml:space="preserve">
+    <value>vnavmesh ने {0} रूट स्टार्ट अस्वीकार किया; गतिविधि समाप्त होने या नए यात्रा स्नैपशॉट की प्रतीक्षा</value>
+  </data>
+  <data name="K664" xml:space="preserve">
+    <value>vnavmesh फ़ॉलो IPC विफल; नए यात्रा स्नैपशॉट की प्रतीक्षा</value>
+  </data>
+  <data name="K665" xml:space="preserve">
+    <value>सहायक और Quester के सत्यापित सार्वजनिक इंस्टेंस मेटाडेटा की प्रतीक्षा</value>
+  </data>
+  <data name="K666" xml:space="preserve">
+    <value>Quester के सत्यापित गैर-इंस्टेंस क्षेत्र की प्रतीक्षा</value>
+  </data>
+  <data name="K667" xml:space="preserve">
+    <value>सार्वजनिक इंस्टेंस बदलने से पहले सुरक्षित निष्क्रिय यात्रा की प्रतीक्षा</value>
+  </data>
+  <data name="K668" xml:space="preserve">
+    <value>सार्वजनिक इंस्टेंस {0} फिर आज़माने की प्रतीक्षा</value>
+  </data>
+  <data name="K669" xml:space="preserve">
+    <value>सार्वजनिक इंस्टेंस बदलने से पहले नैविगेशन रुकने की प्रतीक्षा</value>
+  </data>
+  <data name="K670" xml:space="preserve">
+    <value>सार्वजनिक इंस्टेंस मिलन: {0}</value>
+  </data>
+  <data name="K671" xml:space="preserve">
+    <value>/li से पहले एथराइट के पास लैंड करके माउंट से उतर रहे हैं</value>
+  </data>
+  <data name="K672" xml:space="preserve">
+    <value>/li के बाद सार्वजनिक इंस्टेंस {0} सत्यापित कर रहे हैं</value>
+  </data>
+  <data name="K673" xml:space="preserve">
+    <value>Lifestream ने /li {0} अस्वीकार किया; फिर प्रयास से पहले पाँच सेकंड प्रतीक्षा</value>
+  </data>
+  <data name="K674" xml:space="preserve">
+    <value>Lifestream इंस्टेंस कमांड विफल; फिर प्रयास से पहले पाँच सेकंड प्रतीक्षा</value>
+  </data>
+  <data name="K675" xml:space="preserve">
+    <value>देखे गए क्षेत्र पार करने के लिए आगे बढ़कर जाँच रहे हैं</value>
+  </data>
+  <data name="K676" xml:space="preserve">
+    <value>क्षेत्र ट्रांज़िशन देखा गया; सहायक के सुरक्षित लोड होने की प्रतीक्षा</value>
+  </data>
+  <data name="K677" xml:space="preserve">
+    <value>क्षेत्र {0} में माउंट की अनुमति नहीं है</value>
+  </data>
+  <data name="K678" xml:space="preserve">
+    <value>क्षेत्र की माउंट जाँच विफल: {0}</value>
+  </data>
+  <data name="K679" xml:space="preserve">
+    <value>क्षेत्र {0} में फ़्लाइट उपलब्ध नहीं है</value>
+  </data>
+  <data name="K680" xml:space="preserve">
+    <value>सहायक ने इस क्षेत्र में फ़्लाइट अनलॉक नहीं की है</value>
+  </data>
+  <data name="K681" xml:space="preserve">
+    <value>ARR फ़्लाइट उपलब्धता जाँच रहे हैं</value>
+  </data>
+  <data name="K682" xml:space="preserve">
+    <value>फ़्लाइट जाँच विफल: {0}</value>
+  </data>
+  <data name="K683" xml:space="preserve">
+    <value>ActionManager अनुपलब्ध है</value>
+  </data>
+  <data name="K684" xml:space="preserve">
+    <value>सामान्य एक्शन {0} अनुपलब्ध है (स्थिति {1})</value>
+  </data>
+  <data name="K685" xml:space="preserve">
+    <value>सामान्य एक्शन {0} अस्वीकार हुआ</value>
+  </data>
+  <data name="K686" xml:space="preserve">
+    <value>सामान्य एक्शन {0} विफल: {1}</value>
+  </data>
+  <data name="K687" xml:space="preserve">
+    <value>Lifestream यात्रा स्थिति IPC विफल</value>
+  </data>
+  <data name="K688" xml:space="preserve">
+    <value>{0}; नए यात्रा स्नैपशॉट की प्रतीक्षा</value>
+  </data>
+  <data name="K689" xml:space="preserve">
+    <value>मौजूदा Lifestream यात्रा समाप्त होने की प्रतीक्षा</value>
+  </data>
+  <data name="K690" xml:space="preserve">
+    <value>Lifestream यात्रा IPC विफल</value>
+  </data>
+  <data name="K691" xml:space="preserve">
+    <value>Lifestream ने अनुरोध अस्वीकार किया: {0}</value>
+  </data>
+  <data name="K692" xml:space="preserve">
+    <value>सहायक की टेलीपोर्ट सूची में Quester का सटीक टेलीपोर्ट गंतव्य उपलब्ध नहीं है।</value>
+  </data>
+  <data name="K693" xml:space="preserve">
+    <value>सहायक की टेलीपोर्ट सूची में Quester के क्षेत्र का कोई एथराइट उपलब्ध नहीं है।</value>
+  </data>
+  <data name="K694" xml:space="preserve">
+    <value>एथराइट निर्धारित करना विफल: {0}</value>
+  </data>
+  <data name="K695" xml:space="preserve">
+    <value>स्वीकार किया गया Quester टेलीपोर्ट गंतव्य अनुपलब्ध है।</value>
+  </data>
+  <data name="K696" xml:space="preserve">
+    <value>निकटतम एथराइट विकल्प के लिए Quester की गंतव्य क्षेत्र की स्थिति की प्रतीक्षा।</value>
+  </data>
+  <data name="K697" xml:space="preserve">
+    <value>सहायक की टेलीपोर्ट सूची अनुपलब्ध है या अभी लोड हो रही है।</value>
+  </data>
+  <data name="K698" xml:space="preserve">
+    <value>PowerlevelBot तैयार।</value>
+  </data>
+  <data name="K699" xml:space="preserve">
+    <value>PowerlevelBot चालू करने से पहले BRD या MCH चुनें।</value>
+  </data>
+  <data name="K700" xml:space="preserve">
+    <value>{0} अनलॉक नहीं है।</value>
+  </data>
+  <data name="K701" xml:space="preserve">
+    <value>वर्तमान जॉब चयनित {0} PowerlevelBot जॉब से मेल खाना चाहिए।</value>
+  </data>
+  <data name="K702" xml:space="preserve">
+    <value>FrenRider का कॉन्फ़िगर किया हुआ Fren दिखाई नहीं देता।</value>
+  </data>
+  <data name="K703" xml:space="preserve">
+    <value>PowerlevelBot इस्तेमाल करने से पहले सक्रिय साथी चोकोबो विदा करें।</value>
+  </data>
+  <data name="K704" xml:space="preserve">
+    <value>{0} केवल शत्रु पर इस्तेमाल होने वाला एक्शन नहीं है।</value>
+  </data>
+  <data name="K705" xml:space="preserve">
+    <value>{0} कास्ट किया जाता है।</value>
+  </data>
+  <data name="K706" xml:space="preserve">
+    <value>{0} AoE है।</value>
+  </data>
+  <data name="K707" xml:space="preserve">
+    <value>{0} अनुपलब्ध है।</value>
+  </data>
+  <data name="K708" xml:space="preserve">
+    <value>{0} कूलडाउन पर है।</value>
+  </data>
+  <data name="K709" xml:space="preserve">
+    <value>पोर्ट 47789 आरक्षित है। दूसरा पेयरिंग पोर्ट चुनें।</value>
+  </data>
+  <data name="K710" xml:space="preserve">
+    <value>पेयरिंग पोर्ट 1024 से 65535 के बीच होना चाहिए।</value>
+  </data>
+  <data name="K711" xml:space="preserve">
+    <value>साझा सीक्रेट में कम से कम 16 अक्षर होने चाहिए।</value>
+  </data>
+  <data name="K712" xml:space="preserve">
+    <value>सहायक का एक मान्य IPv4 पता दर्ज करें, जैसे 127.0.0.1 या 192.168.1.25।</value>
+  </data>
+  <data name="K713" xml:space="preserve">
+    <value>चोकोबो</value>
+  </data>
+  <data name="K714" xml:space="preserve">
+    <value>NPC पार्टी सदस्य</value>
+  </data>
+  <data name="K715" xml:space="preserve">
+    <value>मैनुअल लक्ष्य</value>
+  </data>
+  <data name="K716" xml:space="preserve">
+    <value>Jacqueline of All Trades को अटैक के लिए Rotation Solver Reborn चाहिए।</value>
+  </data>
+  <data name="K717" xml:space="preserve">
+    <value>Newb संचालन की भूमिका है, Stand-alone व्यवहार नहीं।</value>
+  </data>
+  <data name="K718" xml:space="preserve">
+    <value>किसी प्लगइन से जुड़ी समस्या / सुझाव पर चर्चा करने के लिए नीचे "The Dumpster Fire" चैनल तक स्क्रॉल करें।</value>
+  </data>
+  <data name="K719" xml:space="preserve">
+    <value>BossMod Reborn (BMR) या VBM</value>
+  </data>
+  <data name="K720" xml:space="preserve">
+    <value>Rotation Solver Reborn (RSR) - वैकल्पिक अलगाव/बहाली सहायक</value>
+  </data>
+  <data name="K721" xml:space="preserve">
+    <value>{0}; सुरक्षित ज़मीनी विकल्प ({1})</value>
+  </data>
+  <data name="K722" xml:space="preserve">
+    <value>मित्रवत बैटल NPC</value>
+  </data>
+  <data name="K723" xml:space="preserve">
+    <value>पेयर किया हुआ सहायक</value>
+  </data>
+  <data name="K724" xml:space="preserve">
+    <value>LOS</value>
+  </data>
+  <data name="K725" xml:space="preserve">
+    <value>Rescue</value>
+  </data>
+  <data name="K726" xml:space="preserve">
+    <value>उड़कर जाना</value>
+  </data>
+  <data name="K727" xml:space="preserve">
+    <value>ज़मीन से फ़ॉलो</value>
+  </data>
+  <data name="K728" xml:space="preserve">
+    <value>पास जाना</value>
+  </data>
+  <data name="K729" xml:space="preserve">
+    <value>पहुँच गए</value>
+  </data>
+  <data name="K730" xml:space="preserve">
+    <value>पहुँच रहे हैं</value>
+  </data>
+  <data name="K731" xml:space="preserve">
+    <value>सवार हो रहे हैं</value>
+  </data>
+  <data name="K732" xml:space="preserve">
+    <value>रद्द</value>
+  </data>
+  <data name="K733" xml:space="preserve">
+    <value>रद्द कर रहे हैं</value>
+  </data>
+  <data name="K734" xml:space="preserve">
+    <value>तैयारी</value>
+  </data>
+  <data name="K735" xml:space="preserve">
+    <value>ट्रांज़िट</value>
+  </data>
+  <data name="K736" xml:space="preserve">
+    <value>प्रतीक्षा</value>
+  </data>
+  <data name="K737" xml:space="preserve">
+    <value>जारी रहने की प्रतीक्षा</value>
+  </data>
+  <data name="K738" xml:space="preserve">
+    <value>क्षेत्र ट्रांज़िशन</value>
+  </data>
+  <data name="K739" xml:space="preserve">
+    <value>लैंडिंग</value>
+  </data>
+  <data name="K740" xml:space="preserve">
+    <value>माउंट से उतरना</value>
+  </data>
+  <data name="K741" xml:space="preserve">
+    <value>HealRider अवरुद्ध: {0}</value>
+  </data>
+  <data name="K742" xml:space="preserve">
+    <value>HealRider सफ़ाई: {0}</value>
+  </data>
+  <data name="K743" xml:space="preserve">
+    <value>HealRider: {0}</value>
+  </data>
+  <data name="K744" xml:space="preserve">
+    <value>HealRider: {0}: {1}</value>
+  </data>
+  <data name="K745" xml:space="preserve">
+    <value>{0} की प्रतीक्षा करते हुए सहायक की सफ़ाई की समय-सीमा समाप्त; समन्वित सफ़ाई के फिर प्रयास की प्रतीक्षा।</value>
+  </data>
+  <data name="K746" xml:space="preserve">
+    <value>कैप्चर किया हुआ कैरेक्टर तैयार होने की</value>
+  </data>
+  <data name="K747" xml:space="preserve">
+    <value>माउंट एक्शन समाप्त होने की</value>
+  </data>
+  <data name="K748" xml:space="preserve">
+    <value>सफ़ाई के लिए लैंडिंग</value>
+  </data>
+  <data name="K749" xml:space="preserve">
+    <value>सफ़ाई के लिए माउंट से उतरना</value>
+  </data>
+  <data name="K750" xml:space="preserve">
+    <value>ट्रांसपोर्ट सफ़ाई के लिए माउंट से उतरना</value>
+  </data>
+  <data name="K751" xml:space="preserve">
+    <value>फ़ॉलो करने के लिए चयनित यात्री माउंट तैयार कर रहे हैं</value>
+  </data>
+  <data name="K752" xml:space="preserve">
+    <value>असाइनमेंट की माउंट नीति बदल गई</value>
+  </data>
+  <data name="K753" xml:space="preserve">
+    <value>गंतव्य या यात्रा का चरण बदल गया</value>
+  </data>
+  <data name="K754" xml:space="preserve">
+    <value>ड्यूटी हस्तांतरण</value>
+  </data>
+  <data name="K755" xml:space="preserve">
+    <value>पिकअप रद्द</value>
+  </data>
+  <data name="K756" xml:space="preserve">
+    <value>असमर्थित असाइनमेंट माउंट-मोड एक्शन।</value>
+  </data>
+  <data name="K757" xml:space="preserve">
+    <value>माउंट नीति बदलने से पहले सक्रिय यात्रा पूरी करें।</value>
+  </data>
+  <data name="K758" xml:space="preserve">
+    <value>सहायक पर यात्री सीट वाला अनलॉक माउंट चुनें।</value>
+  </data>
+  <data name="K759" xml:space="preserve">
+    <value>चयनित यात्री माउंट की तैयारी अस्वीकार हुई या पिकअप की अनुमति से अधिक हो गई।</value>
+  </data>
+  <data name="K760" xml:space="preserve">
+    <value>HealRider v2 आवश्यक है। Helper और Quester दोनों अपडेट करें।</value>
+  </data>
+  <data name="K761" xml:space="preserve">
+    <value>अमान्य HealRider v2 अनुरोध।</value>
+  </data>
+  <data name="K762" xml:space="preserve">
+    <value>इस यात्रा चरण को नए चरण ने निष्क्रिय कर दिया।</value>
+  </data>
+  <data name="K763" xml:space="preserve">
+    <value>इस माउंट वाले जारी चरण को निष्क्रिय कर दिया गया।</value>
+  </data>
+  <data name="K764" xml:space="preserve">
+    <value>पिछली यात्रा के माउंट से उतरने की प्रतीक्षा।</value>
+  </data>
+  <data name="K765" xml:space="preserve">
+    <value>सफ़ाई के फिर प्रयास के लिए कैप्चर किया हुआ कैरेक्टर और पार्टी चाहिए।</value>
+  </data>
+  <data name="K766" xml:space="preserve">
+    <value>असमर्थित HealRider एक्शन।</value>
+  </data>
+  <data name="K767" xml:space="preserve">
+    <value>असाइनमेंट की यात्री माउंट नीति तैयार नहीं है।</value>
+  </data>
+  <data name="K768" xml:space="preserve">
+    <value>यह यात्रा चरण पहले ही समाप्त हो गया।</value>
+  </data>
+  <data name="K769" xml:space="preserve">
+    <value>पिकअप स्वीकार होने से पहले साझा पिकअप प्रतीक्षा समाप्त हो गई।</value>
+  </data>
+  <data name="K770" xml:space="preserve">
+    <value>पिकअप के लिए अनलॉक यात्री माउंट, सहायक की फ़्लाइट, पैदल दूरी की सीमा से आगे ज़मीन पर मौजूद Quester और इस क्षेत्र में सटीक पार्टी चाहिए।</value>
+  </data>
+  <data name="K771" xml:space="preserve">
+    <value>यात्रा संदर्भ खो गया, अवरुद्ध हुआ या समय-सीमा समाप्त</value>
+  </data>
+  <data name="K772" xml:space="preserve">
+    <value>पास पहुँचने या सवार होने के दौरान साझा पिकअप प्रतीक्षा समाप्त</value>
+  </data>
+  <data name="K773" xml:space="preserve">
+    <value>माउंट की यात्रा पर दोनों क्लाइंट लोड होने की प्रतीक्षा।</value>
+  </data>
+  <data name="K774" xml:space="preserve">
+    <value>माउंट पर जारी रहने और दोनों यात्री पुष्टियों की प्रतीक्षा।</value>
+  </data>
+  <data name="K775" xml:space="preserve">
+    <value>माउंट पर सीमा पार करना सत्यापित नहीं हो सका</value>
+  </data>
+  <data name="K776" xml:space="preserve">
+    <value>सहायक और Quester के क्षेत्र तथा सार्वजनिक इंस्टेंस अब साथ में सत्यापित नहीं हैं</value>
+  </data>
+  <data name="K777" xml:space="preserve">
+    <value>सटीक Quester या पार्टी अब उपलब्ध नहीं है</value>
+  </data>
+  <data name="K778" xml:space="preserve">
+    <value>अगले मूवमेंट चरण की प्रतीक्षा करते समय यात्री सत्यापन खो गया</value>
+  </data>
+  <data name="K779" xml:space="preserve">
+    <value>लैंडिंग या माउंट से उतरना अस्वीकार हुआ</value>
+  </data>
+  <data name="K780" xml:space="preserve">
+    <value>मूवमेंट गंतव्य पहुँचे; अगले सत्यापित चरण की प्रतीक्षा।</value>
+  </data>
+  <data name="K781" xml:space="preserve">
+    <value>सटीक लैंडिंग नैविगेशन ने कैप्चर किया हुआ गंतव्य अस्वीकार किया</value>
+  </data>
+  <data name="K782" xml:space="preserve">
+    <value>सटीक लैंडिंग नैविगेशन IPC विफल</value>
+  </data>
+  <data name="K783" xml:space="preserve">
+    <value>सटीक लैंडिंग नैविगेशन स्थिति अनुपलब्ध</value>
+  </data>
+  <data name="K784" xml:space="preserve">
+    <value>कैप्चर किए गए XYZ तक पहुँचने से पहले सटीक लैंडिंग रूट विफल</value>
+  </data>
+  <data name="K785" xml:space="preserve">
+    <value>यात्रा नैविगेशन स्थिति अनुपलब्ध</value>
+  </data>
+  <data name="K786" xml:space="preserve">
+    <value>पहुँचने से पहले यात्री रूट विफल</value>
+  </data>
+  <data name="K787" xml:space="preserve">
+    <value>यात्रा नैविगेशन ने गंतव्य अस्वीकार किया</value>
+  </data>
+  <data name="K788" xml:space="preserve">
+    <value>यात्रा नैविगेशन IPC विफल</value>
+  </data>
+  <data name="K789" xml:space="preserve">
+    <value>लैंडिंग आगमन की सहन-सीमा से बाहर चली गई।</value>
+  </data>
+  <data name="K790" xml:space="preserve">
+    <value>सटीक Quester ने यात्री सीट या पार्टी छोड़ दी।</value>
+  </data>
+  <data name="K791" xml:space="preserve">
+    <value>सवार होने से पहले चयनित माउंट से उतर गए।</value>
+  </data>
+  <data name="K792" xml:space="preserve">
+    <value>चयनित यात्री माउंट तैयार नहीं हो सका।</value>
+  </data>
+  <data name="K793" xml:space="preserve">
+    <value>दोनों यात्री पुष्टियों की प्रतीक्षा।</value>
+  </data>
+  <data name="K794" xml:space="preserve">
+    <value>कैप्चर किए हुए गंतव्य पर ज़मीन पर आने का अवलोकन होने की प्रतीक्षा।</value>
+  </data>
+  <data name="K795" xml:space="preserve">
+    <value>सहायक के नेटिव यात्री अवलोकन की प्रतीक्षा।</value>
+  </data>
+  <data name="K796" xml:space="preserve">
+    <value>Quester की यात्री पुष्टि की प्रतीक्षा।</value>
+  </data>
+  <data name="K797" xml:space="preserve">
+    <value>Epilogue Gate रूट रद्द हुआ या समय-सीमा समाप्त</value>
+  </data>
+  <data name="K798" xml:space="preserve">
+    <value>Idyllshire के Epilogue Gate से यात्रा</value>
+  </data>
+  <data name="K799" xml:space="preserve">
+    <value>Lifestream Epilogue Gate कमांड अनुपलब्ध</value>
+  </data>
+  <data name="K800" xml:space="preserve">
+    <value>Lifestream ने Epilogue Gate रूट अस्वीकार किया</value>
+  </data>
+  <data name="K801" xml:space="preserve">
+    <value>सार्वजनिक इंस्टेंस बदलने के लिए {0} तक यात्रा</value>
+  </data>
+  <data name="K802" xml:space="preserve">
+    <value>इंस्टेंस बदलने वाले एथराइट {0} तक नहीं पहुँचे</value>
+  </data>
+  <data name="K803" xml:space="preserve">
+    <value>असाइनमेंट छोड़ा गया</value>
+  </data>
+  <data name="K804" xml:space="preserve">
+    <value>Dravanian Hinterlands की यात्रा के लिए इस सहायक पर उड़ना आवश्यक है</value>
+  </data>
+  <data name="K805" xml:space="preserve">
+    <value>Lifestream यात्रा IPC अनुपलब्ध है।</value>
+  </data>
+  <data name="K806" xml:space="preserve">
+    <value>vnavmesh यात्रा IPC अनुपलब्ध है।</value>
+  </data>
+  <data name="K807" xml:space="preserve">
+    <value>आवश्यक Lifestream यात्रा IPC अनुपलब्ध है।</value>
+  </data>
+  <data name="K808" xml:space="preserve">
+    <value>आवश्यक vnavmesh यात्रा IPC अनुपलब्ध है।</value>
+  </data>
+  <data name="K809" xml:space="preserve">
+    <value>LOS अवरुद्ध; पेयर की गई यात्रा सक्रिय</value>
+  </data>
+  <data name="K810" xml:space="preserve">
+    <value>LOS अवरुद्ध; पेयर की गई यात्रा दूरस्थ स्थान निर्धारित कर रही है</value>
+  </data>
+  <data name="K811" xml:space="preserve">
+    <value>LOS अवरुद्ध; लक्ष्य Rescue की दूरी से बाहर</value>
+  </data>
+  <data name="K812" xml:space="preserve">
+    <value>ड्यूटी के अंदर निलंबित</value>
+  </data>
+  <data name="K813" xml:space="preserve">
+    <value>FrenRider Powerlevel IPC असंगत है। FrenRider अपडेट करें।</value>
+  </data>
+  <data name="K814" xml:space="preserve">
+    <value>FrenRider Powerlevel IPC अनुपलब्ध है।</value>
+  </data>
+  <data name="K815" xml:space="preserve">
+    <value>खाली FrenRider Powerlevel स्थिति।</value>
+  </data>
+  <data name="K816" xml:space="preserve">
+    <value>FrenRider Powerlevel IPC अभी पूछा नहीं गया है।</value>
+  </data>
+  <data name="K817" xml:space="preserve">
+    <value>FrenRider ने खाली जवाब लौटाया।</value>
+  </data>
+  <data name="K818" xml:space="preserve">
+    <value>असंगत FrenRider Powerlevel स्थिति।</value>
+  </data>
+  <data name="K819" xml:space="preserve">
+    <value>अधूरा पेयरिंग TCP फ़्रेम।</value>
+  </data>
+  <data name="K820" xml:space="preserve">
+    <value>अमान्य पेयरिंग प्रमाणीकरण टैग।</value>
+  </data>
+  <data name="K821" xml:space="preserve">
+    <value>अमान्य पेयरिंग टाइमस्टैम्प।</value>
+  </data>
+  <data name="K822" xml:space="preserve">
+    <value>पेयरिंग प्रमाणीकरण विफल।</value>
+  </data>
+  <data name="K823" xml:space="preserve">
+    <value>पेयरिंग TCP फ़्रेम 64 KiB से बड़ा है।</value>
+  </data>
+  <data name="K824" xml:space="preserve">
+    <value>फिर से भेजा हुआ पेयरिंग एनवेलप।</value>
+  </data>
+  <data name="K825" xml:space="preserve">
+    <value>पुराना पेयरिंग एनवेलप।</value>
+  </data>
+  <data name="K826" xml:space="preserve">
+    <value>साझा सीक्रेट कॉन्फ़िगर नहीं है।</value>
+  </data>
+  <data name="K827" xml:space="preserve">
+    <value>बिना हस्ताक्षर का या असंगत पेयरिंग एनवेलप।</value>
+  </data>
+  <data name="K828" xml:space="preserve">
+    <value>HealBot पेयरिंग अनलोड हो रही है।</value>
+  </data>
+  <data name="K829" xml:space="preserve">
+    <value>हीलिंग क्लाइंट पर Helper भूमिका चुनें।</value>
+  </data>
+  <data name="K830" xml:space="preserve">
+    <value>Helper प्रदाता सीधी Newb पेयरिंग के नियंत्रण में नहीं है।</value>
+  </data>
+  <data name="K831" xml:space="preserve">
+    <value>अभी प्रदाता सक्रिय करना QST के नियंत्रण में है।</value>
+  </data>
+  <data name="K832" xml:space="preserve">
+    <value>सीधी Newb पेयरिंग के पास Helper सक्रिय करने का नियंत्रण नहीं है।</value>
+  </data>
+  <data name="K833" xml:space="preserve">
+    <value>अमान्य Newb सत्र ID।</value>
+  </data>
+  <data name="K834" xml:space="preserve">
+    <value>HealBot का पहले से सक्रिय QST या Newb असाइनमेंट है।</value>
+  </data>
+  <data name="K835" xml:space="preserve">
+    <value>अमान्य Newb पहचान।</value>
+  </data>
+  <data name="K836" xml:space="preserve">
+    <value>Newb सत्र के पास सक्रिय असाइनमेंट का नियंत्रण नहीं है।</value>
+  </data>
+  <data name="K837" xml:space="preserve">
+    <value>Newb सत्र के पास किसी सक्रिय असाइनमेंट का नियंत्रण नहीं है।</value>
+  </data>
+  <data name="K838" xml:space="preserve">
+    <value>यात्रा अपडेट सटीक असाइन किए हुए Newb से मेल नहीं खाता।</value>
+  </data>
+  <data name="K839" xml:space="preserve">
+    <value>HealBot JOAT सक्रिय नहीं कर सका।</value>
+  </data>
+  <data name="K840" xml:space="preserve">
+    <value>HealBot बंद है।</value>
+  </data>
+  <data name="K841" xml:space="preserve">
+    <value>HealBot ऑटोमेशन बंद है।</value>
+  </data>
+  <data name="K842" xml:space="preserve">
+    <value>Jacqueline of All Trades (JOAT) चुनें।</value>
+  </data>
+  <data name="K843" xml:space="preserve">
+    <value>JOAT अटैक के लिए Rotation Solver Reborn आवश्यक है।</value>
+  </data>
+  <data name="K844" xml:space="preserve">
+    <value>ऑटोमेशन बंद है।</value>
+  </data>
+  <data name="K845" xml:space="preserve">
+    <value>चुनें कि ऑटोमेशन अभी चालू करना है या बंद रखना है।</value>
+  </data>
+  <data name="K846" xml:space="preserve">
+    <value>HealBot चयनित भूमिका शुरू नहीं कर सका।</value>
+  </data>
+  <data name="K847" xml:space="preserve">
+    <value>{0} सेटअप सहेजा गया। संचालन भूमिका बंद रहती है।</value>
+  </data>
+  <data name="K848" xml:space="preserve">
+    <value>{0} सेटअप सहेजकर शुरू किया गया।</value>
+  </data>
+  <data name="K849" xml:space="preserve">
+    <value>अज्ञात संचालन भूमिका।</value>
+  </data>
+  <data name="K850" xml:space="preserve">
+    <value>QST पेयर किया गया</value>
+  </data>
+  <data name="K851" xml:space="preserve">
+    <value>हील {0}; अटैक {1}</value>
+  </data>
+  <data name="K852" xml:space="preserve">
+    <value>{0}: {1} मुख्य विंडो खोलने के लिए क्लिक करें।</value>
+  </data>
+  <data name="K853" xml:space="preserve">
+    <value> व्यवहार: {0}।</value>
+  </data>
+  <data name="K854" xml:space="preserve">
+    <value>भूमिका: {0}।{1} अवस्था: {2} अगला: {3} पहचान: {4}</value>
+  </data>
+  <data name="K855" xml:space="preserve">
+    <value>आपके रोमांच के लिए स्वचालित सहायता</value>
+  </data>
+  <data name="K856" xml:space="preserve">
+    <value>रोज़मर्रा के खेलने के लिए कॉम्पैक्ट साथी</value>
+  </data>
+  <data name="Window appearance" xml:space="preserve">
+    <value>विंडो का रूप</value>
+  </data>
+  <data name="Compact visible on main window" xml:space="preserve">
+    <value>मुख्य विंडो पर कॉम्पैक्ट विकल्प दिखाएँ</value>
+  </data>
+  <data name="Language visible on main window" xml:space="preserve">
+    <value>मुख्य विंडो पर भाषा विकल्प दिखाएँ</value>
+  </data>
+  <data name="Transparency" xml:space="preserve">
+    <value>पारदर्शिता</value>
+  </data>
+  <data name="Opacity (%)" xml:space="preserve">
+    <value>अपारदर्शिता (%)</value>
+  </data>
+  <data name="Auto-fade when unfocused" xml:space="preserve">
+    <value>फ़ोकस न होने पर अपने आप फ़ेड करें</value>
+  </data>
+  <data name="Unfocused opacity (%)" xml:space="preserve">
+    <value>फ़ोकस न होने पर अपारदर्शिता (%)</value>
+  </data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve">
+    <value>फ़ोकस न होने का विलंब (सेकंड)</value>
+  </data>
+</root>

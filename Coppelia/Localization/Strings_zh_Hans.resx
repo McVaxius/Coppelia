@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="K015" xml:space="preserve"><value>{0} 设置</value></data>
+  <data name="K017" xml:space="preserve"><value>{0}%</value></data>
+  <data name="K018" xml:space="preserve"><value>{0}% HP</value></data>
+  <data name="K024" xml:space="preserve"><value>操作</value></data>
+  <data name="K035" xml:space="preserve"><value>进攻姿态</value></data>
+  <data name="K041" xml:space="preserve"><value>可用</value></data>
+  <data name="K043" xml:space="preserve"><value>返回</value></data>
+  <data name="K046" xml:space="preserve"><value>BMR 或 VBM</value></data>
+  <data name="K050" xml:space="preserve"><value>取消</value></data>
+  <data name="K052" xml:space="preserve"><value>陆行鸟</value></data>
+  <data name="K059" xml:space="preserve"><value>搭档</value></data>
+  <data name="K062" xml:space="preserve"><value>搭档姿态</value></data>
+  <data name="K068" xml:space="preserve"><value>已配置</value></data>
+  <data name="K071" xml:space="preserve"><value>复制</value></data>
+  <data name="K074" xml:space="preserve"><value>死亡</value></data>
+  <data name="K076" xml:space="preserve"><value>防护姿态</value></data>
+  <data name="K078" xml:space="preserve"><value>详情</value></data>
+  <data name="K079" xml:space="preserve"><value>禁用</value></data>
+  <data name="K080" xml:space="preserve"><value>Discord</value></data>
+  <data name="K082" xml:space="preserve"><value>距离</value></data>
+  <data name="K085" xml:space="preserve"><value>DTR栏</value></data>
+  <data name="K086" xml:space="preserve"><value>DTR模式</value></data>
+  <data name="K088" xml:space="preserve"><value>启用</value></data>
+  <data name="K098" xml:space="preserve"><value>跟随</value></data>
+  <data name="K100" xml:space="preserve"><value>自由姿态</value></data>
+  <data name="K102" xml:space="preserve"><value>FrenRider</value></data>
+  <data name="K108" xml:space="preserve"><value>常规</value></data>
+  <data name="K113" xml:space="preserve"><value>HealBot</value></data>
+  <data name="K124" xml:space="preserve"><value>治疗姿态</value></data>
+  <data name="K147" xml:space="preserve"><value>HP</value></data>
+  <data name="K149" xml:space="preserve"><value>HP%</value></data>
+  <data name="K153" xml:space="preserve"><value>图标＋文本</value></data>
+  <data name="K154" xml:space="preserve"><value>仅图标</value></data>
+  <data name="K157" xml:space="preserve"><value>Jacqueline of All Trades (JOAT)</value></data>
+  <data name="K159" xml:space="preserve"><value>JOAT</value></data>
+  <data name="K170" xml:space="preserve"><value>职业</value></data>
+  <data name="K173" xml:space="preserve"><value>Ko-fi</value></data>
+  <data name="K174" xml:space="preserve"><value>Krangle</value></data>
+  <data name="K175" xml:space="preserve"><value>随机化名称</value></data>
+  <data name="K179" xml:space="preserve"><value>语言</value></data>
+  <data name="K183" xml:space="preserve"><value>已加载</value></data>
+  <data name="K196" xml:space="preserve"><value>未拥有</value></data>
+  <data name="K198" xml:space="preserve"><value>MP%</value></data>
+  <data name="K200" xml:space="preserve"><value>名称</value></data>
+  <data name="K208" xml:space="preserve"><value>下一步操作</value></data>
+  <data name="K209" xml:space="preserve"><value>下一步操作：{0}</value></data>
+  <data name="K214" xml:space="preserve"><value>无</value></data>
+  <data name="K219" xml:space="preserve"><value>不可见</value></data>
+  <data name="K222" xml:space="preserve"><value>关</value></data>
+  <data name="K223" xml:space="preserve"><value>开</value></data>
+  <data name="K225" xml:space="preserve"><value>OOC</value></data>
+  <data name="K242" xml:space="preserve"><value>PowerlevelBot</value></data>
+  <data name="K250" xml:space="preserve"><value>优先级</value></data>
+  <data name="K256" xml:space="preserve"><value>快速设置</value></data>
+  <data name="K258" xml:space="preserve"><value>就绪</value></data>
+  <data name="K260" xml:space="preserve"><value>刷新</value></data>
+  <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
+  <data name="K277" xml:space="preserve"><value>RSR</value></data>
+  <data name="K283" xml:space="preserve"><value>重新运行快速设置</value></data>
+  <data name="K290" xml:space="preserve"><value>已保存</value></data>
+  <data name="K300" xml:space="preserve"><value>已选择</value></data>
+  <data name="K304" xml:space="preserve"><value>自行修理</value></data>
+  <data name="K308" xml:space="preserve"><value>设置</value></data>
+  <data name="K309" xml:space="preserve"><value>共享秘密</value></data>
+  <data name="K311" xml:space="preserve"><value>显示DTR栏条目</value></data>
+  <data name="K319" xml:space="preserve"><value>状态</value></data>
+  <data name="K322" xml:space="preserve"><value>在聊天中显示状态</value></data>
+  <data name="K323" xml:space="preserve"><value>第{0}步，共3步</value></data>
+  <data name="K332" xml:space="preserve"><value>仅文本</value></data>
+  <data name="K343" xml:space="preserve"><value>跟踪中</value></data>
+  <data name="K346" xml:space="preserve"><value>触发器</value></data>
+  <data name="K347" xml:space="preserve"><value>类型</value></data>
+  <data name="K348" xml:space="preserve"><value>不可用</value></data>
+  <data name="K356" xml:space="preserve"><value>可见</value></data>
+  <data name="K359" xml:space="preserve"><value>vnavmesh</value></data>
+  <data name="K000" xml:space="preserve"><value>%d秒</value></data>
+  <data name="K001" xml:space="preserve"><value>%d星码</value></data>
+  <data name="K002" xml:space="preserve"><value>…另有{0}个监视目标。</value></data>
+  <data name="K003" xml:space="preserve"><value>{0} - 跟踪{1}</value></data>
+  <data name="K004" xml:space="preserve"><value>{0} / 生命值{1}%</value></data>
+  <data name="K005" xml:space="preserve"><value>{0} / 不在场 / Ctrl移除</value></data>
+  <data name="K006" xml:space="preserve"><value>{0} / 战斗不能</value></data>
+  <data name="K007" xml:space="preserve"><value>{0} / 被筛选隐藏</value></data>
+  <data name="K008" xml:space="preserve"><value>{0} / 保留</value></data>
+  <data name="K010" xml:space="preserve"><value>{0}直连配对</value></data>
+  <data name="K011" xml:space="preserve"><value>已切换为{0}</value></data>
+  <data name="K012" xml:space="preserve"><value>{0}尚未解锁</value></data>
+  <data name="K013" xml:space="preserve"><value>{0}迷你</value></data>
+  <data name="K016" xml:space="preserve"><value>{0}监视</value></data>
+  <data name="K020" xml:space="preserve"><value>47789已保留</value></data>
+  <data name="K025" xml:space="preserve"><value>已召唤 - 请遣返</value></data>
+  <data name="K026" xml:space="preserve"><value>当前 / 配对身份</value></data>
+  <data name="K027" xml:space="preserve"><value>当前 / 配对身份：{0}</value></data>
+  <data name="K028" xml:space="preserve"><value>当前：{0}/{1} | 在场：{2} | 保存：{3}</value></data>
+  <data name="K029" xml:space="preserve"><value>当前：1/{0} | 在场：{1} | 保存列表未变</value></data>
+  <data name="K031" xml:space="preserve"><value>占星术士 (AST)</value></data>
+  <data name="K032" xml:space="preserve"><value>至少16个字符</value></data>
+  <data name="K033" xml:space="preserve"><value>攻击技能：{0}</value></data>
+  <data name="K034" xml:space="preserve"><value>攻击目标：{0}</value></data>
+  <data name="K036" xml:space="preserve"><value>攻击就绪状态</value></data>
+  <data name="K037" xml:space="preserve"><value>攻击：{0}</value></data>
+  <data name="K040" xml:space="preserve"><value>登录时更新地图位置</value></data>
+  <data name="K042" xml:space="preserve"><value>可用且兼容</value></data>
+  <data name="K044" xml:space="preserve"><value>吟游诗人 (BRD)</value></data>
+  <data name="K045" xml:space="preserve"><value>战斗NPC</value></data>
+  <data name="K056" xml:space="preserve"><value>清空监视列表</value></data>
+  <data name="K057" xml:space="preserve"><value>已清空监视及保存的目标。</value></data>
+  <data name="K058" xml:space="preserve"><value>命令与窗口</value></data>
+  <data name="K060" xml:space="preserve"><value>搭档陆行鸟</value></data>
+  <data name="K061" xml:space="preserve"><value>搭档陆行鸟</value></data>
+  <data name="K069" xml:space="preserve"><value>已配置的Fren</value></data>
+  <data name="K070" xml:space="preserve"><value>继续</value></data>
+  <data name="K072" xml:space="preserve"><value>复制共享密钥</value></data>
+  <data name="K073" xml:space="preserve"><value>当前职业ID {0}不匹配</value></data>
+  <data name="K075" xml:space="preserve"><value>默认</value></data>
+  <data name="K077" xml:space="preserve"><value>依赖就绪状态</value></data>
+  <data name="K081" xml:space="preserve"><value>已遣返</value></data>
+  <data name="K083" xml:space="preserve"><value>不使用碧玉水传送点</value></data>
+  <data name="K084" xml:space="preserve"><value>仅持续伤害</value></data>
+  <data name="K087" xml:space="preserve"><value>启用{0}</value></data>
+  <data name="K089" xml:space="preserve"><value>已启用、配置且可见</value></data>
+  <data name="K090" xml:space="preserve"><value>连接地址：{0}</value></data>
+  <data name="K092" xml:space="preserve"><value>已装备</value></data>
+  <data name="K093" xml:space="preserve"><value>按名称、类型或职业筛选</value></data>
+  <data name="K094" xml:space="preserve"><value>筛选名称…</value></data>
+  <data name="K097" xml:space="preserve"><value>完成设置</value></data>
+  <data name="K099" xml:space="preserve"><value>向前探测区域的时长</value></data>
+  <data name="K101" xml:space="preserve"><value>Fren可见性</value></data>
+  <data name="K103" xml:space="preserve"><value>FrenRider攻击IPC</value></data>
+  <data name="K104" xml:space="preserve"><value>FrenRider攻击来源</value></data>
+  <data name="K105" xml:space="preserve"><value>FrenRider IPC</value></data>
+  <data name="K009" xml:space="preserve"><value>{0} [{1}] - {2}</value></data>
+  <data name="K019" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="K373" xml:space="preserve"><value>青色</value></data>
+  <data name="K402" xml:space="preserve"><value>未激活</value></data>
+  <data name="K400" xml:space="preserve"><value>受阻：{0}</value></data>
+  <data name="K425" xml:space="preserve"><value>被阻止</value></data>
+  <data name="K415" xml:space="preserve"><value>空闲</value></data>
+  <data name="K376" xml:space="preserve"><value>自定义RGB</value></data>
+  <data name="K375" xml:space="preserve"><value>粉色</value></data>
+  <data name="K586" xml:space="preserve"><value>未知</value></data>
+  <data name="K378" xml:space="preserve"><value>正在加载界面字体...</value></data>
+  <data name="K718" xml:space="preserve"><value>请在“The Dumpster Fire”频道讨论插件问题或建议。</value></data>
+  <data name="K372" xml:space="preserve"><value>颜色</value></data>
+  <data name="K413" xml:space="preserve"><value>否</value></data>
+  <data name="K374" xml:space="preserve"><value>蓝色</value></data>
+  <data name="K713" xml:space="preserve"><value>陆行鸟</value></data>
+  <data name="K412" xml:space="preserve"><value>是</value></data>
+  <data name="K504" xml:space="preserve"><value>忙碌或过场中</value></data>
+  <data name="K389" xml:space="preserve"><value>目标</value></data>
+  <data name="K431" xml:space="preserve"><value>咏唱中</value></data>
+  <data name="K377" xml:space="preserve"><value>紧凑模式</value></data>
+  <data name="K502" xml:space="preserve"><value>区域切换中</value></data>
+  <data name="K379" xml:space="preserve"><value>界面字体加载失败，请查看插件日志。</value></data>
+  <data name="K380" xml:space="preserve"><value>从未</value></data>
+  <data name="K106" xml:space="preserve"><value>友方战斗NPC</value></data>
+  <data name="K107" xml:space="preserve"><value>RSR完整循环</value></data>
+  <data name="K109" xml:space="preserve"><value>生成64位十六进制密钥</value></data>
+  <data name="K110" xml:space="preserve"><value>生成密钥</value></data>
+  <data name="K111" xml:space="preserve"><value>基萨尔野菜（普通+优质）：{0}</value></data>
+  <data name="K112" xml:space="preserve"><value>基萨尔野菜（普通+优质）：无法获取</value></data>
+  <data name="K115" xml:space="preserve"><value>HealBot技能</value></data>
+  <data name="K118" xml:space="preserve"><value>HealBot迷你</value></data>
+  <data name="K119" xml:space="preserve"><value>HealBot可选集成</value></data>
+  <data name="K120" xml:space="preserve"><value>HealBot处理路径</value></data>
+  <data name="K122" xml:space="preserve"><value>HealBot监视</value></data>
+  <data name="K123" xml:space="preserve"><value>治疗技能矩阵</value></data>
+  <data name="K125" xml:space="preserve"><value>治疗技能：{0} | 攻击技能：{1}</value></data>
+  <data name="K126" xml:space="preserve"><value>治疗配置</value></data>
+  <data name="K127" xml:space="preserve"><value>治疗目标情况</value></data>
+  <data name="K128" xml:space="preserve"><value>治疗依赖</value></data>
+  <data name="K129" xml:space="preserve"><value>治疗执行条件</value></data>
+  <data name="K130" xml:space="preserve"><value>治疗就绪状态</value></data>
+  <data name="K132" xml:space="preserve"><value>治疗：{0}</value></data>
+  <data name="K133" xml:space="preserve"><value>助手</value></data>
+  <data name="K134" xml:space="preserve"><value>助手 / 新手配对要求</value></data>
+  <data name="K135" xml:space="preserve"><value>助手地址</value></data>
+  <data name="K136" xml:space="preserve"><value>助手连接地址：{0}:{1}。</value></data>
+  <data name="K137" xml:space="preserve"><value>助手IPv4地址</value></data>
+  <data name="K138" xml:space="preserve"><value>助手监听端口：{0}。</value></data>
+  <data name="K143" xml:space="preserve"><value>被筛选隐藏</value></data>
+  <data name="K144" xml:space="preserve"><value>按住Ctrl清空所有监视和保存的目标。</value></data>
+  <data name="K145" xml:space="preserve"><value>按住Ctrl以取消勾选不在场的目标{0}。</value></data>
+  <data name="K148" xml:space="preserve"><value>生命值不可用</value></data>
+  <data name="K150" xml:space="preserve"><value>生命值：{0}</value></data>
+  <data name="K151" xml:space="preserve"><value>生命值：不可用</value></data>
+  <data name="K152" xml:space="preserve"><value>生命值：目标不可见</value></data>
+  <data name="K155" xml:space="preserve"><value>不兼容</value></data>
+  <data name="K156" xml:space="preserve"><value>无效的IPv4地址</value></data>
+  <data name="K158" xml:space="preserve"><value>JOAT要求</value></data>
+  <data name="K160" xml:space="preserve"><value>JOAT攻击模式</value></data>
+  <data name="K162" xml:space="preserve"><value>JOAT攻击就绪状态</value></data>
+  <data name="K164" xml:space="preserve"><value>JOAT治疗技能矩阵</value></data>
+  <data name="K165" xml:space="preserve"><value>JOAT治疗路径</value></data>
+  <data name="K167" xml:space="preserve"><value>尚未检查JOAT就绪状态。</value></data>
+  <data name="K168" xml:space="preserve"><value>JOAT监视目标</value></data>
+  <data name="K171" xml:space="preserve"><value>已装备职业</value></data>
+  <data name="K172" xml:space="preserve"><value>职业已解锁</value></data>
+  <data name="K176" xml:space="preserve"><value>名称混淆：关闭</value></data>
+  <data name="K177" xml:space="preserve"><value>名称混淆：开启</value></data>
+  <data name="K180" xml:space="preserve"><value>上次技能</value></data>
+  <data name="K181" xml:space="preserve"><value>上次规则</value></data>
+  <data name="K182" xml:space="preserve"><value>在场有效目标（{0}）</value></data>
+  <data name="K185" xml:space="preserve"><value>本地治疗职业：{0}（{1}）</value></data>
+  <data name="K186" xml:space="preserve"><value>本地新手生命值：{0}</value></data>
+  <data name="K187" xml:space="preserve"><value>本地新手身份</value></data>
+  <data name="K188" xml:space="preserve"><value>请完全登录后再启用新手角色</value></data>
+  <data name="K189" xml:space="preserve"><value>视线：{0}</value></data>
+  <data name="K190" xml:space="preserve"><value>视线：目标不可见</value></data>
+  <data name="K191" xml:space="preserve"><value>机工士 (MCH)</value></data>
+  <data name="K192" xml:space="preserve"><value>主界面</value></data>
+  <data name="K193" xml:space="preserve"><value>管理监视目标并扫描盟友。</value></data>
+  <data name="K195" xml:space="preserve"><value>迷你</value></data>
+  <data name="K197" xml:space="preserve"><value>缺失（可选）</value></data>
+  <data name="K199" xml:space="preserve"><value>目标上限：当前{0}个，保存{1}个。</value></data>
+  <data name="K201" xml:space="preserve"><value>要求缺少增益</value></data>
+  <data name="K202" xml:space="preserve"><value>网络设置已保存。</value></data>
+  <data name="K203" xml:space="preserve"><value>已保存网络设置并重启直连一次。</value></data>
+  <data name="K204" xml:space="preserve"><value>新手</value></data>
+  <data name="K210" xml:space="preserve"><value>无活动助手/任务角色</value></data>
+  <data name="K211" xml:space="preserve"><value>无当前监视目标</value></data>
+  <data name="K212" xml:space="preserve"><value>没有符合当前筛选条件的有效目标。</value></data>
+  <data name="K213" xml:space="preserve"><value>尚未选择监视目标。</value></data>
+  <data name="K215" xml:space="preserve"><value>未选择</value></data>
+  <data name="K216" xml:space="preserve"><value>未取得</value></data>
+  <data name="K217" xml:space="preserve"><value>未配置</value></data>
+  <data name="K218" xml:space="preserve"><value>未解锁</value></data>
+  <data name="K220" xml:space="preserve"><value>NPC小队</value></data>
+  <data name="K221" xml:space="preserve"><value>NPC小队成员</value></data>
+  <data name="K114" xml:space="preserve"><value>HealBot {0}</value></data>
+  <data name="K169" xml:space="preserve"><value>JOAT: {0}</value></data>
+  <data name="K226" xml:space="preserve"><value>打开主界面</value></data>
+  <data name="K227" xml:space="preserve"><value>打开迷你窗口</value></data>
+  <data name="K229" xml:space="preserve"><value>打开监视</value></data>
+  <data name="K230" xml:space="preserve"><value>打开监视窗口</value></data>
+  <data name="K231" xml:space="preserve"><value>运行角色</value></data>
+  <data name="K233" xml:space="preserve"><value>运行状态</value></data>
+  <data name="K234" xml:space="preserve"><value>配对端口</value></data>
+  <data name="K235" xml:space="preserve"><value>已配对助手：{0}</value></data>
+  <data name="K236" xml:space="preserve"><value>配对TCP端口</value></data>
+  <data name="K237" xml:space="preserve"><value>配对：{0} - {1}</value></data>
+  <data name="K238" xml:space="preserve"><value>玩家</value></data>
+  <data name="K239" xml:space="preserve"><value>练级支援职业</value></data>
+  <data name="K241" xml:space="preserve"><value>尚未检查练级支援就绪状态。</value></data>
+  <data name="K246" xml:space="preserve"><value>PowerlevelBot处理路径</value></data>
+  <data name="K247" xml:space="preserve"><value>PowerlevelBot要求</value></data>
+  <data name="K248" xml:space="preserve"><value>主要状态</value></data>
+  <data name="K251" xml:space="preserve"><value>服务方：{0}</value></data>
+  <data name="K252" xml:space="preserve"><value>QST正在控制JOAT攻击（{0}）。 </value></data>
+  <data name="K253" xml:space="preserve"><value>QST正在控制召唤（{0}）。 </value></data>
+  <data name="K255" xml:space="preserve"><value>QST移动</value></data>
+  <data name="K259" xml:space="preserve"><value>治疗空闲时就绪</value></data>
+  <data name="K261" xml:space="preserve"><value>刷新就绪状态</value></data>
+  <data name="K263" xml:space="preserve"><value>重新加入扫描范围</value></data>
+  <data name="K264" xml:space="preserve"><value>远程追随：{0}</value></data>
+  <data name="K265" xml:space="preserve"><value>远程治疗：{0}</value></data>
+  <data name="K266" xml:space="preserve"><value>要求 / 帮助</value></data>
+  <data name="K267" xml:space="preserve"><value>要求与帮助</value></data>
+  <data name="K268" xml:space="preserve"><value>视线恢复：{0}</value></data>
+  <data name="K269" xml:space="preserve"><value>视线恢复：未启用</value></data>
+  <data name="K270" xml:space="preserve"><value>受限敌人选择</value></data>
+  <data name="K271" xml:space="preserve"><value>保留 - 不在场</value></data>
+  <data name="K272" xml:space="preserve"><value>保留或不在场的目标（{0}）</value></data>
+  <data name="K273" xml:space="preserve"><value>检查并完成</value></data>
+  <data name="K274" xml:space="preserve"><value>角色网络</value></data>
+  <data name="K275" xml:space="preserve"><value>角色：{0}</value></data>
+  <data name="K278" xml:space="preserve"><value>RSR控制</value></data>
+  <data name="K282" xml:space="preserve"><value>运行快速设置</value></data>
+  <data name="K285" xml:space="preserve"><value>贤者 (SGE)</value></data>
+  <data name="K286" xml:space="preserve"><value>保存明确勾选的治疗目标</value></data>
+  <data name="K287" xml:space="preserve"><value>保存治疗目标</value></data>
+  <data name="K289" xml:space="preserve"><value>保存设置并保持角色关闭</value></data>
+  <data name="K291" xml:space="preserve"><value>已保存目标扫描范围</value></data>
+  <data name="K293" xml:space="preserve"><value>目标保存已关闭。</value></data>
+  <data name="K294" xml:space="preserve"><value>目标保存开启；在{0}星码内重新加入。</value></data>
+  <data name="K295" xml:space="preserve"><value>扫描范围（星码）</value></data>
+  <data name="K296" xml:space="preserve"><value>学者 (SCH)</value></data>
+  <data name="K297" xml:space="preserve"><value>选择BRD或MCH</value></data>
+  <data name="K299" xml:space="preserve"><value>选择助手或新手以编辑直连设置。</value></data>
+  <data name="K301" xml:space="preserve"><value>已选择 - 远程</value></data>
+  <data name="K302" xml:space="preserve"><value>所选职业</value></data>
+  <data name="K305" xml:space="preserve"><value>设置助手</value></data>
+  <data name="K306" xml:space="preserve"><value>设置新手</value></data>
+  <data name="K307" xml:space="preserve"><value>设置独立运行</value></data>
+  <data name="K310" xml:space="preserve"><value>显示依赖通知</value></data>
+  <data name="K312" xml:space="preserve"><value>选择QST传送目的地时跳过碧玉水。</value></data>
+  <data name="K313" xml:space="preserve"><value>独立运行</value></data>
+  <data name="K314" xml:space="preserve"><value>独立运行动作</value></data>
+  <data name="K315" xml:space="preserve"><value>独立HealBot要求</value></data>
+  <data name="K318" xml:space="preserve"><value>立即启动此角色</value></data>
+  <data name="K320" xml:space="preserve"><value>状态与动作</value></data>
+  <data name="K321" xml:space="preserve"><value>状态面板</value></data>
+  <data name="K324" xml:space="preserve"><value>召唤搭档陆行鸟</value></data>
+  <data name="K327" xml:space="preserve"><value>支持的治疗职业</value></data>
+  <data name="K328" xml:space="preserve"><value>添加当前目标</value></data>
+  <data name="K329" xml:space="preserve"><value>目标发现与保存</value></data>
+  <data name="K330" xml:space="preserve"><value>目标不可见</value></data>
+  <data name="K331" xml:space="preserve"><value>TCP端口</value></data>
+  <data name="K342" xml:space="preserve"><value>过短</value></data>
+  <data name="K345" xml:space="preserve"><value>移动：{0}</value></data>
+  <data name="K349" xml:space="preserve"><value>已解锁</value></data>
+  <data name="K351" xml:space="preserve"><value>使用1024–65535</value></data>
+  <data name="K354" xml:space="preserve"><value>有效</value></data>
+  <data name="K355" xml:space="preserve"><value>有效IPv4</value></data>
+  <data name="K357" xml:space="preserve"><value>可见 - HealBot原生目标</value></data>
+  <data name="K358" xml:space="preserve"><value>明文共享密钥</value></data>
+  <data name="K360" xml:space="preserve"><value>监视</value></data>
+  <data name="K361" xml:space="preserve"><value>监视筛选</value></data>
+  <data name="K362" xml:space="preserve"><value>监视中</value></data>
+  <data name="K363" xml:space="preserve"><value>监视的新手</value></data>
+  <data name="K364" xml:space="preserve"><value>监视的任务角色</value></data>
+  <data name="K365" xml:space="preserve"><value>监视目标</value></data>
+  <data name="K367" xml:space="preserve"><value>监视目标</value></data>
+  <data name="K369" xml:space="preserve"><value>白魔法师 (WHM)</value></data>
+  <data name="K381" xml:space="preserve"><value>读条GCD</value></data>
+  <data name="K382" xml:space="preserve"><value>瞬发oGCD</value></data>
+  <data name="K383" xml:space="preserve"><value>读条增益</value></data>
+  <data name="K384" xml:space="preserve"><value>瞬发增益</value></data>
+  <data name="K385" xml:space="preserve"><value>生命值低于</value></data>
+  <data name="K386" xml:space="preserve"><value>战斗不能目标</value></data>
+  <data name="K387" xml:space="preserve"><value>缺少增益</value></data>
+  <data name="K388" xml:space="preserve"><value>始终</value></data>
+  <data name="K390" xml:space="preserve"><value>玩家</value></data>
+  <data name="K391" xml:space="preserve"><value>小队NPC</value></data>
+  <data name="K392" xml:space="preserve"><value>友方NPC</value></data>
+  <data name="K723" xml:space="preserve"><value>已配对助手</value></data>
+  <data name="K724" xml:space="preserve"><value>视线</value></data>
+  <data name="K725" xml:space="preserve"><value>视线恢复</value></data>
+  <data name="K232" xml:space="preserve"><value>运行角色：{0}</value></data>
+  <data name="K240" xml:space="preserve"><value>练级支援职业：{0}。</value></data>
+  <data name="K249" xml:space="preserve"><value>主要状态：{0}</value></data>
+  <data name="K303" xml:space="preserve"><value>所选职业：{0}</value></data>
+  <data name="K366" xml:space="preserve"><value>监视目标：{0}</value></data>
+  <data name="K014" xml:space="preserve"><value>{0}个保留/保存目标被隐藏或不在场。请在监视窗口管理。</value></data>
+  <data name="K021" xml:space="preserve"><value>已配置且可见的Fren，未召唤搭档陆行鸟。</value></data>
+  <data name="K022" xml:space="preserve"><value>当前已装备且解锁的BRD或MCH。</value></data>
+  <data name="K023" xml:space="preserve"><value>按住Ctrl取消勾选不在场的目标，同时删除其保存记录。</value></data>
+  <data name="K030" xml:space="preserve"><value>存活：瞬发增益 → 瞬发oGCD → 读条增益 → 读条GCD。复活前先检查瞬发增益。</value></data>
+  <data name="K038" xml:space="preserve"><value>认证直连使用明文显示的共享密钥。</value></data>
+  <data name="K039" xml:space="preserve"><value>局域网通信经过认证但未加密，角色名称和坐标仍在网络中可见。</value></data>
+  <data name="K047" xml:space="preserve"><value>两者均使用RSR手动选敌。仅持续伤害只启用当前治疗职业的DoT；完整循环恢复已记录的攻击和范围设置，不启用自动选敌。</value></data>
+  <data name="K048" xml:space="preserve"><value>两者均使用RSR手动选敌。完整循环仅更改攻击和范围设置。</value></data>
+  <data name="K049" xml:space="preserve"><value>两端须支持兼容的直连v2协议，并使用相同端口和共享密钥。</value></data>
+  <data name="K051" xml:space="preserve"><value>对监视中的友方目标使用已配置的治疗技能。</value></data>
+  <data name="K053" xml:space="preserve"><value>选择运行角色，独立运行再选择动作。完成前保持为草稿，取消会丢弃草稿。</value></data>
+  <data name="K054" xml:space="preserve"><value>选择当前已装备的远程职业。此模式不会切换装备套装，也不使用监视列表。</value></data>
+  <data name="K055" xml:space="preserve"><value>选择监视中显示的友方对象。仅治疗或保存明确勾选的目标。</value></data>
+  <data name="K063" xml:space="preserve"><value>兼容的FrenRider练级IPC、已启用的FrenRider及可见的已配置Fren。</value></data>
+  <data name="K064" xml:space="preserve"><value>兼容的FrenRider练级IPC及已启用的FrenRider。</value></data>
+  <data name="K065" xml:space="preserve"><value>配置一个认证的TCP直连HealBot地址。新手不会在本地治疗或攻击。</value></data>
+  <data name="K066" xml:space="preserve"><value>配置认证监听端口和明文显示的共享密钥。</value></data>
+  <data name="K067" xml:space="preserve"><value>不使用网络，配置HealBot、JOAT或PowerlevelBot动作。</value></data>
+  <data name="K091" xml:space="preserve"><value>仅选择已受伤且正在攻击Fren或本地玩家的敌人。</value></data>
+  <data name="K095" xml:space="preserve"><value>筛选：玩家{0}、陆行鸟{1}、NPC小队{2}、友方战斗NPC{3}。</value></data>
+  <data name="K096" xml:space="preserve"><value>完成时立即启动角色，或保持关闭并保存为/healbot on的恢复角色。</value></data>
+  <data name="K116" xml:space="preserve"><value>HealBot和JOAT共享各职业的治疗矩阵。PowerlevelBot不使用这些规则。</value></data>
+  <data name="K117" xml:space="preserve"><value>HealBot用WHM/SCH/AST/SGE矩阵处理最多{0}个监视目标，可包括小队外的友方玩家。</value></data>
+  <data name="K121" xml:space="preserve"><value>支持/healbot、/hb、/copellia，子命令为off、on、standalone、helper、newb、heal、joat（或jot）、powerlevel、mini、status、config、watch、ws、j。</value></data>
+  <data name="K131" xml:space="preserve"><value>每900毫秒的判断优先治疗。Coppelia在监视规则执行前停止RSR，治疗排队、受阻或读条时保持停止。仅在治疗完全空闲时使用RSR手动模式；配对JOAT在30星码以内等待，由Coppelia选择交战中的敌人。</value></data>
+  <data name="K139" xml:space="preserve"><value>助手监听一个已认证的新手，在兼容的状态请求后才激活JOAT。</value></data>
+  <data name="K140" xml:space="preserve"><value>助手需要有效TCP端口和明文共享密钥；新手还需要助手的IPv4地址。</value></data>
+  <data name="K141" xml:space="preserve"><value>助手需要HealBot/JOAT依赖，以及用于配对移动的Lifestream和vnavmesh。</value></data>
+  <data name="K142" xml:space="preserve"><value>助手设置监听端口和共享密钥；新手另需设置助手IPv4地址。</value></data>
+  <data name="K146" xml:space="preserve"><value>新手/任务角色不经传送切换区域时，助手向前移动的时长。</value></data>
+  <data name="K161" xml:space="preserve"><value>JOAT攻击模式：{0}；两者均仅在治疗完全空闲时使用RSR手动选敌。</value></data>
+  <data name="K163" xml:space="preserve"><value>JOAT不会自动加入Fren。如果Fren是需要治疗保护的低级目标，请在监视中明确勾选。</value></data>
+  <data name="K166" xml:space="preserve"><value>请在监视中明确选择需要治疗的Fren，JOAT不会自动加入。攻击仅限正在攻击可见Fren或本地治疗者的敌人。</value></data>
+  <data name="K178" xml:space="preserve"><value>局域网通信经过认证但未加密，名称和坐标仍可见。连接、认证、分配和重连均异步进行。</value></data>
+  <data name="K184" xml:space="preserve"><value>需要已加载且正常工作的Rotation Solver Reborn，JOAT伤害仅通过RSR执行。</value></data>
+  <data name="K194" xml:space="preserve"><value>仅在监视窗口管理目标。按Ctrl清空会移除当前和保存的目标。</value></data>
+  <data name="K205" xml:space="preserve"><value>新手异步连接到一个明确的助手IPv4地址，不在本地治疗或攻击。</value></data>
+  <data name="K206" xml:space="preserve"><value>新手不在本地治疗或攻击，并保持独立运行监视列表不变。</value></data>
+  <data name="K207" xml:space="preserve"><value>新手不在本地治疗或攻击，监视列表保留供之后的HealBot或JOAT使用。</value></data>
+  <data name="K224" xml:space="preserve"><value>仅符合已受伤且正在攻击可见Fren或本地玩家的敌人。</value></data>
+  <data name="K228" xml:space="preserve"><value>现在打开监视窗口。草稿筛选仅在完成后生效。</value></data>
+  <data name="K243" xml:space="preserve"><value>PowerlevelBot仅选择存活、可选中、已受伤且正在攻击可见配置Fren或本地玩家的敌人。使用BRD/MCH瞬发敌对单体技能，不引未受伤的敌人。</value></data>
+  <data name="K244" xml:space="preserve"><value>PowerlevelBot忽略HealBot监视列表，以FrenRider配置的Fren为领队。</value></data>
+  <data name="K245" xml:space="preserve"><value>PowerlevelBot不会切换装备套装，当前职业必须与所选职业一致。</value></data>
+  <data name="K254" xml:space="preserve"><value>QST正在控制攻击模式，释放后恢复已保存的本地选择。</value></data>
+  <data name="K257" xml:space="preserve"><value>快速设置已完成，可随时从此标签页重新运行。</value></data>
+  <data name="K262" xml:space="preserve"><value>每个HealBot版本更新一次LootGoblin社区地图位置，以选择最近的传送点。</value></data>
+  <data name="K279" xml:space="preserve"><value>JOAT伤害必须且仅由RSR执行。Coppelia直接治疗监视目标，并负责RSR停止及治疗空闲后的恢复。</value></data>
+  <data name="K280" xml:space="preserve"><value>加载RSR时使用隔离和精确会话恢复，HealBot仍直接执行治疗。</value></data>
+  <data name="K281" xml:space="preserve"><value>引导设置独立运行、助手或新手，完成前不作更改。</value></data>
+  <data name="K284" xml:space="preserve"><value>优先治疗监视目标，仅在治疗完全空闲时允许RSR攻击。</value></data>
+  <data name="K288" xml:space="preserve"><value>仅保存明确勾选的目标，取消勾选也会删除保存记录。</value></data>
+  <data name="K292" xml:space="preserve"><value>扫描范围仅影响返回的已保存目标重新加入，不发现新目标。</value></data>
+  <data name="K298" xml:space="preserve"><value>请明确选择要治疗的低级Fren，JOAT不会自动将其加入列表。</value></data>
+  <data name="K316" xml:space="preserve"><value>独立运行无需网络执行HealBot、JOAT或PowerlevelBot。助手监听一位已认证的新手并远程激活JOAT。新手异步连接，不在本地治疗或攻击。</value></data>
+  <data name="K317" xml:space="preserve"><value>独立运行无需网络执行HealBot、JOAT或PowerlevelBot。助手监听一位已认证的新手；新手异步连接，不在本地治疗或攻击。</value></data>
+  <data name="K333" xml:space="preserve"><value>此临时精确目标由QST或新手会话独占管理。保存的目标不变，释放后恢复。</value></data>
+  <data name="K334" xml:space="preserve"><value>Fren不会自动加入监视；如果是低级治疗目标，请明确选择。</value></data>
+  <data name="K335" xml:space="preserve"><value>需要HealBot依赖、已装备的支持治疗职业、启用的技能矩阵以及明确勾选的目标。</value></data>
+  <data name="K336" xml:space="preserve"><value>释放后恢复已保存的本地选择。</value></data>
+  <data name="K337" xml:space="preserve"><value>释放后恢复已保存的本地设置。</value></data>
+  <data name="K338" xml:space="preserve"><value>范围仅让返回的保存目标重新加入，绝不发现或自动选择新目标。</value></data>
+  <data name="K339" xml:space="preserve"><value>这些设置立即生效。快速设置使用独立草稿，完成前不更改配置。</value></data>
+  <data name="K340" xml:space="preserve"><value>这些筛选控制HealBot/JOAT监视窗口中的友方对象。</value></data>
+  <data name="K325" xml:space="preserve"><value>召唤搭档陆行鸟 (基萨尔野菜：{0})</value></data>
+  <data name="K326" xml:space="preserve"><value>召唤搭档陆行鸟 (基萨尔野菜：无法获取)</value></data>
+  <data name="K341" xml:space="preserve"><value>本地选择用于独立JOAT并在QST释放后恢复。两者均使用RSR手动选敌；完整循环只更改记录的攻击和范围设置，不更改选敌。</value></data>
+  <data name="K344" xml:space="preserve"><value>通信经过认证但未加密，名称和坐标仍在网络中可见。</value></data>
+  <data name="K350" xml:space="preserve"><value>取消勾选或按Ctrl清空也会删除保存目标。扫描范围仅影响保存目标返回后的重新加入。</value></data>
+  <data name="K352" xml:space="preserve"><value>在监视窗口添加或移除目标。仅保存明确保留监视的目标。</value></data>
+  <data name="K353" xml:space="preserve"><value>对正在与Fren或本地玩家交战的敌人使用BRD/MCH瞬发远程单体技能。</value></data>
+  <data name="K368" xml:space="preserve"><value>监视{0}/{1}个当前目标。保存目标：{2}。</value></data>
+  <data name="K370" xml:space="preserve"><value>QST释放后恢复已保存的本地选择。</value></data>
+  <data name="K371" xml:space="preserve"><value>QST释放后恢复已保存的本地设置。</value></data>
+  <data name="K393" xml:space="preserve"><value>助手运行中（由QST控制）</value></data>
+  <data name="K394" xml:space="preserve"><value>请通过QST释放或停用此服务方会话。</value></data>
+  <data name="K395" xml:space="preserve"><value>使用/healbot on恢复{0}。</value></data>
+  <data name="K397" xml:space="preserve"><value>解决主要状态中显示的阻碍。</value></data>
+  <data name="K398" xml:space="preserve"><value>无需操作。</value></data>
+  <data name="K399" xml:space="preserve"><value>请解决：{0}</value></data>
+  <data name="K401" xml:space="preserve"><value>暂停：{0}</value></data>
+  <data name="K403" xml:space="preserve"><value>视线不可用</value></data>
+  <data name="K404" xml:space="preserve"><value>视线通畅</value></data>
+  <data name="K405" xml:space="preserve"><value>视线受阻</value></data>
+  <data name="K406" xml:space="preserve"><value>HealBot运输期间暂停视线恢复移动</value></data>
+  <data name="K407" xml:space="preserve"><value>视线受阻；靠近至1星码</value></data>
+  <data name="K408" xml:space="preserve"><value>视线受阻；等待当前移动控制方</value></data>
+  <data name="K409" xml:space="preserve"><value>QST控制当前模式（{0}）；释放后恢复保存的本地选择。</value></data>
+  <data name="K410" xml:space="preserve"><value>QST控制召唤（{0}）；释放后恢复保存的本地设置。</value></data>
+  <data name="K411" xml:space="preserve"><value>此会话专用精确目标在自动化中覆盖已保存监视目标，但不修改或保存它们。</value></data>
+  <data name="K396" xml:space="preserve"><value>治疗：{0} 攻击：{1}</value></data>
+  <data name="K414" xml:space="preserve"><value>HealBot模式已关闭。</value></data>
+  <data name="K416" xml:space="preserve"><value>无匹配规则。</value></data>
+  <data name="K417" xml:space="preserve"><value>正在卸载插件。</value></data>
+  <data name="K418" xml:space="preserve"><value>HealBot仅支持WHM、SCH、AST和SGE。</value></data>
+  <data name="K419" xml:space="preserve"><value>HealRider运输期间暂停技能。</value></data>
+  <data name="K420" xml:space="preserve"><value>移动</value></data>
+  <data name="K421" xml:space="preserve"><value>HealRider控制移动。</value></data>
+  <data name="K422" xml:space="preserve"><value>切换区域期间暂停。</value></data>
+  <data name="K423" xml:space="preserve"><value>正在切换区域。</value></data>
+  <data name="K424" xml:space="preserve"><value>插件已停用。</value></data>
+  <data name="K426" xml:space="preserve"><value>缺少依赖。</value></data>
+  <data name="K427" xml:space="preserve"><value>不支持本地职业。</value></data>
+  <data name="K428" xml:space="preserve"><value>助手骑乘或正在上坐骑时暂停配对治疗。</value></data>
+  <data name="K429" xml:space="preserve"><value>配对助手正在骑乘或上坐骑。</value></data>
+  <data name="K430" xml:space="preserve"><value>技能{0}读条期间暂停。</value></data>
+  <data name="K432" xml:space="preserve"><value>等待当前读条结束。</value></data>
+  <data name="K433" xml:space="preserve"><value>{0}的HealBot矩阵已准备。JOAT攻击需要RSR。</value></data>
+  <data name="K434" xml:space="preserve"><value>{0}的HealBot矩阵已准备。RSR隔离不可用。</value></data>
+  <data name="K435" xml:space="preserve"><value>{0}的HealBot矩阵已准备。RSR JOAT控制已启用。</value></data>
+  <data name="K436" xml:space="preserve"><value>{0}的HealBot矩阵已准备。RSR隔离已启用。</value></data>
+  <data name="K437" xml:space="preserve"><value>{0}的HealBot矩阵已准备。RSR控制失败；JOAT攻击受阻，直接治疗仍运行。</value></data>
+  <data name="K438" xml:space="preserve"><value>{0}的HealBot矩阵已准备。RSR隔离失败，直接治疗仍运行。</value></data>
+  <data name="K439" xml:space="preserve"><value>没有当前监视目标。</value></data>
+  <data name="K440" xml:space="preserve"><value>无监视目标。</value></data>
+  <data name="K441" xml:space="preserve"><value>HealBot设置中已关闭{0}自动化。</value></data>
+  <data name="K442" xml:space="preserve"><value>{0}标签页已停用。</value></data>
+  <data name="K443" xml:space="preserve"><value>{0}目标{1}已选择，但在远程。</value></data>
+  <data name="K444" xml:space="preserve"><value>监视{0}个目标，当前没有可用的在场目标。</value></data>
+  <data name="K445" xml:space="preserve"><value>精确的{0}目标位于远程。</value></data>
+  <data name="K446" xml:space="preserve"><value>无在场监视目标。</value></data>
+  <data name="K447" xml:space="preserve"><value>移动</value></data>
+  <data name="K448" xml:space="preserve"><value>{0} - 视线受阻。</value></data>
+  <data name="K449" xml:space="preserve"><value>监视{0}个目标。{1}</value></data>
+  <data name="K451" xml:space="preserve"><value>监视{0}个目标，没有启用的死亡目标规则可用于{1}。</value></data>
+  <data name="K452" xml:space="preserve"><value>{0} - 无匹配的死亡目标规则。</value></data>
+  <data name="K453" xml:space="preserve"><value>监视{0}个目标，最低生命值目标{1}为{2}%。</value></data>
+  <data name="K454" xml:space="preserve"><value>{0} - 无匹配的存活目标规则。</value></data>
+  <data name="K456" xml:space="preserve"><value>已为{1}预约复活准备技能{0}。</value></data>
+  <data name="K457" xml:space="preserve"><value>已为{1}预约{0}。</value></data>
+  <data name="K458" xml:space="preserve"><value>监视{1}（生命值{2}%）时已预约{0}。</value></data>
+  <data name="K459" xml:space="preserve"><value>已为{1}（生命值{2}%）预约{0}。</value></data>
+  <data name="K450" xml:space="preserve"><value>{0} - {1}</value></data>
+  <data name="K455" xml:space="preserve"><value>{0}: {1} [{2}]</value></data>
+  <data name="K460" xml:space="preserve"><value>JOAT攻击已关闭。</value></data>
+  <data name="K461" xml:space="preserve"><value>等待无需治疗的判断。</value></data>
+  <data name="K462" xml:space="preserve"><value>JOAT攻击等待治疗空闲。</value></data>
+  <data name="K463" xml:space="preserve"><value>FrenRider控制权心跳失败。</value></data>
+  <data name="K464" xml:space="preserve"><value>暂停：治疗已预约{0}。</value></data>
+  <data name="K465" xml:space="preserve"><value>暂停</value></data>
+  <data name="K466" xml:space="preserve"><value>本轮判断优先治疗。</value></data>
+  <data name="K467" xml:space="preserve"><value>暂停：当前读条阻止攻击。{0}</value></data>
+  <data name="K468" xml:space="preserve"><value>暂停：治疗受阻。{0}</value></data>
+  <data name="K469" xml:space="preserve"><value>当前读条阻止本轮攻击。</value></data>
+  <data name="K470" xml:space="preserve"><value>匹配的治疗技能受阻。</value></data>
+  <data name="K471" xml:space="preserve"><value>受阻：治疗未就绪。{0}</value></data>
+  <data name="K472" xml:space="preserve"><value>治疗依赖、配置或监视目标不可用。</value></data>
+  <data name="K473" xml:space="preserve"><value>受阻：RSR控制未启用，JOAT无法攻击。</value></data>
+  <data name="K474" xml:space="preserve"><value>Rotation Solver Reborn控制失败。</value></data>
+  <data name="K475" xml:space="preserve"><value>暂停：{0}。</value></data>
+  <data name="K476" xml:space="preserve"><value>FrenRider IPC不可用。</value></data>
+  <data name="K477" xml:space="preserve"><value>FrenRider攻击条件检查失败。</value></data>
+  <data name="K478" xml:space="preserve"><value>FrenRider控制权获取失败。</value></data>
+  <data name="K479" xml:space="preserve"><value>受阻：本地治疗者不可用。</value></data>
+  <data name="K480" xml:space="preserve"><value>本地治疗者不可用。</value></data>
+  <data name="K481" xml:space="preserve"><value>支持的本地治疗职业不可用。</value></data>
+  <data name="K482" xml:space="preserve"><value>空闲：精确配对目标已选择，但位于远程。</value></data>
+  <data name="K483" xml:space="preserve"><value>精确配对目标位于远程。</value></data>
+  <data name="K484" xml:space="preserve"><value>暂停：精确配对目标距离{0:0.0}星码。</value></data>
+  <data name="K485" xml:space="preserve"><value>精确配对目标超过30星码。</value></data>
+  <data name="K486" xml:space="preserve"><value>RSR手动模式失败。</value></data>
+  <data name="K487" xml:space="preserve"><value>受阻：RSR拒绝配对JOAT分配的手动模式。</value></data>
+  <data name="K488" xml:space="preserve"><value>RSR手动</value></data>
+  <data name="K489" xml:space="preserve"><value>等待与友方配对目标交战的敌人。</value></data>
+  <data name="K490" xml:space="preserve"><value>RSR手动（{0}）等待中，配对范围内没有符合条件的交战敌人。</value></data>
+  <data name="K491" xml:space="preserve"><value>所选配对敌人已消失。</value></data>
+  <data name="K492" xml:space="preserve"><value>RSR手动（{0}）等待中，所选敌人已消失。</value></data>
+  <data name="K493" xml:space="preserve"><value>配对目标</value></data>
+  <data name="K494" xml:space="preserve"><value>攻击配对角色/治疗者</value></data>
+  <data name="K495" xml:space="preserve"><value>RSR手动（{0}）针对{1}，生命值{2:P0}。</value></data>
+  <data name="K496" xml:space="preserve"><value>空闲：治疗已空闲，但没有正在攻击Fren或本地治疗者的受伤敌人。</value></data>
+  <data name="K497" xml:space="preserve"><value>无有效已交战敌人。</value></data>
+  <data name="K498" xml:space="preserve"><value>空闲：所选敌人已消失。</value></data>
+  <data name="K499" xml:space="preserve"><value>目标已消失。</value></data>
+  <data name="K500" xml:space="preserve"><value>{0} - RSR手动模式失败</value></data>
+  <data name="K501" xml:space="preserve"><value>受阻：RSR拒绝{0}的手动模式。</value></data>
+  <data name="K503" xml:space="preserve"><value>骑乘或正在上坐骑</value></data>
+  <data name="K505" xml:space="preserve"><value>正在读条技能{0}</value></data>
+  <data name="K506" xml:space="preserve"><value>缺少必需的治疗依赖。</value></data>
+  <data name="K507" xml:space="preserve"><value>已装备治疗职业的矩阵已关闭。</value></data>
+  <data name="K508" xml:space="preserve"><value>在监视中至少选择一个目标，或等待QST分配。</value></data>
+  <data name="K509" xml:space="preserve"><value>JOAT治疗已就绪。</value></data>
+  <data name="K510" xml:space="preserve"><value>攻击等待治疗就绪：{0}</value></data>
+  <data name="K511" xml:space="preserve"><value>JOAT攻击需要加载RSR。</value></data>
+  <data name="K512" xml:space="preserve"><value>Coppelia无法取得正常运行的RSR控制。</value></data>
+  <data name="K513" xml:space="preserve"><value>治疗空闲时JOAT攻击就绪。</value></data>
+  <data name="K514" xml:space="preserve"><value>精确QST目标已选择，但位于远程。</value></data>
+  <data name="K515" xml:space="preserve"><value>必须启用FrenRider。</value></data>
+  <data name="K516" xml:space="preserve"><value>FrenRider必须配置Fren。</value></data>
+  <data name="K517" xml:space="preserve"><value>已配置的Fren必须可见。</value></data>
+  <data name="K518" xml:space="preserve"><value>PowerlevelBot模式已关闭。</value></data>
+  <data name="K519" xml:space="preserve"><value>未选择目标。</value></data>
+  <data name="K520" xml:space="preserve"><value>正在准备PowerlevelBot。</value></data>
+  <data name="K521" xml:space="preserve"><value>练级支援条件检查失败。</value></data>
+  <data name="K522" xml:space="preserve"><value>本地玩家不可用。</value></data>
+  <data name="K523" xml:space="preserve"><value>无本地玩家。</value></data>
+  <data name="K524" xml:space="preserve"><value>没有正在攻击Fren或本地玩家的受伤敌人。</value></data>
+  <data name="K525" xml:space="preserve"><value>无有效目标。</value></data>
+  <data name="K526" xml:space="preserve"><value>所选目标已消失。</value></data>
+  <data name="K527" xml:space="preserve"><value>已对{1}（生命值{2:P0}）预约{0}。</value></data>
+  <data name="K528" xml:space="preserve"><value>目标{0}受阻：{1}</value></data>
+  <data name="K529" xml:space="preserve"><value>Helper监听而不主动连接。</value></data>
+  <data name="K530" xml:space="preserve"><value>Newb主动连接而不监听。</value></data>
+  <data name="K531" xml:space="preserve"><value>运行角色已关闭。</value></data>
+  <data name="K532" xml:space="preserve"><value>独立模式不使用直接配对。</value></data>
+  <data name="K533" xml:space="preserve"><value>本地Newb身份不可用。请完成登录后再启动Newb角色。</value></data>
+  <data name="K534" xml:space="preserve"><value>请输入一个有效的Helper IPv4地址。</value></data>
+  <data name="K535" xml:space="preserve"><value>配对设置已保存；正在重启。</value></data>
+  <data name="K536" xml:space="preserve"><value>需要HealBot direct pairing v2。请在配对前更新旧版对端。</value></data>
+  <data name="K537" xml:space="preserve"><value>本地HealBot身份不可用。</value></data>
+  <data name="K538" xml:space="preserve"><value>HealBot已有活动的QST分配。</value></data>
+  <data name="K539" xml:space="preserve"><value>已配对</value></data>
+  <data name="K540" xml:space="preserve"><value>监听中</value></data>
+  <data name="K541" xml:space="preserve"><value>配对命令载荷无效。</value></data>
+  <data name="K542" xml:space="preserve"><value>命令未指定此HealBot的确切名称和所属世界。</value></data>
+  <data name="K543" xml:space="preserve"><value>Newb已释放分配。</value></data>
+  <data name="K544" xml:space="preserve"><value>未知的Newb配对操作。</value></data>
+  <data name="K545" xml:space="preserve"><value>HealBot正在卸载。</value></data>
+  <data name="K546" xml:space="preserve"><value>TCP {0}</value></data>
+  <data name="K547" xml:space="preserve"><value>正在重启HealBot监听器。</value></data>
+  <data name="K548" xml:space="preserve"><value>已连接</value></data>
+  <data name="K549" xml:space="preserve"><value>等待已认证的分配。</value></data>
+  <data name="K550" xml:space="preserve"><value>使用此端口和共享密钥启动Newb。</value></data>
+  <data name="K551" xml:space="preserve"><value>等待监听器启动。</value></data>
+  <data name="K552" xml:space="preserve"><value>等待已认证的Newb状态</value></data>
+  <data name="K553" xml:space="preserve"><value>JOAT提供方已启用</value></data>
+  <data name="K554" xml:space="preserve"><value>远程提供方不可用</value></data>
+  <data name="K555" xml:space="preserve"><value>远程JOAT不可用</value></data>
+  <data name="K556" xml:space="preserve"><value>远程移动不可用</value></data>
+  <data name="K557" xml:space="preserve"><value>正在重启Newb连接。</value></data>
+  <data name="K558" xml:space="preserve"><value>认证中</value></data>
+  <data name="K559" xml:space="preserve"><value>连接中</value></data>
+  <data name="K560" xml:space="preserve"><value>等待分配确认。</value></data>
+  <data name="K561" xml:space="preserve"><value>等待新的已认证状态和分配。</value></data>
+  <data name="K562" xml:space="preserve"><value>等待异步连接或重连。</value></data>
+  <data name="K563" xml:space="preserve"><value>等待远程提供方状态</value></data>
+  <data name="K564" xml:space="preserve"><value>远程提供方已就绪</value></data>
+  <data name="K565" xml:space="preserve"><value>等待远程JOAT状态</value></data>
+  <data name="K566" xml:space="preserve"><value>等待远程移动状态</value></data>
+  <data name="K567" xml:space="preserve"><value>请将旧版对端更新为兼容的HealBot direct pairing v2版本。</value></data>
+  <data name="K568" xml:space="preserve"><value>在设置中为Helper和Newb输入相同的共享密钥。</value></data>
+  <data name="K569" xml:space="preserve"><value>本地Newb身份不可用。</value></data>
+  <data name="K570" xml:space="preserve"><value>已配对HealBot的连接或已认证状态已丢失。</value></data>
+  <data name="K571" xml:space="preserve"><value>配置的连接端点或HealBot身份已更改。</value></data>
+  <data name="K572" xml:space="preserve"><value>已配对HealBot仍报告已释放的会话{0}。</value></data>
+  <data name="K573" xml:space="preserve"><value>已配对HealBot有活动的QST分配。</value></data>
+  <data name="K574" xml:space="preserve"><value>已配对HealBot属于另一个Newb会话。</value></data>
+  <data name="K575" xml:space="preserve"><value>已配对HealBot报告此Newb的过期会话。</value></data>
+  <data name="K576" xml:space="preserve"><value>已配对HealBot尚未就绪。</value></data>
+  <data name="K577" xml:space="preserve"><value>已配对HealBot报告Newb会话缺失或不匹配。</value></data>
+  <data name="K578" xml:space="preserve"><value>等待已配对HealBot确认确切的Newb会话。</value></data>
+  <data name="K579" xml:space="preserve"><value>已配对HealBot拒绝了Newb分配。</value></data>
+  <data name="K580" xml:space="preserve"><value>已配对HealBot拒绝了{0}。</value></data>
+  <data name="K581" xml:space="preserve"><value>已配对HealBot未接受活动会话的{0}。</value></data>
+  <data name="K582" xml:space="preserve"><value>已配对HealBot未确认释放其过期会话。</value></data>
+  <data name="K583" xml:space="preserve"><value>选择Helper或Newb以使用直接配对。</value></data>
+  <data name="K584" xml:space="preserve"><value>TCP端口{0}已被占用。</value></data>
+  <data name="K585" xml:space="preserve"><value>无法启动配对监听器：{0}</value></data>
+  <data name="K587" xml:space="preserve"><value>配对封包格式错误。</value></data>
+  <data name="K588" xml:space="preserve"><value>已配对Newb的连接已丢失。</value></data>
+  <data name="K589" xml:space="preserve"><value>HealBot配对监听器正在停止。</value></data>
+  <data name="K590" xml:space="preserve"><value>配对消息类型与其命令不匹配。</value></data>
+  <data name="K591" xml:space="preserve"><value>此连接已持有另一个Newb会话。</value></data>
+  <data name="K592" xml:space="preserve"><value>Newb会话已属于另一个活动连接。</value></data>
+  <data name="K593" xml:space="preserve"><value>此连接未持有活动的Newb会话。</value></data>
+  <data name="K594" xml:space="preserve"><value>Newb会话仍属于另一个活动连接。</value></data>
+  <data name="K595" xml:space="preserve"><value>已断开</value></data>
+  <data name="K596" xml:space="preserve"><value>已配对HealBot未连接。</value></data>
+  <data name="K597" xml:space="preserve"><value>已配对HealBot未确认命令。</value></data>
+  <data name="K598" xml:space="preserve"><value>已配对连接已关闭。</value></data>
+  <data name="K599" xml:space="preserve"><value>需要HealBot direct pairing v2。请在配对前更新旧版Helper。</value></data>
+  <data name="K600" xml:space="preserve"><value>已连接；等待中</value></data>
+  <data name="K601" xml:space="preserve"><value>已配对HealBot未返回对应的已认证状态。请检查共享密钥和协议。</value></data>
+  <data name="K602" xml:space="preserve"><value>配对监控失败：{0}</value></data>
+  <data name="K603" xml:space="preserve"><value>已连接；等待已认证的HealBot状态。</value></data>
+  <data name="K604" xml:space="preserve"><value>连接{0}:{1}超时。</value></data>
+  <data name="K605" xml:space="preserve"><value>没有HealBot在{0}:{1}监听。</value></data>
+  <data name="K606" xml:space="preserve"><value>连接{0}:{1}失败：{2}</value></data>
+  <data name="K607" xml:space="preserve"><value>已配对端点返回了格式错误的配对JSON。</value></data>
+  <data name="K608" xml:space="preserve"><value>已配对HealBot的连接已丢失：{0}</value></data>
+  <data name="K609" xml:space="preserve"><value>已配对HealBot的连接已丢失。</value></data>
+  <data name="K610" xml:space="preserve"><value>已配对HealBot返回了不匹配的命令响应。</value></data>
+  <data name="K611" xml:space="preserve"><value>已配对连接失败：{0}</value></data>
+  <data name="K612" xml:space="preserve"><value>{0}秒后重连</value></data>
+  <data name="K613" xml:space="preserve"><value>HealBot所需依赖已全部就绪。</value></data>
+  <data name="K614" xml:space="preserve"><value>HealBot需要{0}。请安装缺失的插件或在设置中关闭自动化。</value></data>
+  <data name="K615" xml:space="preserve"><value>本地玩家不可用。</value></data>
+  <data name="K616" xml:space="preserve"><value>已在施法。</value></data>
+  <data name="K617" xml:space="preserve"><value>动作表中未找到动作{0}。</value></data>
+  <data name="K618" xml:space="preserve"><value>使用{0}的魔力不足。</value></data>
+  <data name="K619" xml:space="preserve"><value>ActionManager不可用。</value></data>
+  <data name="K620" xml:space="preserve"><value>{0}正在冷却。</value></data>
+  <data name="K621" xml:space="preserve"><value>所选目标不可用。</value></data>
+  <data name="K622" xml:space="preserve"><value>无法选中{0}。</value></data>
+  <data name="K623" xml:space="preserve"><value>{0}超出范围。</value></data>
+  <data name="K624" xml:space="preserve"><value>UseAction拒绝了{0}。</value></data>
+  <data name="K625" xml:space="preserve"><value>当前没有可用的PowerlevelBot动作。</value></data>
+  <data name="K626" xml:space="preserve"><value>为HealBot动作暂停</value></data>
+  <data name="K627" xml:space="preserve"><value>副本控制期间已暂停HealRider跟随</value></data>
+  <data name="K628" xml:space="preserve"><value>所选多人坐骑的准备超出了接人允许时间。</value></data>
+  <data name="K629" xml:space="preserve"><value>等待Lifestream切换区域实例并完成加载</value></data>
+  <data name="K630" xml:space="preserve"><value>在/li后验证Helper的公共区域实例</value></data>
+  <data name="K631" xml:space="preserve"><value>在HealRider后等待新的Quester移动快照</value></data>
+  <data name="K632" xml:space="preserve"><value>等待Helper角色</value></data>
+  <data name="K633" xml:space="preserve"><value>因施放{0}而暂停</value></data>
+  <data name="K634" xml:space="preserve"><value>正在访问世界{0}</value></data>
+  <data name="K635" xml:space="preserve"><value>世界访问未到达目标{0}</value></data>
+  <data name="K636" xml:space="preserve"><value>正在传送至{0}</value></data>
+  <data name="K637" xml:space="preserve"><value>传送至{0}未到达区域{1}</value></data>
+  <data name="K638" xml:space="preserve"><value>此区域拒绝了ARR飞行探测</value></data>
+  <data name="K639" xml:space="preserve"><value>等待当前vnavmesh活动结束</value></data>
+  <data name="K640" xml:space="preserve"><value>坐骑不可用：{0}</value></data>
+  <data name="K641" xml:space="preserve"><value>等待重试随机坐骑</value></data>
+  <data name="K642" xml:space="preserve"><value>使用随机坐骑同步Quester的骑乘状态</value></data>
+  <data name="K643" xml:space="preserve"><value>距离超过{0:F0}星码，正在骑乘追赶</value></data>
+  <data name="K644" xml:space="preserve"><value>等待同步Quester的骑乘状态</value></data>
+  <data name="K645" xml:space="preserve"><value>等待骑乘追赶</value></data>
+  <data name="K646" xml:space="preserve"><value>等待骑乘完成后再下坐骑</value></data>
+  <data name="K647" xml:space="preserve"><value>着陆前继续沿活动路径移动</value></data>
+  <data name="K648" xml:space="preserve"><value>保持骑乘并着陆</value></data>
+  <data name="K649" xml:space="preserve"><value>下坐骑前在{0:F0}星码范围内着陆</value></data>
+  <data name="K650" xml:space="preserve"><value>无法着陆：{0}</value></data>
+  <data name="K651" xml:space="preserve"><value>等待在{0:F0}星码范围内下坐骑</value></data>
+  <data name="K652" xml:space="preserve"><value>正在{0:F0}星码范围内下坐骑</value></data>
+  <data name="K653" xml:space="preserve"><value>无法下坐骑：{0}</value></data>
+  <data name="K654" xml:space="preserve"><value>无法飞行：{0}</value></data>
+  <data name="K655" xml:space="preserve"><value>vnavmesh跟随IPC失败</value></data>
+  <data name="K656" xml:space="preserve"><value>近距离跟随（{0:F1}星码）</value></data>
+  <data name="K657" xml:space="preserve"><value>正在刷新Quester的最新目的地</value></data>
+  <data name="K658" xml:space="preserve"><value>在{0:F1}星码距离飞行</value></data>
+  <data name="K659" xml:space="preserve"><value>在{0:F1}星码距离地面跟随</value></data>
+  <data name="K660" xml:space="preserve"><value>vnavmesh拒绝启动路径；等待活动结束或新的移动快照</value></data>
+  <data name="K661" xml:space="preserve"><value>等待vnavmesh</value></data>
+  <data name="K662" xml:space="preserve"><value>正在{1:F1}星码距离预约{0}</value></data>
+  <data name="K663" xml:space="preserve"><value>vnavmesh拒绝启动{0}路径；等待活动结束或新的移动快照</value></data>
+  <data name="K664" xml:space="preserve"><value>vnavmesh跟随IPC失败；等待新的移动快照</value></data>
+  <data name="K665" xml:space="preserve"><value>等待已验证的Helper和Quester公共区域实例信息</value></data>
+  <data name="K666" xml:space="preserve"><value>等待Quester已验证的无分区实例区域</value></data>
+  <data name="K667" xml:space="preserve"><value>切换公共区域实例前等待安全的移动空闲状态</value></data>
+  <data name="K668" xml:space="preserve"><value>等待重试公共区域实例{0}</value></data>
+  <data name="K669" xml:space="preserve"><value>切换公共区域实例前等待导航停止</value></data>
+  <data name="K670" xml:space="preserve"><value>公共区域实例会合：{0}</value></data>
+  <data name="K671" xml:space="preserve"><value>执行/li前在以太之光旁着陆并下坐骑</value></data>
+  <data name="K672" xml:space="preserve"><value>在/li后验证公共区域实例{0}</value></data>
+  <data name="K673" xml:space="preserve"><value>Lifestream拒绝了/li {0}；等待五秒后重试</value></data>
+  <data name="K674" xml:space="preserve"><value>Lifestream区域实例命令失败；等待五秒后重试</value></data>
+  <data name="K675" xml:space="preserve"><value>向前探测已观察到的区域边界</value></data>
+  <data name="K676" xml:space="preserve"><value>已观察到区域切换；等待Helper安全完成加载</value></data>
+  <data name="K677" xml:space="preserve"><value>区域{0}不允许骑乘</value></data>
+  <data name="K678" xml:space="preserve"><value>区域骑乘检查失败：{0}</value></data>
+  <data name="K679" xml:space="preserve"><value>区域{0}无法飞行</value></data>
+  <data name="K680" xml:space="preserve"><value>Helper尚未解锁此区域的飞行</value></data>
+  <data name="K681" xml:space="preserve"><value>正在探测ARR飞行可用性</value></data>
+  <data name="K682" xml:space="preserve"><value>飞行检查失败：{0}</value></data>
+  <data name="K683" xml:space="preserve"><value>ActionManager不可用</value></data>
+  <data name="K684" xml:space="preserve"><value>通用指令{0}不可用（状态{1}）</value></data>
+  <data name="K685" xml:space="preserve"><value>通用指令{0}被拒绝</value></data>
+  <data name="K686" xml:space="preserve"><value>通用指令{0}失败：{1}</value></data>
+  <data name="K687" xml:space="preserve"><value>Lifestream移动状态IPC失败</value></data>
+  <data name="K688" xml:space="preserve"><value>{0}；等待更新的移动快照</value></data>
+  <data name="K689" xml:space="preserve"><value>等待当前Lifestream移动完成</value></data>
+  <data name="K690" xml:space="preserve"><value>Lifestream移动IPC失败</value></data>
+  <data name="K691" xml:space="preserve"><value>Lifestream拒绝了请求：{0}</value></data>
+  <data name="K692" xml:space="preserve"><value>此Helper的传送列表中没有Quester的确切传送目的地。</value></data>
+  <data name="K693" xml:space="preserve"><value>此Helper的传送列表中没有Quester所在区域的任何以太之光。</value></data>
+  <data name="K694" xml:space="preserve"><value>以太之光解析失败：{0}</value></data>
+  <data name="K695" xml:space="preserve"><value>已接受的Quester传送目的地不可用。</value></data>
+  <data name="K696" xml:space="preserve"><value>等待Quester在目标区域的位置，以便改用最近的以太之光。</value></data>
+  <data name="K697" xml:space="preserve"><value>Helper的传送列表不可用或仍在加载。</value></data>
+  <data name="K698" xml:space="preserve"><value>PowerlevelBot已就绪。</value></data>
+  <data name="K699" xml:space="preserve"><value>启用PowerlevelBot前请选择BRD或MCH。</value></data>
+  <data name="K700" xml:space="preserve"><value>{0}尚未解锁。</value></data>
+  <data name="K701" xml:space="preserve"><value>当前职业必须与PowerlevelBot所选的{0}职业一致。</value></data>
+  <data name="K702" xml:space="preserve"><value>FrenRider配置的Fren不可见。</value></data>
+  <data name="K703" xml:space="preserve"><value>使用PowerlevelBot前请遣返当前搭档陆行鸟。</value></data>
+  <data name="K704" xml:space="preserve"><value>{0}不是仅对敌使用的动作。</value></data>
+  <data name="K705" xml:space="preserve"><value>{0}需要咏唱。</value></data>
+  <data name="K706" xml:space="preserve"><value>{0}是范围动作。</value></data>
+  <data name="K707" xml:space="preserve"><value>{0}不可用。</value></data>
+  <data name="K708" xml:space="preserve"><value>{0}正在冷却。</value></data>
+  <data name="K709" xml:space="preserve"><value>端口47789已保留。请选择其他配对端口。</value></data>
+  <data name="K710" xml:space="preserve"><value>配对端口必须在1024到65535之间。</value></data>
+  <data name="K711" xml:space="preserve"><value>共享密钥必须至少包含16个字符。</value></data>
+  <data name="K712" xml:space="preserve"><value>请输入一个有效的Helper IPv4地址，例如127.0.0.1或192.168.1.25。</value></data>
+  <data name="K714" xml:space="preserve"><value>NPC队员</value></data>
+  <data name="K715" xml:space="preserve"><value>手动目标</value></data>
+  <data name="K716" xml:space="preserve"><value>Jacqueline of All Trades需要Rotation Solver Reborn才能攻击。</value></data>
+  <data name="K717" xml:space="preserve"><value>Newb是运行角色，不是独立模式行为。</value></data>
+  <data name="K719" xml:space="preserve"><value>BossMod Reborn（BMR）或VBM</value></data>
+  <data name="K720" xml:space="preserve"><value>Rotation Solver Reborn（RSR）- 可选的隔离/恢复辅助</value></data>
+  <data name="K721" xml:space="preserve"><value>{0}；安全地面替代方案（{1}）</value></data>
+  <data name="K722" xml:space="preserve"><value>友方战斗NPC</value></data>
+  <data name="K726" xml:space="preserve"><value>飞向目的地</value></data>
+  <data name="K727" xml:space="preserve"><value>地面跟随</value></data>
+  <data name="K728" xml:space="preserve"><value>接近</value></data>
+  <data name="K729" xml:space="preserve"><value>已到达</value></data>
+  <data name="K730" xml:space="preserve"><value>正在到达</value></data>
+  <data name="K731" xml:space="preserve"><value>登乘中</value></data>
+  <data name="K732" xml:space="preserve"><value>已取消</value></data>
+  <data name="K733" xml:space="preserve"><value>取消中</value></data>
+  <data name="K734" xml:space="preserve"><value>准备中</value></data>
+  <data name="K735" xml:space="preserve"><value>途中</value></data>
+  <data name="K736" xml:space="preserve"><value>等待中</value></data>
+  <data name="K737" xml:space="preserve"><value>等待继续</value></data>
+  <data name="K738" xml:space="preserve"><value>区域切换</value></data>
+  <data name="K739" xml:space="preserve"><value>着陆</value></data>
+  <data name="K740" xml:space="preserve"><value>下坐骑</value></data>
+  <data name="K741" xml:space="preserve"><value>HealRider受阻：{0}</value></data>
+  <data name="K742" xml:space="preserve"><value>HealRider清理：{0}</value></data>
+  <data name="K743" xml:space="preserve"><value>HealRider：{0}</value></data>
+  <data name="K744" xml:space="preserve"><value>HealRider：{0}：{1}</value></data>
+  <data name="K745" xml:space="preserve"><value>Helper清理在等待{0}时超时；等待协调清理重试。</value></data>
+  <data name="K746" xml:space="preserve"><value>记录角色就绪</value></data>
+  <data name="K747" xml:space="preserve"><value>坐骑动作完成</value></data>
+  <data name="K748" xml:space="preserve"><value>为清理着陆</value></data>
+  <data name="K749" xml:space="preserve"><value>为清理下坐骑</value></data>
+  <data name="K750" xml:space="preserve"><value>为运输清理下坐骑</value></data>
+  <data name="K751" xml:space="preserve"><value>正在准备所选多人坐骑用于跟随</value></data>
+  <data name="K752" xml:space="preserve"><value>分配的坐骑策略已更改</value></data>
+  <data name="K753" xml:space="preserve"><value>目的地或骑乘路段已更改</value></data>
+  <data name="K754" xml:space="preserve"><value>副本移交</value></data>
+  <data name="K755" xml:space="preserve"><value>接人已取消</value></data>
+  <data name="K756" xml:space="preserve"><value>不支持的分配坐骑模式操作。</value></data>
+  <data name="K757" xml:space="preserve"><value>更改坐骑策略前请完成当前骑乘。</value></data>
+  <data name="K758" xml:space="preserve"><value>请在Helper上选择已解锁的多人坐骑。</value></data>
+  <data name="K759" xml:space="preserve"><value>所选多人坐骑的准备被拒绝或超出了接人允许时间。</value></data>
+  <data name="K760" xml:space="preserve"><value>需要HealRider v2。请更新Helper和Quester。</value></data>
+  <data name="K761" xml:space="preserve"><value>无效的HealRider v2请求。</value></data>
+  <data name="K762" xml:space="preserve"><value>此骑乘路段已被新路段替代。</value></data>
+  <data name="K763" xml:space="preserve"><value>此骑乘继续请求已停用。</value></data>
+  <data name="K764" xml:space="preserve"><value>等待前一次骑乘下坐骑。</value></data>
+  <data name="K765" xml:space="preserve"><value>清理重试需要记录的角色和队伍。</value></data>
+  <data name="K766" xml:space="preserve"><value>不支持的HealRider操作。</value></data>
+  <data name="K767" xml:space="preserve"><value>分配的多人坐骑策略尚未就绪。</value></data>
+  <data name="K768" xml:space="preserve"><value>此骑乘路段已结束。</value></data>
+  <data name="K769" xml:space="preserve"><value>共享接人等待时间在接人请求被接受前已到期。</value></data>
+  <data name="K770" xml:space="preserve"><value>接人需要已解锁的多人坐骑、Helper可飞行、超过步行阈值且未飞行的Quester，以及此区域内的确切队伍。</value></data>
+  <data name="K771" xml:space="preserve"><value>骑乘上下文丢失、受阻或超时</value></data>
+  <data name="K772" xml:space="preserve"><value>共享接人等待时间在接近或登乘期间已到期</value></data>
+  <data name="K773" xml:space="preserve"><value>等待骑乘期间两个客户端加载。</value></data>
+  <data name="K774" xml:space="preserve"><value>等待骑乘继续以及双方乘客确认。</value></data>
+  <data name="K775" xml:space="preserve"><value>无法验证骑乘中的区域边界穿越</value></data>
+  <data name="K776" xml:space="preserve"><value>Helper和Quester的区域及公共区域实例已无法共同验证</value></data>
+  <data name="K777" xml:space="preserve"><value>确切的Quester或队伍已不可用</value></data>
+  <data name="K778" xml:space="preserve"><value>等待下一移动步骤时丢失了乘客验证</value></data>
+  <data name="K779" xml:space="preserve"><value>着陆或下坐骑被拒绝</value></data>
+  <data name="K780" xml:space="preserve"><value>已到达移动目的地；等待下一已验证步骤。</value></data>
+  <data name="K781" xml:space="preserve"><value>精确着陆导航拒绝了记录的目的地</value></data>
+  <data name="K782" xml:space="preserve"><value>精确着陆导航IPC失败</value></data>
+  <data name="K783" xml:space="preserve"><value>精确着陆导航状态不可用</value></data>
+  <data name="K784" xml:space="preserve"><value>精确着陆路径在到达记录的XYZ前失败</value></data>
+  <data name="K785" xml:space="preserve"><value>骑乘导航状态不可用</value></data>
+  <data name="K786" xml:space="preserve"><value>乘客路径在到达前失败</value></data>
+  <data name="K787" xml:space="preserve"><value>骑乘导航拒绝了目的地</value></data>
+  <data name="K788" xml:space="preserve"><value>骑乘导航IPC失败</value></data>
+  <data name="K789" xml:space="preserve"><value>着陆位置移出了到达容差范围。</value></data>
+  <data name="K790" xml:space="preserve"><value>确切的Quester离开了乘客座位或队伍。</value></data>
+  <data name="K791" xml:space="preserve"><value>在登乘前已从所选坐骑下来。</value></data>
+  <data name="K792" xml:space="preserve"><value>无法准备所选多人坐骑。</value></data>
+  <data name="K793" xml:space="preserve"><value>等待双方乘客确认。</value></data>
+  <data name="K794" xml:space="preserve"><value>等待在记录目的地观察到落地。</value></data>
+  <data name="K795" xml:space="preserve"><value>等待Helper的原生乘客观测。</value></data>
+  <data name="K796" xml:space="preserve"><value>等待Quester的乘客确认。</value></data>
+  <data name="K797" xml:space="preserve"><value>Epilogue Gate路径已取消或超时</value></data>
+  <data name="K798" xml:space="preserve"><value>正在通过Idyllshire的Epilogue Gate移动</value></data>
+  <data name="K799" xml:space="preserve"><value>Lifestream Epilogue Gate命令不可用</value></data>
+  <data name="K800" xml:space="preserve"><value>Lifestream拒绝了Epilogue Gate路径</value></data>
+  <data name="K801" xml:space="preserve"><value>正在前往{0}以切换公共区域实例</value></data>
+  <data name="K802" xml:space="preserve"><value>未到达用于切换区域实例的以太之光{0}</value></data>
+  <data name="K803" xml:space="preserve"><value>分配已释放</value></data>
+  <data name="K804" xml:space="preserve"><value>前往Dravanian Hinterlands需要此Helper能够飞行</value></data>
+  <data name="K805" xml:space="preserve"><value>Lifestream移动IPC不可用。</value></data>
+  <data name="K806" xml:space="preserve"><value>vnavmesh移动IPC不可用。</value></data>
+  <data name="K807" xml:space="preserve"><value>所需Lifestream移动IPC不可用。</value></data>
+  <data name="K808" xml:space="preserve"><value>所需vnavmesh移动IPC不可用。</value></data>
+  <data name="K809" xml:space="preserve"><value>LOS受阻；配对移动进行中</value></data>
+  <data name="K810" xml:space="preserve"><value>LOS受阻；配对移动正在解析远程位置</value></data>
+  <data name="K811" xml:space="preserve"><value>LOS受阻；目标超出救援范围</value></data>
+  <data name="K812" xml:space="preserve"><value>副本内已暂停</value></data>
+  <data name="K813" xml:space="preserve"><value>FrenRider Powerlevel IPC不兼容。请更新FrenRider。</value></data>
+  <data name="K814" xml:space="preserve"><value>FrenRider Powerlevel IPC不可用。</value></data>
+  <data name="K815" xml:space="preserve"><value>FrenRider Powerlevel状态为空。</value></data>
+  <data name="K816" xml:space="preserve"><value>尚未查询FrenRider Powerlevel IPC。</value></data>
+  <data name="K817" xml:space="preserve"><value>FrenRider返回了空响应。</value></data>
+  <data name="K818" xml:space="preserve"><value>FrenRider Powerlevel状态不兼容。</value></data>
+  <data name="K819" xml:space="preserve"><value>配对TCP帧不完整。</value></data>
+  <data name="K820" xml:space="preserve"><value>配对认证标签无效。</value></data>
+  <data name="K821" xml:space="preserve"><value>配对时间戳无效。</value></data>
+  <data name="K822" xml:space="preserve"><value>配对认证失败。</value></data>
+  <data name="K823" xml:space="preserve"><value>配对TCP帧超过64 KiB。</value></data>
+  <data name="K824" xml:space="preserve"><value>配对封包被重放。</value></data>
+  <data name="K825" xml:space="preserve"><value>配对封包已过期。</value></data>
+  <data name="K826" xml:space="preserve"><value>尚未配置共享密钥。</value></data>
+  <data name="K827" xml:space="preserve"><value>配对封包未签名或不兼容。</value></data>
+  <data name="K828" xml:space="preserve"><value>HealBot配对正在卸载。</value></data>
+  <data name="K829" xml:space="preserve"><value>请在治疗客户端选择Helper角色。</value></data>
+  <data name="K830" xml:space="preserve"><value>Helper提供方不由直接Newb配对持有。</value></data>
+  <data name="K831" xml:space="preserve"><value>QST当前持有提供方激活控制。</value></data>
+  <data name="K832" xml:space="preserve"><value>直接Newb配对不持有Helper激活控制。</value></data>
+  <data name="K833" xml:space="preserve"><value>Newb会话ID无效。</value></data>
+  <data name="K834" xml:space="preserve"><value>HealBot已有活动的QST或Newb分配。</value></data>
+  <data name="K835" xml:space="preserve"><value>Newb身份无效。</value></data>
+  <data name="K836" xml:space="preserve"><value>Newb会话未持有活动分配。</value></data>
+  <data name="K837" xml:space="preserve"><value>Newb会话未持有任何活动分配。</value></data>
+  <data name="K838" xml:space="preserve"><value>移动更新与确切分配的Newb不匹配。</value></data>
+  <data name="K839" xml:space="preserve"><value>HealBot无法激活JOAT。</value></data>
+  <data name="K840" xml:space="preserve"><value>HealBot已禁用。</value></data>
+  <data name="K841" xml:space="preserve"><value>HealBot自动化已禁用。</value></data>
+  <data name="K842" xml:space="preserve"><value>请选择Jacqueline of All Trades（JOAT）。</value></data>
+  <data name="K843" xml:space="preserve"><value>JOAT攻击需要Rotation Solver Reborn。</value></data>
+  <data name="K844" xml:space="preserve"><value>自动化已关闭。</value></data>
+  <data name="K845" xml:space="preserve"><value>请选择立即启用自动化或保持关闭。</value></data>
+  <data name="K846" xml:space="preserve"><value>HealBot无法启动所选角色。</value></data>
+  <data name="K847" xml:space="preserve"><value>{0}设置已保存。运行角色保持关闭。</value></data>
+  <data name="K848" xml:space="preserve"><value>{0}设置已保存并启动。</value></data>
+  <data name="K849" xml:space="preserve"><value>未知的运行角色。</value></data>
+  <data name="K850" xml:space="preserve"><value>QST已配对</value></data>
+  <data name="K851" xml:space="preserve"><value>治疗{0}；攻击{1}</value></data>
+  <data name="K852" xml:space="preserve"><value>{0}：{1} 点击打开主窗口。</value></data>
+  <data name="K853" xml:space="preserve"><value> 行为：{0}。</value></data>
+  <data name="K854" xml:space="preserve"><value>角色：{0}。{1} 状态：{2} 下一步：{3} 身份：{4}</value></data>
+  <data name="K855" xml:space="preserve"><value>为你的冒险提供自动支持</value></data>
+  <data name="K856" xml:space="preserve"><value>日常游玩的轻巧伙伴</value></data>
+  <data name="Window appearance" xml:space="preserve">
+    <value>窗口外观</value>
+  </data>
+  <data name="Compact visible on main window" xml:space="preserve">
+    <value>在主窗口显示紧凑模式开关</value>
+  </data>
+  <data name="Language visible on main window" xml:space="preserve">
+    <value>在主窗口显示语言选择</value>
+  </data>
+  <data name="Transparency" xml:space="preserve">
+    <value>透明度</value>
+  </data>
+  <data name="Opacity (%)" xml:space="preserve">
+    <value>不透明度 (%)</value>
+  </data>
+  <data name="Auto-fade when unfocused" xml:space="preserve">
+    <value>失去焦点后自动淡化</value>
+  </data>
+  <data name="Unfocused opacity (%)" xml:space="preserve">
+    <value>未聚焦时的不透明度 (%)</value>
+  </data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve">
+    <value>失去焦点后的等待时间 (秒)</value>
+  </data>
+</root>

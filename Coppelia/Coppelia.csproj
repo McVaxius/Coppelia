@@ -6,9 +6,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>2.3.0.4</Version>
-    <FileVersion>2.3.0.4</FileVersion>
-    <AssemblyVersion>2.3.0.4</AssemblyVersion>
+    <Version>3.0.0.0</Version>
+    <FileVersion>3.0.0.0</FileVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
     <IsPackable>false</IsPackable>
     <RootNamespace>Coppelia</RootNamespace>
@@ -22,6 +22,10 @@
     <Compile Remove="**\backups\**" />
     <None Remove="backups\**" />
     <None Remove="**\backups\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\aethertekUI\src\AethertekUI\AethertekUI.csproj" />
+    <ProjectReference Include="..\..\aethertekUI\src\AethertekUI.Dalamud\AethertekUI.Dalamud.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Coppelia.json" CopyToOutputDirectory="PreserveNewest" />

@@ -1,3 +1,4 @@
+using AethertekUI;
 using System.Diagnostics;
 using System.Numerics;
 using System.Security.Cryptography;
@@ -10,6 +11,7 @@ namespace Coppelia.Windows;
 
 public sealed class ConfigWindow : Window, IDisposable
 {
+    private readonly AethertekUI.Dalamud.MaterialWindowMotion windowMotion = new();
     private static readonly string[] DtrModes = { "Text only", "Icon + text", "Icon only" };
     private static readonly HealbotTriggerKind[] TriggerKinds = Enum.GetValues<HealbotTriggerKind>();
     private static readonly (uint JobId, string Label)[] JobTabs =
@@ -69,14 +71,19 @@ public sealed class ConfigWindow : Window, IDisposable
             pendingSavedPositionApply = true;
             pendingWindowPosition = null;
         }
+        windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
     }
+
+    public override void PostDraw()
+        { windowMotion.Restore(this); plugin.PaintWindowTitle(WindowName,UiText.F("{0} Settings",PluginInfo.DisplayName)); }
 
     public override void Draw()
     {
+        windowMotion.DrawChrome();
         var configuration = plugin.Configuration;
         var changed = false;
 
-        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(6f, 4f));
+        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemSpacing);
         try
         {
             DrawHeader();
@@ -123,20 +130,22 @@ public sealed class ConfigWindow : Window, IDisposable
 
     private void DrawHeader()
     {
-        ImGui.TextColored(CoppeliaUi.Accent, $"{PluginInfo.DisplayName} Settings");
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Ko-fi##CoppeliaConfig"))
+        UiGui.Title("HealBot Settings",UiText.F("{0} Settings",PluginInfo.DisplayName));
+        CoppeliaUi.Brand("Settings");
+        plugin.DrawWindowAppearanceSettings();
+        CoppeliaUi.SameLineFor("Ko-fi");
+        if (UiGui.SmallButton("Ko-fi##CoppeliaConfig"))
             Process.Start(new ProcessStartInfo { FileName = PluginInfo.SupportUrl, UseShellExecute = true });
 
         ImGui.SameLine();
-        if (ImGui.SmallButton("Discord##CoppeliaConfig"))
+        if (UiGui.SmallButton("Discord##CoppeliaConfig"))
             Process.Start(new ProcessStartInfo { FileName = PluginInfo.DiscordUrl, UseShellExecute = true });
 
         ImGui.SameLine();
-        if (ImGui.SmallButton("Watch##CoppeliaConfig"))
+        if (UiGui.SmallButton("Watch##CoppeliaConfig"))
             plugin.ToggleWatchUi();
 
-        ImGui.TextDisabled(PluginInfo.DiscordFeedbackNote);
+        UiGui.TextDisabled(PluginInfo.DiscordFeedbackNote);
     }
 
     private void DrawSettingsTabs(Configuration configuration, ref bool changed)
@@ -146,16 +155,16 @@ public sealed class ConfigWindow : Window, IDisposable
         selectQuickSetupTab = false;
         selectGeneralTab = false;
 
-        if (!ImGui.BeginTabBar("CoppeliaSettingsTabs"))
+        if (!UiGui.BeginTabBar("CoppeliaSettingsTabs",["Quick Setup","General","HealBot Actions","Requirements / Help"]))
             return;
 
-        if (ImGui.BeginTabItem("Quick Setup", quickSetupFlags))
+        if (UiGui.BeginTabItem("Quick Setup", quickSetupFlags))
         {
             DrawQuickSetup(configuration);
             ImGui.EndTabItem();
         }
 
-        if (ImGui.BeginTabItem("General", generalFlags))
+        if (UiGui.BeginTabItem("General", generalFlags))
         {
             CoppeliaUi.SectionHeader(
                 "General",
@@ -164,7 +173,7 @@ public sealed class ConfigWindow : Window, IDisposable
             ImGui.EndTabItem();
         }
 
-        if (ImGui.BeginTabItem("HealBot Actions"))
+        if (UiGui.BeginTabItem("HealBot Actions"))
         {
             CoppeliaUi.SectionHeader(
                 "HealBot Actions",
@@ -173,7 +182,7 @@ public sealed class ConfigWindow : Window, IDisposable
             ImGui.EndTabItem();
         }
 
-        if (ImGui.BeginTabItem("Requirements / Help"))
+        if (UiGui.BeginTabItem("Requirements / Help"))
         {
             CoppeliaUi.SectionHeader("Requirements and help");
             DrawRequirements();
@@ -206,7 +215,7 @@ public sealed class ConfigWindow : Window, IDisposable
             QuickSetupStep.Configure => 2,
             _ => 3,
         };
-        ImGui.TextDisabled($"Step {visibleStep} of 3");
+        UiGui.TextDisabled(UiText.F($"Step {visibleStep} of 3"));
 
         switch (setupStep)
         {
@@ -237,7 +246,7 @@ public sealed class ConfigWindow : Window, IDisposable
             "Stand-alone runs HealBot, JOAT, or PowerlevelBot without networking. Helper listens for and remotely activates JOAT for one authenticated Newb. Newb connects asynchronously and performs no local healing or attacking.");
         ImGui.Spacing();
 
-        if (CoppeliaUi.PrimaryButton("Set up Stand-alone", new Vector2(220f, 38f)))
+        if (CoppeliaUi.PrimaryButton("Set up Stand-alone", new Vector2(220f * MaterialTheme.Metrics.Scale, CoppeliaPresentation.ActionHeight * MaterialTheme.Metrics.Scale)))
         {
             setupDraft!.Role = OperatingRole.StandAlone;
             if (setupDraft.Mode == BotMode.Newb)
@@ -247,8 +256,8 @@ public sealed class ConfigWindow : Window, IDisposable
         }
         CoppeliaUi.Tooltip("Configure the selected HealBot, JOAT, or PowerlevelBot behavior without networking.");
 
-        ImGui.SameLine();
-        if (CoppeliaUi.PrimaryButton("Set up Helper", new Vector2(220f, 38f)))
+        CoppeliaUi.SameLineFor("Set up Helper", 80);
+        if (CoppeliaUi.PrimaryButton("Set up Helper", new Vector2(220f * MaterialTheme.Metrics.Scale, CoppeliaPresentation.ActionHeight * MaterialTheme.Metrics.Scale)))
         {
             setupDraft!.Role = OperatingRole.Helper;
             setupStep = QuickSetupStep.Configure;
@@ -256,8 +265,8 @@ public sealed class ConfigWindow : Window, IDisposable
         }
         CoppeliaUi.Tooltip("Configure the authenticated listener port and visible shared secret.");
 
-        ImGui.SameLine();
-        if (CoppeliaUi.PrimaryButton("Set up Newb", new Vector2(220f, 38f)))
+        CoppeliaUi.SameLineFor("Set up Newb", 80);
+        if (CoppeliaUi.PrimaryButton("Set up Newb", new Vector2(220f * MaterialTheme.Metrics.Scale, CoppeliaPresentation.ActionHeight * MaterialTheme.Metrics.Scale)))
         {
             setupDraft!.Role = OperatingRole.Newb;
             setupStep = QuickSetupStep.Configure;
@@ -267,19 +276,19 @@ public sealed class ConfigWindow : Window, IDisposable
 
         CoppeliaUi.SectionHeader("Stand-alone behavior");
         var heal = setupDraft!.Mode == BotMode.HealBot;
-        if (ImGui.RadioButton("HealBot##SetupBehavior", heal))
+        if (UiGui.RadioButton("HealBot##SetupBehavior", heal))
             setupDraft.Mode = BotMode.HealBot;
         ImGui.SameLine();
         var joat = setupDraft.Mode == BotMode.Jot;
-        if (ImGui.RadioButton("JOAT##SetupBehavior", joat))
+        if (UiGui.RadioButton("JOAT##SetupBehavior", joat))
             setupDraft.Mode = BotMode.Jot;
         ImGui.SameLine();
         var powerlevel = setupDraft.Mode == BotMode.PowerlevelBot;
-        if (ImGui.RadioButton("PowerlevelBot##SetupBehavior", powerlevel))
+        if (UiGui.RadioButton("PowerlevelBot##SetupBehavior", powerlevel))
             setupDraft.Mode = BotMode.PowerlevelBot;
 
         ImGui.Spacing();
-        if (ImGui.Button("Cancel##QuickSetupChoose"))
+        if (UiGui.Button("Cancel##QuickSetupChoose"))
             CancelQuickSetup();
     }
 
@@ -306,38 +315,38 @@ public sealed class ConfigWindow : Window, IDisposable
             "Choose which friendly objects appear in Watch. Only targets you explicitly check are healed or saved.");
 
         var watchPlayers = draft.WatchPlayers;
-        if (ImGui.Checkbox("Players##Setup", ref watchPlayers))
+        if (UiGui.Checkbox("Players##Setup", ref watchPlayers))
             draft.WatchPlayers = watchPlayers;
 
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("Companion chocobos");
         var watchChocobos = draft.WatchCompanionChocobos;
-        if (ImGui.Checkbox("Companion chocobos##Setup", ref watchChocobos))
+        if (UiGui.Checkbox("Companion chocobos##Setup", ref watchChocobos))
             draft.WatchCompanionChocobos = watchChocobos;
 
         var watchPartyNpcs = draft.WatchPartyNpcs;
-        if (ImGui.Checkbox("NPC party members##Setup", ref watchPartyNpcs))
+        if (UiGui.Checkbox("NPC party members##Setup", ref watchPartyNpcs))
             draft.WatchPartyNpcs = watchPartyNpcs;
 
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("Friendly battle NPCs");
         var watchBattleNpcs = draft.WatchFriendlyBattleNpcs;
-        if (ImGui.Checkbox("Friendly battle NPCs##Setup", ref watchBattleNpcs))
+        if (UiGui.Checkbox("Friendly battle NPCs##Setup", ref watchBattleNpcs))
             draft.WatchFriendlyBattleNpcs = watchBattleNpcs;
 
         var saveTargets = draft.SaveHealTargets;
-        if (ImGui.Checkbox("Save explicitly watched heal targets##Setup", ref saveTargets))
+        if (UiGui.Checkbox("Save explicitly watched heal targets##Setup", ref saveTargets))
             draft.SaveHealTargets = saveTargets;
 
         ImGui.SameLine();
         ImGui.BeginDisabled(!draft.SaveHealTargets);
-        ImGui.SetNextItemWidth(170f);
+        ImGui.SetNextItemWidth(170f * MaterialTheme.Metrics.Scale);
         var scanRange = draft.SavedTargetScanRangeYalms;
-        if (ImGui.SliderInt("Rejoin scan range##Setup", ref scanRange, 1, 200, "%d y"))
+        if (UiGui.SliderInt("Rejoin scan range##Setup", ref scanRange, 1, 200, "%d y"))
             draft.SavedTargetScanRangeYalms = scanRange;
         ImGui.EndDisabled();
 
         CoppeliaUi.WrappedHelp(
             "The scan range only lets a previously saved target rejoin after it returns. It never discovers or auto-selects a new target.");
-        if (ImGui.Button("Open Watch window##QuickSetup"))
+        if (UiGui.Button("Open Watch window##QuickSetup"))
             plugin.OpenWatchUi();
         CoppeliaUi.Tooltip("Open the existing Watch window now. Draft filter changes apply only after Finish.");
 
@@ -370,7 +379,7 @@ public sealed class ConfigWindow : Window, IDisposable
                 CoppeliaUi.StatusText(readiness.AttackingReason, readiness.AttackingReady);
             }
 
-            if (ImGui.SmallButton("Refresh readiness##QuickSetupJot"))
+            if (UiGui.SmallButton("Refresh readiness##QuickSetupJot"))
             {
                 nextJotReadinessUtc = DateTimeOffset.MinValue;
                 RefreshJotReadiness();
@@ -390,14 +399,14 @@ public sealed class ConfigWindow : Window, IDisposable
             "JOAT attack mode",
             "Both choices use RSR Manual targeting. DoTs only enables only the equipped healer's damage-over-time actions; Full RSR restores the captured offensive actions and AoE mode without enabling automatic targeting.");
         ImGui.BeginDisabled(plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned);
-        if (ImGui.RadioButton("DoTs only##QuickSetupJoatAttack", !draft.JoatFullRsrRotation))
+        if (UiGui.RadioButton("DoTs only##QuickSetupJoatAttack", !draft.JoatFullRsrRotation))
             draft.JoatFullRsrRotation = false;
-        ImGui.SameLine();
-        if (ImGui.RadioButton("Full RSR rotation##QuickSetupJoatAttack", draft.JoatFullRsrRotation))
+        CoppeliaUi.SameLineFor("Full RSR rotation");
+        if (UiGui.RadioButton("Full RSR rotation##QuickSetupJoatAttack", draft.JoatFullRsrRotation))
             draft.JoatFullRsrRotation = true;
         ImGui.EndDisabled();
         if (plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned)
-            ImGui.TextDisabled("QST currently controls the active attack mode; the saved local choice resumes after release.");
+            UiGui.TextDisabled("QST currently controls the active attack mode; the saved local choice resumes after release.");
     }
 
     private void DrawPowerlevelSetup()
@@ -408,7 +417,7 @@ public sealed class ConfigWindow : Window, IDisposable
             "Choose the ranged job that is already equipped. HealBot never switches gearsets and will not use the watched-target list in this mode.");
 
         var brdSelected = draft.PowerlevelJob == PowerlevelJob.BRD;
-        if (ImGui.RadioButton("Bard (BRD)##SetupPowerlevel", brdSelected))
+        if (UiGui.RadioButton("Bard (BRD)##SetupPowerlevel", brdSelected))
         {
             draft.PowerlevelJob = PowerlevelJob.BRD;
             nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
@@ -416,7 +425,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
         ImGui.SameLine();
         var mchSelected = draft.PowerlevelJob == PowerlevelJob.MCH;
-        if (ImGui.RadioButton("Machinist (MCH)##SetupPowerlevel", mchSelected))
+        if (UiGui.RadioButton("Machinist (MCH)##SetupPowerlevel", mchSelected))
         {
             draft.PowerlevelJob = PowerlevelJob.MCH;
             nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
@@ -453,7 +462,7 @@ public sealed class ConfigWindow : Window, IDisposable
             CoppeliaUi.StatusText(readiness.Reason, readiness.Ready);
         }
 
-        if (ImGui.SmallButton("Refresh readiness##QuickSetupPowerlevel"))
+        if (UiGui.SmallButton("Refresh readiness##QuickSetupPowerlevel"))
         {
             nextPowerlevelReadinessUtc = DateTimeOffset.MinValue;
             RefreshPowerlevelReadiness();
@@ -477,27 +486,27 @@ public sealed class ConfigWindow : Window, IDisposable
 
         if (role == OperatingRole.Newb)
         {
-            ImGui.SetNextItemWidth(320f);
+            ImGui.SetNextItemWidth(320f * MaterialTheme.Metrics.Scale);
             var address = draft.LanHealBotAddress;
-            if (ImGui.InputText("Helper IPv4 address##SetupNewb", ref address, 45))
+            if (UiGui.InputText("Helper IPv4 address##SetupNewb", ref address, 45))
                 draft.LanHealBotAddress = address;
         }
 
-        ImGui.SetNextItemWidth(160f);
+        ImGui.SetNextItemWidth(160f * MaterialTheme.Metrics.Scale);
         var port = draft.LanPairingPort;
-        if (ImGui.InputInt("TCP port##SetupNewb", ref port))
+        if (UiGui.InputInt("TCP port##SetupNewb", ref port))
             draft.LanPairingPort = port;
 
-        ImGui.SetNextItemWidth(420f);
+        ImGui.SetNextItemWidth(420f * MaterialTheme.Metrics.Scale);
         var secret = draft.LanPairingSecret;
-        if (ImGui.InputText("Visible shared secret##SetupNewb", ref secret, 256))
+        if (UiGui.InputText("Visible shared secret##SetupNewb", ref secret, 256))
             draft.LanPairingSecret = secret;
 
-        if (ImGui.SmallButton("Generate secret##SetupNewb"))
+        if (UiGui.SmallButton("Generate secret##SetupNewb"))
             draft.LanPairingSecret = Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLowerInvariant();
         ImGui.SameLine();
         ImGui.BeginDisabled(string.IsNullOrEmpty(draft.LanPairingSecret));
-        if (ImGui.SmallButton("Copy secret##SetupNewb"))
+        if (UiGui.SmallButton("Copy secret##SetupNewb"))
             ImGui.SetClipboardText(draft.LanPairingSecret);
         ImGui.EndDisabled();
 
@@ -534,53 +543,53 @@ public sealed class ConfigWindow : Window, IDisposable
     {
         var draft = setupDraft!;
         CoppeliaUi.SectionHeader("Review and finish");
-        ImGui.TextUnformatted($"Role: {draft.Role.GetLabel()}");
+        UiGui.TextUnformatted(UiText.F($"Role: {draft.Role.GetLabel()}"));
         if (draft.Role is OperatingRole.Helper or OperatingRole.Newb)
         {
             if (draft.Role == OperatingRole.Newb)
-                ImGui.TextDisabled($"Helper endpoint: {draft.LanHealBotAddress}:{draft.LanPairingPort}.");
+                UiGui.TextDisabled(UiText.F($"Helper endpoint: {draft.LanHealBotAddress}:{draft.LanPairingPort}."));
             else
-                ImGui.TextDisabled($"Helper listener port: {draft.LanPairingPort}.");
-            ImGui.TextDisabled("Authenticated direct pairing uses the visible shared secret.");
+                UiGui.TextDisabled(UiText.F($"Helper listener port: {draft.LanPairingPort}."));
+            UiGui.TextDisabled("Authenticated direct pairing uses the visible shared secret.");
         }
         else if (draft.Mode != BotMode.PowerlevelBot)
         {
-            ImGui.TextDisabled(
-                $"Filters: players {(draft.WatchPlayers ? "on" : "off")}, chocobos {(draft.WatchCompanionChocobos ? "on" : "off")}, NPC party {(draft.WatchPartyNpcs ? "on" : "off")}, friendly battle NPCs {(draft.WatchFriendlyBattleNpcs ? "on" : "off")}.");
-            ImGui.TextDisabled(draft.SaveHealTargets
+            UiGui.TextDisabled(
+                UiText.F($"Filters: players {(draft.WatchPlayers ? "on" : "off")}, chocobos {(draft.WatchCompanionChocobos ? "on" : "off")}, NPC party {(draft.WatchPartyNpcs ? "on" : "off")}, friendly battle NPCs {(draft.WatchFriendlyBattleNpcs ? "on" : "off")}."));
+            UiGui.TextDisabled(draft.SaveHealTargets
                 ? $"Saved targets on; {draft.SavedTargetScanRangeYalms} y rejoin scan."
                 : "Saved targets off.");
             if (draft.Mode == BotMode.Jot)
-                ImGui.TextDisabled($"JOAT attack mode: {(draft.JoatFullRsrRotation ? "Full RSR rotation" : "DoTs only")}; both use RSR Manual targeting during genuinely idle healing cycles.");
+                UiGui.TextDisabled(UiText.F($"JOAT attack mode: {(draft.JoatFullRsrRotation ? "Full RSR rotation" : "DoTs only")}; both use RSR Manual targeting during genuinely idle healing cycles."));
         }
         else
         {
-            ImGui.TextDisabled($"Powerlevel job: {draft.PowerlevelJob.GetLabel()}.");
-            ImGui.TextDisabled("Enemy selection remains restricted to damaged enemies already engaging the Fren or local player.");
+            UiGui.TextDisabled(UiText.F($"Powerlevel job: {draft.PowerlevelJob.GetLabel()}."));
+            UiGui.TextDisabled("Enemy selection remains restricted to damaged enemies already engaging the Fren or local player.");
         }
 
         CoppeliaUi.WrappedHelp(
             "Finish must either start the selected role now or save it as the role resumed by /healbot on while remaining Off.");
 
         var enableNow = setupCompletionChoice == QuickSetupCompletionChoice.EnableNow;
-        if (ImGui.RadioButton("Start this role now##QuickSetupFinish", enableNow))
+        if (UiGui.RadioButton("Start this role now##QuickSetupFinish", enableNow))
             setupCompletionChoice = QuickSetupCompletionChoice.EnableNow;
 
         var leaveOff = setupCompletionChoice == QuickSetupCompletionChoice.LeaveAutomationOff;
-        if (ImGui.RadioButton("Save setup and leave role Off##QuickSetupFinish", leaveOff))
+        if (UiGui.RadioButton("Save setup and leave role Off##QuickSetupFinish", leaveOff))
             setupCompletionChoice = QuickSetupCompletionChoice.LeaveAutomationOff;
 
         if (!string.IsNullOrWhiteSpace(setupMessage))
             CoppeliaUi.StatusText(setupMessage, ready: false);
 
-        if (ImGui.Button("Back##QuickSetupFinish"))
+        if (UiGui.Button("Back##QuickSetupFinish"))
         {
             setupStep = QuickSetupStep.Configure;
             setupMessage = string.Empty;
         }
 
         ImGui.SameLine();
-        if (ImGui.Button("Cancel##QuickSetupFinish"))
+        if (UiGui.Button("Cancel##QuickSetupFinish"))
             CancelQuickSetup();
 
         ImGui.SameLine();
@@ -605,14 +614,14 @@ public sealed class ConfigWindow : Window, IDisposable
     private void DrawSetupNavigation(bool allowContinue)
     {
         ImGui.Spacing();
-        if (ImGui.Button("Back##QuickSetupConfigure"))
+        if (UiGui.Button("Back##QuickSetupConfigure"))
         {
             setupStep = QuickSetupStep.ChooseMode;
             setupMessage = string.Empty;
         }
 
         ImGui.SameLine();
-        if (ImGui.Button("Cancel##QuickSetupConfigure"))
+        if (UiGui.Button("Cancel##QuickSetupConfigure"))
             CancelQuickSetup();
 
         ImGui.SameLine();
@@ -669,9 +678,9 @@ public sealed class ConfigWindow : Window, IDisposable
 
     private void DrawGeneralSettings(Configuration configuration, ref bool changed)
     {
-        ImGui.TextDisabled($"Operating role: {configuration.OperatingRole.GetLabel()}");
+        UiGui.TextDisabled(UiText.F($"Operating role: {configuration.OperatingRole.GetLabel()}"));
         var krangleEnabled = configuration.KrangleNames;
-        if (ImGui.Checkbox("Krangle names", ref krangleEnabled))
+        if (UiGui.Checkbox("Krangle names", ref krangleEnabled))
         {
             configuration.KrangleNames = krangleEnabled;
             if (!krangleEnabled)
@@ -680,7 +689,7 @@ public sealed class ConfigWindow : Window, IDisposable
         }
 
         var dependencyToasts = configuration.ShowDependencyToasts;
-        if (ImGui.Checkbox("Show dependency toasts", ref dependencyToasts))
+        if (UiGui.Checkbox("Show dependency toasts", ref dependencyToasts))
         {
             configuration.ShowDependencyToasts = dependencyToasts;
             changed = true;
@@ -688,7 +697,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
         ImGui.SameLine();
         var dtrEnabled = configuration.DtrBarEnabled;
-        if (ImGui.Checkbox("Show DTR bar entry", ref dtrEnabled))
+        if (UiGui.Checkbox("Show DTR bar entry", ref dtrEnabled))
         {
             configuration.DtrBarEnabled = dtrEnabled;
             plugin.UpdateDtrBar();
@@ -696,8 +705,8 @@ public sealed class ConfigWindow : Window, IDisposable
         }
 
         var dtrMode = configuration.DtrBarMode;
-        ImGui.SetNextItemWidth(180f);
-        if (ImGui.Combo("DTR mode", ref dtrMode, DtrModes, DtrModes.Length))
+        ImGui.SetNextItemWidth(180f * MaterialTheme.Metrics.Scale);
+        if (UiGui.Combo("DTR mode", ref dtrMode, DtrModes, DtrModes.Length))
         {
             configuration.DtrBarMode = dtrMode;
             plugin.UpdateDtrBar();
@@ -706,13 +715,13 @@ public sealed class ConfigWindow : Window, IDisposable
 
         CoppeliaUi.SectionHeader("Companion");
         var greensCount = plugin.CoppeliaCompanionService.GetGysahlGreensCount();
-        ImGui.TextDisabled(greensCount.HasValue
+        UiGui.TextDisabled(greensCount.HasValue
             ? $"Gysahl Greens (NQ + HQ): {greensCount.Value}"
             : "Gysahl Greens (NQ + HQ): unavailable");
 
         var summonCompanion = configuration.SummonCompanionChocobo;
         ImGui.BeginDisabled(plugin.CoppeliaCompanionService.IsQstOwned);
-        if (ImGui.Checkbox("Summon companion chocobo##GeneralCompanionSummon", ref summonCompanion))
+        if (UiGui.Checkbox("Summon companion chocobo##GeneralCompanionSummon", ref summonCompanion))
         {
             configuration.SummonCompanionChocobo = summonCompanion;
             changed = true;
@@ -720,16 +729,14 @@ public sealed class ConfigWindow : Window, IDisposable
         ImGui.EndDisabled();
         if (plugin.CoppeliaCompanionService.IsQstOwned)
         {
-            ImGui.TextDisabled(
-                $"QST currently controls summoning ({(plugin.CoppeliaCompanionService.QstSummoningEnabled ? "enabled" : "disabled")}). " +
-                "Your saved local setting resumes when QST releases it.");
+            UiGui.TextDisabled(UiText.F("QST controls summoning ({0}); the saved local setting resumes after release.", UiText.T(plugin.CoppeliaCompanionService.QstSummoningEnabled ? "Enabled" : "Disabled")));
         }
 
         var companionStance = Array.IndexOf(
             CoppeliaCompanionPolicy.StanceNames,
             CoppeliaCompanionPolicy.NormalizeStance(configuration.CompanionStance));
-        ImGui.SetNextItemWidth(220f);
-        if (ImGui.Combo(
+        ImGui.SetNextItemWidth(220f * MaterialTheme.Metrics.Scale);
+        if (UiGui.Combo(
                 "Companion stance",
                 ref companionStance,
                 CoppeliaCompanionPolicy.StanceNames,
@@ -744,13 +751,13 @@ public sealed class ConfigWindow : Window, IDisposable
             "JOAT attack mode",
             "This saved local choice is used by Stand-alone JOAT and resumes after QST releases its temporary override. Both choices use RSR Manual targeting; Full RSR changes captured offensive actions and AoE, not targeting.");
         ImGui.BeginDisabled(plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned);
-        if (ImGui.RadioButton("DoTs only##GeneralJoatAttack", !configuration.JoatFullRsrRotation))
+        if (UiGui.RadioButton("DoTs only##GeneralJoatAttack", !configuration.JoatFullRsrRotation))
         {
             configuration.JoatFullRsrRotation = false;
             changed = true;
         }
-        ImGui.SameLine();
-        if (ImGui.RadioButton("Full RSR rotation##GeneralJoatAttack", configuration.JoatFullRsrRotation))
+        CoppeliaUi.SameLineFor("Full RSR rotation");
+        if (UiGui.RadioButton("Full RSR rotation##GeneralJoatAttack", configuration.JoatFullRsrRotation))
         {
             configuration.JoatFullRsrRotation = true;
             changed = true;
@@ -758,24 +765,22 @@ public sealed class ConfigWindow : Window, IDisposable
         ImGui.EndDisabled();
         if (plugin.CoppeliaQstIpcService.IsJoatAttackModeQstOwned)
         {
-            ImGui.TextDisabled(
-                $"QST currently controls JOAT attacks ({(plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation ? "Full RSR rotation" : "DoTs only")}). " +
-                "Your saved local choice resumes when QST releases it.");
+            UiGui.TextDisabled(UiText.F("QST controls the active mode ({0}); the saved local choice resumes after release.", UiText.T(plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation ? "Full RSR rotation" : "DoTs only")));
         }
 
         CoppeliaUi.SectionHeader("QST travel");
         var avoidTamamizu = configuration.AvoidTamamizuAetheryte;
-        if (ImGui.Checkbox("Do not use Tamamizu aetheryte", ref avoidTamamizu))
+        if (UiGui.Checkbox("Do not use Tamamizu aetheryte", ref avoidTamamizu))
         {
             configuration.AvoidTamamizuAetheryte = avoidTamamizu;
             changed = true;
         }
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Skips Tamamizu when choosing a QST teleport destination.");
+            UiGui.SetTooltip("Skips Tamamizu when choosing a QST teleport destination.");
 
         var territoryForwardProbeSeconds = configuration.TerritoryForwardProbeSeconds;
-        ImGui.SetNextItemWidth(260f);
-        if (ImGui.SliderInt(
+        ImGui.SetNextItemWidth(260f * MaterialTheme.Metrics.Scale);
+        if (UiGui.SliderInt(
                 "Forward territory probe duration",
                 ref territoryForwardProbeSeconds,
                 1,
@@ -789,13 +794,13 @@ public sealed class ConfigWindow : Window, IDisposable
             "How long the Helper moves forward when its paired Newb/Quester changes territory without teleporting.");
 
         var autoUpdateMapLocations = configuration.AutoUpdateMapLocationsOnLogin;
-        if (ImGui.Checkbox("Auto-update map locations on login", ref autoUpdateMapLocations))
+        if (UiGui.Checkbox("Auto-update map locations on login", ref autoUpdateMapLocations))
         {
             configuration.AutoUpdateMapLocationsOnLogin = autoUpdateMapLocations;
             changed = true;
         }
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Refreshes LootGoblin's community map-location data once per HealBot version for nearest-aetheryte selection.");
+            UiGui.SetTooltip("Refreshes LootGoblin's community map-location data once per HealBot version for nearest-aetheryte selection.");
 
         var networkRole = configuration.OperatingRole == OperatingRole.Off
             ? configuration.LastNonOffRole
@@ -807,33 +812,33 @@ public sealed class ConfigWindow : Window, IDisposable
         {
             if (networkRole == OperatingRole.Newb)
             {
-                ImGui.SetNextItemWidth(300f);
-                if (ImGui.InputText("Helper IPv4 address", ref networkAddressDraft, 45))
+                ImGui.SetNextItemWidth(300f * MaterialTheme.Metrics.Scale);
+                if (UiGui.InputText("Helper IPv4 address", ref networkAddressDraft, 45))
                     networkConfirmation = string.Empty;
                 if (ImGui.IsItemDeactivatedAfterEdit())
                     CommitNetworking(networkRole);
             }
 
-            ImGui.SetNextItemWidth(160f);
-            if (ImGui.InputInt("Pairing TCP port", ref networkPortDraft))
+            ImGui.SetNextItemWidth(160f * MaterialTheme.Metrics.Scale);
+            if (UiGui.InputInt("Pairing TCP port", ref networkPortDraft))
                 networkConfirmation = string.Empty;
             if (ImGui.IsItemDeactivatedAfterEdit())
                 CommitNetworking(networkRole);
 
-            ImGui.SetNextItemWidth(520f);
-            if (ImGui.InputText("Visible shared secret", ref networkSecretDraft, 256))
+            ImGui.SetNextItemWidth(520f * MaterialTheme.Metrics.Scale);
+            if (UiGui.InputText("Visible shared secret", ref networkSecretDraft, 256))
                 networkConfirmation = string.Empty;
             if (ImGui.IsItemDeactivatedAfterEdit())
                 CommitNetworking(networkRole);
 
-            if (ImGui.SmallButton("Generate 64-character hex secret##ConfigPairSecret"))
+            if (UiGui.SmallButton("Generate 64-character hex secret##ConfigPairSecret"))
             {
                 networkSecretDraft = Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLowerInvariant();
                 CommitNetworking(networkRole);
             }
             ImGui.SameLine();
             ImGui.BeginDisabled(string.IsNullOrEmpty(networkSecretDraft));
-            if (ImGui.SmallButton("Copy##ConfigPairSecret"))
+            if (UiGui.SmallButton("Copy##ConfigPairSecret"))
                 ImGui.SetClipboardText(networkSecretDraft);
             ImGui.EndDisabled();
             if (!string.IsNullOrWhiteSpace(networkConfirmation))
@@ -842,7 +847,7 @@ public sealed class ConfigWindow : Window, IDisposable
         }
         else
         {
-            ImGui.TextDisabled("Select Helper or Newb to edit direct-pairing settings.");
+            UiGui.TextDisabled("Select Helper or Newb to edit direct-pairing settings.");
         }
 
         CoppeliaUi.SectionHeader(
@@ -850,54 +855,54 @@ public sealed class ConfigWindow : Window, IDisposable
             "These filters control which friendly objects appear in the HealBot/JOAT Watch window.");
 
         var watchPlayers = configuration.WatchPlayers;
-        if (ImGui.Checkbox("Players", ref watchPlayers))
+        if (UiGui.Checkbox("Players", ref watchPlayers))
         {
             configuration.WatchPlayers = watchPlayers;
             changed = true;
         }
 
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("Companion chocobos");
         var watchChocobos = configuration.WatchCompanionChocobos;
-        if (ImGui.Checkbox("Companion chocobos", ref watchChocobos))
+        if (UiGui.Checkbox("Companion chocobos", ref watchChocobos))
         {
             configuration.WatchCompanionChocobos = watchChocobos;
             changed = true;
         }
 
         var watchPartyNpcs = configuration.WatchPartyNpcs;
-        if (ImGui.Checkbox("NPC party members", ref watchPartyNpcs))
+        if (UiGui.Checkbox("NPC party members", ref watchPartyNpcs))
         {
             configuration.WatchPartyNpcs = watchPartyNpcs;
             changed = true;
         }
 
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("Friendly battle NPCs");
         var watchBattleNpcs = configuration.WatchFriendlyBattleNpcs;
-        if (ImGui.Checkbox("Friendly battle NPCs", ref watchBattleNpcs))
+        if (UiGui.Checkbox("Friendly battle NPCs", ref watchBattleNpcs))
         {
             configuration.WatchFriendlyBattleNpcs = watchBattleNpcs;
             changed = true;
         }
 
         var saveHealTargets = configuration.SaveHealTargets;
-        if (ImGui.Checkbox("Save heal targets", ref saveHealTargets))
+        if (UiGui.Checkbox("Save heal targets", ref saveHealTargets))
         {
             configuration.SaveHealTargets = saveHealTargets;
             changed = true;
         }
 
         ImGui.SameLine();
-        ImGui.SetNextItemWidth(170f);
+        ImGui.SetNextItemWidth(170f * MaterialTheme.Metrics.Scale);
         var scanRange = configuration.SavedTargetScanRangeYalms;
-        if (ImGui.SliderInt("Saved target scan range", ref scanRange, 1, 200, "%d y"))
+        if (UiGui.SliderInt("Saved target scan range", ref scanRange, 1, 200, "%d y"))
         {
             configuration.SavedTargetScanRangeYalms = scanRange;
             changed = true;
         }
 
-        ImGui.TextDisabled($"Multi-target watch cap: {WatchTargetService.MaxTrackedTargets} active and {WatchTargetService.MaxTrackedTargets} saved targets.");
-        ImGui.TextDisabled("Use the Watch window to add or remove targets. Save heal targets only persists the targets you explicitly keep watched.");
-        ImGui.TextDisabled("Unticking a watched target or Ctrl-clearing the watch set removes it from the saved set too. Scan range only affects saved targets rejoining after they return.");
+        UiGui.TextDisabled(UiText.F($"Multi-target watch cap: {WatchTargetService.MaxTrackedTargets} active and {WatchTargetService.MaxTrackedTargets} saved targets."));
+        UiGui.TextDisabled("Use the Watch window to add or remove targets. Save heal targets only persists the targets you explicitly keep watched.");
+        UiGui.TextDisabled("Unticking a watched target or Ctrl-clearing the watch set removes it from the saved set too. Scan range only affects saved targets rejoining after they return.");
     }
 
     private void CommitNetworking(OperatingRole role)
@@ -933,19 +938,19 @@ public sealed class ConfigWindow : Window, IDisposable
 
     private void DrawJobTabsContent(Configuration configuration, ref bool changed)
     {
-        ImGui.TextDisabled("Alive order: Instant BUFF -> Instant oGCD -> Casted BUFF -> Casted GCD. Dead-target prep checks instant buffs before raise.");
+        UiGui.TextDisabled("Alive order: Instant BUFF -> Instant oGCD -> Casted BUFF -> Casted GCD. Dead-target prep checks instant buffs before raise.");
 
-        if (!ImGui.BeginTabBar("CoppeliaJobTabs"))
+        if (!UiGui.BeginTabBar("CoppeliaJobTabs",JobTabs.Select(tab=>tab.Item2).ToArray()))
             return;
 
         foreach (var (jobId, label) in JobTabs)
         {
-            if (!ImGui.BeginTabItem(label))
+            if (!UiGui.BeginTabItem(label))
                 continue;
 
             var jobConfig = configuration.GetJobConfigForJob(jobId);
             var jobEnabled = jobConfig.Enabled;
-            if (ImGui.Checkbox($"Enable {label}##JobEnabled{jobId}", ref jobEnabled))
+            if (UiGui.Checkbox($"Enable {label}##JobEnabled{jobId}", ref jobEnabled))
             {
                 jobConfig.Enabled = jobEnabled;
                 changed = true;
@@ -972,25 +977,30 @@ public sealed class ConfigWindow : Window, IDisposable
         if (definitions.Length == 0)
             return;
 
-        ImGui.TextUnformatted(group.GetLabel());
+        var scale=MaterialTheme.Metrics.Scale;
+        var priorityWidth=UiGui.NumberMinimum(false)+12*scale;
+        var percentWidth=UiGui.NumberMinimum(false)+12*scale;
+        var triggerWidth=TriggerKinds.Max(item=>MaterialText.Measure(UiText.T(item.GetLabel())).X)+ImGui.GetFrameHeight()+2*ImGui.GetStyle().FramePadding.X+12*scale;
+        var matrixWidth=(42+180+54+150)*scale+priorityWidth+2*percentWidth+triggerWidth;
+        UiGui.TextUnformatted(group.GetLabel());
         if (!ImGui.BeginTable(
                 $"CoppeliaRules{jobId}{group}",
                 8,
-                ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY,
-                new Vector2(-1f, 170f)))
+                ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY | ImGuiTableFlags.ScrollX,
+                new Vector2(-1f, (CoppeliaPresentation.Compact ? 140f : 170f) * scale),Math.Max(matrixWidth,ImGui.GetContentRegionAvail().X)))
         {
             return;
         }
 
-        ImGui.TableSetupColumn("On", ImGuiTableColumnFlags.WidthFixed, 42f);
-        ImGui.TableSetupColumn("Priority", ImGuiTableColumnFlags.WidthFixed, 70f);
+        ImGui.TableSetupColumn("On", ImGuiTableColumnFlags.WidthFixed, 42f * MaterialTheme.Metrics.Scale);
+        ImGui.TableSetupColumn("Priority", ImGuiTableColumnFlags.WidthFixed, priorityWidth);
         ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.WidthStretch, 0.32f);
-        ImGui.TableSetupColumn("Trigger", ImGuiTableColumnFlags.WidthFixed, 120f);
-        ImGui.TableSetupColumn("HP%", ImGuiTableColumnFlags.WidthFixed, 70f);
-        ImGui.TableSetupColumn("MP%", ImGuiTableColumnFlags.WidthFixed, 70f);
-        ImGui.TableSetupColumn("OOC", ImGuiTableColumnFlags.WidthFixed, 54f);
-        ImGui.TableSetupColumn("Need Missing Buff", ImGuiTableColumnFlags.WidthFixed, 150f);
-        ImGui.TableHeadersRow();
+        ImGui.TableSetupColumn("Trigger", ImGuiTableColumnFlags.WidthFixed, triggerWidth);
+        ImGui.TableSetupColumn("HP%", ImGuiTableColumnFlags.WidthFixed, percentWidth);
+        ImGui.TableSetupColumn("MP%", ImGuiTableColumnFlags.WidthFixed, percentWidth);
+        ImGui.TableSetupColumn("OOC", ImGuiTableColumnFlags.WidthFixed, 54f * MaterialTheme.Metrics.Scale);
+        ImGui.TableSetupColumn("Need Missing Buff", ImGuiTableColumnFlags.WidthFixed, 150f * MaterialTheme.Metrics.Scale);
+        UiGui.TableHeadersRow();
 
         foreach (var definition in definitions)
         {
@@ -1001,16 +1011,16 @@ public sealed class ConfigWindow : Window, IDisposable
 
             ImGui.TableSetColumnIndex(0);
             var enabled = rule.Enabled;
-            if (ImGui.Checkbox($"##Enabled{jobId}{group}{rule.ActionName}", ref enabled))
+            if (UiGui.Checkbox($"##Enabled{jobId}{group}{rule.ActionName}", ref enabled))
             {
                 rule.Enabled = enabled;
                 changed = true;
             }
 
             ImGui.TableSetColumnIndex(1);
-            ImGui.SetNextItemWidth(62f);
+            ImGui.SetNextItemWidth(62f * MaterialTheme.Metrics.Scale);
             var priority = rule.Priority;
-            if (ImGui.InputInt($"##Priority{jobId}{group}{rule.ActionName}", ref priority))
+            if (UiGui.InputInt($"##Priority{jobId}{group}{rule.ActionName}", ref priority))
             {
                 rule.Priority = Math.Clamp(priority, 0, 999);
                 changed = true;
@@ -1021,15 +1031,15 @@ public sealed class ConfigWindow : Window, IDisposable
             var meta = definition.TargetKind == HealbotTargetKind.Self
                 ? "self"
                 : "watched target";
-            if (!string.IsNullOrWhiteSpace(definition.TrackedStatusName))
-                meta = $"{meta} - tracks {definition.TrackedStatusName}";
-            ImGui.TextDisabled(meta);
+            if(!string.IsNullOrWhiteSpace(definition.TrackedStatusName))
+                UiGui.TextDisabled(UiText.F("{0} - tracks {1}",UiText.T(definition.TargetKind==HealbotTargetKind.Self?"self":"watched target"),definition.TrackedStatusName));
+            else UiGui.TextDisabled(meta);
 
             ImGui.TableSetColumnIndex(3);
-            ImGui.SetNextItemWidth(110f);
+            ImGui.SetNextItemWidth(110f * MaterialTheme.Metrics.Scale);
             var triggerIndex = Array.IndexOf(TriggerKinds, rule.TriggerKind);
             var triggerLabels = TriggerKinds.Select(item => item.GetLabel()).ToArray();
-            if (ImGui.Combo($"##Trigger{jobId}{group}{rule.ActionName}", ref triggerIndex, triggerLabels, triggerLabels.Length) &&
+            if (UiGui.Combo($"##Trigger{jobId}{group}{rule.ActionName}", ref triggerIndex, triggerLabels, triggerLabels.Length) &&
                 triggerIndex >= 0 &&
                 triggerIndex < TriggerKinds.Length)
             {
@@ -1039,9 +1049,9 @@ public sealed class ConfigWindow : Window, IDisposable
 
             ImGui.TableSetColumnIndex(4);
             ImGui.BeginDisabled(rule.TriggerKind == HealbotTriggerKind.DeadTarget);
-            ImGui.SetNextItemWidth(64f);
+            ImGui.SetNextItemWidth(64f * MaterialTheme.Metrics.Scale);
             var hpThreshold = rule.HpThresholdPercent;
-            if (ImGui.SliderInt($"##Hp{jobId}{group}{rule.ActionName}", ref hpThreshold, 0, 100, "%d"))
+            if (UiGui.SliderInt($"##Hp{jobId}{group}{rule.ActionName}", ref hpThreshold, 0, 100, "%d"))
             {
                 rule.HpThresholdPercent = hpThreshold;
                 changed = true;
@@ -1049,9 +1059,9 @@ public sealed class ConfigWindow : Window, IDisposable
             ImGui.EndDisabled();
 
             ImGui.TableSetColumnIndex(5);
-            ImGui.SetNextItemWidth(64f);
+            ImGui.SetNextItemWidth(64f * MaterialTheme.Metrics.Scale);
             var mpThreshold = rule.MinimumMpPercent;
-            if (ImGui.SliderInt($"##Mp{jobId}{group}{rule.ActionName}", ref mpThreshold, 0, 100, "%d"))
+            if (UiGui.SliderInt($"##Mp{jobId}{group}{rule.ActionName}", ref mpThreshold, 0, 100, "%d"))
             {
                 rule.MinimumMpPercent = mpThreshold;
                 changed = true;
@@ -1059,7 +1069,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
             ImGui.TableSetColumnIndex(6);
             var allowOoc = rule.AllowOutOfCombat;
-            if (ImGui.Checkbox($"##Ooc{jobId}{group}{rule.ActionName}", ref allowOoc))
+            if (UiGui.Checkbox($"##Ooc{jobId}{group}{rule.ActionName}", ref allowOoc))
             {
                 rule.AllowOutOfCombat = allowOoc;
                 changed = true;
@@ -1068,7 +1078,7 @@ public sealed class ConfigWindow : Window, IDisposable
             ImGui.TableSetColumnIndex(7);
             ImGui.BeginDisabled(string.IsNullOrWhiteSpace(definition.TrackedStatusName));
             var requireMissing = rule.RequireMissingTrackedStatus;
-            if (ImGui.Checkbox($"##NeedBuff{jobId}{group}{rule.ActionName}", ref requireMissing))
+            if (UiGui.Checkbox($"##NeedBuff{jobId}{group}{rule.ActionName}", ref requireMissing))
             {
                 rule.RequireMissingTrackedStatus = requireMissing;
                 changed = true;
@@ -1083,38 +1093,38 @@ public sealed class ConfigWindow : Window, IDisposable
     {
         CoppeliaUi.SectionHeader("Stand-alone HealBot requirements");
         foreach (var requirement in PluginInfo.RequiredPlugins)
-            ImGui.BulletText(requirement);
+            UiGui.BulletText(requirement);
 
         CoppeliaUi.SectionHeader("HealBot optional integration");
         foreach (var recommendation in PluginInfo.RecommendedPlugins)
-            ImGui.BulletText(recommendation);
+            UiGui.BulletText(recommendation);
 
         CoppeliaUi.SectionHeader("PowerlevelBot requirements");
-        ImGui.BulletText("A currently equipped and unlocked BRD or MCH.");
-        ImGui.BulletText("Compatible FrenRider Powerlevel IPC with FrenRider enabled.");
-        ImGui.BulletText("A configured, visible Fren and no active companion chocobo.");
+        UiGui.BulletText("A currently equipped and unlocked BRD or MCH.");
+        UiGui.BulletText("Compatible FrenRider Powerlevel IPC with FrenRider enabled.");
+        UiGui.BulletText("A configured, visible Fren and no active companion chocobo.");
 
         CoppeliaUi.SectionHeader("Jacqueline of All Trades (JOAT) requirements");
-        ImGui.BulletText("The HealBot dependencies, a supported equipped healer, an enabled healer action matrix, and an explicitly watched target.");
-        ImGui.BulletText("Loaded, working Rotation Solver Reborn; JOAT damage is executed only through RSR.");
-        ImGui.BulletText("Compatible FrenRider Powerlevel IPC with FrenRider enabled and its configured Fren visible.");
-        ImGui.BulletText("The Fren is never auto-added to Watch; select it explicitly when it is the low-level heal target.");
+        UiGui.BulletText("The HealBot dependencies, a supported equipped healer, an enabled healer action matrix, and an explicitly watched target.");
+        UiGui.BulletText("Loaded, working Rotation Solver Reborn; JOAT damage is executed only through RSR.");
+        UiGui.BulletText("Compatible FrenRider Powerlevel IPC with FrenRider enabled and its configured Fren visible.");
+        UiGui.BulletText("The Fren is never auto-added to Watch; select it explicitly when it is the low-level heal target.");
 
         CoppeliaUi.SectionHeader("Helper / Newb pairing requirements");
-        ImGui.BulletText("Helper needs a valid TCP port and visible shared secret; Newb additionally needs the Helper IPv4 address.");
-        ImGui.BulletText("Both peers must run compatible direct-pairing protocol v2 and use the same port and shared secret.");
-        ImGui.BulletText("Helper needs the HealBot/JOAT dependencies plus Lifestream and vnavmesh for paired travel.");
-        ImGui.BulletText("Traffic is authenticated but not encrypted; names and coordinates remain visible on the network.");
+        UiGui.BulletText("Helper needs a valid TCP port and visible shared secret; Newb additionally needs the Helper IPv4 address.");
+        UiGui.BulletText("Both peers must run compatible direct-pairing protocol v2 and use the same port and shared secret.");
+        UiGui.BulletText("Helper needs the HealBot/JOAT dependencies plus Lifestream and vnavmesh for paired travel.");
+        UiGui.BulletText("Traffic is authenticated but not encrypted; names and coordinates remain visible on the network.");
 
         CoppeliaUi.SectionHeader("Commands and windows");
-        ImGui.TextDisabled("HealBot supports /healbot, /hb, and /copellia with off, on, standalone, helper, newb, heal, joat (or jot), powerlevel, mini, status, config, watch, ws, and j.");
-        if (ImGui.Button("Open Main##Requirements"))
+        UiGui.TextDisabled("HealBot supports /healbot, /hb, and /copellia with off, on, standalone, helper, newb, heal, joat (or jot), powerlevel, mini, status, config, watch, ws, and j.");
+        if (UiGui.Button("Open Main##Requirements"))
             plugin.OpenMainUi();
         ImGui.SameLine();
-        if (ImGui.Button("Open Watch##Requirements"))
+        if (UiGui.Button("Open Watch##Requirements"))
             plugin.OpenWatchUi();
         ImGui.SameLine();
-        if (ImGui.Button("Open Mini##Requirements"))
+        if (UiGui.Button("Open Mini##Requirements"))
             plugin.OpenMiniUi();
         ImGui.SameLine();
         if (CoppeliaUi.PrimaryButton("Run Quick Setup##Requirements"))

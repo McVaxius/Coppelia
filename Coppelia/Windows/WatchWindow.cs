@@ -1,3 +1,4 @@
+using AethertekUI;
 using System.Diagnostics;
 using System.Numerics;
 using Coppelia.Models;
@@ -9,6 +10,7 @@ namespace Coppelia.Windows;
 
 public sealed class WatchWindow : Window, IDisposable
 {
+    private readonly AethertekUI.Dalamud.MaterialWindowMotion windowMotion = new();
     private const float MinWatchTableHeight = 260f;
     private const float MaxRetainedTableShare = 0.35f;
     private const int MaxVisibleRetainedRows = 6;
@@ -28,10 +30,10 @@ public sealed class WatchWindow : Window, IDisposable
         this.plugin = plugin;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(920f, 660f),
+            MinimumSize = new Vector2(420f, 400f),
             MaximumSize = new Vector2(1700f, 1200f),
         };
-        Size = new Vector2(1200f, 860f);
+        Size = new Vector2(510f, 600f);
         SizeCondition = ImGuiCond.FirstUseEver;
     }
 
@@ -48,13 +50,20 @@ public sealed class WatchWindow : Window, IDisposable
             pendingSavedPositionApply = true;
             pendingWindowPosition = null;
         }
+        windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
     }
+
+    public override void PostDraw()
+        { windowMotion.Restore(this); plugin.PaintWindowTitle(WindowName,UiText.F("{0} Watch",PluginInfo.DisplayName)); }
 
     public override void Draw()
     {
-        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(6f, 4f));
+        windowMotion.DrawChrome();
+        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemSpacing);
         try
         {
+            UiGui.Title("HealBot Watch",UiText.F("{0} Watch",PluginInfo.DisplayName));
+            using var typography = UiText.FontScale(1.25f);
             var retainedTargets = plugin.WatchTargetService.RetainedTargets.ToArray();
 
             DrawHeader();
@@ -69,7 +78,7 @@ public sealed class WatchWindow : Window, IDisposable
                 }
             }
 
-            DrawWatchTable(MathF.Max(MinWatchTableHeight, ImGui.GetContentRegionAvail().Y));
+            DrawWatchTable(MathF.Max(MinWatchTableHeight * MaterialTheme.Metrics.Scale, ImGui.GetContentRegionAvail().Y));
             TrackWindowPosition();
         }
         finally
@@ -98,77 +107,61 @@ public sealed class WatchWindow : Window, IDisposable
 
     private void DrawHeader()
     {
-        CoppeliaUi.SectionHeader(
-            "Watch status",
-            "This window manages the Stand-alone HealBot/JOAT watch list and any session-only Helper assignment. PowerlevelBot and Newb do not use this local list.");
-
-        if (plugin.WatchTargetService.HasEphemeralQstTarget)
-        {
-            var state = plugin.WatchTargetService.IsEphemeralQstTargetVisible
-                ? "visible and resolved into the native HealBot candidate"
-                : "selected but remote";
-            CoppeliaUi.StatusText(
-                $"{plugin.WatchTargetService.EphemeralAssignmentLabel}: {plugin.FormatDisplayName(plugin.WatchTargetService.EphemeralQstTargetName)} is {state}.",
-                ready: plugin.WatchTargetService.IsEphemeralQstTargetVisible);
-            CoppeliaUi.WrappedHelp("This session-only exact target overrides saved watched targets for automation without changing or saving them.");
-        }
-
-        ImGui.TextUnformatted("Operating role");
+        CoppeliaUi.Brand("Watch");
+        UiGui.TextUnformatted("Operating role");
         DrawRoleRadio("Off##WatchRole", OperatingRole.Off);
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("Stand-alone");
         DrawRoleRadio("Stand-alone##WatchRole", OperatingRole.StandAlone);
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("Helper");
         DrawRoleRadio("Helper##WatchRole", OperatingRole.Helper);
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("Newb");
         DrawRoleRadio("Newb##WatchRole", OperatingRole.Newb);
-
-        if (plugin.Configuration.OperatingRole == OperatingRole.StandAlone)
-        {
-            ImGui.SameLine();
-            if (ImGui.RadioButton("HealBot##WatchBehavior", plugin.Configuration.BotMode == BotMode.HealBot))
-                plugin.SetStandaloneBehavior(BotMode.HealBot, printStatus: true);
-            ImGui.SameLine();
-            if (ImGui.RadioButton("JOAT##WatchBehavior", plugin.Configuration.BotMode == BotMode.Jot))
-                plugin.SetStandaloneBehavior(BotMode.Jot, printStatus: true);
-            ImGui.SameLine();
-            if (ImGui.RadioButton("PowerlevelBot##WatchBehavior", plugin.Configuration.BotMode == BotMode.PowerlevelBot))
-                plugin.SetStandaloneBehavior(BotMode.PowerlevelBot, printStatus: true);
-        }
-
-        ImGui.Spacing();
         var krangleEnabled = plugin.Configuration.KrangleNames;
-        if (ImGui.Checkbox("Krangle names##WatchWindow", ref krangleEnabled))
+        if (UiGui.Checkbox("Krangle names##WatchWindow", ref krangleEnabled))
         {
             plugin.Configuration.KrangleNames = krangleEnabled;
             plugin.Configuration.Save();
-            if (!krangleEnabled)
-                KrangleService.ClearCache();
+            if (!krangleEnabled) KrangleService.ClearCache();
         }
-
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Main##WatchWindow"))
-            plugin.OpenMainUi();
-
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Settings##WatchWindow"))
-            plugin.OpenConfigUi();
-
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Mini##WatchWindow"))
-            plugin.OpenMiniUi();
-
-        ImGui.SameLine();
-        if (CoppeliaUi.PrimaryButton("Quick Setup##WatchWindow"))
-            plugin.OpenQuickSetupUi();
-
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Ko-fi##WatchWindow"))
+        CoppeliaUi.SameLineFor("Quick Setup");
+        if (CoppeliaUi.PrimaryButton("Quick Setup##WatchWindow")) plugin.OpenQuickSetupUi();
+        CoppeliaUi.SameLineFor("Main");
+        if (UiGui.SmallButton("Main##WatchWindow")) plugin.OpenMainUi();
+        CoppeliaUi.SameLineFor("Settings");
+        if (UiGui.SmallButton("Settings##WatchWindow")) plugin.OpenConfigUi();
+        CoppeliaUi.SameLineFor("Mini");
+        if (UiGui.SmallButton("Mini##WatchWindow")) plugin.OpenMiniUi();
+        CoppeliaUi.SameLineFor("Ko-fi");
+        if (UiGui.SmallButton("Ko-fi##WatchWindow"))
             Process.Start(new ProcessStartInfo { FileName = PluginInfo.SupportUrl, UseShellExecute = true });
+        if (UiGui.CollapsingHeader("Status and behavior##WatchDetails"))
+        {
+            if (plugin.Configuration.OperatingRole == OperatingRole.StandAlone)
+            {
+                if (UiGui.RadioButton("HealBot##WatchBehavior", plugin.Configuration.BotMode == BotMode.HealBot))
+                    plugin.SetStandaloneBehavior(BotMode.HealBot, printStatus: true);
+                CoppeliaUi.SameLineFor("JOAT");
+                if (UiGui.RadioButton("JOAT##WatchBehavior", plugin.Configuration.BotMode == BotMode.Jot))
+                    plugin.SetStandaloneBehavior(BotMode.Jot, printStatus: true);
+                CoppeliaUi.SameLineFor("PowerlevelBot");
+                if (UiGui.RadioButton("PowerlevelBot##WatchBehavior", plugin.Configuration.BotMode == BotMode.PowerlevelBot))
+                    plugin.SetStandaloneBehavior(BotMode.PowerlevelBot, printStatus: true);
+            }
+            DrawWatchDiagnostics();
+        }
+    }
 
+    private void DrawWatchDiagnostics()
+    {
+        if (plugin.WatchTargetService.HasEphemeralQstTarget)
+        {
+            CoppeliaUi.StatusText(plugin.WatchTargetService.IsEphemeralQstTargetVisible ? "Visible - native HealBot target" : "Selected - remote", plugin.WatchTargetService.IsEphemeralQstTargetVisible);
+            CoppeliaUi.WrappedHelp("This session-only exact target overrides saved watched targets for automation without changing or saving them.");
+        }
         var operational = plugin.GetOperationalStatus();
-        ImGui.TextWrapped($"Primary state: {operational.PrimaryState}");
-        ImGui.TextWrapped($"Next action: {operational.NextAction}");
-        ImGui.TextWrapped($"Active / paired identity: {operational.Identity}");
+        UiGui.TextWrapped(UiText.F($"Primary state: {operational.PrimaryState}"));
+        UiGui.TextWrapped(UiText.F($"Next action: {operational.NextAction}"));
+        UiGui.TextWrapped(UiText.F($"Active / paired identity: {operational.Identity}"));
 
         if (plugin.Configuration.OperatingRole != OperatingRole.Newb &&
             plugin.Configuration.BotMode == BotMode.Jot)
@@ -181,10 +174,10 @@ public sealed class WatchWindow : Window, IDisposable
             }
 
             ImGui.PushStyleColor(ImGuiCol.Text, CoppeliaUi.Accent);
-            ImGui.TextWrapped($"Healing: {plugin.HealbotRuntimeService.StatusText}");
-            ImGui.TextWrapped($"Attacking: {plugin.JotRuntimeService.StatusText}");
+            UiGui.TextWrapped(UiText.F($"Healing: {plugin.HealbotRuntimeService.StatusText}"));
+            UiGui.TextWrapped(UiText.F($"Attacking: {plugin.JotRuntimeService.StatusText}"));
             ImGui.PopStyleColor();
-            ImGui.TextDisabled($"Healing action: {plugin.HealbotRuntimeService.LastIssuedAction} | Attack action: {plugin.JotRuntimeService.LastIssuedAction}");
+            UiGui.TextDisabled(UiText.F($"Healing action: {plugin.HealbotRuntimeService.LastIssuedAction} | Attack action: {plugin.JotRuntimeService.LastIssuedAction}"));
             CoppeliaUi.WrappedHelp("Select FrenRider's configured Fren explicitly when it is the low-level target to heal. JOAT never inserts it into this list.");
             return;
         }
@@ -193,9 +186,9 @@ public sealed class WatchWindow : Window, IDisposable
         {
             var pairing = plugin.HealBotPairingService.Snapshot;
             ImGui.PushStyleColor(ImGuiCol.Text, CoppeliaUi.Accent);
-            ImGui.TextWrapped($"Pairing: {pairing.PrimaryState} - {pairing.Identity}");
-            ImGui.TextWrapped($"Remote healing: {pairing.JoatState}");
-            ImGui.TextWrapped($"Remote chase: {pairing.TravelState}");
+            UiGui.TextWrapped(UiText.F($"Pairing: {pairing.PrimaryState} - {pairing.Identity}"));
+            UiGui.TextWrapped(UiText.F($"Remote healing: {pairing.JoatState}"));
+            UiGui.TextWrapped(UiText.F($"Remote chase: {pairing.TravelState}"));
             ImGui.PopStyleColor();
             CoppeliaUi.WrappedHelp("Newb performs no local healing or attacking. This watched-target list remains unchanged for later HealBot or JOAT use.");
             return;
@@ -205,13 +198,13 @@ public sealed class WatchWindow : Window, IDisposable
             ? plugin.PowerlevelRuntimeService.StatusText
             : plugin.HealbotRuntimeService.StatusText;
         ImGui.PushStyleColor(ImGuiCol.Text, CoppeliaUi.Accent);
-        ImGui.TextWrapped(runtimeStatus);
+        UiGui.TextWrapped(runtimeStatus);
         ImGui.PopStyleColor();
     }
 
     private void DrawRoleRadio(string label, OperatingRole role)
     {
-        if (ImGui.RadioButton(label, plugin.Configuration.OperatingRole == role))
+        if (UiGui.RadioTile(label, plugin.Configuration.OperatingRole == role, height: 30))
             plugin.SetOperatingRole(role, printStatus: true);
     }
 
@@ -228,89 +221,85 @@ public sealed class WatchWindow : Window, IDisposable
     {
         var configuration = plugin.Configuration;
 
-        CoppeliaUi.SectionHeader(
-            "Target controls",
-            "Add the current target, refresh the object table, or hold Ctrl to clear every active and saved target.");
+        ImGui.Spacing();
 
-        if (ImGui.SmallButton("Refresh##WatchWindow"))
+        if (UiGui.SmallButton("Refresh##WatchWindow"))
             plugin.WatchTargetService.Update(configuration, force: true);
 
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Target current##WatchWindow"))
+        CoppeliaUi.SameLineFor("Target current");
+        if (UiGui.SmallButton("Target current##WatchWindow"))
         {
             plugin.WatchTargetService.TryAddCurrentGameTarget(configuration, out var message);
             plugin.PrintStatus(message);
         }
 
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("Clear watched");
         var ctrlHeld = ImGui.GetIO().KeyCtrl;
         ImGui.BeginDisabled(!ctrlHeld);
-        if (ImGui.SmallButton("Clear watched##WatchWindow"))
+        if (UiGui.SmallButton("Clear watched##WatchWindow"))
         {
             plugin.WatchTargetService.ClearWatchedTargets(configuration);
             plugin.PrintStatus("Cleared watched and saved targets.");
         }
         ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGui.SetTooltip("Hold Ctrl to clear all watched targets and saved targets.");
+            UiGui.SetTooltip("Hold Ctrl to clear all watched targets and saved targets.");
 
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("Save heal targets");
         var saveHealTargets = configuration.SaveHealTargets;
-        if (ImGui.Checkbox("Save heal targets##WatchWindow", ref saveHealTargets))
+        if (UiGui.Checkbox("Save heal targets##WatchWindow", ref saveHealTargets))
         {
             configuration.SaveHealTargets = saveHealTargets;
             configuration.Save();
             plugin.WatchTargetService.Update(configuration, force: true);
         }
 
-        ImGui.SameLine();
-        ImGui.SetNextItemWidth(110f);
+        CoppeliaUi.SameLineFor("Scan y", 110);
+        ImGui.SetNextItemWidth(110f * MaterialTheme.Metrics.Scale);
         var scanRange = configuration.SavedTargetScanRangeYalms;
-        if (ImGui.SliderInt("Scan y##WatchWindow", ref scanRange, 1, 200, "%d"))
+        if (UiGui.SliderInt("Scan y##WatchWindow", ref scanRange, 1, 200, "%d"))
         {
             configuration.SavedTargetScanRangeYalms = scanRange;
             configuration.Save();
             plugin.WatchTargetService.Update(configuration, force: true);
         }
 
-        CoppeliaUi.SectionHeader(
-            "Filters",
-            "Filters control discovery and visibility. They do not change an already retained target until you explicitly remove it.");
+        ImGui.Spacing();
 
-        ImGui.SetNextItemWidth(220f);
-        ImGui.InputTextWithHint("##WatchFilter", "Filter names...", ref nameFilter, 100);
-        ImGui.SameLine();
-        ImGui.TextDisabled("Filter by name, type, or job");
+        ImGui.SetNextItemWidth(Math.Min(220f * MaterialTheme.Metrics.Scale, ImGui.GetContentRegionAvail().X));
+        UiGui.InputTextWithHint("##WatchFilter", "Filter names...", ref nameFilter, 100);
+        CoppeliaUi.SameLineFor("Filter by name, type, or job");
+        UiGui.TextDisabled("Filter by name, type, or job");
 
         var watchPlayers = configuration.WatchPlayers;
-        if (ImGui.Checkbox("Players##WatchWindow", ref watchPlayers))
+        if (UiGui.Checkbox("Players##WatchWindow", ref watchPlayers))
         {
             configuration.WatchPlayers = watchPlayers;
             configuration.Save();
             plugin.WatchTargetService.Update(configuration, force: true);
         }
 
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("Chocobos");
         var watchChocobos = configuration.WatchCompanionChocobos;
-        if (ImGui.Checkbox("Chocobos##WatchWindow", ref watchChocobos))
+        if (UiGui.Checkbox("Chocobos##WatchWindow", ref watchChocobos))
         {
             configuration.WatchCompanionChocobos = watchChocobos;
             configuration.Save();
             plugin.WatchTargetService.Update(configuration, force: true);
         }
 
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("NPC Party");
         var watchPartyNpcs = configuration.WatchPartyNpcs;
-        if (ImGui.Checkbox("NPC Party##WatchWindow", ref watchPartyNpcs))
+        if (UiGui.Checkbox("NPC Party##WatchWindow", ref watchPartyNpcs))
         {
             configuration.WatchPartyNpcs = watchPartyNpcs;
             configuration.Save();
             plugin.WatchTargetService.Update(configuration, force: true);
         }
 
-        ImGui.SameLine();
+        CoppeliaUi.SameLineFor("Battle NPC");
         var watchBattleNpcs = configuration.WatchFriendlyBattleNpcs;
-        if (ImGui.Checkbox("Battle NPC##WatchWindow", ref watchBattleNpcs))
+        if (UiGui.Checkbox("Battle NPC##WatchWindow", ref watchBattleNpcs))
         {
             configuration.WatchFriendlyBattleNpcs = watchBattleNpcs;
             configuration.Save();
@@ -323,6 +312,11 @@ public sealed class WatchWindow : Window, IDisposable
 
     private void DrawRetainedTargets(ResolvedWatchTarget[] retainedTargets, float tableHeight)
     {
+        var widths = MeasureWatchColumns(retainedTargets.Select(target => new[]
+        {
+            string.Empty, plugin.FormatDisplayName(target.Name), UiText.T(target.CategoryLabel), target.JobLabel,
+            UiText.T(BuildRetainedStateLabel(target)), float.IsNaN(target.Distance) ? "--" : target.Distance.ToString("F1", UiText.Current.Culture),
+        }), retained: true);
         CoppeliaUi.SectionHeader(
             $"Retained or absent targets ({retainedTargets.Length})",
             "Absent rows require Ctrl+untick. Removing one here also removes its saved copy.");
@@ -330,20 +324,20 @@ public sealed class WatchWindow : Window, IDisposable
         if (!ImGui.BeginTable(
                 "CoppeliaRetainedTargets",
                 6,
-                ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY |
+                ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY | ImGuiTableFlags.ScrollX |
                 ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.Resizable,
-                new Vector2(-1f, tableHeight)))
+                new Vector2(-1f, tableHeight), widths.Sum() + 12 * ImGui.GetStyle().CellPadding.X))
         {
             return;
         }
 
-        ImGui.TableSetupColumn("Watch", ImGuiTableColumnFlags.WidthFixed, 54f);
+        ImGui.TableSetupColumn("Watch", ImGuiTableColumnFlags.WidthFixed, widths[0]);
         ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch, 0.34f);
-        ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 130f);
-        ImGui.TableSetupColumn("Job", ImGuiTableColumnFlags.WidthFixed, 70f);
-        ImGui.TableSetupColumn("State", ImGuiTableColumnFlags.WidthFixed, 210f);
-        ImGui.TableSetupColumn("Dist", ImGuiTableColumnFlags.WidthFixed, 64f);
-        ImGui.TableHeadersRow();
+        ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, widths[2]);
+        ImGui.TableSetupColumn("Job", ImGuiTableColumnFlags.WidthFixed, widths[3]);
+        ImGui.TableSetupColumn("State", ImGuiTableColumnFlags.WidthFixed, widths[4]);
+        ImGui.TableSetupColumn("Dist", ImGuiTableColumnFlags.WidthFixed, widths[5]);
+        UiGui.TableHeadersRow();
 
         foreach (var target in retainedTargets)
         {
@@ -351,7 +345,7 @@ public sealed class WatchWindow : Window, IDisposable
 
             ImGui.TableSetColumnIndex(0);
             var trackedState = target.IsActive || target.IsSaved;
-            if (ImGui.Checkbox($"##RetainedWatch{target.Entry.Name}{target.Entry.GameObjectId}", ref trackedState))
+            if (UiGui.Checkbox($"##RetainedWatch{target.Entry.Name}{target.Entry.GameObjectId}", ref trackedState))
             {
                 if (trackedState && target.LiveSnapshot != null)
                 {
@@ -368,16 +362,16 @@ public sealed class WatchWindow : Window, IDisposable
             ImGui.TextUnformatted(plugin.FormatDisplayName(target.Name));
 
             ImGui.TableSetColumnIndex(2);
-            ImGui.TextUnformatted(target.CategoryLabel);
+            UiGui.TextUnformatted(target.CategoryLabel);
 
             ImGui.TableSetColumnIndex(3);
             ImGui.TextUnformatted(target.JobLabel);
 
             ImGui.TableSetColumnIndex(4);
-            ImGui.TextUnformatted(BuildRetainedStateLabel(target));
+            UiGui.TextUnformatted(BuildRetainedStateLabel(target));
 
             ImGui.TableSetColumnIndex(5);
-            ImGui.TextUnformatted(float.IsNaN(target.Distance) ? "--" : $"{target.Distance:F1}");
+            UiGui.TextUnformatted(float.IsNaN(target.Distance) ? "--" : target.Distance.ToString("F1",UiText.Current.Culture));
         }
 
         ImGui.EndTable();
@@ -386,8 +380,13 @@ public sealed class WatchWindow : Window, IDisposable
     private void DrawWatchTable(float height)
     {
         var targets = FilteredTargets().ToArray();
+        var widths = MeasureWatchColumns(targets.Select(target => new[]
+        {
+            string.Empty, plugin.FormatDisplayName(target.Name), UiText.T(target.CategoryLabel), target.JobLabel,
+            target.IsDead ? UiText.T("Dead") : UiText.F("{0}%", target.HpPercent), target.Distance.ToString("F1", UiText.Current.Culture),
+        }), retained: false);
         var savedText = plugin.Configuration.SaveHealTargets
-            ? plugin.WatchTargetService.SavedTargetCount.ToString()
+            ? plugin.WatchTargetService.SavedTargetCount.ToString(UiText.Current.Culture)
             : "Off";
         CoppeliaUi.SectionHeader(
             $"Live eligible targets ({targets.Length})",
@@ -402,20 +401,20 @@ public sealed class WatchWindow : Window, IDisposable
         if (!ImGui.BeginTable(
                 "CoppeliaWatchWindowTable",
                 6,
-                ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY |
+                ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY | ImGuiTableFlags.ScrollX |
                 ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.Resizable,
-                new Vector2(-1f, height)))
+                new Vector2(-1f, height), widths.Sum() + 12 * ImGui.GetStyle().CellPadding.X))
         {
             return;
         }
 
-        ImGui.TableSetupColumn("Watch", ImGuiTableColumnFlags.WidthFixed, 54f);
+        ImGui.TableSetupColumn("Watch", ImGuiTableColumnFlags.WidthFixed, widths[0]);
         ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch, 0.34f);
-        ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 130f);
-        ImGui.TableSetupColumn("Job", ImGuiTableColumnFlags.WidthFixed, 70f);
-        ImGui.TableSetupColumn("HP", ImGuiTableColumnFlags.WidthFixed, 90f);
-        ImGui.TableSetupColumn("Dist", ImGuiTableColumnFlags.WidthFixed, 64f);
-        ImGui.TableHeadersRow();
+        ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, widths[2]);
+        ImGui.TableSetupColumn("Job", ImGuiTableColumnFlags.WidthFixed, widths[3]);
+        ImGui.TableSetupColumn("HP", ImGuiTableColumnFlags.WidthFixed, widths[4]);
+        ImGui.TableSetupColumn("Dist", ImGuiTableColumnFlags.WidthFixed, widths[5]);
+        UiGui.TableHeadersRow();
 
         foreach (var target in targets)
         {
@@ -425,39 +424,53 @@ public sealed class WatchWindow : Window, IDisposable
 
             ImGui.TableSetColumnIndex(0);
             var watchedState = isWatched;
-            if (ImGui.Checkbox($"##Watch{target.GameObjectId}", ref watchedState))
+            if (UiGui.Checkbox($"##Watch{target.GameObjectId}", ref watchedState))
                 ToggleLiveTarget(target, watchedState);
 
             ImGui.TableSetColumnIndex(1);
             ImGui.TextUnformatted(plugin.FormatDisplayName(target.Name));
 
             ImGui.TableSetColumnIndex(2);
-            ImGui.TextUnformatted(target.CategoryLabel);
+            UiGui.TextUnformatted(target.CategoryLabel);
 
             ImGui.TableSetColumnIndex(3);
             ImGui.TextUnformatted(target.JobLabel);
 
             ImGui.TableSetColumnIndex(4);
-            var hpText = target.IsDead ? "Dead" : $"{target.HpPercent}%";
-            ImGui.TextUnformatted(hpText);
+            var hpText = target.IsDead ? "Dead" : UiText.F("{0}%",target.HpPercent);
+            UiGui.TextUnformatted(hpText);
 
             ImGui.TableSetColumnIndex(5);
-            ImGui.TextUnformatted($"{target.Distance:F1}");
+            UiGui.TextUnformatted(target.Distance.ToString("F1", UiText.Current.Culture));
         }
 
         ImGui.EndTable();
     }
 
+    private static float[] MeasureWatchColumns(IEnumerable<string[]> rows, bool retained)
+    {
+        var scale = MaterialTheme.Metrics.Scale;
+        var headings = new[] { "Watch", "Name", "Type", "Job", retained ? "State" : "HP", "Dist" };
+        var widths = new[] { 32f, 120f, 80f, 40f, retained ? 145f : 50f, 52f };
+        for (var column = 0; column < widths.Length; column++)
+            widths[column] = MathF.Ceiling(MathF.Max(widths[column] * scale, MaterialText.Measure(UiText.T(headings[column])).X + 2 * scale));
+        widths[0] = MathF.Max(widths[0], MathF.Ceiling(ImGui.GetFrameHeight()));
+        foreach (var row in rows)
+            for (var column = 1; column < widths.Length; column++)
+                widths[column] = MathF.Max(widths[column], MathF.Ceiling(MaterialText.Measure(row[column]).X + 2 * scale));
+        return widths;
+    }
+
     private static float CalculateRetainedTableHeight(int retainedCount, float availableHeight)
     {
-        var maxHeight = MathF.Min(availableHeight * MaxRetainedTableShare, availableHeight - MinWatchTableHeight);
-        if (maxHeight <= 0f)
-            return 0f;
-
+        var maxHeight = MathF.Min(availableHeight * MaxRetainedTableShare, availableHeight - MinWatchTableHeight * MaterialTheme.Metrics.Scale);
         var visibleRows = Math.Clamp(retainedCount, 1, MaxVisibleRetainedRows);
         var rowHeight = ImGui.GetFrameHeightWithSpacing();
-        var desiredHeight = ((visibleRows + 1) * rowHeight) + 6f;
-        return MathF.Min(desiredHeight, maxHeight);
+        var desiredHeight = ((visibleRows + 1) * rowHeight) + 6f * MaterialTheme.Metrics.Scale;
+        // Keep retained targets reachable when the header exceeds a small viewport.
+        // The outer window can scroll; its height must not remove this section.
+        var minimumHeight = 3 * rowHeight + 6f * MaterialTheme.Metrics.Scale;
+        return MathF.Min(desiredHeight, MathF.Max(minimumHeight, maxHeight));
     }
 
     private IEnumerable<WatchTargetSnapshot> FilteredTargets()
@@ -519,17 +532,17 @@ public sealed class WatchWindow : Window, IDisposable
 
     private static string BuildRetainedStateLabel(ResolvedWatchTarget target)
     {
-        var prefix = target.IsActive ? "Watched" : target.IsSaved ? "Saved" : "Tracked";
+        var prefix = UiText.T(target.IsActive ? "Watched" : target.IsSaved ? "Saved" : "Tracked");
         if (target.IsMissingFromObjectTable)
-            return $"{prefix} / absent / Ctrl remove";
+            return UiText.F("{0} / absent / Ctrl remove", prefix);
 
         if (target.IsHiddenByFilters)
-            return $"{prefix} / hidden by filters";
+            return UiText.F("{0} / hidden by filters", prefix);
 
         if (!target.IsVisibleInObjectTable)
-            return $"{prefix} / retained";
+            return UiText.F("{0} / retained", prefix);
 
-        return target.IsDead ? $"{prefix} / dead" : $"{prefix} / {target.HpPercent}% HP";
+        return target.IsDead ? UiText.F("{0} / dead", prefix) : UiText.F("{0} / {1}% HP", prefix, target.HpPercent);
     }
 
     private void TrackWindowPosition()

@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="K000" xml:space="preserve"><value>%d saniye</value></data>
+  <data name="K001" xml:space="preserve"><value>%d y</value></data>
+  <data name="K002" xml:space="preserve"><value>...ve izlenen {0} hedef daha.</value></data>
+  <data name="K003" xml:space="preserve"><value>{0} - {1} izleniyor</value></data>
+  <data name="K004" xml:space="preserve"><value>{0} / %{1} HP</value></data>
+  <data name="K005" xml:space="preserve"><value>{0} / yok / Ctrl ile kaldır</value></data>
+  <data name="K006" xml:space="preserve"><value>{0} / ölü</value></data>
+  <data name="K007" xml:space="preserve"><value>{0} / filtrelerle gizli</value></data>
+  <data name="K008" xml:space="preserve"><value>{0} / korunan</value></data>
+  <data name="K009" xml:space="preserve"><value>{0} [{1}] - {2}</value></data>
+  <data name="K010" xml:space="preserve"><value>{0} doğrudan eşleştirme</value></data>
+  <data name="K011" xml:space="preserve"><value>{0} kuşanıldı</value></data>
+  <data name="K012" xml:space="preserve"><value>{0} kilidi açılmadı</value></data>
+  <data name="K013" xml:space="preserve"><value>{0} Mini</value></data>
+  <data name="K014" xml:space="preserve"><value>{0} korunan/kaydedilen hedef gizli veya yok. Yönetmek için izleme penceresini açın.</value></data>
+  <data name="K015" xml:space="preserve"><value>{0} Ayarlar</value></data>
+  <data name="K016" xml:space="preserve"><value>{0} İzleme</value></data>
+  <data name="K017" xml:space="preserve"><value>%{0}</value></data>
+  <data name="K018" xml:space="preserve"><value>%{0} HP</value></data>
+  <data name="K019" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="K020" xml:space="preserve"><value>47789 ayrılmıştır</value></data>
+  <data name="K021" xml:space="preserve"><value>Yapılandırılmış, görünür bir Fren ve etkin yoldaş chocobo bulunmaması.</value></data>
+  <data name="K022" xml:space="preserve"><value>Şu anda kuşanılmış ve kilidi açılmış BRD veya MCH.</value></data>
+  <data name="K023" xml:space="preserve"><value>Olmayan satırlar Ctrl ile işaret kaldırmayı gerektirir. Buradan kaldırmak kayıtlı kopyayı da kaldırır.</value></data>
+  <data name="K024" xml:space="preserve"><value>Eylem</value></data>
+  <data name="K025" xml:space="preserve"><value>Etkin - gönder</value></data>
+  <data name="K026" xml:space="preserve"><value>Etkin / eşleştirilen kimlik</value></data>
+  <data name="K027" xml:space="preserve"><value>Etkin / eşleştirilen kimlik: {0}</value></data>
+  <data name="K028" xml:space="preserve"><value>Etkin: {0}/{1} | Mevcut: {2} | Kayıtlı: {3}</value></data>
+  <data name="K029" xml:space="preserve"><value>Etkin: 1/{0} | Mevcut: {1} | Kayıtlı: değişmedi</value></data>
+  <data name="K030" xml:space="preserve"><value>Canlı sıra: anlık BUFF -&gt; anlık oGCD -&gt; kullanımı süreli BUFF -&gt; kullanımı süreli GCD. Ölü hedef hazırlığı diriltmeden önce anlık buffları kontrol eder.</value></data>
+  <data name="K031" xml:space="preserve"><value>Astrolog (AST)</value></data>
+  <data name="K032" xml:space="preserve"><value>En az 16 karakter</value></data>
+  <data name="K033" xml:space="preserve"><value>Saldırı eylemi: {0}</value></data>
+  <data name="K034" xml:space="preserve"><value>Saldırı hedefi: {0}</value></data>
+  <data name="K035" xml:space="preserve"><value>Saldırı duruşu</value></data>
+  <data name="K036" xml:space="preserve"><value>Saldırı hazırlığı</value></data>
+  <data name="K037" xml:space="preserve"><value>Saldırı: {0}</value></data>
+  <data name="K038" xml:space="preserve"><value>Kimliği doğrulanmış doğrudan eşleştirme görünür ortak sırrı kullanır.</value></data>
+  <data name="K039" xml:space="preserve"><value>Kimliği doğrulanmış LAN trafiği şifrelenmez; karakter adları ve koordinatlar ağda görünür kalır.</value></data>
+  <data name="K040" xml:space="preserve"><value>Girişte harita konumlarını güncelle</value></data>
+  <data name="K041" xml:space="preserve"><value>Kullanılabilir</value></data>
+  <data name="K042" xml:space="preserve"><value>Kullanılabilir ve uyumlu</value></data>
+  <data name="K043" xml:space="preserve"><value>Geri</value></data>
+  <data name="K044" xml:space="preserve"><value>Ozan (BRD)</value></data>
+  <data name="K045" xml:space="preserve"><value>Savaş NPC'si</value></data>
+  <data name="K046" xml:space="preserve"><value>BMR veya VBM</value></data>
+  <data name="K047" xml:space="preserve"><value>Her iki seçenek RSR Manual hedeflemesini kullanır. Yalnızca DoT, kuşanılan şifacının zamanla hasar eylemlerini açar; tam RSR, otomatik hedeflemeyi açmadan kaydedilen saldırı eylemlerini ve AoE modunu geri yükler.</value></data>
+  <data name="K048" xml:space="preserve"><value>Her iki seçenek RSR Manual hedeflemesini kullanır. Tam RSR yalnızca saldırı eylemlerini ve AoE'yi değiştirir.</value></data>
+  <data name="K049" xml:space="preserve"><value>İki taraf da uyumlu doğrudan eşleştirme v2 protokolünü, aynı portu ve ortak sırrı kullanmalıdır.</value></data>
+  <data name="K050" xml:space="preserve"><value>İptal</value></data>
+  <data name="K051" xml:space="preserve"><value>İzlenen dost hedeflere yapılandırılmış iyileştirme eylemlerini uygular.</value></data>
+  <data name="K052" xml:space="preserve"><value>Chocobolar</value></data>
+  <data name="K053" xml:space="preserve"><value>Bir çalışma rolü seçin. Bağımsız mod bir yerel davranış kullanır. Ayarlar Bitir'e kadar taslakta kalır; İptal taslağı siler.</value></data>
+  <data name="K054" xml:space="preserve"><value>Zaten kuşanılmış menzilli mesleği seçin. HealBot hiçbir zaman ekipman setini değiştirmez ve bu modda izlenen hedef listesini kullanmaz.</value></data>
+  <data name="K055" xml:space="preserve"><value>İzleme'de görünecek dost nesneleri seçin. Yalnızca açıkça işaretlediğiniz hedefler iyileştirilir veya kaydedilir.</value></data>
+  <data name="K056" xml:space="preserve"><value>İzlenenleri temizle</value></data>
+  <data name="K057" xml:space="preserve"><value>İzlenen ve kayıtlı hedefler temizlendi.</value></data>
+  <data name="K058" xml:space="preserve"><value>Komutlar ve pencereler</value></data>
+  <data name="K059" xml:space="preserve"><value>Yoldaş</value></data>
+  <data name="K060" xml:space="preserve"><value>Yoldaş chocobo</value></data>
+  <data name="K061" xml:space="preserve"><value>Yoldaş chocobolar</value></data>
+  <data name="K062" xml:space="preserve"><value>Yoldaş duruşu</value></data>
+  <data name="K063" xml:space="preserve"><value>FrenRider etkin ve yapılandırılmış Fren görünürken uyumlu FrenRider Powerlevel IPC.</value></data>
+  <data name="K064" xml:space="preserve"><value>FrenRider etkinken uyumlu FrenRider Powerlevel IPC.</value></data>
+  <data name="K065" xml:space="preserve"><value>Kimliği doğrulanmış bir doğrudan TCP HealBot uç noktası yapılandırın. Newb asla yerel iyileştirme veya saldırı yapmaz.</value></data>
+  <data name="K066" xml:space="preserve"><value>Kimliği doğrulanmış dinleme portunu ve görünür ortak sırrı yapılandırın.</value></data>
+  <data name="K067" xml:space="preserve"><value>Seçilen HealBot, JOAT veya PowerlevelBot davranışını ağ bağlantısı olmadan yapılandırın.</value></data>
+  <data name="K068" xml:space="preserve"><value>Yapılandırıldı</value></data>
+  <data name="K069" xml:space="preserve"><value>Yapılandırılan Fren</value></data>
+  <data name="K070" xml:space="preserve"><value>Devam</value></data>
+  <data name="K071" xml:space="preserve"><value>Kopyala</value></data>
+  <data name="K072" xml:space="preserve"><value>Sırrı kopyala</value></data>
+  <data name="K073" xml:space="preserve"><value>Geçerli meslek kimliği {0} eşleşmiyor</value></data>
+  <data name="K074" xml:space="preserve"><value>Ölü</value></data>
+  <data name="K075" xml:space="preserve"><value>varsayılan</value></data>
+  <data name="K076" xml:space="preserve"><value>Savunma duruşu</value></data>
+  <data name="K077" xml:space="preserve"><value>Bağımlılık hazırlığı</value></data>
+  <data name="K078" xml:space="preserve"><value>Ayrıntılar</value></data>
+  <data name="K079" xml:space="preserve"><value>Devre Dışı</value></data>
+  <data name="K080" xml:space="preserve"><value>Discord</value></data>
+  <data name="K081" xml:space="preserve"><value>Gönderildi</value></data>
+  <data name="K082" xml:space="preserve"><value>Mesafe</value></data>
+  <data name="K083" xml:space="preserve"><value>Tamamizu aetheryte'ını kullanma</value></data>
+  <data name="K084" xml:space="preserve"><value>Yalnızca DoT</value></data>
+  <data name="K085" xml:space="preserve"><value>DTR çubuğu</value></data>
+  <data name="K086" xml:space="preserve"><value>DTR modu</value></data>
+  <data name="K087" xml:space="preserve"><value>{0} etkinleştir</value></data>
+  <data name="K088" xml:space="preserve"><value>Etkin</value></data>
+  <data name="K089" xml:space="preserve"><value>Etkin, yapılandırılmış ve görünür</value></data>
+  <data name="K090" xml:space="preserve"><value>Uç nokta: {0}</value></data>
+  <data name="K091" xml:space="preserve"><value>Düşman seçimi, Fren veya yerel oyuncuyla zaten çatışan hasar almış düşmanlarla sınırlıdır.</value></data>
+  <data name="K092" xml:space="preserve"><value>Kuşanıldı</value></data>
+  <data name="K093" xml:space="preserve"><value>Ada, türe veya mesleğe göre filtrele</value></data>
+  <data name="K094" xml:space="preserve"><value>Adları filtrele...</value></data>
+  <data name="K095" xml:space="preserve"><value>Filtreler: oyuncular {0}, chocobolar {1}, NPC grubu {2}, dost savaş NPC'leri {3}.</value></data>
+  <data name="K096" xml:space="preserve"><value>Bitir, seçilen rolü şimdi başlatmalı veya Kapalı kalırken /healbot on ile sürdürülecek rol olarak kaydetmelidir.</value></data>
+  <data name="K097" xml:space="preserve"><value>Kurulumu bitir</value></data>
+  <data name="K098" xml:space="preserve"><value>Takip et</value></data>
+  <data name="K099" xml:space="preserve"><value>İleri bölge yoklama süresi</value></data>
+  <data name="K100" xml:space="preserve"><value>Serbest duruş</value></data>
+  <data name="K101" xml:space="preserve"><value>Fren görünürlüğü</value></data>
+  <data name="K102" xml:space="preserve"><value>FrenRider</value></data>
+  <data name="K103" xml:space="preserve"><value>FrenRider saldırı IPC</value></data>
+  <data name="K104" xml:space="preserve"><value>FrenRider saldırı kaynağı</value></data>
+  <data name="K105" xml:space="preserve"><value>FrenRider IPC</value></data>
+  <data name="K106" xml:space="preserve"><value>Dost savaş NPC'leri</value></data>
+  <data name="K107" xml:space="preserve"><value>Tam RSR rotasyonu</value></data>
+  <data name="K108" xml:space="preserve"><value>Genel</value></data>
+  <data name="K109" xml:space="preserve"><value>64 karakterli onaltılık sır üret</value></data>
+  <data name="K110" xml:space="preserve"><value>Sır üret</value></data>
+  <data name="K111" xml:space="preserve"><value>Gysahl Greens (NQ + HQ): {0}</value></data>
+  <data name="K112" xml:space="preserve"><value>Gysahl Greens (NQ + HQ): kullanılamıyor</value></data>
+  <data name="K113" xml:space="preserve"><value>HealBot</value></data>
+  <data name="K114" xml:space="preserve"><value>HealBot {0}</value></data>
+  <data name="K115" xml:space="preserve"><value>HealBot eylemleri</value></data>
+  <data name="K116" xml:space="preserve"><value>HealBot ve JOAT bu mesleğe özel iyileştirme eylem matrisini paylaşır. PowerlevelBot bu kuralları kullanmaz.</value></data>
+  <data name="K117" xml:space="preserve"><value>HealBot yapılandırılan {0} hedefli izleme listesini değerlendirir ve mevcut WHM, SCH, AST veya SGE eylem matrisini kullanır. Hedefler grubunuz dışındaki dost oyuncular olabilir.</value></data>
+  <data name="K118" xml:space="preserve"><value>HealBot Mini</value></data>
+  <data name="K119" xml:space="preserve"><value>İsteğe bağlı HealBot entegrasyonu</value></data>
+  <data name="K120" xml:space="preserve"><value>HealBot yolu</value></data>
+  <data name="K121" xml:space="preserve"><value>HealBot; /healbot, /hb ve /copellia komutlarında off, on, standalone, helper, newb, heal, joat (veya jot), powerlevel, mini, status, config, watch, ws ve j seçeneklerini destekler.</value></data>
+  <data name="K122" xml:space="preserve"><value>HealBot İzleme</value></data>
+  <data name="K123" xml:space="preserve"><value>Şifacı eylem matrisi</value></data>
+  <data name="K124" xml:space="preserve"><value>Şifa duruşu</value></data>
+  <data name="K125" xml:space="preserve"><value>İyileştirme eylemi: {0} | Saldırı eylemi: {1}</value></data>
+  <data name="K126" xml:space="preserve"><value>İyileştirme yapılandırması</value></data>
+  <data name="K127" xml:space="preserve"><value>İyileştirme bağlamı</value></data>
+  <data name="K128" xml:space="preserve"><value>İyileştirme bağımlılıkları</value></data>
+  <data name="K129" xml:space="preserve"><value>İyileştirme koşulu</value></data>
+  <data name="K130" xml:space="preserve"><value>İyileştirme hazırlığı</value></data>
+  <data name="K131" xml:space="preserve"><value>İyileştirme her 900 ms karar döngüsünde önceliklidir. Coppelia, eşleşen İzleme kuralı uygulanmadan önce RSR'yi kapatır; iyileştirme sırada, engelli veya kullanımdayken kapalı tutar ve RSR Manual'ı yalnızca iyileştirme gerçekten boşta olduğunda kullanır. Eşleşen JOAT 30 yalm ve altında Manual'da bekler; çatışan düşmanı yalnızca Coppelia seçer.</value></data>
+  <data name="K132" xml:space="preserve"><value>İyileştirme: {0}</value></data>
+  <data name="K133" xml:space="preserve"><value>Yardımcı</value></data>
+  <data name="K134" xml:space="preserve"><value>Yardımcı / Newb eşleştirme gereksinimleri</value></data>
+  <data name="K135" xml:space="preserve"><value>Yardımcı adresi</value></data>
+  <data name="K136" xml:space="preserve"><value>Yardımcı uç noktası: {0}:{1}.</value></data>
+  <data name="K137" xml:space="preserve"><value>Yardımcı IPv4 adresi</value></data>
+  <data name="K138" xml:space="preserve"><value>Yardımcı dinleme portu: {0}.</value></data>
+  <data name="K139" xml:space="preserve"><value>Yardımcı, kimliği doğrulanmış bir Newb'ü dinler ve JOAT'ı yalnızca uyumlu bir durum isteğinden sonra etkinleştirir.</value></data>
+  <data name="K140" xml:space="preserve"><value>Yardımcı geçerli bir TCP portu ve görünür ortak sır gerektirir; Newb ayrıca Yardımcı'nın IPv4 adresini gerektirir.</value></data>
+  <data name="K141" xml:space="preserve"><value>Yardımcı, eşleşmiş seyahat için HealBot/JOAT bağımlılıkları ile Lifestream ve vnavmesh gerektirir.</value></data>
+  <data name="K142" xml:space="preserve"><value>Yardımcı dinleme portunu ve ortak sırrı yönetir. Newb ayrıca Yardımcı'nın IPv4 adresini yönetir.</value></data>
+  <data name="K143" xml:space="preserve"><value>Filtrelerle gizli</value></data>
+  <data name="K144" xml:space="preserve"><value>Tüm izlenen ve kayıtlı hedefleri temizlemek için Ctrl'yi basılı tutun.</value></data>
+  <data name="K145" xml:space="preserve"><value>Korunan fakat olmayan {0} hedefinin işaretini kaldırırken Ctrl'yi basılı tutun.</value></data>
+  <data name="K146" xml:space="preserve"><value>Eşleşen Newb/Quester ışınlanmadan bölge değiştirdiğinde Yardımcı'nın ne kadar ilerleyeceği.</value></data>
+  <data name="K147" xml:space="preserve"><value>HP</value></data>
+  <data name="K148" xml:space="preserve"><value>HP kullanılamıyor</value></data>
+  <data name="K149" xml:space="preserve"><value>HP%</value></data>
+  <data name="K150" xml:space="preserve"><value>HP: {0}</value></data>
+  <data name="K151" xml:space="preserve"><value>HP: HP kullanılamıyor</value></data>
+  <data name="K152" xml:space="preserve"><value>HP: Hedef görünmüyor</value></data>
+  <data name="K153" xml:space="preserve"><value>Simge ve metin</value></data>
+  <data name="K154" xml:space="preserve"><value>Yalnızca simge</value></data>
+  <data name="K155" xml:space="preserve"><value>Uyumsuz</value></data>
+  <data name="K156" xml:space="preserve"><value>Geçersiz IPv4 adresi</value></data>
+  <data name="K157" xml:space="preserve"><value>Jacqueline of All Trades (JOAT)</value></data>
+  <data name="K158" xml:space="preserve"><value>Jacqueline of All Trades (JOAT) gereksinimleri</value></data>
+  <data name="K159" xml:space="preserve"><value>JOAT</value></data>
+  <data name="K160" xml:space="preserve"><value>JOAT saldırı modu</value></data>
+  <data name="K161" xml:space="preserve"><value>JOAT saldırı modu: {0}; her ikisi de iyileştirme döngüleri gerçekten boşta olduğunda RSR Manual hedeflemesini kullanır.</value></data>
+  <data name="K162" xml:space="preserve"><value>JOAT saldırı hazırlığı</value></data>
+  <data name="K163" xml:space="preserve"><value>JOAT, FrenRider'ın Fren'ini otomatik eklemez. İyileştirmeyle korunması gereken düşük seviyeli hedefse İzleme'de bu Fren'i açıkça seçin.</value></data>
+  <data name="K164" xml:space="preserve"><value>JOAT iyileştirme matrisi</value></data>
+  <data name="K165" xml:space="preserve"><value>JOAT iyileştirme yolu</value></data>
+  <data name="K166" xml:space="preserve"><value>JOAT, FrenRider'ın Fren'ini asla İzleme'ye eklemez. İyileştirmeyle korunması için orada açıkça seçin; saldırılar yalnızca görünür Fren'i veya yerel şifacıyı hedefleyen düşmanlarla sınırlıdır.</value></data>
+  <data name="K167" xml:space="preserve"><value>JOAT hazırlığı henüz kontrol edilmedi.</value></data>
+  <data name="K168" xml:space="preserve"><value>JOAT izlenen hedefler</value></data>
+  <data name="K169" xml:space="preserve"><value>JOAT: {0}</value></data>
+  <data name="K170" xml:space="preserve"><value>Meslek</value></data>
+  <data name="K171" xml:space="preserve"><value>Meslek kuşanıldı</value></data>
+  <data name="K172" xml:space="preserve"><value>Meslek kilidi açıldı</value></data>
+  <data name="K173" xml:space="preserve"><value>Ko-fi</value></data>
+  <data name="K174" xml:space="preserve"><value>Krangle</value></data>
+  <data name="K175" xml:space="preserve"><value>Adları Değiştir</value></data>
+  <data name="K176" xml:space="preserve"><value>Ad karıştırma: KAPALI</value></data>
+  <data name="K177" xml:space="preserve"><value>Ad karıştırma: AÇIK</value></data>
+  <data name="K178" xml:space="preserve"><value>LAN trafiğinin kimliği doğrulanır ancak şifrelenmez. Karakter adları ve koordinatlar yerel ağda görünür kalır. Bağlantı, kimlik doğrulama, atama ve yeniden bağlantı işlemleri eşzamansız kalır.</value></data>
+  <data name="K179" xml:space="preserve"><value>Dil</value></data>
+  <data name="K180" xml:space="preserve"><value>Son eylem</value></data>
+  <data name="K181" xml:space="preserve"><value>Son kural</value></data>
+  <data name="K182" xml:space="preserve"><value>Mevcut uygun hedefler ({0})</value></data>
+  <data name="K183" xml:space="preserve"><value>Yüklendi</value></data>
+  <data name="K184" xml:space="preserve"><value>Rotation Solver Reborn yüklendi ve çalışıyor; JOAT hasarı yalnızca RSR aracılığıyla uygulanır.</value></data>
+  <data name="K185" xml:space="preserve"><value>Yerel şifacı: {0} ({1})</value></data>
+  <data name="K186" xml:space="preserve"><value>Yerel Newb HP: {0}</value></data>
+  <data name="K187" xml:space="preserve"><value>Yerel Newb kimliği</value></data>
+  <data name="K188" xml:space="preserve"><value>Newb'ü başlatmadan önce girişin tamamlanmasını bekleyin</value></data>
+  <data name="K189" xml:space="preserve"><value>LOS: {0}</value></data>
+  <data name="K190" xml:space="preserve"><value>LOS: Hedef görünmüyor</value></data>
+  <data name="K191" xml:space="preserve"><value>Makinist (MCH)</value></data>
+  <data name="K192" xml:space="preserve"><value>Ana</value></data>
+  <data name="K193" xml:space="preserve"><value>İzlenen hedefleri yönetin ve müttefikleri tarayın.</value></data>
+  <data name="K194" xml:space="preserve"><value>İzlenen hedefleri yalnızca İzleme penceresinde yönetin. Orada Ctrl ile temizlemek etkin izlenen ve kayıtlı hedefleri kaldırır.</value></data>
+  <data name="K195" xml:space="preserve"><value>Mini</value></data>
+  <data name="K196" xml:space="preserve"><value>Eksik</value></data>
+  <data name="K197" xml:space="preserve"><value>Eksik (isteğe bağlı)</value></data>
+  <data name="K198" xml:space="preserve"><value>MP%</value></data>
+  <data name="K199" xml:space="preserve"><value>Çoklu hedef izleme sınırı: {0} etkin ve {1} kayıtlı hedef.</value></data>
+  <data name="K200" xml:space="preserve"><value>Ad</value></data>
+  <data name="K201" xml:space="preserve"><value>Eksik buff gerekli</value></data>
+  <data name="K202" xml:space="preserve"><value>Ağ ayarları zaten kayıtlı.</value></data>
+  <data name="K203" xml:space="preserve"><value>Ağ ayarları kaydedildi; doğrudan eşleştirme bir kez yeniden başlatıldı.</value></data>
+  <data name="K204" xml:space="preserve"><value>Newb</value></data>
+  <data name="K205" xml:space="preserve"><value>Newb, bir Yardımcı IPv4 uç noktasına tam olarak eşzamansız bağlanır ve asla yerel iyileştirme veya saldırı yapmaz.</value></data>
+  <data name="K206" xml:space="preserve"><value>Newb yerel iyileştirme veya saldırı yapmaz ve Bağımsız izleme listesini değiştirmez.</value></data>
+  <data name="K207" xml:space="preserve"><value>Newb yerel iyileştirme veya saldırı yapmaz. Bu izlenen hedef listesi daha sonra HealBot veya JOAT kullanımı için değişmeden kalır.</value></data>
+  <data name="K208" xml:space="preserve"><value>Sonraki eylem</value></data>
+  <data name="K209" xml:space="preserve"><value>Sonraki eylem: {0}</value></data>
+  <data name="K210" xml:space="preserve"><value>Etkin yardımcı/quester yok</value></data>
+  <data name="K211" xml:space="preserve"><value>Etkin izlenen hedef yok</value></data>
+  <data name="K212" xml:space="preserve"><value>Mevcut filtrelere uyan uygun hedef yok.</value></data>
+  <data name="K213" xml:space="preserve"><value>Henüz izlenen hedef seçilmedi.</value></data>
+  <data name="K214" xml:space="preserve"><value>Yok</value></data>
+  <data name="K215" xml:space="preserve"><value>Seçim yok</value></data>
+  <data name="K216" xml:space="preserve"><value>Edinilmedi</value></data>
+  <data name="K217" xml:space="preserve"><value>Ayarlanmamış</value></data>
+  <data name="K218" xml:space="preserve"><value>Kilidi açılmadı</value></data>
+  <data name="K219" xml:space="preserve"><value>Görünmüyor</value></data>
+  <data name="K220" xml:space="preserve"><value>NPC grubu</value></data>
+  <data name="K221" xml:space="preserve"><value>NPC grubu üyeleri</value></data>
+  <data name="K222" xml:space="preserve"><value>Kapalı</value></data>
+  <data name="K223" xml:space="preserve"><value>açık</value></data>
+  <data name="K224" xml:space="preserve"><value>Yalnızca yapılandırılmış görünür Fren'i veya yerel oyuncuyu zaten hedefleyen hasar almış düşmanlar uygundur.</value></data>
+  <data name="K225" xml:space="preserve"><value>Çatışma dışında</value></data>
+  <data name="K226" xml:space="preserve"><value>Ana pencereyi aç</value></data>
+  <data name="K227" xml:space="preserve"><value>Mini'yi aç</value></data>
+  <data name="K228" xml:space="preserve"><value>Mevcut İzleme penceresini şimdi açın. Taslak filtre değişiklikleri yalnızca Bitir'den sonra uygulanır.</value></data>
+  <data name="K229" xml:space="preserve"><value>İzleme'yi aç</value></data>
+  <data name="K230" xml:space="preserve"><value>İzleme penceresini aç</value></data>
+  <data name="K231" xml:space="preserve"><value>Çalışma rolü</value></data>
+  <data name="K232" xml:space="preserve"><value>Çalışma rolü: {0}</value></data>
+  <data name="K233" xml:space="preserve"><value>Çalışma durumu</value></data>
+  <data name="K234" xml:space="preserve"><value>Eşleştirme portu</value></data>
+  <data name="K235" xml:space="preserve"><value>Eşleştirilen Yardımcı: {0}</value></data>
+  <data name="K236" xml:space="preserve"><value>Eşleştirme TCP portu</value></data>
+  <data name="K237" xml:space="preserve"><value>Eşleştirme: {0} - {1}</value></data>
+  <data name="K238" xml:space="preserve"><value>Oyuncular</value></data>
+  <data name="K239" xml:space="preserve"><value>Powerlevel mesleği</value></data>
+  <data name="K240" xml:space="preserve"><value>Powerlevel mesleği: {0}.</value></data>
+  <data name="K241" xml:space="preserve"><value>Powerlevel hazırlığı henüz kontrol edilmedi.</value></data>
+  <data name="K242" xml:space="preserve"><value>PowerlevelBot</value></data>
+  <data name="K243" xml:space="preserve"><value>PowerlevelBot yalnızca FrenRider'ın yapılandırılmış görünür Fren'ini veya yerel oyuncuyu hedefleyen canlı, hedeflenebilir, hasar almış düşmanları değerlendirir. Anlık, yalnızca düşmana yönelik, tek hedefli BRD/MCH eylemlerini kullanır ve dokunulmamış düşmanları çekmez.</value></data>
+  <data name="K244" xml:space="preserve"><value>PowerlevelBot, HealBot izleme listesini yok sayar ve FrenRider'ın yapılandırılmış Fren'ini lider olarak kullanır.</value></data>
+  <data name="K245" xml:space="preserve"><value>PowerlevelBot ekipman setini asla değiştirmez; geçerli mesleğiniz bu seçimle eşleşmelidir.</value></data>
+  <data name="K246" xml:space="preserve"><value>PowerlevelBot yolu</value></data>
+  <data name="K247" xml:space="preserve"><value>PowerlevelBot gereksinimleri</value></data>
+  <data name="K248" xml:space="preserve"><value>Birincil durum</value></data>
+  <data name="K249" xml:space="preserve"><value>Birincil durum: {0}</value></data>
+  <data name="K250" xml:space="preserve"><value>Öncelik</value></data>
+  <data name="K251" xml:space="preserve"><value>Sağlayıcı: {0}</value></data>
+  <data name="K252" xml:space="preserve"><value>QST, JOAT saldırılarını şu anda yönetiyor ({0}). </value></data>
+  <data name="K253" xml:space="preserve"><value>QST, çağırmayı şu anda yönetiyor ({0}). </value></data>
+  <data name="K254" xml:space="preserve"><value>QST etkin saldırı modunu yönetiyor; kaydedilen yerel seçim kontrol bırakılınca sürdürülür.</value></data>
+  <data name="K255" xml:space="preserve"><value>QST seyahati</value></data>
+  <data name="K256" xml:space="preserve"><value>Hızlı kurulum</value></data>
+  <data name="K257" xml:space="preserve"><value>Hızlı Kurulum tamamlandı. Bu kalıcı sekmeden istediğiniz zaman yeniden çalıştırabilirsiniz.</value></data>
+  <data name="K258" xml:space="preserve"><value>Hazır</value></data>
+  <data name="K259" xml:space="preserve"><value>İyileştirme boşta olduğunda hazır</value></data>
+  <data name="K260" xml:space="preserve"><value>Yenile</value></data>
+  <data name="K261" xml:space="preserve"><value>Hazırlığı yenile</value></data>
+  <data name="K262" xml:space="preserve"><value>En yakın aetheryte seçimi için LootGoblin topluluk harita konumu verilerini her HealBot sürümünde bir kez yeniler.</value></data>
+  <data name="K263" xml:space="preserve"><value>Yeniden katılma tarama menzili</value></data>
+  <data name="K264" xml:space="preserve"><value>Uzaktan takip: {0}</value></data>
+  <data name="K265" xml:space="preserve"><value>Uzaktan iyileştirme: {0}</value></data>
+  <data name="K266" xml:space="preserve"><value>Gereksinimler / Yardım</value></data>
+  <data name="K267" xml:space="preserve"><value>Gereksinimler ve yardım</value></data>
+  <data name="K268" xml:space="preserve"><value>Kurtarma: {0}</value></data>
+  <data name="K269" xml:space="preserve"><value>Kurtarma: Etkin değil</value></data>
+  <data name="K270" xml:space="preserve"><value>Sınırlı düşman ilkesi</value></data>
+  <data name="K271" xml:space="preserve"><value>Korunan - yok</value></data>
+  <data name="K272" xml:space="preserve"><value>Korunan veya olmayan hedefler ({0})</value></data>
+  <data name="K273" xml:space="preserve"><value>İncele ve bitir</value></data>
+  <data name="K274" xml:space="preserve"><value>Rol ağı</value></data>
+  <data name="K275" xml:space="preserve"><value>Rol: {0}</value></data>
+  <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
+  <data name="K277" xml:space="preserve"><value>RSR</value></data>
+  <data name="K278" xml:space="preserve"><value>RSR denetimi</value></data>
+  <data name="K279" xml:space="preserve"><value>RSR zorunludur ve JOAT hasarını yalnızca o uygular. Coppelia doğrudan İzleme iyileştirmesini sürdürür ve RSR'yi kapatma/boşta sürdürme geçişini yönetir.</value></data>
+  <data name="K280" xml:space="preserve"><value>RSR yüklüyken RSR yalıtımı ve tam oturum geri yüklemesi kullanılır; HealBot iyileştirmesi doğrudan uygulanmaya devam eder.</value></data>
+  <data name="K281" xml:space="preserve"><value>Bitir'e kadar hiçbir şeyi değiştirmeden Bağımsız, Yardımcı veya Newb kurulum rehberini çalıştırın.</value></data>
+  <data name="K282" xml:space="preserve"><value>Hızlı Kurulum'u çalıştır</value></data>
+  <data name="K283" xml:space="preserve"><value>Hızlı kurulumu yeniden çalıştır</value></data>
+  <data name="K284" xml:space="preserve"><value>Önce izlenen hedefleri iyileştirir, ardından yalnızca iyileştirme döngüleri gerçekten boşta olduğunda RSR'nin saldırmasına izin verir.</value></data>
+  <data name="K285" xml:space="preserve"><value>Bilge (SGE)</value></data>
+  <data name="K286" xml:space="preserve"><value>Açıkça izlenen iyileştirme hedeflerini kaydet</value></data>
+  <data name="K287" xml:space="preserve"><value>İyileştirme hedeflerini kaydet</value></data>
+  <data name="K288" xml:space="preserve"><value>İyileştirme hedeflerini kaydet yalnızca açıkça işaretlediğiniz hedefleri saklar. İşareti kaldırmak hedefi kayıtlı kümeden de kaldırır.</value></data>
+  <data name="K289" xml:space="preserve"><value>Kurulumu kaydet ve rolü Kapalı bırak</value></data>
+  <data name="K290" xml:space="preserve"><value>Kayıtlı</value></data>
+  <data name="K291" xml:space="preserve"><value>Kayıtlı hedef tarama menzili</value></data>
+  <data name="K292" xml:space="preserve"><value>Kayıtlı hedef tarama menzili yalnızca kayıtlı bir hedef döndüğünde otomatik yeniden katılma zamanını etkiler; yeni hedef bulmaz.</value></data>
+  <data name="K293" xml:space="preserve"><value>Kayıtlı hedefler kapalı.</value></data>
+  <data name="K294" xml:space="preserve"><value>Kayıtlı hedefler açık; yeniden katılma taraması {0} y.</value></data>
+  <data name="K295" xml:space="preserve"><value>Tarama y</value></data>
+  <data name="K296" xml:space="preserve"><value>Âlim (SCH)</value></data>
+  <data name="K297" xml:space="preserve"><value>BRD veya MCH seçin</value></data>
+  <data name="K298" xml:space="preserve"><value>İyileştirilecek düşük seviyeli hedefse FrenRider'ın yapılandırılmış Fren'ini açıkça seçin. JOAT onu bu listeye asla eklemez.</value></data>
+  <data name="K299" xml:space="preserve"><value>Doğrudan eşleştirme ayarlarını düzenlemek için Yardımcı veya Newb seçin.</value></data>
+  <data name="K300" xml:space="preserve"><value>Seçili</value></data>
+  <data name="K301" xml:space="preserve"><value>Seçildi - uzak</value></data>
+  <data name="K302" xml:space="preserve"><value>Seçilen meslek</value></data>
+  <data name="K303" xml:space="preserve"><value>Seçilen meslek: {0}</value></data>
+  <data name="K304" xml:space="preserve"><value>kendisi</value></data>
+  <data name="K305" xml:space="preserve"><value>Yardımcı'yı kur</value></data>
+  <data name="K306" xml:space="preserve"><value>Newb'ü kur</value></data>
+  <data name="K307" xml:space="preserve"><value>Bağımsız modu kur</value></data>
+  <data name="K308" xml:space="preserve"><value>Ayarlar</value></data>
+  <data name="K309" xml:space="preserve"><value>Ortak sır</value></data>
+  <data name="K310" xml:space="preserve"><value>Bağımlılık bildirimlerini göster</value></data>
+  <data name="K311" xml:space="preserve"><value>DTR çubuğu öğesini göster</value></data>
+  <data name="K312" xml:space="preserve"><value>QST ışınlanma hedefi seçilirken Tamamizu'yu atlar.</value></data>
+  <data name="K313" xml:space="preserve"><value>Bağımsız</value></data>
+  <data name="K314" xml:space="preserve"><value>Bağımsız davranış</value></data>
+  <data name="K315" xml:space="preserve"><value>Bağımsız HealBot gereksinimleri</value></data>
+  <data name="K316" xml:space="preserve"><value>Bağımsız mod HealBot, JOAT veya PowerlevelBot'u ağ olmadan çalıştırır. Yardımcı, kimliği doğrulanmış bir Newb'ü dinler ve onun için JOAT'ı uzaktan etkinleştirir. Newb eşzamansız bağlanır ve yerel iyileştirme veya saldırı yapmaz.</value></data>
+  <data name="K317" xml:space="preserve"><value>Bağımsız mod HealBot, JOAT veya PowerlevelBot'u ağ olmadan çalıştırır. Yardımcı, kimliği doğrulanmış bir Newb'ü dinler. Newb eşzamansız bağlanır ve yerel iyileştirme veya saldırı yapmaz.</value></data>
+  <data name="K318" xml:space="preserve"><value>Bu rolü şimdi başlat</value></data>
+  <data name="K319" xml:space="preserve"><value>Durum</value></data>
+  <data name="K320" xml:space="preserve"><value>Durum ve davranış</value></data>
+  <data name="K321" xml:space="preserve"><value>Durum paneli</value></data>
+  <data name="K322" xml:space="preserve"><value>Durumu sohbete yaz</value></data>
+  <data name="K323" xml:space="preserve"><value>Adım {0} / 3</value></data>
+  <data name="K324" xml:space="preserve"><value>Yoldaş chocobo çağır</value></data>
+  <data name="K325" xml:space="preserve"><value>Yoldaş chocobo çağır (Gysahl Greens: {0})</value></data>
+  <data name="K326" xml:space="preserve"><value>Yoldaş chocobo çağır (Gysahl Greens: kullanılamıyor)</value></data>
+  <data name="K327" xml:space="preserve"><value>Desteklenen şifacı</value></data>
+  <data name="K328" xml:space="preserve"><value>Geçerli hedefi seç</value></data>
+  <data name="K329" xml:space="preserve"><value>Hedef keşfi ve saklama</value></data>
+  <data name="K330" xml:space="preserve"><value>Hedef görünmüyor</value></data>
+  <data name="K331" xml:space="preserve"><value>TCP portu</value></data>
+  <data name="K332" xml:space="preserve"><value>Yalnızca metin</value></data>
+  <data name="K333" xml:space="preserve"><value>Etkin QST veya Newb oturumu bu bellek içi hedefi tek başına yönetir. Kayıtlı izlenen hedefler değişmez ve kontrol bırakılınca sürdürülür.</value></data>
+  <data name="K334" xml:space="preserve"><value>Fren, İzleme'ye asla otomatik eklenmez; düşük seviyeli iyileştirme hedefiyse açıkça seçin.</value></data>
+  <data name="K335" xml:space="preserve"><value>HealBot bağımlılıkları, kuşanılmış desteklenen bir şifacı, etkin iyileştirme eylem matrisi ve açıkça izlenen bir hedef.</value></data>
+  <data name="K336" xml:space="preserve"><value>kaydedilen yerel seçim kontrol bırakılınca sürdürülür.</value></data>
+  <data name="K337" xml:space="preserve"><value>kaydedilen yerel ayar kontrol bırakılınca sürdürülür.</value></data>
+  <data name="K338" xml:space="preserve"><value>Tarama menzili yalnızca önceden kayıtlı bir hedefin döndüğünde yeniden katılmasını sağlar. Yeni hedef keşfetmez veya otomatik seçmez.</value></data>
+  <data name="K339" xml:space="preserve"><value>Bu denetimler hemen uygulanır. Hızlı Kurulum ayrı bir taslak kullanır ve Bitir'e kadar hiçbir şeyi değiştirmez.</value></data>
+  <data name="K340" xml:space="preserve"><value>Bu filtreler HealBot/JOAT İzleme penceresinde hangi dost nesnelerin görüneceğini belirler.</value></data>
+  <data name="K341" xml:space="preserve"><value>Kaydedilen bu yerel seçim Bağımsız JOAT tarafından kullanılır ve QST geçici geçersiz kılmayı bırakınca sürdürülür. İki seçenek de RSR Manual hedeflemesi kullanır; tam RSR hedeflemeyi değil, kaydedilen saldırı eylemlerini ve AoE'yi değiştirir.</value></data>
+  <data name="K342" xml:space="preserve"><value>Çok kısa</value></data>
+  <data name="K343" xml:space="preserve"><value>Takip ediliyor</value></data>
+  <data name="K344" xml:space="preserve"><value>Trafiğin kimliği doğrulanır ancak şifrelenmez; adlar ve koordinatlar ağda görünür kalır.</value></data>
+  <data name="K345" xml:space="preserve"><value>Seyahat: {0}</value></data>
+  <data name="K346" xml:space="preserve"><value>Tetikleyici</value></data>
+  <data name="K347" xml:space="preserve"><value>Tür</value></data>
+  <data name="K348" xml:space="preserve"><value>Kullanılamıyor</value></data>
+  <data name="K349" xml:space="preserve"><value>Kilidi açıldı</value></data>
+  <data name="K350" xml:space="preserve"><value>İzlenen hedefin işaretini kaldırmak veya izleme kümesini Ctrl ile temizlemek hedefi kayıtlı kümeden de kaldırır. Tarama menzili yalnızca kayıtlı hedeflerin döndüğünde yeniden katılmasını etkiler.</value></data>
+  <data name="K351" xml:space="preserve"><value>1024-65535 kullanın</value></data>
+  <data name="K352" xml:space="preserve"><value>Hedef eklemek veya kaldırmak için İzleme penceresini kullanın. İyileştirme hedeflerini kaydet yalnızca açıkça izlemeyi sürdürdüğünüz hedefleri saklar.</value></data>
+  <data name="K353" xml:space="preserve"><value>Fren/yerel oyuncuyla zaten savaşan düşmanlarda anlık, menzilli, tek hedefli BRD/MCH eylemlerini kullanır.</value></data>
+  <data name="K354" xml:space="preserve"><value>Geçerli</value></data>
+  <data name="K355" xml:space="preserve"><value>Geçerli IPv4</value></data>
+  <data name="K356" xml:space="preserve"><value>Görünür</value></data>
+  <data name="K357" xml:space="preserve"><value>Görünür - yerel HealBot hedefi</value></data>
+  <data name="K358" xml:space="preserve"><value>Görünür ortak sır</value></data>
+  <data name="K359" xml:space="preserve"><value>vnavmesh</value></data>
+  <data name="K360" xml:space="preserve"><value>İzleme</value></data>
+  <data name="K361" xml:space="preserve"><value>İzleme filtreleri</value></data>
+  <data name="K362" xml:space="preserve"><value>İzlenen</value></data>
+  <data name="K363" xml:space="preserve"><value>İzlenen Newb</value></data>
+  <data name="K364" xml:space="preserve"><value>İzlenen Quester</value></data>
+  <data name="K365" xml:space="preserve"><value>izlenen hedef</value></data>
+  <data name="K366" xml:space="preserve"><value>İzlenen hedef: {0}</value></data>
+  <data name="K367" xml:space="preserve"><value>İzlenen hedefler</value></data>
+  <data name="K368" xml:space="preserve"><value>{0}/{1} etkin hedef izleniyor. Kayıtlı hedefler: {2}.</value></data>
+  <data name="K369" xml:space="preserve"><value>Ak Büyücü (WHM)</value></data>
+  <data name="K370" xml:space="preserve"><value>Kaydedilen yerel seçiminiz QST kontrolü bırakınca sürdürülür.</value></data>
+  <data name="K371" xml:space="preserve"><value>Kaydedilen yerel ayarınız QST kontrolü bırakınca sürdürülür.</value></data>
+  <data name="K372" xml:space="preserve"><value>Renk</value></data>
+  <data name="K373" xml:space="preserve"><value>Deniz mavisi</value></data>
+  <data name="K374" xml:space="preserve"><value>Mavi</value></data>
+  <data name="K375" xml:space="preserve"><value>Pembe</value></data>
+  <data name="K376" xml:space="preserve"><value>Özel RGB</value></data>
+  <data name="K377" xml:space="preserve"><value>Kompakt mod</value></data>
+  <data name="K378" xml:space="preserve"><value>UI yazı tipleri yükleniyor...</value></data>
+  <data name="K379" xml:space="preserve"><value>Arayüz yazı tipleri yüklenemedi. Eklenti günlüğüne bakın.</value></data>
+  <data name="K380" xml:space="preserve"><value>Hiçbir zaman</value></data>
+  <data name="K381" xml:space="preserve"><value>Kullanımı süreli GCD</value></data>
+  <data name="K382" xml:space="preserve"><value>Anlık oGCD</value></data>
+  <data name="K383" xml:space="preserve"><value>Kullanımı süreli BUFF</value></data>
+  <data name="K384" xml:space="preserve"><value>Anlık BUFF</value></data>
+  <data name="K385" xml:space="preserve"><value>HP alt sınırı</value></data>
+  <data name="K386" xml:space="preserve"><value>Ölü hedef</value></data>
+  <data name="K387" xml:space="preserve"><value>Eksik buff</value></data>
+  <data name="K388" xml:space="preserve"><value>Her zaman</value></data>
+  <data name="K389" xml:space="preserve"><value>Hedef</value></data>
+  <data name="K390" xml:space="preserve"><value>Oyuncu</value></data>
+  <data name="K391" xml:space="preserve"><value>Grup NPC'si</value></data>
+  <data name="K392" xml:space="preserve"><value>Dost NPC</value></data>
+  <data name="K393" xml:space="preserve"><value>Yardımcı etkin (QST denetiminde)</value></data>
+  <data name="K394" xml:space="preserve"><value>Bu sağlayıcı oturumunu bırakmak veya devre dışı bırakmak için QST kullanın.</value></data>
+  <data name="K395" xml:space="preserve"><value>{0} sürdürmek için /healbot on kullanın.</value></data>
+  <data name="K396" xml:space="preserve"><value>İyileştirme: {0} Saldırı: {1}</value></data>
+  <data name="K397" xml:space="preserve"><value>Birincil durumda gösterilen engeli giderin.</value></data>
+  <data name="K398" xml:space="preserve"><value>Eylem gerekmiyor.</value></data>
+  <data name="K399" xml:space="preserve"><value>Çözüm: {0}</value></data>
+  <data name="K400" xml:space="preserve"><value>Engelli: {0}</value></data>
+  <data name="K401" xml:space="preserve"><value>Bekletiliyor: {0}</value></data>
+  <data name="K402" xml:space="preserve"><value>Etkin değil</value></data>
+  <data name="K403" xml:space="preserve"><value>LOS kullanılamıyor</value></data>
+  <data name="K404" xml:space="preserve"><value>LOS açık</value></data>
+  <data name="K405" xml:space="preserve"><value>LOS engelli</value></data>
+  <data name="K406" xml:space="preserve"><value>LOS hareketi HealBot taşımacılığı için bekletiliyor</value></data>
+  <data name="K407" xml:space="preserve"><value>LOS engelli; 1y mesafeye gidiliyor</value></data>
+  <data name="K408" xml:space="preserve"><value>LOS engelli; geçerli hareket sahibi bekleniyor</value></data>
+  <data name="K409" xml:space="preserve"><value>QST etkin modu yönetiyor ({0}); kaydedilen yerel seçim kontrol bırakılınca sürdürülür.</value></data>
+  <data name="K410" xml:space="preserve"><value>QST çağırmayı yönetiyor ({0}); kaydedilen yerel ayar kontrol bırakılınca sürdürülür.</value></data>
+  <data name="K411" xml:space="preserve"><value>Yalnızca bu oturuma ait tam hedef, kayıtlı izlenen hedefleri değiştirmeden veya kaydetmeden otomasyon için geçersiz kılar.</value></data>
+  <data name="K412" xml:space="preserve"><value>Evet</value></data>
+  <data name="K413" xml:space="preserve"><value>Hayır</value></data>
+  <data name="K414" xml:space="preserve"><value>Healbot modu kapalı.</value></data>
+  <data name="K415" xml:space="preserve"><value>Boşta</value></data>
+  <data name="K416" xml:space="preserve"><value>Eşleşen kural yok.</value></data>
+  <data name="K417" xml:space="preserve"><value>Eklenti kaldırılıyor.</value></data>
+  <data name="K418" xml:space="preserve"><value>HealBot yalnızca WHM, SCH, AST ve SGE destekler.</value></data>
+  <data name="K419" xml:space="preserve"><value>HealRider taşımacılığı sırasında eylemler bekletiliyor.</value></data>
+  <data name="K420" xml:space="preserve"><value>Yolculuk</value></data>
+  <data name="K421" xml:space="preserve"><value>Hareketi HealRider yönetiyor.</value></data>
+  <data name="K422" xml:space="preserve"><value>Alan geçişi sırasında bekletiliyor.</value></data>
+  <data name="K423" xml:space="preserve"><value>Bölge geçişi sürüyor.</value></data>
+  <data name="K424" xml:space="preserve"><value>Eklenti devre dışı.</value></data>
+  <data name="K425" xml:space="preserve"><value>Engellendi</value></data>
+  <data name="K426" xml:space="preserve"><value>Bağımlılıklar eksik.</value></data>
+  <data name="K427" xml:space="preserve"><value>Yerel meslek desteklenmiyor.</value></data>
+  <data name="K428" xml:space="preserve"><value>Yardımcı binek üzerindeyken veya binerken eşleşmiş iyileştirme bekletiliyor.</value></data>
+  <data name="K429" xml:space="preserve"><value>Eşleştirilen yardımcı binek üzerinde veya biniyor.</value></data>
+  <data name="K430" xml:space="preserve"><value>{0} eylemi kullanılırken bekletiliyor.</value></data>
+  <data name="K431" xml:space="preserve"><value>Kullanımda</value></data>
+  <data name="K432" xml:space="preserve"><value>Geçerli kullanımın bitmesi bekleniyor.</value></data>
+  <data name="K433" xml:space="preserve"><value>Healbot eylem matrisi {0} için hazır. JOAT saldırmadan önce RSR gerekir.</value></data>
+  <data name="K434" xml:space="preserve"><value>Healbot eylem matrisi {0} için hazır. RSR yalıtımı kullanılamıyor.</value></data>
+  <data name="K435" xml:space="preserve"><value>Healbot eylem matrisi {0} için hazır. RSR JOAT denetimi etkin.</value></data>
+  <data name="K436" xml:space="preserve"><value>Healbot eylem matrisi {0} için hazır. RSR yalıtımı etkin.</value></data>
+  <data name="K437" xml:space="preserve"><value>Healbot eylem matrisi {0} için hazır. RSR denetimi başarısız; JOAT saldırısı engelli ve doğrudan iyileştirme etkin kalır.</value></data>
+  <data name="K438" xml:space="preserve"><value>Healbot eylem matrisi {0} için hazır. RSR yalıtımı başarısız; doğrudan iyileştirme etkin kalır.</value></data>
+  <data name="K439" xml:space="preserve"><value>Etkin izlenen hedef yok.</value></data>
+  <data name="K440" xml:space="preserve"><value>İzlenen hedef yok.</value></data>
+  <data name="K441" xml:space="preserve"><value>{0} otomasyonu HealBot ayarlarında kapalı.</value></data>
+  <data name="K442" xml:space="preserve"><value>{0} sekmesi kapalı.</value></data>
+  <data name="K443" xml:space="preserve"><value>{0} hedefi {1} seçildi ancak uzakta.</value></data>
+  <data name="K444" xml:space="preserve"><value>{0} hedef izleniyor. Şu anda mevcut izlenen hedef yok.</value></data>
+  <data name="K445" xml:space="preserve"><value>Tam {0} hedefi uzakta.</value></data>
+  <data name="K446" xml:space="preserve"><value>Mevcut izlenen hedef yok.</value></data>
+  <data name="K447" xml:space="preserve"><value>Hareket</value></data>
+  <data name="K448" xml:space="preserve"><value>{0} - LOS engelli.</value></data>
+  <data name="K449" xml:space="preserve"><value>{0} hedef izleniyor. {1}</value></data>
+  <data name="K450" xml:space="preserve"><value>{0} - {1}</value></data>
+  <data name="K451" xml:space="preserve"><value>{0} hedef izleniyor. Etkin ölü hedef kurallarından hiçbiri {1} üzerinde işlem yapamıyor.</value></data>
+  <data name="K452" xml:space="preserve"><value>{0} - Eşleşen ölü hedef kuralı yok.</value></data>
+  <data name="K453" xml:space="preserve"><value>{0} hedef izleniyor. En düşük HP'li izlenen hedef {1}, HP %{2}.</value></data>
+  <data name="K454" xml:space="preserve"><value>{0} - Eşleşen canlı hedef kuralı yok.</value></data>
+  <data name="K455" xml:space="preserve"><value>{0}: {1} [{2}]</value></data>
+  <data name="K456" xml:space="preserve"><value>{0}, {1} için ölü hedef hazırlığı olarak sıraya alındı.</value></data>
+  <data name="K457" xml:space="preserve"><value>{0}, {1} için sıraya alındı.</value></data>
+  <data name="K458" xml:space="preserve"><value>{1}, %{2} HP ile izlenirken {0} sıraya alındı.</value></data>
+  <data name="K459" xml:space="preserve"><value>{0}, %{2} HP değerindeki {1} için sıraya alındı.</value></data>
+  <data name="K460" xml:space="preserve"><value>JOAT saldırısı kapalı.</value></data>
+  <data name="K461" xml:space="preserve"><value>Boşta iyileştirme kararı bekleniyor.</value></data>
+  <data name="K462" xml:space="preserve"><value>JOAT saldırısı iyileştirmenin boşta olmasını bekliyor.</value></data>
+  <data name="K463" xml:space="preserve"><value>FrenRider kullanım hakkı canlılık sinyali başarısız.</value></data>
+  <data name="K464" xml:space="preserve"><value>Bekletiliyor: iyileştirme {0} sıraya alındı.</value></data>
+  <data name="K465" xml:space="preserve"><value>Bekletiliyor</value></data>
+  <data name="K466" xml:space="preserve"><value>Bu karar döngüsünde iyileştirme eylemi öncelik aldı.</value></data>
+  <data name="K467" xml:space="preserve"><value>Bekletiliyor: geçerli kullanım saldırıyı engelliyor. {0}</value></data>
+  <data name="K468" xml:space="preserve"><value>Bekletiliyor: iyileştirme engelli. {0}</value></data>
+  <data name="K469" xml:space="preserve"><value>Geçerli kullanım bu saldırı döngüsünü engelliyor.</value></data>
+  <data name="K470" xml:space="preserve"><value>Eşleşen iyileştirme eylemi engelli.</value></data>
+  <data name="K471" xml:space="preserve"><value>Engelli: iyileştirme hazır değil. {0}</value></data>
+  <data name="K472" xml:space="preserve"><value>İyileştirme bağımlılıkları, yapılandırma veya izlenen hedefler kullanılamıyor.</value></data>
+  <data name="K473" xml:space="preserve"><value>Engelli: Rotation Solver Reborn denetimi etkin değil, JOAT saldıramaz.</value></data>
+  <data name="K474" xml:space="preserve"><value>Rotation Solver Reborn denetimi başarısız.</value></data>
+  <data name="K475" xml:space="preserve"><value>Bekletiliyor: {0}.</value></data>
+  <data name="K476" xml:space="preserve"><value>FrenRider IPC kullanılamıyor.</value></data>
+  <data name="K477" xml:space="preserve"><value>FrenRider saldırı koşulu başarısız.</value></data>
+  <data name="K478" xml:space="preserve"><value>FrenRider kullanım hakkı edinilemedi.</value></data>
+  <data name="K479" xml:space="preserve"><value>Engelli: yerel şifacı kullanılamıyor.</value></data>
+  <data name="K480" xml:space="preserve"><value>Yerel şifacı kullanılamıyor.</value></data>
+  <data name="K481" xml:space="preserve"><value>Desteklenen yerel şifacı kullanılamıyor.</value></data>
+  <data name="K482" xml:space="preserve"><value>Boşta: tam eşleştirilen hedef seçildi ancak uzakta.</value></data>
+  <data name="K483" xml:space="preserve"><value>Tam eşleştirilen hedef uzakta.</value></data>
+  <data name="K484" xml:space="preserve"><value>Bekletiliyor: tam eşleştirilen hedef {0:0.0} yalm uzakta.</value></data>
+  <data name="K485" xml:space="preserve"><value>Tam eşleştirilen hedef 30 yalmden uzakta.</value></data>
+  <data name="K486" xml:space="preserve"><value>RSR Manual başarısız.</value></data>
+  <data name="K487" xml:space="preserve"><value>Engelli: Rotation Solver Reborn, eşleştirilen JOAT ataması için Manual modunu reddetti.</value></data>
+  <data name="K488" xml:space="preserve"><value>RSR Manual</value></data>
+  <data name="K489" xml:space="preserve"><value>Çatışan düşman için eşleşmiş dost hedef üzerinde bekleniyor.</value></data>
+  <data name="K490" xml:space="preserve"><value>RSR Manual ({0}) bekliyor; eşleşme menzilinde uygun çatışan düşman yok.</value></data>
+  <data name="K491" xml:space="preserve"><value>Seçilen eşleşmiş düşman kayboldu.</value></data>
+  <data name="K492" xml:space="preserve"><value>RSR Manual ({0}) bekliyor; seçilen düşman kayboldu.</value></data>
+  <data name="K493" xml:space="preserve"><value>eşleşmiş hedef</value></data>
+  <data name="K494" xml:space="preserve"><value>eşleşen kişi/şifacıyla çatışıyor</value></data>
+  <data name="K495" xml:space="preserve"><value>RSR Manual ({0}), {2:P0} HP değerindeki {1} üzerinde.</value></data>
+  <data name="K496" xml:space="preserve"><value>Boşta: iyileştirme uygun ancak Fren'i veya yerel şifacıyı hedefleyen hasar almış düşman yok.</value></data>
+  <data name="K497" xml:space="preserve"><value>Uygun işaretli düşman yok.</value></data>
+  <data name="K498" xml:space="preserve"><value>Boşta: seçilen düşman kayboldu.</value></data>
+  <data name="K499" xml:space="preserve"><value>Hedef kayboldu.</value></data>
+  <data name="K500" xml:space="preserve"><value>{0} - RSR Manual başarısız</value></data>
+  <data name="K501" xml:space="preserve"><value>Engelli: Rotation Solver Reborn, {0} için Manual modunu reddetti.</value></data>
+  <data name="K502" xml:space="preserve"><value>alanlar arasında</value></data>
+  <data name="K503" xml:space="preserve"><value>binekte veya biniyor</value></data>
+  <data name="K504" xml:space="preserve"><value>meşgul veya ara sahnede</value></data>
+  <data name="K505" xml:space="preserve"><value>{0} eylemi kullanılıyor</value></data>
+  <data name="K506" xml:space="preserve"><value>Gerekli iyileştirme bağımlılıkları eksik.</value></data>
+  <data name="K507" xml:space="preserve"><value>Kuşanılan şifacının eylem matrisi kapalı.</value></data>
+  <data name="K508" xml:space="preserve"><value>İzleme'de en az bir hedef seçin veya QST ataması bekleyin.</value></data>
+  <data name="K509" xml:space="preserve"><value>JOAT iyileştirmesi hazır.</value></data>
+  <data name="K510" xml:space="preserve"><value>Saldırı iyileştirme hazırlığını bekliyor: {0}</value></data>
+  <data name="K511" xml:space="preserve"><value>JOAT saldırısı için Rotation Solver Reborn yüklenmiş olmalıdır.</value></data>
+  <data name="K512" xml:space="preserve"><value>Coppelia çalışan Rotation Solver Reborn denetimini alamadı.</value></data>
+  <data name="K513" xml:space="preserve"><value>İyileştirme boşta olduğunda JOAT saldırısı hazır.</value></data>
+  <data name="K514" xml:space="preserve"><value>Tam QST hedefi seçildi ancak uzakta.</value></data>
+  <data name="K515" xml:space="preserve"><value>FrenRider etkin olmalıdır.</value></data>
+  <data name="K516" xml:space="preserve"><value>FrenRider'ın yapılandırılmış bir Fren'i olmalıdır.</value></data>
+  <data name="K517" xml:space="preserve"><value>FrenRider'ın yapılandırılmış Fren'i görünür olmalıdır.</value></data>
+  <data name="K518" xml:space="preserve"><value>PowerlevelBot modu kapalı.</value></data>
+  <data name="K519" xml:space="preserve"><value>Hedef seçilmedi.</value></data>
+  <data name="K520" xml:space="preserve"><value>PowerlevelBot hazırlanıyor.</value></data>
+  <data name="K521" xml:space="preserve"><value>Powerlevel koşulu başarısız.</value></data>
+  <data name="K522" xml:space="preserve"><value>Yerel oyuncu yok.</value></data>
+  <data name="K523" xml:space="preserve"><value>Yerel oyuncu yok.</value></data>
+  <data name="K524" xml:space="preserve"><value>Fren'i veya yerel oyuncuyu hedefleyen hasar almış düşman yok.</value></data>
+  <data name="K525" xml:space="preserve"><value>Uygun hedef yok.</value></data>
+  <data name="K526" xml:space="preserve"><value>Seçilen hedef kayboldu.</value></data>
+  <data name="K527" xml:space="preserve"><value>{0}, {2:P0} HP değerindeki {1} üzerinde sıraya alındı.</value></data>
+  <data name="K528" xml:space="preserve"><value>{0} hedefi engelli: {1}</value></data>
+  <data name="K529" xml:space="preserve"><value>Yardımcı bağlanmak yerine dinler.</value></data>
+  <data name="K530" xml:space="preserve"><value>Newb dinlemek yerine bağlanır.</value></data>
+  <data name="K531" xml:space="preserve"><value>Çalışma rolü Kapalı.</value></data>
+  <data name="K532" xml:space="preserve"><value>Bağımsız mod doğrudan eşleştirme kullanmaz.</value></data>
+  <data name="K533" xml:space="preserve"><value>Yerel Newb kimliği kullanılamıyor. Newb rolünü başlatmadan önce girişin tamamlanmasını bekleyin.</value></data>
+  <data name="K534" xml:space="preserve"><value>Geçerli bir Yardımcı IPv4 adresi girin.</value></data>
+  <data name="K535" xml:space="preserve"><value>Eşleştirme ayarları kaydedildi; yeniden başlatılıyor.</value></data>
+  <data name="K536" xml:space="preserve"><value>HealBot doğrudan eşleştirme v2 gerekir. Eşleştirmeden önce eski tarafı güncelleyin.</value></data>
+  <data name="K537" xml:space="preserve"><value>Yerel HealBot kimliği kullanılamıyor.</value></data>
+  <data name="K538" xml:space="preserve"><value>HealBot'un zaten etkin bir QST ataması var.</value></data>
+  <data name="K539" xml:space="preserve"><value>Eşleştirildi</value></data>
+  <data name="K540" xml:space="preserve"><value>Dinleniyor</value></data>
+  <data name="K541" xml:space="preserve"><value>Eşleştirme komutunun verisi geçersiz.</value></data>
+  <data name="K542" xml:space="preserve"><value>Komut bu HealBot'un tam adını ve ana dünyasını hedeflemiyor.</value></data>
+  <data name="K543" xml:space="preserve"><value>Newb atamayı bıraktı.</value></data>
+  <data name="K544" xml:space="preserve"><value>Bilinmeyen Newb eşleştirme eylemi.</value></data>
+  <data name="K545" xml:space="preserve"><value>HealBot kaldırılıyor.</value></data>
+  <data name="K546" xml:space="preserve"><value>TCP {0}</value></data>
+  <data name="K547" xml:space="preserve"><value>HealBot dinleyicisi yeniden başlatılıyor.</value></data>
+  <data name="K548" xml:space="preserve"><value>Bağlı</value></data>
+  <data name="K549" xml:space="preserve"><value>Kimliği doğrulanmış atamayı bekleyin.</value></data>
+  <data name="K550" xml:space="preserve"><value>Newb'ü bu port ve ortak sırla başlatın.</value></data>
+  <data name="K551" xml:space="preserve"><value>Dinleyicinin başlamasını bekleyin.</value></data>
+  <data name="K552" xml:space="preserve"><value>Kimliği doğrulanmış Newb durumu bekleniyor</value></data>
+  <data name="K553" xml:space="preserve"><value>JOAT sağlayıcısı etkin</value></data>
+  <data name="K554" xml:space="preserve"><value>Uzak sağlayıcı kullanılamıyor</value></data>
+  <data name="K555" xml:space="preserve"><value>Uzaktan JOAT kullanılamıyor</value></data>
+  <data name="K556" xml:space="preserve"><value>Uzaktan seyahat kullanılamıyor</value></data>
+  <data name="K557" xml:space="preserve"><value>Newb bağlantısı yeniden başlatılıyor.</value></data>
+  <data name="K558" xml:space="preserve"><value>Kimlik doğrulanıyor</value></data>
+  <data name="K559" xml:space="preserve"><value>Bağlanıyor</value></data>
+  <data name="K560" xml:space="preserve"><value>Atama onayını bekleyin.</value></data>
+  <data name="K561" xml:space="preserve"><value>Yeni, kimliği doğrulanmış durum ve atamayı bekleyin.</value></data>
+  <data name="K562" xml:space="preserve"><value>Eşzamansız bağlantıyı veya yeniden bağlantıyı bekleyin.</value></data>
+  <data name="K563" xml:space="preserve"><value>Uzak sağlayıcı durumu bekleniyor</value></data>
+  <data name="K564" xml:space="preserve"><value>Uzak sağlayıcı hazır</value></data>
+  <data name="K565" xml:space="preserve"><value>Uzaktan JOAT durumu bekleniyor</value></data>
+  <data name="K566" xml:space="preserve"><value>Uzaktan seyahat durumu bekleniyor</value></data>
+  <data name="K567" xml:space="preserve"><value>Eski tarafı uyumlu bir HealBot doğrudan eşleştirme v2 sürümüne güncelleyin.</value></data>
+  <data name="K568" xml:space="preserve"><value>Ayarlar'da Yardımcı ve Newb için aynı ortak sırrı girin.</value></data>
+  <data name="K569" xml:space="preserve"><value>Yerel Newb kimliği kullanılamıyor.</value></data>
+  <data name="K570" xml:space="preserve"><value>Eşleştirilen HealBot bağlantısı veya kimliği doğrulanmış durum kayboldu.</value></data>
+  <data name="K571" xml:space="preserve"><value>Yapılandırılmış uç nokta veya HealBot kimliği değişti.</value></data>
+  <data name="K572" xml:space="preserve"><value>Eşleştirilen HealBot bırakılan {0} oturumunu hâlâ bildiriyor.</value></data>
+  <data name="K573" xml:space="preserve"><value>Eşleştirilen HealBot'un etkin bir QST ataması var.</value></data>
+  <data name="K574" xml:space="preserve"><value>Eşleştirilen HealBot başka bir Newb oturumuna ait.</value></data>
+  <data name="K575" xml:space="preserve"><value>Eşleştirilen HealBot bu Newb için eski bir oturum bildiriyor.</value></data>
+  <data name="K576" xml:space="preserve"><value>Eşleştirilen HealBot hazır değil.</value></data>
+  <data name="K577" xml:space="preserve"><value>Eşleştirilen HealBot eksik veya eşleşmeyen bir Newb oturumu bildirdi.</value></data>
+  <data name="K578" xml:space="preserve"><value>Eşleştirilen HealBot'un tam Newb oturumunu onaylaması bekleniyor.</value></data>
+  <data name="K579" xml:space="preserve"><value>Eşleştirilen HealBot Newb atamasını reddetti.</value></data>
+  <data name="K580" xml:space="preserve"><value>Eşleştirilen HealBot {0} reddetti.</value></data>
+  <data name="K581" xml:space="preserve"><value>Eşleştirilen HealBot etkin oturum için {0} kabul etmedi.</value></data>
+  <data name="K582" xml:space="preserve"><value>Eşleştirilen HealBot eski oturumunu bıraktığını onaylamadı.</value></data>
+  <data name="K583" xml:space="preserve"><value>Doğrudan eşleştirme için Yardımcı veya Newb seçin.</value></data>
+  <data name="K584" xml:space="preserve"><value>TCP portu {0} zaten kullanımda.</value></data>
+  <data name="K585" xml:space="preserve"><value>Eşleştirme dinleyicisi başlatılamadı: {0}</value></data>
+  <data name="K586" xml:space="preserve"><value>bilinmiyor</value></data>
+  <data name="K587" xml:space="preserve"><value>Eşleştirme zarfı bozuk.</value></data>
+  <data name="K588" xml:space="preserve"><value>Eşleştirilen Newb bağlantısı kayboldu.</value></data>
+  <data name="K589" xml:space="preserve"><value>HealBot eşleştirme dinleyicisi duruyor.</value></data>
+  <data name="K590" xml:space="preserve"><value>Eşleştirme mesajı türü komutuyla eşleşmiyor.</value></data>
+  <data name="K591" xml:space="preserve"><value>Bu bağlantı zaten farklı bir Newb oturumunu yönetiyor.</value></data>
+  <data name="K592" xml:space="preserve"><value>Newb oturumu zaten başka bir etkin bağlantıya ait.</value></data>
+  <data name="K593" xml:space="preserve"><value>Bu bağlantı etkin Newb oturumunu yönetmiyor.</value></data>
+  <data name="K594" xml:space="preserve"><value>Newb oturumu hâlâ başka bir etkin bağlantıya ait.</value></data>
+  <data name="K595" xml:space="preserve"><value>Bağlantısı kesildi</value></data>
+  <data name="K596" xml:space="preserve"><value>Eşleştirilen HealBot bağlı değil.</value></data>
+  <data name="K597" xml:space="preserve"><value>Eşleştirilen HealBot komutu onaylamadı.</value></data>
+  <data name="K598" xml:space="preserve"><value>Eşleştirilmiş bağlantı kapatıldı.</value></data>
+  <data name="K599" xml:space="preserve"><value>HealBot doğrudan eşleştirme v2 gerekir. Eşleştirmeden önce eski Yardımcı'yı güncelleyin.</value></data>
+  <data name="K600" xml:space="preserve"><value>Bağlandı; bekleniyor</value></data>
+  <data name="K601" xml:space="preserve"><value>Eşleştirilen HealBot ilişkili, kimliği doğrulanmış durum döndürmedi. Ortak sırrı ve protokolü kontrol edin.</value></data>
+  <data name="K602" xml:space="preserve"><value>Eşleştirme izleyicisi başarısız: {0}</value></data>
+  <data name="K603" xml:space="preserve"><value>Bağlandı; kimliği doğrulanmış HealBot durumu bekleniyor.</value></data>
+  <data name="K604" xml:space="preserve"><value>{0}:{1} bağlantısı zaman aşımına uğradı.</value></data>
+  <data name="K605" xml:space="preserve"><value>{0}:{1} üzerinde dinleyen HealBot yok.</value></data>
+  <data name="K606" xml:space="preserve"><value>{0}:{1} bağlantısı başarısız: {2}</value></data>
+  <data name="K607" xml:space="preserve"><value>Eşleştirilen uç nokta bozuk eşleştirme JSON'u döndürdü.</value></data>
+  <data name="K608" xml:space="preserve"><value>Eşleştirilen HealBot bağlantısı kayboldu: {0}</value></data>
+  <data name="K609" xml:space="preserve"><value>Eşleştirilen HealBot bağlantısı kayboldu.</value></data>
+  <data name="K610" xml:space="preserve"><value>Eşleştirilen HealBot eşleşmeyen komut yanıtı döndürdü.</value></data>
+  <data name="K611" xml:space="preserve"><value>Eşleştirilmiş bağlantı başarısız: {0}</value></data>
+  <data name="K612" xml:space="preserve"><value>{0}s sonra yeniden bağlan</value></data>
+  <data name="K613" xml:space="preserve"><value>Tüm gerekli HealBot bağımlılıkları hazır.</value></data>
+  <data name="K614" xml:space="preserve"><value>HealBot {0} gerektirir. Eksik eklentileri yükleyin veya ayarlardan otomasyonu kapatın.</value></data>
+  <data name="K615" xml:space="preserve"><value>Yerel oyuncu kullanılamıyor.</value></data>
+  <data name="K616" xml:space="preserve"><value>Zaten kullanımda.</value></data>
+  <data name="K617" xml:space="preserve"><value>{0} eylemi eylem tablosunda bulunamadı.</value></data>
+  <data name="K618" xml:space="preserve"><value>{0} için yeterli MP yok.</value></data>
+  <data name="K619" xml:space="preserve"><value>ActionManager kullanılamıyor.</value></data>
+  <data name="K620" xml:space="preserve"><value>{0} bekleme süresinde.</value></data>
+  <data name="K621" xml:space="preserve"><value>Seçilen hedef kullanılamıyor.</value></data>
+  <data name="K622" xml:space="preserve"><value>{0} hedeflenemiyor.</value></data>
+  <data name="K623" xml:space="preserve"><value>{0} menzil dışında.</value></data>
+  <data name="K624" xml:space="preserve"><value>UseAction {0} reddetti.</value></data>
+  <data name="K625" xml:space="preserve"><value>Şu anda kullanılabilir PowerlevelBot eylemi yok.</value></data>
+  <data name="K626" xml:space="preserve"><value>HealBot eylemi için duraklatıldı</value></data>
+  <data name="K627" xml:space="preserve"><value>Görev sahipliği nedeniyle HealRider takibi askıda</value></data>
+  <data name="K628" xml:space="preserve"><value>Seçilen yolcu bineği hazırlığı izin verilen alma süresini aştı.</value></data>
+  <data name="K629" xml:space="preserve"><value>Lifestream alan örneği değişiminin ve yüklemenin bitmesi bekleniyor</value></data>
+  <data name="K630" xml:space="preserve"><value>/li sonrası Yardımcı'nın açık alan örneği doğrulanıyor</value></data>
+  <data name="K631" xml:space="preserve"><value>HealRider sonrası yeni Quester seyahat görüntüsü bekleniyor</value></data>
+  <data name="K632" xml:space="preserve"><value>Yardımcı karakteri bekleniyor</value></data>
+  <data name="K633" xml:space="preserve"><value>{0} kullanımı için duraklatıldı</value></data>
+  <data name="K634" xml:space="preserve"><value>{0} dünyası ziyaret ediliyor</value></data>
+  <data name="K635" xml:space="preserve"><value>{0} dünya ziyareti hedefine ulaşmadı</value></data>
+  <data name="K636" xml:space="preserve"><value>{0} konumuna ışınlanılıyor</value></data>
+  <data name="K637" xml:space="preserve"><value>{0} ışınlanması {1} bölgesine ulaşmadı</value></data>
+  <data name="K638" xml:space="preserve"><value>ARR uçuş yoklaması bu bölge için reddedildi</value></data>
+  <data name="K639" xml:space="preserve"><value>Mevcut vnavmesh etkinliğinin bitmesi bekleniyor</value></data>
+  <data name="K640" xml:space="preserve"><value>binek kullanılamıyor: {0}</value></data>
+  <data name="K641" xml:space="preserve"><value>Mount Roulette yeniden denemesi bekleniyor</value></data>
+  <data name="K642" xml:space="preserve"><value>Mount Roulette ile Quester taklit ediliyor</value></data>
+  <data name="K643" xml:space="preserve"><value>{0:F0} yalmden uzakta yetişmek için bineğe biniliyor</value></data>
+  <data name="K644" xml:space="preserve"><value>Quester'ın bineğini taklit etmek için bekleniyor</value></data>
+  <data name="K645" xml:space="preserve"><value>Yetişmek için bineğe binilmesi bekleniyor</value></data>
+  <data name="K646" xml:space="preserve"><value>İnmeden önce binmenin bitmesi bekleniyor</value></data>
+  <data name="K647" xml:space="preserve"><value>İnmeden önce etkin rota izleniyor</value></data>
+  <data name="K648" xml:space="preserve"><value>Binekten inmeden yere iniliyor</value></data>
+  <data name="K649" xml:space="preserve"><value>Binekten inmeden önce {0:F0} yalm içinde yere iniliyor</value></data>
+  <data name="K650" xml:space="preserve"><value>Yere inme kullanılamıyor: {0}</value></data>
+  <data name="K651" xml:space="preserve"><value>{0:F0} yalm içinde binekten inme bekleniyor</value></data>
+  <data name="K652" xml:space="preserve"><value>{0:F0} yalm içinde binekten iniliyor</value></data>
+  <data name="K653" xml:space="preserve"><value>Binekten inme kullanılamıyor: {0}</value></data>
+  <data name="K654" xml:space="preserve"><value>uçuş kullanılamıyor: {0}</value></data>
+  <data name="K655" xml:space="preserve"><value>vnavmesh takip IPC başarısız</value></data>
+  <data name="K656" xml:space="preserve"><value>Yakın takip ({0:F1} yalm)</value></data>
+  <data name="K657" xml:space="preserve"><value>En son Quester hedefi yenileniyor</value></data>
+  <data name="K658" xml:space="preserve"><value>{0:F1} yalm mesafede uçuluyor</value></data>
+  <data name="K659" xml:space="preserve"><value>Yerde {0:F1} yalm mesafede takip ediliyor</value></data>
+  <data name="K660" xml:space="preserve"><value>vnavmesh rota başlangıcını reddetti; etkinliğin bitmesi veya yeni seyahat görüntüsü bekleniyor</value></data>
+  <data name="K661" xml:space="preserve"><value>Navmesh bekleniyor</value></data>
+  <data name="K662" xml:space="preserve"><value>{0}, {1:F1} yalm mesafede sıraya alınıyor</value></data>
+  <data name="K663" xml:space="preserve"><value>vnavmesh {0} rota başlangıcını reddetti; etkinliğin bitmesi veya yeni seyahat görüntüsü bekleniyor</value></data>
+  <data name="K664" xml:space="preserve"><value>vnavmesh takip IPC başarısız; yeni seyahat görüntüsü bekleniyor</value></data>
+  <data name="K665" xml:space="preserve"><value>Doğrulanmış Yardımcı ve Quester açık alan örneği verileri bekleniyor</value></data>
+  <data name="K666" xml:space="preserve"><value>Quester'ın doğrulanmış, örneklenmemiş alanı bekleniyor</value></data>
+  <data name="K667" xml:space="preserve"><value>Açık alan örneğini değiştirmeden önce güvenli, boşta seyahat bekleniyor</value></data>
+  <data name="K668" xml:space="preserve"><value>Açık alan örneği {0} yeniden denemesi bekleniyor</value></data>
+  <data name="K669" xml:space="preserve"><value>Açık alan örneğini değiştirmeden önce gezinmenin durması bekleniyor</value></data>
+  <data name="K670" xml:space="preserve"><value>Açık alan örneği buluşması: {0}</value></data>
+  <data name="K671" xml:space="preserve"><value>/li öncesi aetheryte yanında yere ve binekten iniliyor</value></data>
+  <data name="K672" xml:space="preserve"><value>/li sonrası açık alan örneği {0} doğrulanıyor</value></data>
+  <data name="K673" xml:space="preserve"><value>Lifestream /li {0} reddetti; yeniden denemek için beş saniye bekleniyor</value></data>
+  <data name="K674" xml:space="preserve"><value>Lifestream alan örneği komutu başarısız; yeniden denemek için beş saniye bekleniyor</value></data>
+  <data name="K675" xml:space="preserve"><value>Gözlenen bölge geçişi için ileri yoklama yapılıyor</value></data>
+  <data name="K676" xml:space="preserve"><value>Bölge geçişi gözlendi; yardımcının güvenle yüklenmesi bekleniyor</value></data>
+  <data name="K677" xml:space="preserve"><value>{0} bölgesinde bineğe binilemiyor</value></data>
+  <data name="K678" xml:space="preserve"><value>bölge binek kontrolü başarısız: {0}</value></data>
+  <data name="K679" xml:space="preserve"><value>{0} bölgesinde uçuş kullanılamıyor</value></data>
+  <data name="K680" xml:space="preserve"><value>yardımcının bu bölgede uçuş kilidi açılmadı</value></data>
+  <data name="K681" xml:space="preserve"><value>ARR uçuş kullanılabilirliği yoklanıyor</value></data>
+  <data name="K682" xml:space="preserve"><value>uçuş kontrolü başarısız: {0}</value></data>
+  <data name="K683" xml:space="preserve"><value>ActionManager kullanılamıyor</value></data>
+  <data name="K684" xml:space="preserve"><value>genel eylem {0} kullanılamıyor (durum {1})</value></data>
+  <data name="K685" xml:space="preserve"><value>genel eylem {0} reddedildi</value></data>
+  <data name="K686" xml:space="preserve"><value>genel eylem {0} başarısız: {1}</value></data>
+  <data name="K687" xml:space="preserve"><value>Lifestream seyahat durumu IPC başarısız</value></data>
+  <data name="K688" xml:space="preserve"><value>{0}; daha yeni seyahat görüntüsü bekleniyor</value></data>
+  <data name="K689" xml:space="preserve"><value>Mevcut Lifestream seyahatinin bitmesi bekleniyor</value></data>
+  <data name="K690" xml:space="preserve"><value>Lifestream seyahat IPC başarısız</value></data>
+  <data name="K691" xml:space="preserve"><value>Lifestream isteği reddetti: {0}</value></data>
+  <data name="K692" xml:space="preserve"><value>Quester'ın tam ışınlanma hedefi bu yardımcının ışınlanma listesinde yok.</value></data>
+  <data name="K693" xml:space="preserve"><value>Quester'ın bölgesindeki hiçbir aetheryte bu yardımcının ışınlanma listesinde yok.</value></data>
+  <data name="K694" xml:space="preserve"><value>Aetheryte çözümlemesi başarısız: {0}</value></data>
+  <data name="K695" xml:space="preserve"><value>Kabul edilen Quester ışınlanma hedefi kullanılamıyor.</value></data>
+  <data name="K696" xml:space="preserve"><value>En yakın aetheryte yedeği için Quester'ın hedef bölgedeki konumu bekleniyor.</value></data>
+  <data name="K697" xml:space="preserve"><value>Yardımcının ışınlanma listesi kullanılamıyor veya hâlâ yükleniyor.</value></data>
+  <data name="K698" xml:space="preserve"><value>PowerlevelBot hazır.</value></data>
+  <data name="K699" xml:space="preserve"><value>PowerlevelBot'u etkinleştirmeden önce BRD veya MCH seçin.</value></data>
+  <data name="K700" xml:space="preserve"><value>{0} kilidi açılmadı.</value></data>
+  <data name="K701" xml:space="preserve"><value>Geçerli meslek seçilen {0} PowerlevelBot mesleğiyle eşleşmelidir.</value></data>
+  <data name="K702" xml:space="preserve"><value>FrenRider'ın yapılandırılmış Fren'i görünmüyor.</value></data>
+  <data name="K703" xml:space="preserve"><value>PowerlevelBot'u kullanmadan önce etkin yoldaş chocobo'yu gönderin.</value></data>
+  <data name="K704" xml:space="preserve"><value>{0} yalnızca düşmana yönelik bir eylem değil.</value></data>
+  <data name="K705" xml:space="preserve"><value>{0} süreli kullanılır.</value></data>
+  <data name="K706" xml:space="preserve"><value>{0} AoE'dir.</value></data>
+  <data name="K707" xml:space="preserve"><value>{0} kullanılamıyor.</value></data>
+  <data name="K708" xml:space="preserve"><value>{0} bekleme süresinde.</value></data>
+  <data name="K709" xml:space="preserve"><value>47789 portu ayrılmıştır. Başka bir eşleştirme portu seçin.</value></data>
+  <data name="K710" xml:space="preserve"><value>Eşleştirme portu 1024 ile 65535 arasında olmalıdır.</value></data>
+  <data name="K711" xml:space="preserve"><value>Ortak sır en az 16 karakter içermelidir.</value></data>
+  <data name="K712" xml:space="preserve"><value>127.0.0.1 veya 192.168.1.25 gibi geçerli bir Yardımcı IPv4 adresi girin.</value></data>
+  <data name="K713" xml:space="preserve"><value>Chocobo</value></data>
+  <data name="K714" xml:space="preserve"><value>NPC grubu üyesi</value></data>
+  <data name="K715" xml:space="preserve"><value>Elle seçilen hedef</value></data>
+  <data name="K716" xml:space="preserve"><value>Jacqueline of All Trades saldırı için Rotation Solver Reborn gerektirir.</value></data>
+  <data name="K717" xml:space="preserve"><value>Newb bir çalışma rolüdür, Bağımsız davranış değildir.</value></data>
+  <data name="K718" xml:space="preserve"><value>Belirli eklentilerle ilgili sorun / önerileri konuşmak için "The Dumpster Fire" kanalına kaydırın.</value></data>
+  <data name="K719" xml:space="preserve"><value>BossMod Reborn (BMR) veya VBM</value></data>
+  <data name="K720" xml:space="preserve"><value>Rotation Solver Reborn (RSR) - isteğe bağlı yalıtım/geri yükleme yardımcısı</value></data>
+  <data name="K721" xml:space="preserve"><value>{0}; güvenli yer yedeği ({1})</value></data>
+  <data name="K722" xml:space="preserve"><value>Dost savaş NPC'si</value></data>
+  <data name="K723" xml:space="preserve"><value>Eşleştirilen Yardımcı</value></data>
+  <data name="K724" xml:space="preserve"><value>LOS</value></data>
+  <data name="K725" xml:space="preserve"><value>Kurtarma</value></data>
+  <data name="K726" xml:space="preserve"><value>uçuş</value></data>
+  <data name="K727" xml:space="preserve"><value>yer takibi</value></data>
+  <data name="K728" xml:space="preserve"><value>Yaklaşma</value></data>
+  <data name="K729" xml:space="preserve"><value>Vardı</value></data>
+  <data name="K730" xml:space="preserve"><value>Varılıyor</value></data>
+  <data name="K731" xml:space="preserve"><value>Yolcu binmesi</value></data>
+  <data name="K732" xml:space="preserve"><value>İptal edildi</value></data>
+  <data name="K733" xml:space="preserve"><value>İptal ediliyor</value></data>
+  <data name="K734" xml:space="preserve"><value>Hazırlanıyor</value></data>
+  <data name="K735" xml:space="preserve"><value>Geçiş</value></data>
+  <data name="K736" xml:space="preserve"><value>Bekliyor</value></data>
+  <data name="K737" xml:space="preserve"><value>Devam bekleniyor</value></data>
+  <data name="K738" xml:space="preserve"><value>Bölge geçişi</value></data>
+  <data name="K739" xml:space="preserve"><value>yere inme</value></data>
+  <data name="K740" xml:space="preserve"><value>binekten inme</value></data>
+  <data name="K741" xml:space="preserve"><value>HealRider engelli: {0}</value></data>
+  <data name="K742" xml:space="preserve"><value>HealRider temizliği: {0}</value></data>
+  <data name="K743" xml:space="preserve"><value>HealRider: {0}</value></data>
+  <data name="K744" xml:space="preserve"><value>HealRider: {0}: {1}</value></data>
+  <data name="K745" xml:space="preserve"><value>Yardımcı temizliği {0} beklerken zaman aşımına uğradı; eşgüdümlü temizlik yeniden denemesi bekleniyor.</value></data>
+  <data name="K746" xml:space="preserve"><value>kaydedilen karakterin hazır olması</value></data>
+  <data name="K747" xml:space="preserve"><value>bineğe binme eyleminin bitmesi</value></data>
+  <data name="K748" xml:space="preserve"><value>Temizlik için yere iniliyor</value></data>
+  <data name="K749" xml:space="preserve"><value>Temizlik için binekten iniliyor</value></data>
+  <data name="K750" xml:space="preserve"><value>Taşımacılık temizliği için binekten iniliyor</value></data>
+  <data name="K751" xml:space="preserve"><value>Takip için seçilen yolcu bineği hazırlanıyor</value></data>
+  <data name="K752" xml:space="preserve"><value>Atama binek ilkesi değişti</value></data>
+  <data name="K753" xml:space="preserve"><value>Hedef veya biniş aşaması değişti</value></data>
+  <data name="K754" xml:space="preserve"><value>Görev devri</value></data>
+  <data name="K755" xml:space="preserve"><value>Alma iptal edildi</value></data>
+  <data name="K756" xml:space="preserve"><value>Atama binek modu eylemi desteklenmiyor.</value></data>
+  <data name="K757" xml:space="preserve"><value>Binek ilkesini değiştirmeden önce etkin binişi bitirin.</value></data>
+  <data name="K758" xml:space="preserve"><value>Yardımcı'da yolcu koltukları olan, kilidi açılmış bir binek seçin.</value></data>
+  <data name="K759" xml:space="preserve"><value>Seçilen yolcu bineği hazırlığı reddedildi veya izin verilen alma süresini aştı.</value></data>
+  <data name="K760" xml:space="preserve"><value>HealRider v2 gerekir. Yardımcı ve Quester'ı güncelleyin.</value></data>
+  <data name="K761" xml:space="preserve"><value>Geçersiz HealRider v2 isteği.</value></data>
+  <data name="K762" xml:space="preserve"><value>Bu biniş aşaması daha yeni bir aşamayla değiştirildi.</value></data>
+  <data name="K763" xml:space="preserve"><value>Bu binek devamı sona erdirildi.</value></data>
+  <data name="K764" xml:space="preserve"><value>Önceki binişin binekten inmesi bekleniyor.</value></data>
+  <data name="K765" xml:space="preserve"><value>Temizlik yeniden denemesi kaydedilen karakteri ve grubu gerektirir.</value></data>
+  <data name="K766" xml:space="preserve"><value>HealRider eylemi desteklenmiyor.</value></data>
+  <data name="K767" xml:space="preserve"><value>Atamanın yolcu bineği ilkesi hazır değil.</value></data>
+  <data name="K768" xml:space="preserve"><value>Bu biniş aşaması zaten sona erdi.</value></data>
+  <data name="K769" xml:space="preserve"><value>Ortak alma bekleme süresi alma kabul edilmeden doldu.</value></data>
+  <data name="K770" xml:space="preserve"><value>Alma; kilidi açılmış yolcu bineği, Yardımcı uçuşu, yürüme eşiğinden uzakta uçmayan Quester ve bu alandaki tam grubu gerektirir.</value></data>
+  <data name="K771" xml:space="preserve"><value>Biniş bağlamı kayboldu, engellendi veya zaman aşımına uğradı</value></data>
+  <data name="K772" xml:space="preserve"><value>Ortak alma bekleme süresi yaklaşma veya binme sırasında doldu</value></data>
+  <data name="K773" xml:space="preserve"><value>Binek yolculuğunda iki istemcinin de yüklenmesi bekleniyor.</value></data>
+  <data name="K774" xml:space="preserve"><value>Binek devamı ve iki yolcu onayı bekleniyor.</value></data>
+  <data name="K775" xml:space="preserve"><value>Binekte sınır geçişi doğrulanamadı</value></data>
+  <data name="K776" xml:space="preserve"><value>Yardımcı ve Quester bölgesi ile açık alan örnekleri artık birlikte doğrulanmıyor</value></data>
+  <data name="K777" xml:space="preserve"><value>Tam Quester veya grup artık kullanılamıyor</value></data>
+  <data name="K778" xml:space="preserve"><value>Sonraki hareket adımı beklenirken yolcu doğrulaması kayboldu</value></data>
+  <data name="K779" xml:space="preserve"><value>Yere veya binekten inme reddedildi</value></data>
+  <data name="K780" xml:space="preserve"><value>Hareket hedefine ulaşıldı; sonraki doğrulanmış adım bekleniyor.</value></data>
+  <data name="K781" xml:space="preserve"><value>Hassas yere inme gezinmesi kaydedilen hedefi reddetti</value></data>
+  <data name="K782" xml:space="preserve"><value>Hassas yere inme gezinme IPC başarısız</value></data>
+  <data name="K783" xml:space="preserve"><value>Hassas yere inme gezinme durumu kullanılamıyor</value></data>
+  <data name="K784" xml:space="preserve"><value>Hassas yere inme rotası kaydedilen XYZ'ye ulaşmadan başarısız oldu</value></data>
+  <data name="K785" xml:space="preserve"><value>Biniş gezinme durumu kullanılamıyor</value></data>
+  <data name="K786" xml:space="preserve"><value>Yolcu rotası varıştan önce başarısız oldu</value></data>
+  <data name="K787" xml:space="preserve"><value>Biniş gezinmesi hedefi reddetti</value></data>
+  <data name="K788" xml:space="preserve"><value>Biniş gezinme IPC başarısız</value></data>
+  <data name="K789" xml:space="preserve"><value>Yere inme varış toleransı dışına çıktı.</value></data>
+  <data name="K790" xml:space="preserve"><value>Tam Quester yolcu koltuğunu veya grubu terk etti.</value></data>
+  <data name="K791" xml:space="preserve"><value>Seçilen binekten yolcu binmeden önce inildi.</value></data>
+  <data name="K792" xml:space="preserve"><value>Seçilen yolcu bineği hazırlanamadı.</value></data>
+  <data name="K793" xml:space="preserve"><value>İki yolcu onayı bekleniyor.</value></data>
+  <data name="K794" xml:space="preserve"><value>Kaydedilen hedefte gözlenen yere basma bekleniyor.</value></data>
+  <data name="K795" xml:space="preserve"><value>Yardımcı'nın yerel yolcu gözlemi bekleniyor.</value></data>
+  <data name="K796" xml:space="preserve"><value>Quester'ın yolcu onayı bekleniyor.</value></data>
+  <data name="K797" xml:space="preserve"><value>Epilogue Gate rotası iptal edildi veya zaman aşımına uğradı</value></data>
+  <data name="K798" xml:space="preserve"><value>Idyllshire'ın Epilogue Gate kapısından geçiliyor</value></data>
+  <data name="K799" xml:space="preserve"><value>Lifestream Epilogue Gate komutu kullanılamıyor</value></data>
+  <data name="K800" xml:space="preserve"><value>Lifestream Epilogue Gate rotasını reddetti</value></data>
+  <data name="K801" xml:space="preserve"><value>Açık alan örneğini değiştirmek için {0} konumuna gidiliyor</value></data>
+  <data name="K802" xml:space="preserve"><value>Alan örneği değiştirme aetheryte'i {0} ulaşılmadı</value></data>
+  <data name="K803" xml:space="preserve"><value>Atama bırakıldı</value></data>
+  <data name="K804" xml:space="preserve"><value>Dravanian Hinterlands seyahati bu Yardımcı'da uçuş gerektirir</value></data>
+  <data name="K805" xml:space="preserve"><value>Lifestream seyahat IPC kullanılamıyor.</value></data>
+  <data name="K806" xml:space="preserve"><value>vnavmesh seyahat IPC kullanılamıyor.</value></data>
+  <data name="K807" xml:space="preserve"><value>Gerekli Lifestream seyahat IPC kullanılamıyor.</value></data>
+  <data name="K808" xml:space="preserve"><value>Gerekli vnavmesh seyahat IPC kullanılamıyor.</value></data>
+  <data name="K809" xml:space="preserve"><value>LOS engelli; eşleşmiş seyahat etkin</value></data>
+  <data name="K810" xml:space="preserve"><value>LOS engelli; eşleşmiş seyahat uzak konumu çözümlüyor</value></data>
+  <data name="K811" xml:space="preserve"><value>LOS engelli; hedef kurtarma menzili dışında</value></data>
+  <data name="K812" xml:space="preserve"><value>Görev içinde askıya alındı</value></data>
+  <data name="K813" xml:space="preserve"><value>FrenRider Powerlevel IPC uyumsuz. FrenRider'ı güncelleyin.</value></data>
+  <data name="K814" xml:space="preserve"><value>FrenRider Powerlevel IPC kullanılamıyor.</value></data>
+  <data name="K815" xml:space="preserve"><value>Boş FrenRider Powerlevel durumu.</value></data>
+  <data name="K816" xml:space="preserve"><value>FrenRider Powerlevel IPC henüz sorgulanmadı.</value></data>
+  <data name="K817" xml:space="preserve"><value>FrenRider boş yanıt döndürdü.</value></data>
+  <data name="K818" xml:space="preserve"><value>Uyumsuz FrenRider Powerlevel durumu.</value></data>
+  <data name="K819" xml:space="preserve"><value>Eksik eşleştirme TCP çerçevesi.</value></data>
+  <data name="K820" xml:space="preserve"><value>Geçersiz eşleştirme kimlik doğrulama etiketi.</value></data>
+  <data name="K821" xml:space="preserve"><value>Geçersiz eşleştirme zaman damgası.</value></data>
+  <data name="K822" xml:space="preserve"><value>Eşleştirme kimlik doğrulaması başarısız.</value></data>
+  <data name="K823" xml:space="preserve"><value>Eşleştirme TCP çerçevesi 64 KiB sınırını aşıyor.</value></data>
+  <data name="K824" xml:space="preserve"><value>Yeniden oynatılan eşleştirme zarfı.</value></data>
+  <data name="K825" xml:space="preserve"><value>Eski eşleştirme zarfı.</value></data>
+  <data name="K826" xml:space="preserve"><value>Ortak sır yapılandırılmadı.</value></data>
+  <data name="K827" xml:space="preserve"><value>İmzasız veya uyumsuz eşleştirme zarfı.</value></data>
+  <data name="K828" xml:space="preserve"><value>HealBot eşleştirmesi kaldırılıyor.</value></data>
+  <data name="K829" xml:space="preserve"><value>İyileştirme istemcisinde Yardımcı rolünü seçin.</value></data>
+  <data name="K830" xml:space="preserve"><value>Yardımcı sağlayıcısı doğrudan Newb eşleştirmesi tarafından yönetilmiyor.</value></data>
+  <data name="K831" xml:space="preserve"><value>Sağlayıcı etkinleştirmesini şu anda QST yönetiyor.</value></data>
+  <data name="K832" xml:space="preserve"><value>Doğrudan Newb eşleştirmesi Yardımcı etkinleştirmesini yönetmiyor.</value></data>
+  <data name="K833" xml:space="preserve"><value>Geçersiz Newb oturum kimliği.</value></data>
+  <data name="K834" xml:space="preserve"><value>HealBot'un zaten etkin bir QST veya Newb ataması var.</value></data>
+  <data name="K835" xml:space="preserve"><value>Geçersiz Newb kimliği.</value></data>
+  <data name="K836" xml:space="preserve"><value>Newb oturumu etkin atamayı yönetmiyor.</value></data>
+  <data name="K837" xml:space="preserve"><value>Newb oturumu bir etkin atamayı yönetmiyor.</value></data>
+  <data name="K838" xml:space="preserve"><value>Seyahat güncellemesi atanan tam Newb ile eşleşmiyor.</value></data>
+  <data name="K839" xml:space="preserve"><value>HealBot JOAT'ı etkinleştiremedi.</value></data>
+  <data name="K840" xml:space="preserve"><value>HealBot devre dışı.</value></data>
+  <data name="K841" xml:space="preserve"><value>HealBot otomasyonu kapalı.</value></data>
+  <data name="K842" xml:space="preserve"><value>Jacqueline of All Trades (JOAT) seçin.</value></data>
+  <data name="K843" xml:space="preserve"><value>JOAT saldırısı için Rotation Solver Reborn gerekir.</value></data>
+  <data name="K844" xml:space="preserve"><value>Otomasyon kapalı.</value></data>
+  <data name="K845" xml:space="preserve"><value>Otomasyonu şimdi açmayı veya kapalı bırakmayı seçin.</value></data>
+  <data name="K846" xml:space="preserve"><value>HealBot seçilen rolü başlatamadı.</value></data>
+  <data name="K847" xml:space="preserve"><value>{0} kurulumu kaydedildi. Çalışma rolü Kapalı kalır.</value></data>
+  <data name="K848" xml:space="preserve"><value>{0} kurulumu kaydedildi ve başlatıldı.</value></data>
+  <data name="K849" xml:space="preserve"><value>Bilinmeyen çalışma rolü.</value></data>
+  <data name="K850" xml:space="preserve"><value>QST eşleştirildi</value></data>
+  <data name="K851" xml:space="preserve"><value>İyileştirme {0}; saldırı {1}</value></data>
+  <data name="K852" xml:space="preserve"><value>{0}: {1} Ana pencereyi açmak için tıklayın.</value></data>
+  <data name="K853" xml:space="preserve"><value> Davranış: {0}.</value></data>
+  <data name="K854" xml:space="preserve"><value>Rol: {0}.{1} Durum: {2} Sonraki: {3} Kimlik: {4}</value></data>
+  <data name="K855" xml:space="preserve"><value>Maceralarınız için otomatik destek</value></data>
+  <data name="K856" xml:space="preserve"><value>Günlük oyunlarınız için kompakt bir yol arkadaşı</value></data>
+  <data name="Window appearance" xml:space="preserve">
+    <value>Pencere görünümü</value>
+  </data>
+  <data name="Compact visible on main window" xml:space="preserve">
+    <value>Ana pencerede kompakt modu göster</value>
+  </data>
+  <data name="Language visible on main window" xml:space="preserve">
+    <value>Ana pencerede dil seçimini göster</value>
+  </data>
+  <data name="Transparency" xml:space="preserve">
+    <value>Saydamlık</value>
+  </data>
+  <data name="Opacity (%)" xml:space="preserve">
+    <value>Opaklık (%)</value>
+  </data>
+  <data name="Auto-fade when unfocused" xml:space="preserve">
+    <value>Odak yokken otomatik soldur</value>
+  </data>
+  <data name="Unfocused opacity (%)" xml:space="preserve">
+    <value>Odak yokken opaklık (%)</value>
+  </data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve">
+    <value>Odak kaybı gecikmesi (saniye)</value>
+  </data>
+</root>

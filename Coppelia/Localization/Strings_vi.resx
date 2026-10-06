@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="K000" xml:space="preserve"><value>%d giây</value></data>
+  <data name="K001" xml:space="preserve"><value>%d y</value></data>
+  <data name="K002" xml:space="preserve"><value>...và thêm {0} mục tiêu theo dõi.</value></data>
+  <data name="K003" xml:space="preserve"><value>{0} - theo dõi {1}</value></data>
+  <data name="K004" xml:space="preserve"><value>{0} / {1}% HP</value></data>
+  <data name="K005" xml:space="preserve"><value>{0} / vắng mặt / Ctrl để xóa</value></data>
+  <data name="K006" xml:space="preserve"><value>{0} / đã chết</value></data>
+  <data name="K007" xml:space="preserve"><value>{0} / bị bộ lọc ẩn</value></data>
+  <data name="K008" xml:space="preserve"><value>{0} / được giữ lại</value></data>
+  <data name="K009" xml:space="preserve"><value>{0} [{1}] - {2}</value></data>
+  <data name="K010" xml:space="preserve"><value>{0} ghép nối trực tiếp</value></data>
+  <data name="K011" xml:space="preserve"><value>Đã trang bị {0}</value></data>
+  <data name="K012" xml:space="preserve"><value>Chưa mở khóa {0}</value></data>
+  <data name="K013" xml:space="preserve"><value>{0} Mini</value></data>
+  <data name="K014" xml:space="preserve"><value>{0} mục tiêu được giữ lại/đã lưu đang bị ẩn hoặc vắng mặt. Mở cửa sổ theo dõi để quản lý.</value></data>
+  <data name="K015" xml:space="preserve"><value>{0} Cài đặt</value></data>
+  <data name="K016" xml:space="preserve"><value>{0} Theo dõi</value></data>
+  <data name="K017" xml:space="preserve"><value>{0}%</value></data>
+  <data name="K018" xml:space="preserve"><value>{0}% HP</value></data>
+  <data name="K019" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="K020" xml:space="preserve"><value>47789 được dành riêng</value></data>
+  <data name="K021" xml:space="preserve"><value>Fren đã cấu hình và hiển thị, không có chocobo đồng hành đang hoạt động.</value></data>
+  <data name="K022" xml:space="preserve"><value>BRD hoặc MCH hiện đang được trang bị và đã mở khóa.</value></data>
+  <data name="K023" xml:space="preserve"><value>Dòng vắng mặt cần Ctrl+bỏ chọn. Xóa tại đây cũng xóa bản đã lưu.</value></data>
+  <data name="K024" xml:space="preserve"><value>Hành động</value></data>
+  <data name="K025" xml:space="preserve"><value>Đang hoạt động - giải tán</value></data>
+  <data name="K026" xml:space="preserve"><value>Đang hoạt động / danh tính ghép nối</value></data>
+  <data name="K027" xml:space="preserve"><value>Đang hoạt động / danh tính ghép nối: {0}</value></data>
+  <data name="K028" xml:space="preserve"><value>Hoạt động: {0}/{1} | Hiện diện: {2} | Đã lưu: {3}</value></data>
+  <data name="K029" xml:space="preserve"><value>Hoạt động: 1/{0} | Hiện diện: {1} | Đã lưu: không đổi</value></data>
+  <data name="K030" xml:space="preserve"><value>Thứ tự khi sống: BUFF tức thời -&gt; oGCD tức thời -&gt; BUFF niệm -&gt; GCD niệm. Chuẩn bị cho mục tiêu chết kiểm tra buff tức thời trước hồi sinh.</value></data>
+  <data name="K031" xml:space="preserve"><value>Chiêm tinh gia (AST)</value></data>
+  <data name="K032" xml:space="preserve"><value>Ít nhất 16 ký tự</value></data>
+  <data name="K033" xml:space="preserve"><value>Hành động tấn công: {0}</value></data>
+  <data name="K034" xml:space="preserve"><value>Mục tiêu tấn công: {0}</value></data>
+  <data name="K035" xml:space="preserve"><value>Thế tấn công</value></data>
+  <data name="K036" xml:space="preserve"><value>Sẵn sàng tấn công</value></data>
+  <data name="K037" xml:space="preserve"><value>Tấn công: {0}</value></data>
+  <data name="K038" xml:space="preserve"><value>Ghép nối trực tiếp có xác thực dùng bí mật chung hiển thị.</value></data>
+  <data name="K039" xml:space="preserve"><value>Lưu lượng LAN có xác thực không được mã hóa; tên nhân vật và tọa độ vẫn hiển thị trên mạng.</value></data>
+  <data name="K040" xml:space="preserve"><value>Tự cập nhật vị trí bản đồ khi đăng nhập</value></data>
+  <data name="K041" xml:space="preserve"><value>Có sẵn</value></data>
+  <data name="K042" xml:space="preserve"><value>Khả dụng và tương thích</value></data>
+  <data name="K043" xml:space="preserve"><value>Quay lại</value></data>
+  <data name="K044" xml:space="preserve"><value>Thi sĩ (BRD)</value></data>
+  <data name="K045" xml:space="preserve"><value>NPC chiến đấu</value></data>
+  <data name="K046" xml:space="preserve"><value>BMR hoặc VBM</value></data>
+  <data name="K047" xml:space="preserve"><value>Cả hai lựa chọn dùng chọn mục tiêu RSR Manual. Chỉ DoT chỉ bật hành động gây sát thương theo thời gian của người hồi máu đang trang bị; RSR đầy đủ khôi phục các hành động tấn công và chế độ AoE đã ghi nhận mà không bật tự chọn mục tiêu.</value></data>
+  <data name="K048" xml:space="preserve"><value>Cả hai lựa chọn dùng chọn mục tiêu RSR Manual. RSR đầy đủ chỉ thay đổi hành động tấn công và AoE.</value></data>
+  <data name="K049" xml:space="preserve"><value>Cả hai bên phải dùng giao thức ghép nối trực tiếp v2 tương thích cùng cổng và bí mật chung.</value></data>
+  <data name="K050" xml:space="preserve"><value>Hủy</value></data>
+  <data name="K051" xml:space="preserve"><value>Thực hiện các hành động hồi máu đã cấu hình lên mục tiêu thân thiện được theo dõi.</value></data>
+  <data name="K052" xml:space="preserve"><value>Chocobo</value></data>
+  <data name="K053" xml:space="preserve"><value>Chọn vai trò vận hành. Chế độ độc lập dùng một hành vi cục bộ. Cài đặt giữ trong bản nháp đến khi Hoàn tất; Hủy sẽ bỏ bản nháp.</value></data>
+  <data name="K054" xml:space="preserve"><value>Chọn nghề tầm xa đã trang bị. HealBot không bao giờ đổi bộ trang bị và không dùng danh sách mục tiêu theo dõi ở chế độ này.</value></data>
+  <data name="K055" xml:space="preserve"><value>Chọn các đối tượng thân thiện hiển thị trong Theo dõi. Chỉ mục tiêu bạn chọn rõ ràng mới được hồi máu hoặc lưu.</value></data>
+  <data name="K056" xml:space="preserve"><value>Xóa mục tiêu theo dõi</value></data>
+  <data name="K057" xml:space="preserve"><value>Đã xóa các mục tiêu theo dõi và đã lưu.</value></data>
+  <data name="K058" xml:space="preserve"><value>Lệnh và cửa sổ</value></data>
+  <data name="K059" xml:space="preserve"><value>Đồng hành</value></data>
+  <data name="K060" xml:space="preserve"><value>Chocobo đồng hành</value></data>
+  <data name="K061" xml:space="preserve"><value>Chocobo đồng hành</value></data>
+  <data name="K062" xml:space="preserve"><value>Tư thế đồng hành</value></data>
+  <data name="K063" xml:space="preserve"><value>IPC Powerlevel FrenRider tương thích, FrenRider được bật và Fren đã cấu hình hiển thị.</value></data>
+  <data name="K064" xml:space="preserve"><value>IPC Powerlevel FrenRider tương thích và FrenRider được bật.</value></data>
+  <data name="K065" xml:space="preserve"><value>Cấu hình một đầu cuối HealBot TCP trực tiếp có xác thực. Newb không bao giờ hồi máu hay tấn công cục bộ.</value></data>
+  <data name="K066" xml:space="preserve"><value>Cấu hình cổng lắng nghe có xác thực và bí mật chung hiển thị.</value></data>
+  <data name="K067" xml:space="preserve"><value>Cấu hình hành vi HealBot, JOAT hoặc PowerlevelBot đã chọn mà không dùng mạng.</value></data>
+  <data name="K068" xml:space="preserve"><value>Đã cấu hình</value></data>
+  <data name="K069" xml:space="preserve"><value>Fren đã cấu hình</value></data>
+  <data name="K070" xml:space="preserve"><value>Tiếp tục</value></data>
+  <data name="K071" xml:space="preserve"><value>Sao chép</value></data>
+  <data name="K072" xml:space="preserve"><value>Sao chép bí mật</value></data>
+  <data name="K073" xml:space="preserve"><value>ID nghề hiện tại {0} không khớp</value></data>
+  <data name="K074" xml:space="preserve"><value>Chết</value></data>
+  <data name="K075" xml:space="preserve"><value>mặc định</value></data>
+  <data name="K076" xml:space="preserve"><value>Thế phòng thủ</value></data>
+  <data name="K077" xml:space="preserve"><value>Sẵn sàng của phụ thuộc</value></data>
+  <data name="K078" xml:space="preserve"><value>Chi tiết</value></data>
+  <data name="K079" xml:space="preserve"><value>Đã tắt</value></data>
+  <data name="K080" xml:space="preserve"><value>Discord</value></data>
+  <data name="K081" xml:space="preserve"><value>Đã giải tán</value></data>
+  <data name="K082" xml:space="preserve"><value>Khoảng cách</value></data>
+  <data name="K083" xml:space="preserve"><value>Không dùng aetheryte Tamamizu</value></data>
+  <data name="K084" xml:space="preserve"><value>Chỉ DoT</value></data>
+  <data name="K085" xml:space="preserve"><value>Thanh DTR</value></data>
+  <data name="K086" xml:space="preserve"><value>Chế độ DTR</value></data>
+  <data name="K087" xml:space="preserve"><value>Bật {0}</value></data>
+  <data name="K088" xml:space="preserve"><value>Đã bật</value></data>
+  <data name="K089" xml:space="preserve"><value>Đã bật, cấu hình và hiển thị</value></data>
+  <data name="K090" xml:space="preserve"><value>Đầu cuối: {0}</value></data>
+  <data name="K091" xml:space="preserve"><value>Chỉ chọn kẻ địch đã bị thương và đang giao chiến với Fren hoặc người chơi cục bộ.</value></data>
+  <data name="K092" xml:space="preserve"><value>Đã trang bị</value></data>
+  <data name="K093" xml:space="preserve"><value>Lọc theo tên, loại hoặc nghề</value></data>
+  <data name="K094" xml:space="preserve"><value>Lọc tên...</value></data>
+  <data name="K095" xml:space="preserve"><value>Bộ lọc: người chơi {0}, chocobo {1}, nhóm NPC {2}, NPC chiến đấu thân thiện {3}.</value></data>
+  <data name="K096" xml:space="preserve"><value>Hoàn tất phải bắt đầu vai trò đã chọn ngay hoặc lưu vai trò để /healbot on tiếp tục trong khi vẫn Tắt.</value></data>
+  <data name="K097" xml:space="preserve"><value>Hoàn tất thiết lập</value></data>
+  <data name="K098" xml:space="preserve"><value>Theo sau</value></data>
+  <data name="K099" xml:space="preserve"><value>Thời gian dò lãnh thổ bằng tiến về trước</value></data>
+  <data name="K100" xml:space="preserve"><value>Thế tự do</value></data>
+  <data name="K101" xml:space="preserve"><value>Hiển thị Fren</value></data>
+  <data name="K102" xml:space="preserve"><value>FrenRider</value></data>
+  <data name="K103" xml:space="preserve"><value>IPC tấn công FrenRider</value></data>
+  <data name="K104" xml:space="preserve"><value>Nguồn tấn công FrenRider</value></data>
+  <data name="K105" xml:space="preserve"><value>IPC FrenRider</value></data>
+  <data name="K106" xml:space="preserve"><value>NPC chiến đấu thân thiện</value></data>
+  <data name="K107" xml:space="preserve"><value>Vòng xoay RSR đầy đủ</value></data>
+  <data name="K108" xml:space="preserve"><value>Chung</value></data>
+  <data name="K109" xml:space="preserve"><value>Tạo bí mật hex 64 ký tự</value></data>
+  <data name="K110" xml:space="preserve"><value>Tạo bí mật</value></data>
+  <data name="K111" xml:space="preserve"><value>Gysahl Greens (NQ + HQ): {0}</value></data>
+  <data name="K112" xml:space="preserve"><value>Gysahl Greens (NQ + HQ): không khả dụng</value></data>
+  <data name="K113" xml:space="preserve"><value>HealBot</value></data>
+  <data name="K114" xml:space="preserve"><value>HealBot {0}</value></data>
+  <data name="K115" xml:space="preserve"><value>Hành động HealBot</value></data>
+  <data name="K116" xml:space="preserve"><value>HealBot và JOAT dùng chung ma trận hành động hồi máu theo nghề. PowerlevelBot không dùng các quy tắc này.</value></data>
+  <data name="K117" xml:space="preserve"><value>HealBot đánh giá danh sách theo dõi {0} mục tiêu đã cấu hình và dùng ma trận WHM, SCH, AST hoặc SGE hiện có. Mục tiêu có thể là người chơi thân thiện ngoài nhóm.</value></data>
+  <data name="K118" xml:space="preserve"><value>HealBot Mini</value></data>
+  <data name="K119" xml:space="preserve"><value>Tích hợp HealBot tùy chọn</value></data>
+  <data name="K120" xml:space="preserve"><value>Đường dẫn HealBot</value></data>
+  <data name="K121" xml:space="preserve"><value>HealBot hỗ trợ /healbot, /hb và /copellia với off, on, standalone, helper, newb, heal, joat (hoặc jot), powerlevel, mini, status, config, watch, ws và j.</value></data>
+  <data name="K122" xml:space="preserve"><value>HealBot Theo dõi</value></data>
+  <data name="K123" xml:space="preserve"><value>Ma trận hành động người hồi máu</value></data>
+  <data name="K124" xml:space="preserve"><value>Thế hồi phục</value></data>
+  <data name="K125" xml:space="preserve"><value>Hành động hồi máu: {0} | Hành động tấn công: {1}</value></data>
+  <data name="K126" xml:space="preserve"><value>Cấu hình hồi máu</value></data>
+  <data name="K127" xml:space="preserve"><value>Bối cảnh hồi máu</value></data>
+  <data name="K128" xml:space="preserve"><value>Phụ thuộc hồi máu</value></data>
+  <data name="K129" xml:space="preserve"><value>Điều kiện hồi máu</value></data>
+  <data name="K130" xml:space="preserve"><value>Sẵn sàng hồi máu</value></data>
+  <data name="K131" xml:space="preserve"><value>Hồi máu được ưu tiên trong mỗi chu kỳ quyết định 900 ms. Coppelia tắt RSR trước khi quy tắc Theo dõi phù hợp hoạt động, giữ RSR tắt khi hồi máu đang chờ, bị chặn hoặc đang niệm, và chỉ dùng RSR Manual khi quyết định hồi máu thực sự nhàn rỗi. JOAT ghép nối chờ trong Manual ở khoảng cách tối đa 30 yalms, còn Coppelia tự chọn kẻ địch đã giao chiến.</value></data>
+  <data name="K132" xml:space="preserve"><value>Hồi máu: {0}</value></data>
+  <data name="K133" xml:space="preserve"><value>Trợ giúp</value></data>
+  <data name="K134" xml:space="preserve"><value>Yêu cầu ghép nối Trợ giúp / Newb</value></data>
+  <data name="K135" xml:space="preserve"><value>Địa chỉ Trợ giúp</value></data>
+  <data name="K136" xml:space="preserve"><value>Đầu cuối Trợ giúp: {0}:{1}.</value></data>
+  <data name="K137" xml:space="preserve"><value>Địa chỉ IPv4 Trợ giúp</value></data>
+  <data name="K138" xml:space="preserve"><value>Cổng lắng nghe Trợ giúp: {0}.</value></data>
+  <data name="K139" xml:space="preserve"><value>Trợ giúp lắng nghe một Newb có xác thực và chỉ bật JOAT sau yêu cầu trạng thái tương thích.</value></data>
+  <data name="K140" xml:space="preserve"><value>Trợ giúp cần cổng TCP hợp lệ và bí mật chung hiển thị; Newb còn cần địa chỉ IPv4 của Trợ giúp.</value></data>
+  <data name="K141" xml:space="preserve"><value>Trợ giúp cần các phụ thuộc HealBot/JOAT cùng Lifestream và vnavmesh để di chuyển ghép nối.</value></data>
+  <data name="K142" xml:space="preserve"><value>Trợ giúp quản lý cổng lắng nghe và bí mật chung. Newb còn quản lý địa chỉ IPv4 của Trợ giúp.</value></data>
+  <data name="K143" xml:space="preserve"><value>Bị bộ lọc ẩn</value></data>
+  <data name="K144" xml:space="preserve"><value>Giữ Ctrl để xóa tất cả mục tiêu theo dõi và đã lưu.</value></data>
+  <data name="K145" xml:space="preserve"><value>Giữ Ctrl khi bỏ chọn mục tiêu được giữ lại nhưng vắng mặt {0}.</value></data>
+  <data name="K146" xml:space="preserve"><value>Thời gian Trợ giúp tiến về trước khi Newb/Quester ghép nối đổi lãnh thổ mà không dịch chuyển.</value></data>
+  <data name="K147" xml:space="preserve"><value>HP</value></data>
+  <data name="K148" xml:space="preserve"><value>HP không khả dụng</value></data>
+  <data name="K149" xml:space="preserve"><value>HP%</value></data>
+  <data name="K150" xml:space="preserve"><value>HP: {0}</value></data>
+  <data name="K151" xml:space="preserve"><value>HP: HP không khả dụng</value></data>
+  <data name="K152" xml:space="preserve"><value>HP: Mục tiêu không hiển thị</value></data>
+  <data name="K153" xml:space="preserve"><value>Biểu tượng + chữ</value></data>
+  <data name="K154" xml:space="preserve"><value>Chỉ biểu tượng</value></data>
+  <data name="K155" xml:space="preserve"><value>Không tương thích</value></data>
+  <data name="K156" xml:space="preserve"><value>Địa chỉ IPv4 không hợp lệ</value></data>
+  <data name="K157" xml:space="preserve"><value>Jacqueline of All Trades (JOAT)</value></data>
+  <data name="K158" xml:space="preserve"><value>Yêu cầu Jacqueline of All Trades (JOAT)</value></data>
+  <data name="K159" xml:space="preserve"><value>JOAT</value></data>
+  <data name="K160" xml:space="preserve"><value>Chế độ tấn công JOAT</value></data>
+  <data name="K161" xml:space="preserve"><value>Chế độ tấn công JOAT: {0}; cả hai dùng chọn mục tiêu RSR Manual khi chu kỳ hồi máu thực sự nhàn rỗi.</value></data>
+  <data name="K162" xml:space="preserve"><value>Sẵn sàng tấn công JOAT</value></data>
+  <data name="K163" xml:space="preserve"><value>JOAT không tự thêm Fren của FrenRider. Hãy chọn Fren đó trong Theo dõi khi đó là mục tiêu cấp thấp cần bảo vệ bằng hồi máu.</value></data>
+  <data name="K164" xml:space="preserve"><value>Ma trận hồi máu JOAT</value></data>
+  <data name="K165" xml:space="preserve"><value>Đường dẫn hồi máu JOAT</value></data>
+  <data name="K166" xml:space="preserve"><value>JOAT không bao giờ thêm Fren của FrenRider vào Theo dõi. Chọn Fren tại đó để hồi máu bảo vệ; tấn công chỉ áp dụng cho kẻ địch đã nhắm vào Fren hiển thị hoặc người hồi máu cục bộ.</value></data>
+  <data name="K167" xml:space="preserve"><value>Chưa kiểm tra mức sẵn sàng JOAT.</value></data>
+  <data name="K168" xml:space="preserve"><value>Mục tiêu JOAT theo dõi</value></data>
+  <data name="K169" xml:space="preserve"><value>JOAT: {0}</value></data>
+  <data name="K170" xml:space="preserve"><value>Nghề</value></data>
+  <data name="K171" xml:space="preserve"><value>Đã trang bị nghề</value></data>
+  <data name="K172" xml:space="preserve"><value>Đã mở khóa nghề</value></data>
+  <data name="K173" xml:space="preserve"><value>Ko-fi</value></data>
+  <data name="K174" xml:space="preserve"><value>Krangle</value></data>
+  <data name="K175" xml:space="preserve"><value>Biến đổi tên</value></data>
+  <data name="K176" xml:space="preserve"><value>Biến đổi tên: TẮT</value></data>
+  <data name="K177" xml:space="preserve"><value>Biến đổi tên: BẬT</value></data>
+  <data name="K178" xml:space="preserve"><value>Lưu lượng LAN có xác thực nhưng không mã hóa. Tên nhân vật và tọa độ vẫn hiển thị trên mạng cục bộ. Kết nối, xác thực, phân công và kết nối lại vẫn diễn ra bất đồng bộ.</value></data>
+  <data name="K179" xml:space="preserve"><value>Ngôn ngữ</value></data>
+  <data name="K180" xml:space="preserve"><value>Hành động cuối</value></data>
+  <data name="K181" xml:space="preserve"><value>Quy tắc cuối</value></data>
+  <data name="K182" xml:space="preserve"><value>Mục tiêu hợp lệ hiện diện ({0})</value></data>
+  <data name="K183" xml:space="preserve"><value>Đã tải</value></data>
+  <data name="K184" xml:space="preserve"><value>Rotation Solver Reborn đã tải và hoạt động; sát thương JOAT chỉ do RSR thực hiện.</value></data>
+  <data name="K185" xml:space="preserve"><value>Người hồi máu cục bộ: {0} ({1})</value></data>
+  <data name="K186" xml:space="preserve"><value>HP Newb cục bộ: {0}</value></data>
+  <data name="K187" xml:space="preserve"><value>Danh tính Newb cục bộ</value></data>
+  <data name="K188" xml:space="preserve"><value>Đăng nhập hoàn tất trước khi bật Newb</value></data>
+  <data name="K189" xml:space="preserve"><value>LOS: {0}</value></data>
+  <data name="K190" xml:space="preserve"><value>LOS: Mục tiêu không hiển thị</value></data>
+  <data name="K191" xml:space="preserve"><value>Thợ máy (MCH)</value></data>
+  <data name="K192" xml:space="preserve"><value>Chính</value></data>
+  <data name="K193" xml:space="preserve"><value>Quản lý mục tiêu theo dõi và quét đồng minh.</value></data>
+  <data name="K194" xml:space="preserve"><value>Chỉ quản lý mục tiêu theo dõi trong cửa sổ Theo dõi. Xóa bằng Ctrl tại đó xóa cả mục tiêu đang theo dõi lẫn đã lưu.</value></data>
+  <data name="K195" xml:space="preserve"><value>Mini</value></data>
+  <data name="K196" xml:space="preserve"><value>Thiếu</value></data>
+  <data name="K197" xml:space="preserve"><value>Thiếu (tùy chọn)</value></data>
+  <data name="K198" xml:space="preserve"><value>MP%</value></data>
+  <data name="K199" xml:space="preserve"><value>Giới hạn nhiều mục tiêu: {0} đang hoạt động và {1} đã lưu.</value></data>
+  <data name="K200" xml:space="preserve"><value>Tên</value></data>
+  <data name="K201" xml:space="preserve"><value>Cần buff còn thiếu</value></data>
+  <data name="K202" xml:space="preserve"><value>Cấu hình mạng đã được lưu.</value></data>
+  <data name="K203" xml:space="preserve"><value>Đã lưu mạng; ghép nối trực tiếp khởi động lại một lần.</value></data>
+  <data name="K204" xml:space="preserve"><value>Newb</value></data>
+  <data name="K205" xml:space="preserve"><value>Newb kết nối bất đồng bộ đến đúng một đầu cuối IPv4 Trợ giúp và không bao giờ hồi máu hay tấn công cục bộ.</value></data>
+  <data name="K206" xml:space="preserve"><value>Newb không hồi máu hay tấn công cục bộ và giữ nguyên danh sách theo dõi độc lập.</value></data>
+  <data name="K207" xml:space="preserve"><value>Newb không hồi máu hay tấn công cục bộ. Danh sách mục tiêu theo dõi này giữ nguyên cho HealBot hoặc JOAT dùng sau.</value></data>
+  <data name="K208" xml:space="preserve"><value>Hành động tiếp theo</value></data>
+  <data name="K209" xml:space="preserve"><value>Hành động tiếp theo: {0}</value></data>
+  <data name="K210" xml:space="preserve"><value>Không có trợ giúp/quester đang hoạt động</value></data>
+  <data name="K211" xml:space="preserve"><value>Không có mục tiêu đang theo dõi</value></data>
+  <data name="K212" xml:space="preserve"><value>Không có mục tiêu hợp lệ khớp bộ lọc hiện tại.</value></data>
+  <data name="K213" xml:space="preserve"><value>Chưa chọn mục tiêu theo dõi.</value></data>
+  <data name="K214" xml:space="preserve"><value>Không có</value></data>
+  <data name="K215" xml:space="preserve"><value>Chưa chọn</value></data>
+  <data name="K216" xml:space="preserve"><value>Chưa có</value></data>
+  <data name="K217" xml:space="preserve"><value>Chưa thiết lập</value></data>
+  <data name="K218" xml:space="preserve"><value>Chưa mở khóa</value></data>
+  <data name="K219" xml:space="preserve"><value>Không hiển thị</value></data>
+  <data name="K220" xml:space="preserve"><value>Nhóm NPC</value></data>
+  <data name="K221" xml:space="preserve"><value>Thành viên nhóm NPC</value></data>
+  <data name="K222" xml:space="preserve"><value>Tắt</value></data>
+  <data name="K223" xml:space="preserve"><value>bật</value></data>
+  <data name="K224" xml:space="preserve"><value>Chỉ kẻ địch đã bị thương và đang nhắm vào Fren đã cấu hình, hiển thị hoặc người chơi cục bộ mới hợp lệ.</value></data>
+  <data name="K225" xml:space="preserve"><value>Ngoài giao chiến</value></data>
+  <data name="K226" xml:space="preserve"><value>Mở Chính</value></data>
+  <data name="K227" xml:space="preserve"><value>Mở Mini</value></data>
+  <data name="K228" xml:space="preserve"><value>Mở cửa sổ Theo dõi hiện có ngay. Thay đổi bộ lọc trong bản nháp chỉ áp dụng sau Hoàn tất.</value></data>
+  <data name="K229" xml:space="preserve"><value>Mở Theo dõi</value></data>
+  <data name="K230" xml:space="preserve"><value>Mở cửa sổ theo dõi</value></data>
+  <data name="K231" xml:space="preserve"><value>Vai trò vận hành</value></data>
+  <data name="K232" xml:space="preserve"><value>Vai trò vận hành: {0}</value></data>
+  <data name="K233" xml:space="preserve"><value>Trạng thái vận hành</value></data>
+  <data name="K234" xml:space="preserve"><value>Cổng ghép nối</value></data>
+  <data name="K235" xml:space="preserve"><value>Trợ giúp ghép nối: {0}</value></data>
+  <data name="K236" xml:space="preserve"><value>Cổng TCP ghép nối</value></data>
+  <data name="K237" xml:space="preserve"><value>Ghép nối: {0} - {1}</value></data>
+  <data name="K238" xml:space="preserve"><value>Người chơi</value></data>
+  <data name="K239" xml:space="preserve"><value>Nghề Powerlevel</value></data>
+  <data name="K240" xml:space="preserve"><value>Nghề Powerlevel: {0}.</value></data>
+  <data name="K241" xml:space="preserve"><value>Chưa kiểm tra mức sẵn sàng Powerlevel.</value></data>
+  <data name="K242" xml:space="preserve"><value>PowerlevelBot</value></data>
+  <data name="K243" xml:space="preserve"><value>PowerlevelBot chỉ xét kẻ địch sống, có thể chọn, đã bị thương và đang nhắm vào Fren hiển thị đã cấu hình của FrenRider hoặc người chơi cục bộ. Dùng hành động BRD/MCH tức thời, chỉ nhắm địch và đơn mục tiêu, không kéo kẻ địch chưa bị tác động.</value></data>
+  <data name="K244" xml:space="preserve"><value>PowerlevelBot bỏ qua danh sách theo dõi HealBot và dùng Fren đã cấu hình của FrenRider làm thủ lĩnh.</value></data>
+  <data name="K245" xml:space="preserve"><value>PowerlevelBot không bao giờ đổi bộ trang bị; nghề hiện tại phải khớp lựa chọn này.</value></data>
+  <data name="K246" xml:space="preserve"><value>Đường dẫn PowerlevelBot</value></data>
+  <data name="K247" xml:space="preserve"><value>Yêu cầu PowerlevelBot</value></data>
+  <data name="K248" xml:space="preserve"><value>Trạng thái chính</value></data>
+  <data name="K249" xml:space="preserve"><value>Trạng thái chính: {0}</value></data>
+  <data name="K250" xml:space="preserve"><value>Ưu tiên</value></data>
+  <data name="K251" xml:space="preserve"><value>Nhà cung cấp: {0}</value></data>
+  <data name="K252" xml:space="preserve"><value>QST hiện kiểm soát tấn công JOAT ({0}). </value></data>
+  <data name="K253" xml:space="preserve"><value>QST hiện kiểm soát triệu hồi ({0}). </value></data>
+  <data name="K254" xml:space="preserve"><value>QST hiện kiểm soát chế độ tấn công; lựa chọn cục bộ đã lưu sẽ tiếp tục sau khi nhả quyền.</value></data>
+  <data name="K255" xml:space="preserve"><value>Di chuyển QST</value></data>
+  <data name="K256" xml:space="preserve"><value>Thiết lập nhanh</value></data>
+  <data name="K257" xml:space="preserve"><value>Thiết lập nhanh đã hoàn tất. Bạn có thể chạy lại bất kỳ lúc nào từ thẻ cố định này.</value></data>
+  <data name="K258" xml:space="preserve"><value>Sẵn sàng</value></data>
+  <data name="K259" xml:space="preserve"><value>Sẵn sàng khi hồi máu nhàn rỗi</value></data>
+  <data name="K260" xml:space="preserve"><value>Làm mới</value></data>
+  <data name="K261" xml:space="preserve"><value>Làm mới mức sẵn sàng</value></data>
+  <data name="K262" xml:space="preserve"><value>Làm mới dữ liệu vị trí bản đồ cộng đồng của LootGoblin một lần mỗi phiên bản HealBot để chọn aetheryte gần nhất.</value></data>
+  <data name="K263" xml:space="preserve"><value>Phạm vi quét tái gia nhập</value></data>
+  <data name="K264" xml:space="preserve"><value>Truy đuổi từ xa: {0}</value></data>
+  <data name="K265" xml:space="preserve"><value>Hồi máu từ xa: {0}</value></data>
+  <data name="K266" xml:space="preserve"><value>Yêu cầu / Trợ giúp</value></data>
+  <data name="K267" xml:space="preserve"><value>Yêu cầu và trợ giúp</value></data>
+  <data name="K268" xml:space="preserve"><value>Giải cứu: {0}</value></data>
+  <data name="K269" xml:space="preserve"><value>Giải cứu: Không hoạt động</value></data>
+  <data name="K270" xml:space="preserve"><value>Chính sách kẻ địch hạn chế</value></data>
+  <data name="K271" xml:space="preserve"><value>Được giữ lại - vắng mặt</value></data>
+  <data name="K272" xml:space="preserve"><value>Mục tiêu được giữ lại hoặc vắng mặt ({0})</value></data>
+  <data name="K273" xml:space="preserve"><value>Xem lại và hoàn tất</value></data>
+  <data name="K274" xml:space="preserve"><value>Mạng theo vai trò</value></data>
+  <data name="K275" xml:space="preserve"><value>Vai trò: {0}</value></data>
+  <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
+  <data name="K277" xml:space="preserve"><value>RSR</value></data>
+  <data name="K278" xml:space="preserve"><value>Điều khiển RSR</value></data>
+  <data name="K279" xml:space="preserve"><value>RSR bắt buộc và chỉ RSR thực hiện sát thương JOAT. Coppelia tiếp tục hồi máu Theo dõi trực tiếp và quản lý việc tắt RSR/tiếp tục khi nhàn rỗi.</value></data>
+  <data name="K280" xml:space="preserve"><value>Cách ly RSR và khôi phục chính xác phiên được dùng khi RSR đã tải; hồi máu HealBot vẫn thực hiện trực tiếp.</value></data>
+  <data name="K281" xml:space="preserve"><value>Chạy thiết lập có hướng dẫn cho Độc lập, Trợ giúp hoặc Newb, không thay đổi gì đến khi Hoàn tất.</value></data>
+  <data name="K282" xml:space="preserve"><value>Chạy Thiết lập nhanh</value></data>
+  <data name="K283" xml:space="preserve"><value>Chạy lại thiết lập nhanh</value></data>
+  <data name="K284" xml:space="preserve"><value>Hồi máu mục tiêu theo dõi trước, rồi chỉ cho RSR tấn công khi chu kỳ hồi máu thực sự nhàn rỗi.</value></data>
+  <data name="K285" xml:space="preserve"><value>Hiền giả (SGE)</value></data>
+  <data name="K286" xml:space="preserve"><value>Lưu mục tiêu hồi máu được theo dõi rõ ràng</value></data>
+  <data name="K287" xml:space="preserve"><value>Lưu mục tiêu hồi máu</value></data>
+  <data name="K288" xml:space="preserve"><value>Lưu mục tiêu hồi máu chỉ lưu các mục tiêu bạn chọn rõ ràng. Bỏ chọn cũng xóa mục tiêu khỏi tập đã lưu.</value></data>
+  <data name="K289" xml:space="preserve"><value>Lưu thiết lập và giữ vai trò Tắt</value></data>
+  <data name="K290" xml:space="preserve"><value>Đã lưu</value></data>
+  <data name="K291" xml:space="preserve"><value>Phạm vi quét mục tiêu đã lưu</value></data>
+  <data name="K292" xml:space="preserve"><value>Phạm vi quét mục tiêu đã lưu chỉ ảnh hưởng việc tự tái gia nhập khi quay lại; không phát hiện mục tiêu mới.</value></data>
+  <data name="K293" xml:space="preserve"><value>Tắt mục tiêu đã lưu.</value></data>
+  <data name="K294" xml:space="preserve"><value>Bật mục tiêu đã lưu; quét tái gia nhập {0} y.</value></data>
+  <data name="K295" xml:space="preserve"><value>Quét y</value></data>
+  <data name="K296" xml:space="preserve"><value>Học giả (SCH)</value></data>
+  <data name="K297" xml:space="preserve"><value>Chọn BRD hoặc MCH</value></data>
+  <data name="K298" xml:space="preserve"><value>Chọn rõ ràng Fren đã cấu hình của FrenRider khi đó là mục tiêu cấp thấp cần hồi máu. JOAT không bao giờ tự thêm vào danh sách này.</value></data>
+  <data name="K299" xml:space="preserve"><value>Chọn Trợ giúp hoặc Newb để sửa cài đặt ghép nối trực tiếp.</value></data>
+  <data name="K300" xml:space="preserve"><value>Đã chọn</value></data>
+  <data name="K301" xml:space="preserve"><value>Đã chọn - từ xa</value></data>
+  <data name="K302" xml:space="preserve"><value>Nghề đã chọn</value></data>
+  <data name="K303" xml:space="preserve"><value>Nghề đã chọn: {0}</value></data>
+  <data name="K304" xml:space="preserve"><value>bản thân</value></data>
+  <data name="K305" xml:space="preserve"><value>Thiết lập Trợ giúp</value></data>
+  <data name="K306" xml:space="preserve"><value>Thiết lập Newb</value></data>
+  <data name="K307" xml:space="preserve"><value>Thiết lập Độc lập</value></data>
+  <data name="K308" xml:space="preserve"><value>Thiết lập</value></data>
+  <data name="K309" xml:space="preserve"><value>Bí mật chung</value></data>
+  <data name="K310" xml:space="preserve"><value>Hiển thị thông báo phụ thuộc</value></data>
+  <data name="K311" xml:space="preserve"><value>Hiện mục thanh DTR</value></data>
+  <data name="K312" xml:space="preserve"><value>Bỏ qua Tamamizu khi chọn đích dịch chuyển QST.</value></data>
+  <data name="K313" xml:space="preserve"><value>Độc lập</value></data>
+  <data name="K314" xml:space="preserve"><value>Hành vi độc lập</value></data>
+  <data name="K315" xml:space="preserve"><value>Yêu cầu HealBot độc lập</value></data>
+  <data name="K316" xml:space="preserve"><value>Độc lập chạy HealBot, JOAT hoặc PowerlevelBot không dùng mạng. Trợ giúp lắng nghe và kích hoạt JOAT từ xa cho một Newb có xác thực. Newb kết nối bất đồng bộ và không hồi máu hay tấn công cục bộ.</value></data>
+  <data name="K317" xml:space="preserve"><value>Độc lập chạy HealBot, JOAT hoặc PowerlevelBot không dùng mạng. Trợ giúp lắng nghe một Newb có xác thực. Newb kết nối bất đồng bộ và không hồi máu hay tấn công cục bộ.</value></data>
+  <data name="K318" xml:space="preserve"><value>Bắt đầu vai trò này ngay</value></data>
+  <data name="K319" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="K320" xml:space="preserve"><value>Trạng thái và hành vi</value></data>
+  <data name="K321" xml:space="preserve"><value>Bảng trạng thái</value></data>
+  <data name="K322" xml:space="preserve"><value>Gửi trạng thái vào trò chuyện</value></data>
+  <data name="K323" xml:space="preserve"><value>Bước {0} trong 3</value></data>
+  <data name="K324" xml:space="preserve"><value>Triệu hồi chocobo đồng hành</value></data>
+  <data name="K325" xml:space="preserve"><value>Triệu hồi chocobo đồng hành (Gysahl Greens: {0})</value></data>
+  <data name="K326" xml:space="preserve"><value>Triệu hồi chocobo đồng hành (Gysahl Greens: không khả dụng)</value></data>
+  <data name="K327" xml:space="preserve"><value>Người hồi máu được hỗ trợ</value></data>
+  <data name="K328" xml:space="preserve"><value>Chọn mục tiêu hiện tại</value></data>
+  <data name="K329" xml:space="preserve"><value>Phát hiện và lưu mục tiêu</value></data>
+  <data name="K330" xml:space="preserve"><value>Mục tiêu không hiển thị</value></data>
+  <data name="K331" xml:space="preserve"><value>Cổng TCP</value></data>
+  <data name="K332" xml:space="preserve"><value>Chỉ văn bản</value></data>
+  <data name="K333" xml:space="preserve"><value>Phiên QST hoặc Newb đang hoạt động quản lý độc quyền mục tiêu trong bộ nhớ này. Các mục tiêu theo dõi đã lưu không đổi và tiếp tục sau khi nhả quyền.</value></data>
+  <data name="K334" xml:space="preserve"><value>Fren không bao giờ tự thêm vào Theo dõi; hãy chọn rõ ràng khi đó là mục tiêu hồi máu cấp thấp.</value></data>
+  <data name="K335" xml:space="preserve"><value>Các phụ thuộc HealBot, một người hồi máu được hỗ trợ đã trang bị, ma trận hành động hồi máu được bật và một mục tiêu được theo dõi rõ ràng.</value></data>
+  <data name="K336" xml:space="preserve"><value>lựa chọn cục bộ đã lưu tiếp tục sau khi nhả quyền.</value></data>
+  <data name="K337" xml:space="preserve"><value>cài đặt cục bộ đã lưu tiếp tục sau khi nhả quyền.</value></data>
+  <data name="K338" xml:space="preserve"><value>Phạm vi quét chỉ cho phép mục tiêu đã lưu tái gia nhập khi quay lại. Không phát hiện hay tự chọn mục tiêu mới.</value></data>
+  <data name="K339" xml:space="preserve"><value>Các điều khiển này áp dụng ngay. Thiết lập nhanh dùng bản nháp riêng và không thay đổi gì đến khi Hoàn tất.</value></data>
+  <data name="K340" xml:space="preserve"><value>Các bộ lọc này kiểm soát đối tượng thân thiện hiển thị trong cửa sổ Theo dõi HealBot/JOAT.</value></data>
+  <data name="K341" xml:space="preserve"><value>Lựa chọn cục bộ đã lưu này dùng cho JOAT độc lập và tiếp tục khi QST nhả ghi đè tạm thời. Cả hai dùng chọn mục tiêu RSR Manual; RSR đầy đủ thay đổi hành động tấn công và AoE đã ghi nhận, không đổi chọn mục tiêu.</value></data>
+  <data name="K342" xml:space="preserve"><value>Quá ngắn</value></data>
+  <data name="K343" xml:space="preserve"><value>Đang theo dõi</value></data>
+  <data name="K344" xml:space="preserve"><value>Lưu lượng có xác thực nhưng không mã hóa; tên và tọa độ vẫn hiển thị trên mạng.</value></data>
+  <data name="K345" xml:space="preserve"><value>Di chuyển: {0}</value></data>
+  <data name="K346" xml:space="preserve"><value>Kích hoạt</value></data>
+  <data name="K347" xml:space="preserve"><value>Kiểu</value></data>
+  <data name="K348" xml:space="preserve"><value>Không khả dụng</value></data>
+  <data name="K349" xml:space="preserve"><value>Đã mở khóa</value></data>
+  <data name="K350" xml:space="preserve"><value>Bỏ chọn mục tiêu theo dõi hoặc xóa tập theo dõi bằng Ctrl cũng xóa khỏi tập đã lưu. Phạm vi quét chỉ ảnh hưởng việc mục tiêu đã lưu tái gia nhập khi quay lại.</value></data>
+  <data name="K351" xml:space="preserve"><value>Dùng 1024-65535</value></data>
+  <data name="K352" xml:space="preserve"><value>Dùng cửa sổ Theo dõi để thêm hoặc xóa mục tiêu. Lưu mục tiêu hồi máu chỉ lưu mục tiêu bạn rõ ràng giữ theo dõi.</value></data>
+  <data name="K353" xml:space="preserve"><value>Dùng hành động tầm xa đơn mục tiêu BRD/MCH tức thời lên kẻ địch đang đánh Fren/người chơi cục bộ.</value></data>
+  <data name="K354" xml:space="preserve"><value>Hợp lệ</value></data>
+  <data name="K355" xml:space="preserve"><value>IPv4 hợp lệ</value></data>
+  <data name="K356" xml:space="preserve"><value>Hiện</value></data>
+  <data name="K357" xml:space="preserve"><value>Hiển thị - mục tiêu HealBot bản địa</value></data>
+  <data name="K358" xml:space="preserve"><value>Bí mật chung hiển thị</value></data>
+  <data name="K359" xml:space="preserve"><value>vnavmesh</value></data>
+  <data name="K360" xml:space="preserve"><value>Theo dõi</value></data>
+  <data name="K361" xml:space="preserve"><value>Bộ lọc theo dõi</value></data>
+  <data name="K362" xml:space="preserve"><value>Đang theo dõi</value></data>
+  <data name="K363" xml:space="preserve"><value>Newb được theo dõi</value></data>
+  <data name="K364" xml:space="preserve"><value>Quester được theo dõi</value></data>
+  <data name="K365" xml:space="preserve"><value>mục tiêu theo dõi</value></data>
+  <data name="K366" xml:space="preserve"><value>Mục tiêu theo dõi: {0}</value></data>
+  <data name="K367" xml:space="preserve"><value>Mục tiêu theo dõi</value></data>
+  <data name="K368" xml:space="preserve"><value>Theo dõi {0}/{1} mục tiêu hoạt động. Mục tiêu đã lưu: {2}.</value></data>
+  <data name="K369" xml:space="preserve"><value>Pháp sư trắng (WHM)</value></data>
+  <data name="K370" xml:space="preserve"><value>Lựa chọn cục bộ đã lưu tiếp tục khi QST nhả quyền.</value></data>
+  <data name="K371" xml:space="preserve"><value>Cài đặt cục bộ đã lưu tiếp tục khi QST nhả quyền.</value></data>
+  <data name="K372" xml:space="preserve"><value>Màu</value></data>
+  <data name="K373" xml:space="preserve"><value>Xanh ngọc</value></data>
+  <data name="K374" xml:space="preserve"><value>Xanh dương</value></data>
+  <data name="K375" xml:space="preserve"><value>Hồng</value></data>
+  <data name="K376" xml:space="preserve"><value>RGB tùy chỉnh</value></data>
+  <data name="K377" xml:space="preserve"><value>Chế độ gọn</value></data>
+  <data name="K378" xml:space="preserve"><value>Đang tải phông UI...</value></data>
+  <data name="K379" xml:space="preserve"><value>Phông UI tải thất bại. Xem log plugin.</value></data>
+  <data name="K380" xml:space="preserve"><value>Chưa từng</value></data>
+  <data name="K381" xml:space="preserve"><value>GCD niệm</value></data>
+  <data name="K382" xml:space="preserve"><value>oGCD tức thời</value></data>
+  <data name="K383" xml:space="preserve"><value>BUFF niệm</value></data>
+  <data name="K384" xml:space="preserve"><value>BUFF tức thời</value></data>
+  <data name="K385" xml:space="preserve"><value>HP dưới</value></data>
+  <data name="K386" xml:space="preserve"><value>Mục tiêu chết</value></data>
+  <data name="K387" xml:space="preserve"><value>Thiếu buff</value></data>
+  <data name="K388" xml:space="preserve"><value>Luôn luôn</value></data>
+  <data name="K389" xml:space="preserve"><value>Mục tiêu</value></data>
+  <data name="K390" xml:space="preserve"><value>Người chơi</value></data>
+  <data name="K391" xml:space="preserve"><value>NPC nhóm</value></data>
+  <data name="K392" xml:space="preserve"><value>NPC thân thiện</value></data>
+  <data name="K393" xml:space="preserve"><value>Trợ giúp hoạt động (QST quản lý)</value></data>
+  <data name="K394" xml:space="preserve"><value>Dùng QST để nhả hoặc tắt phiên nhà cung cấp này.</value></data>
+  <data name="K395" xml:space="preserve"><value>Dùng /healbot on để tiếp tục {0}.</value></data>
+  <data name="K396" xml:space="preserve"><value>Hồi máu: {0} Tấn công: {1}</value></data>
+  <data name="K397" xml:space="preserve"><value>Giải quyết nguyên nhân chặn trong trạng thái chính.</value></data>
+  <data name="K398" xml:space="preserve"><value>Không cần hành động.</value></data>
+  <data name="K399" xml:space="preserve"><value>Giải quyết: {0}</value></data>
+  <data name="K400" xml:space="preserve"><value>Bị chặn: {0}</value></data>
+  <data name="K401" xml:space="preserve"><value>Tạm giữ: {0}</value></data>
+  <data name="K402" xml:space="preserve"><value>Không hoạt động</value></data>
+  <data name="K403" xml:space="preserve"><value>LOS không khả dụng</value></data>
+  <data name="K404" xml:space="preserve"><value>LOS thông thoáng</value></data>
+  <data name="K405" xml:space="preserve"><value>LOS bị chặn</value></data>
+  <data name="K406" xml:space="preserve"><value>Di chuyển LOS bị giữ do vận chuyển HealBot</value></data>
+  <data name="K407" xml:space="preserve"><value>LOS bị chặn; đang tới 1y</value></data>
+  <data name="K408" xml:space="preserve"><value>LOS bị chặn; chờ bên đang kiểm soát di chuyển</value></data>
+  <data name="K409" xml:space="preserve"><value>QST kiểm soát chế độ hoạt động ({0}); lựa chọn cục bộ đã lưu tiếp tục sau khi nhả quyền.</value></data>
+  <data name="K410" xml:space="preserve"><value>QST kiểm soát triệu hồi ({0}); cài đặt cục bộ đã lưu tiếp tục sau khi nhả quyền.</value></data>
+  <data name="K411" xml:space="preserve"><value>Mục tiêu chính xác chỉ trong phiên này ghi đè mục tiêu theo dõi đã lưu cho tự động hóa mà không sửa hay lưu chúng.</value></data>
+  <data name="K412" xml:space="preserve"><value>Có</value></data>
+  <data name="K413" xml:space="preserve"><value>Không</value></data>
+  <data name="K414" xml:space="preserve"><value>Chế độ Healbot tắt.</value></data>
+  <data name="K415" xml:space="preserve"><value>Rảnh</value></data>
+  <data name="K416" xml:space="preserve"><value>Không quy tắc nào khớp.</value></data>
+  <data name="K417" xml:space="preserve"><value>Đang gỡ plugin.</value></data>
+  <data name="K418" xml:space="preserve"><value>HealBot chỉ hỗ trợ WHM, SCH, AST và SGE.</value></data>
+  <data name="K419" xml:space="preserve"><value>Giữ hành động trong lúc vận chuyển HealRider.</value></data>
+  <data name="K420" xml:space="preserve"><value>Di chuyển</value></data>
+  <data name="K421" xml:space="preserve"><value>HealRider kiểm soát di chuyển.</value></data>
+  <data name="K422" xml:space="preserve"><value>Tạm giữ trong lúc chuyển khu vực.</value></data>
+  <data name="K423" xml:space="preserve"><value>Đang chuyển khu vực.</value></data>
+  <data name="K424" xml:space="preserve"><value>Plugin bị tắt.</value></data>
+  <data name="K425" xml:space="preserve"><value>Bị chặn</value></data>
+  <data name="K426" xml:space="preserve"><value>Thiếu phụ thuộc.</value></data>
+  <data name="K427" xml:space="preserve"><value>Nghề cục bộ không được hỗ trợ.</value></data>
+  <data name="K428" xml:space="preserve"><value>Giữ hồi máu ghép nối khi trợ giúp đang cưỡi hoặc lên thú cưỡi.</value></data>
+  <data name="K429" xml:space="preserve"><value>Trợ giúp ghép nối đang cưỡi hoặc lên thú cưỡi.</value></data>
+  <data name="K430" xml:space="preserve"><value>Tạm giữ khi đang niệm hành động {0}.</value></data>
+  <data name="K431" xml:space="preserve"><value>Đang niệm</value></data>
+  <data name="K432" xml:space="preserve"><value>Chờ lần niệm hiện tại hoàn tất.</value></data>
+  <data name="K433" xml:space="preserve"><value>Ma trận Healbot sẵn sàng cho {0}. Cần RSR trước khi JOAT có thể tấn công.</value></data>
+  <data name="K434" xml:space="preserve"><value>Ma trận Healbot sẵn sàng cho {0}. Cách ly RSR không khả dụng.</value></data>
+  <data name="K435" xml:space="preserve"><value>Ma trận Healbot sẵn sàng cho {0}. Điều khiển RSR JOAT hoạt động.</value></data>
+  <data name="K436" xml:space="preserve"><value>Ma trận Healbot sẵn sàng cho {0}. Cách ly RSR hoạt động.</value></data>
+  <data name="K437" xml:space="preserve"><value>Ma trận Healbot sẵn sàng cho {0}. Điều khiển RSR thất bại; JOAT bị chặn tấn công, hồi máu trực tiếp vẫn hoạt động.</value></data>
+  <data name="K438" xml:space="preserve"><value>Ma trận Healbot sẵn sàng cho {0}. Cách ly RSR thất bại; hồi máu trực tiếp vẫn hoạt động.</value></data>
+  <data name="K439" xml:space="preserve"><value>Không mục tiêu theo dõi nào hoạt động.</value></data>
+  <data name="K440" xml:space="preserve"><value>Không có mục tiêu theo dõi.</value></data>
+  <data name="K441" xml:space="preserve"><value>Tự động hóa {0} tắt trong cài đặt HealBot.</value></data>
+  <data name="K442" xml:space="preserve"><value>Thẻ {0} tắt.</value></data>
+  <data name="K443" xml:space="preserve"><value>Mục tiêu {0} {1} đã chọn nhưng ở xa.</value></data>
+  <data name="K444" xml:space="preserve"><value>Theo dõi {0} mục tiêu. Hiện không có mục tiêu theo dõi hiện diện.</value></data>
+  <data name="K445" xml:space="preserve"><value>Mục tiêu chính xác {0} ở xa.</value></data>
+  <data name="K446" xml:space="preserve"><value>Không mục tiêu theo dõi nào hiện diện.</value></data>
+  <data name="K447" xml:space="preserve"><value>Di chuyển</value></data>
+  <data name="K448" xml:space="preserve"><value>{0} - LOS bị chặn.</value></data>
+  <data name="K449" xml:space="preserve"><value>Theo dõi {0} mục tiêu. {1}</value></data>
+  <data name="K450" xml:space="preserve"><value>{0} - {1}</value></data>
+  <data name="K451" xml:space="preserve"><value>Theo dõi {0} mục tiêu. Không quy tắc mục tiêu chết được bật nào có thể tác động lên {1}.</value></data>
+  <data name="K452" xml:space="preserve"><value>{0} - Không quy tắc mục tiêu chết nào khớp.</value></data>
+  <data name="K453" xml:space="preserve"><value>Theo dõi {0} mục tiêu. Mục tiêu có HP thấp nhất là {1} với {2}% HP.</value></data>
+  <data name="K454" xml:space="preserve"><value>{0} - Không quy tắc mục tiêu sống nào khớp.</value></data>
+  <data name="K455" xml:space="preserve"><value>{0}: {1} [{2}]</value></data>
+  <data name="K456" xml:space="preserve"><value>Đã xếp {0} để chuẩn bị hồi sinh {1}.</value></data>
+  <data name="K457" xml:space="preserve"><value>Đã xếp {0} cho {1}.</value></data>
+  <data name="K458" xml:space="preserve"><value>Đã xếp {0} khi theo dõi {1} với {2}% HP.</value></data>
+  <data name="K459" xml:space="preserve"><value>Đã xếp {0} cho {1} với {2}% HP.</value></data>
+  <data name="K460" xml:space="preserve"><value>Tấn công JOAT tắt.</value></data>
+  <data name="K461" xml:space="preserve"><value>Chờ quyết định hồi máu nhàn rỗi.</value></data>
+  <data name="K462" xml:space="preserve"><value>Tấn công JOAT chờ hồi máu nhàn rỗi.</value></data>
+  <data name="K463" xml:space="preserve"><value>Nhịp duy trì quyền thuê FrenRider thất bại.</value></data>
+  <data name="K464" xml:space="preserve"><value>Tạm giữ: hồi máu đã xếp {0}.</value></data>
+  <data name="K465" xml:space="preserve"><value>Tạm giữ</value></data>
+  <data name="K466" xml:space="preserve"><value>Hành động hồi máu được ưu tiên ở chu kỳ này.</value></data>
+  <data name="K467" xml:space="preserve"><value>Tạm giữ: lần niệm hiện tại chặn tấn công. {0}</value></data>
+  <data name="K468" xml:space="preserve"><value>Tạm giữ: hồi máu bị chặn. {0}</value></data>
+  <data name="K469" xml:space="preserve"><value>Lần niệm hiện tại chặn chu kỳ tấn công này.</value></data>
+  <data name="K470" xml:space="preserve"><value>Hành động hồi máu khớp bị chặn.</value></data>
+  <data name="K471" xml:space="preserve"><value>Bị chặn: hồi máu chưa sẵn sàng. {0}</value></data>
+  <data name="K472" xml:space="preserve"><value>Phụ thuộc, cấu hình hồi máu hoặc mục tiêu theo dõi không khả dụng.</value></data>
+  <data name="K473" xml:space="preserve"><value>Bị chặn: điều khiển Rotation Solver Reborn không hoạt động nên JOAT không thể tấn công.</value></data>
+  <data name="K474" xml:space="preserve"><value>Điều khiển Rotation Solver Reborn thất bại.</value></data>
+  <data name="K475" xml:space="preserve"><value>Tạm giữ: {0}.</value></data>
+  <data name="K476" xml:space="preserve"><value>IPC FrenRider không khả dụng.</value></data>
+  <data name="K477" xml:space="preserve"><value>Điều kiện tấn công FrenRider thất bại.</value></data>
+  <data name="K478" xml:space="preserve"><value>Nhận quyền thuê FrenRider thất bại.</value></data>
+  <data name="K479" xml:space="preserve"><value>Bị chặn: người hồi máu cục bộ không khả dụng.</value></data>
+  <data name="K480" xml:space="preserve"><value>Người hồi máu cục bộ không khả dụng.</value></data>
+  <data name="K481" xml:space="preserve"><value>Người hồi máu cục bộ được hỗ trợ không khả dụng.</value></data>
+  <data name="K482" xml:space="preserve"><value>Nhàn rỗi: mục tiêu ghép nối chính xác đã chọn nhưng ở xa.</value></data>
+  <data name="K483" xml:space="preserve"><value>Mục tiêu ghép nối chính xác ở xa.</value></data>
+  <data name="K484" xml:space="preserve"><value>Tạm giữ: mục tiêu ghép nối chính xác cách {0:0.0} yalms.</value></data>
+  <data name="K485" xml:space="preserve"><value>Mục tiêu ghép nối chính xác xa hơn 30 yalms.</value></data>
+  <data name="K486" xml:space="preserve"><value>RSR Manual thất bại.</value></data>
+  <data name="K487" xml:space="preserve"><value>Bị chặn: Rotation Solver Reborn từ chối chế độ Manual cho phân công JOAT ghép nối.</value></data>
+  <data name="K488" xml:space="preserve"><value>RSR Manual</value></data>
+  <data name="K489" xml:space="preserve"><value>Chờ trên mục tiêu thân thiện ghép nối để có kẻ địch đã giao chiến.</value></data>
+  <data name="K490" xml:space="preserve"><value>RSR Manual ({0}) chờ; không kẻ địch đang giao chiến nào hợp lệ trong phạm vi ghép nối.</value></data>
+  <data name="K491" xml:space="preserve"><value>Kẻ địch ghép nối đã chọn biến mất.</value></data>
+  <data name="K492" xml:space="preserve"><value>RSR Manual ({0}) chờ; kẻ địch đã chọn biến mất.</value></data>
+  <data name="K493" xml:space="preserve"><value>mục tiêu ghép nối</value></data>
+  <data name="K494" xml:space="preserve"><value>giao chiến với cặp/người hồi máu</value></data>
+  <data name="K495" xml:space="preserve"><value>RSR Manual ({0}) trên {1} với {2:P0} HP.</value></data>
+  <data name="K496" xml:space="preserve"><value>Nhàn rỗi: hồi máu thông thoáng nhưng không kẻ địch bị thương nào nhắm vào Fren hoặc người hồi máu cục bộ.</value></data>
+  <data name="K497" xml:space="preserve"><value>Không kẻ địch đã đánh dấu nào hợp lệ.</value></data>
+  <data name="K498" xml:space="preserve"><value>Nhàn rỗi: kẻ địch đã chọn biến mất.</value></data>
+  <data name="K499" xml:space="preserve"><value>Mục tiêu biến mất.</value></data>
+  <data name="K500" xml:space="preserve"><value>{0} - RSR Manual thất bại</value></data>
+  <data name="K501" xml:space="preserve"><value>Bị chặn: Rotation Solver Reborn từ chối chế độ Manual cho {0}.</value></data>
+  <data name="K502" xml:space="preserve"><value>giữa các khu vực</value></data>
+  <data name="K503" xml:space="preserve"><value>đang cưỡi hoặc lên thú cưỡi</value></data>
+  <data name="K504" xml:space="preserve"><value>bận hoặc trong cảnh cắt</value></data>
+  <data name="K505" xml:space="preserve"><value>đang niệm hành động {0}</value></data>
+  <data name="K506" xml:space="preserve"><value>Thiếu các phụ thuộc hồi máu bắt buộc.</value></data>
+  <data name="K507" xml:space="preserve"><value>Ma trận hành động người hồi máu đang trang bị bị tắt.</value></data>
+  <data name="K508" xml:space="preserve"><value>Chọn ít nhất một mục tiêu trong Theo dõi hoặc chờ phân công QST.</value></data>
+  <data name="K509" xml:space="preserve"><value>Hồi máu JOAT sẵn sàng.</value></data>
+  <data name="K510" xml:space="preserve"><value>Tấn công chờ hồi máu sẵn sàng: {0}</value></data>
+  <data name="K511" xml:space="preserve"><value>Phải tải Rotation Solver Reborn để JOAT tấn công.</value></data>
+  <data name="K512" xml:space="preserve"><value>Coppelia không thể nhận quyền điều khiển Rotation Solver Reborn hoạt động.</value></data>
+  <data name="K513" xml:space="preserve"><value>Tấn công JOAT sẵn sàng khi hồi máu nhàn rỗi.</value></data>
+  <data name="K514" xml:space="preserve"><value>Mục tiêu QST chính xác đã chọn nhưng ở xa.</value></data>
+  <data name="K515" xml:space="preserve"><value>Phải bật FrenRider.</value></data>
+  <data name="K516" xml:space="preserve"><value>FrenRider phải có Fren đã cấu hình.</value></data>
+  <data name="K517" xml:space="preserve"><value>Fren đã cấu hình của FrenRider phải hiển thị.</value></data>
+  <data name="K518" xml:space="preserve"><value>Chế độ PowerlevelBot tắt.</value></data>
+  <data name="K519" xml:space="preserve"><value>Chưa chọn mục tiêu.</value></data>
+  <data name="K520" xml:space="preserve"><value>PowerlevelBot đang chuẩn bị.</value></data>
+  <data name="K521" xml:space="preserve"><value>Điều kiện Powerlevel thất bại.</value></data>
+  <data name="K522" xml:space="preserve"><value>Người chơi cục bộ không có.</value></data>
+  <data name="K523" xml:space="preserve"><value>Không có người chơi cục bộ.</value></data>
+  <data name="K524" xml:space="preserve"><value>Không kẻ địch bị thương nào nhắm vào Fren hoặc người chơi cục bộ.</value></data>
+  <data name="K525" xml:space="preserve"><value>Không có mục tiêu hợp lệ.</value></data>
+  <data name="K526" xml:space="preserve"><value>Mục tiêu đã chọn biến mất.</value></data>
+  <data name="K527" xml:space="preserve"><value>Đã xếp {0} lên {1} với {2:P0} HP.</value></data>
+  <data name="K528" xml:space="preserve"><value>Mục tiêu {0} bị chặn: {1}</value></data>
+  <data name="K529" xml:space="preserve"><value>Trợ giúp lắng nghe thay vì kết nối.</value></data>
+  <data name="K530" xml:space="preserve"><value>Newb kết nối thay vì lắng nghe.</value></data>
+  <data name="K531" xml:space="preserve"><value>Vai trò vận hành đang Tắt.</value></data>
+  <data name="K532" xml:space="preserve"><value>Độc lập không dùng ghép nối trực tiếp.</value></data>
+  <data name="K533" xml:space="preserve"><value>Danh tính Newb cục bộ không khả dụng. Đăng nhập hoàn tất trước khi bắt đầu vai trò Newb.</value></data>
+  <data name="K534" xml:space="preserve"><value>Nhập một địa chỉ IPv4 Trợ giúp hợp lệ.</value></data>
+  <data name="K535" xml:space="preserve"><value>Đã lưu cài đặt ghép nối; đang khởi động lại.</value></data>
+  <data name="K536" xml:space="preserve"><value>Cần ghép nối trực tiếp HealBot v2. Cập nhật bên cũ hơn trước khi ghép nối.</value></data>
+  <data name="K537" xml:space="preserve"><value>Danh tính HealBot cục bộ không khả dụng.</value></data>
+  <data name="K538" xml:space="preserve"><value>HealBot đã có phân công QST hoạt động.</value></data>
+  <data name="K539" xml:space="preserve"><value>Đã ghép nối</value></data>
+  <data name="K540" xml:space="preserve"><value>Đang lắng nghe</value></data>
+  <data name="K541" xml:space="preserve"><value>Nội dung lệnh ghép nối không hợp lệ.</value></data>
+  <data name="K542" xml:space="preserve"><value>Lệnh không nhắm đúng tên HealBot và thế giới gốc này.</value></data>
+  <data name="K543" xml:space="preserve"><value>Newb đã nhả phân công.</value></data>
+  <data name="K544" xml:space="preserve"><value>Hành động ghép nối Newb không rõ.</value></data>
+  <data name="K545" xml:space="preserve"><value>HealBot đang gỡ tải.</value></data>
+  <data name="K546" xml:space="preserve"><value>TCP {0}</value></data>
+  <data name="K547" xml:space="preserve"><value>Đang khởi động lại bộ lắng nghe HealBot.</value></data>
+  <data name="K548" xml:space="preserve"><value>Đã kết nối</value></data>
+  <data name="K549" xml:space="preserve"><value>Chờ phân công có xác thực.</value></data>
+  <data name="K550" xml:space="preserve"><value>Bắt đầu Newb với cổng và bí mật chung này.</value></data>
+  <data name="K551" xml:space="preserve"><value>Chờ bộ lắng nghe bắt đầu.</value></data>
+  <data name="K552" xml:space="preserve"><value>Chờ trạng thái Newb có xác thực</value></data>
+  <data name="K553" xml:space="preserve"><value>Nhà cung cấp JOAT hoạt động</value></data>
+  <data name="K554" xml:space="preserve"><value>Nhà cung cấp từ xa không khả dụng</value></data>
+  <data name="K555" xml:space="preserve"><value>JOAT từ xa không khả dụng</value></data>
+  <data name="K556" xml:space="preserve"><value>Di chuyển từ xa không khả dụng</value></data>
+  <data name="K557" xml:space="preserve"><value>Đang khởi động lại kết nối Newb.</value></data>
+  <data name="K558" xml:space="preserve"><value>Đang xác thực</value></data>
+  <data name="K559" xml:space="preserve"><value>Đang kết nối</value></data>
+  <data name="K560" xml:space="preserve"><value>Chờ xác nhận phân công.</value></data>
+  <data name="K561" xml:space="preserve"><value>Chờ trạng thái và phân công mới có xác thực.</value></data>
+  <data name="K562" xml:space="preserve"><value>Chờ kết nối hoặc kết nối lại bất đồng bộ.</value></data>
+  <data name="K563" xml:space="preserve"><value>Chờ trạng thái nhà cung cấp từ xa</value></data>
+  <data name="K564" xml:space="preserve"><value>Nhà cung cấp từ xa sẵn sàng</value></data>
+  <data name="K565" xml:space="preserve"><value>Chờ trạng thái JOAT từ xa</value></data>
+  <data name="K566" xml:space="preserve"><value>Chờ trạng thái di chuyển từ xa</value></data>
+  <data name="K567" xml:space="preserve"><value>Cập nhật bên cũ hơn lên bản ghép nối trực tiếp HealBot v2 tương thích.</value></data>
+  <data name="K568" xml:space="preserve"><value>Nhập cùng bí mật chung trên Trợ giúp và Newb trong Cài đặt.</value></data>
+  <data name="K569" xml:space="preserve"><value>Danh tính Newb cục bộ không khả dụng.</value></data>
+  <data name="K570" xml:space="preserve"><value>Kết nối HealBot ghép nối hoặc trạng thái có xác thực đã mất.</value></data>
+  <data name="K571" xml:space="preserve"><value>Đầu cuối đã cấu hình hoặc danh tính HealBot thay đổi.</value></data>
+  <data name="K572" xml:space="preserve"><value>HealBot ghép nối vẫn báo phiên {0} đã nhả.</value></data>
+  <data name="K573" xml:space="preserve"><value>HealBot ghép nối có phân công QST hoạt động.</value></data>
+  <data name="K574" xml:space="preserve"><value>HealBot ghép nối thuộc một phiên Newb khác.</value></data>
+  <data name="K575" xml:space="preserve"><value>HealBot ghép nối báo phiên cũ cho Newb này.</value></data>
+  <data name="K576" xml:space="preserve"><value>HealBot ghép nối chưa sẵn sàng.</value></data>
+  <data name="K577" xml:space="preserve"><value>HealBot ghép nối báo phiên Newb thiếu hoặc không khớp.</value></data>
+  <data name="K578" xml:space="preserve"><value>Chờ HealBot ghép nối xác nhận đúng phiên Newb.</value></data>
+  <data name="K579" xml:space="preserve"><value>HealBot ghép nối từ chối phân công Newb.</value></data>
+  <data name="K580" xml:space="preserve"><value>HealBot ghép nối từ chối {0}.</value></data>
+  <data name="K581" xml:space="preserve"><value>HealBot ghép nối không chấp nhận {0} cho phiên hoạt động.</value></data>
+  <data name="K582" xml:space="preserve"><value>HealBot ghép nối không xác nhận nhả phiên cũ.</value></data>
+  <data name="K583" xml:space="preserve"><value>Chọn Trợ giúp hoặc Newb để dùng ghép nối trực tiếp.</value></data>
+  <data name="K584" xml:space="preserve"><value>Cổng TCP {0} đã được dùng.</value></data>
+  <data name="K585" xml:space="preserve"><value>Bộ lắng nghe ghép nối không thể bắt đầu: {0}</value></data>
+  <data name="K586" xml:space="preserve"><value>không xác định</value></data>
+  <data name="K587" xml:space="preserve"><value>Gói ghép nối sai định dạng.</value></data>
+  <data name="K588" xml:space="preserve"><value>Mất kết nối Newb ghép nối.</value></data>
+  <data name="K589" xml:space="preserve"><value>Bộ lắng nghe ghép nối HealBot đang dừng.</value></data>
+  <data name="K590" xml:space="preserve"><value>Loại thông điệp ghép nối không khớp lệnh.</value></data>
+  <data name="K591" xml:space="preserve"><value>Kết nối này đã quản lý một phiên Newb khác.</value></data>
+  <data name="K592" xml:space="preserve"><value>Phiên Newb đã thuộc một kết nối hoạt động khác.</value></data>
+  <data name="K593" xml:space="preserve"><value>Kết nối này không quản lý phiên Newb hoạt động.</value></data>
+  <data name="K594" xml:space="preserve"><value>Phiên Newb vẫn thuộc một kết nối hoạt động khác.</value></data>
+  <data name="K595" xml:space="preserve"><value>Đã ngắt kết nối</value></data>
+  <data name="K596" xml:space="preserve"><value>HealBot ghép nối chưa kết nối.</value></data>
+  <data name="K597" xml:space="preserve"><value>HealBot ghép nối không xác nhận lệnh.</value></data>
+  <data name="K598" xml:space="preserve"><value>Kết nối ghép nối đã đóng.</value></data>
+  <data name="K599" xml:space="preserve"><value>Cần ghép nối trực tiếp HealBot v2. Cập nhật Trợ giúp cũ hơn trước khi ghép nối.</value></data>
+  <data name="K600" xml:space="preserve"><value>Đã kết nối; đang chờ</value></data>
+  <data name="K601" xml:space="preserve"><value>HealBot ghép nối không trả về trạng thái có xác thực tương ứng. Kiểm tra bí mật chung và giao thức.</value></data>
+  <data name="K602" xml:space="preserve"><value>Giám sát ghép nối thất bại: {0}</value></data>
+  <data name="K603" xml:space="preserve"><value>Đã kết nối; chờ trạng thái HealBot có xác thực.</value></data>
+  <data name="K604" xml:space="preserve"><value>Kết nối đến {0}:{1} hết thời gian.</value></data>
+  <data name="K605" xml:space="preserve"><value>Không có HealBot lắng nghe tại {0}:{1}.</value></data>
+  <data name="K606" xml:space="preserve"><value>Kết nối đến {0}:{1} thất bại: {2}</value></data>
+  <data name="K607" xml:space="preserve"><value>Đầu cuối ghép nối trả về JSON ghép nối sai định dạng.</value></data>
+  <data name="K608" xml:space="preserve"><value>Mất kết nối HealBot ghép nối: {0}</value></data>
+  <data name="K609" xml:space="preserve"><value>Mất kết nối HealBot ghép nối.</value></data>
+  <data name="K610" xml:space="preserve"><value>HealBot ghép nối trả về phản hồi lệnh không khớp.</value></data>
+  <data name="K611" xml:space="preserve"><value>Kết nối ghép nối thất bại: {0}</value></data>
+  <data name="K612" xml:space="preserve"><value>Kết nối lại sau {0}s</value></data>
+  <data name="K613" xml:space="preserve"><value>Tất cả phụ thuộc bắt buộc của HealBot sẵn sàng.</value></data>
+  <data name="K614" xml:space="preserve"><value>HealBot cần {0}. Cài plugin còn thiếu hoặc tắt tự động hóa trong cài đặt.</value></data>
+  <data name="K615" xml:space="preserve"><value>Người chơi cục bộ không có.</value></data>
+  <data name="K616" xml:space="preserve"><value>Đã đang niệm.</value></data>
+  <data name="K617" xml:space="preserve"><value>Không tìm thấy hành động {0} trong bảng hành động.</value></data>
+  <data name="K618" xml:space="preserve"><value>Không đủ MP cho {0}.</value></data>
+  <data name="K619" xml:space="preserve"><value>ActionManager không khả dụng.</value></data>
+  <data name="K620" xml:space="preserve"><value>{0} đang hồi chiêu.</value></data>
+  <data name="K621" xml:space="preserve"><value>Mục tiêu đã chọn không khả dụng.</value></data>
+  <data name="K622" xml:space="preserve"><value>Không thể chọn {0} làm mục tiêu.</value></data>
+  <data name="K623" xml:space="preserve"><value>{0} ngoài tầm.</value></data>
+  <data name="K624" xml:space="preserve"><value>UseAction từ chối {0}.</value></data>
+  <data name="K625" xml:space="preserve"><value>Hiện không hành động PowerlevelBot nào dùng được.</value></data>
+  <data name="K626" xml:space="preserve"><value>Tạm dừng cho hành động HealBot</value></data>
+  <data name="K627" xml:space="preserve"><value>Theo sau HealRider bị tạm dừng do quyền điều khiển trong nhiệm vụ</value></data>
+  <data name="K628" xml:space="preserve"><value>Chuẩn bị thú cưỡi chở khách đã chọn vượt thời gian đón cho phép.</value></data>
+  <data name="K629" xml:space="preserve"><value>Chờ Lifestream đổi phân khu và tải hoàn tất</value></data>
+  <data name="K630" xml:space="preserve"><value>Xác minh phân khu công cộng của Trợ giúp sau /li</value></data>
+  <data name="K631" xml:space="preserve"><value>Chờ ảnh trạng thái di chuyển Quester mới sau HealRider</value></data>
+  <data name="K632" xml:space="preserve"><value>Chờ nhân vật trợ giúp</value></data>
+  <data name="K633" xml:space="preserve"><value>Tạm dừng cho lần niệm {0}</value></data>
+  <data name="K634" xml:space="preserve"><value>Đang đến thế giới {0}</value></data>
+  <data name="K635" xml:space="preserve"><value>Đến thế giới {0} không đạt đích</value></data>
+  <data name="K636" xml:space="preserve"><value>Dịch chuyển đến {0}</value></data>
+  <data name="K637" xml:space="preserve"><value>Dịch chuyển đến {0} không đến lãnh thổ {1}</value></data>
+  <data name="K638" xml:space="preserve"><value>dò bay ARR bị từ chối cho lãnh thổ này</value></data>
+  <data name="K639" xml:space="preserve"><value>Chờ hoạt động vnavmesh hiện có kết thúc</value></data>
+  <data name="K640" xml:space="preserve"><value>thú cưỡi không khả dụng: {0}</value></data>
+  <data name="K641" xml:space="preserve"><value>chờ thử lại Mount Roulette</value></data>
+  <data name="K642" xml:space="preserve"><value>Bắt chước Quester bằng Mount Roulette</value></data>
+  <data name="K643" xml:space="preserve"><value>Lên thú cưỡi để đuổi kịp ngoài {0:F0} yalms</value></data>
+  <data name="K644" xml:space="preserve"><value>Chờ bắt chước thú cưỡi của Quester</value></data>
+  <data name="K645" xml:space="preserve"><value>Chờ lên thú cưỡi để đuổi kịp</value></data>
+  <data name="K646" xml:space="preserve"><value>Chờ lên thú cưỡi hoàn tất trước khi xuống</value></data>
+  <data name="K647" xml:space="preserve"><value>Theo tuyến đang hoạt động trước khi hạ cánh</value></data>
+  <data name="K648" xml:space="preserve"><value>Hạ cánh nhưng vẫn cưỡi</value></data>
+  <data name="K649" xml:space="preserve"><value>Hạ cánh trong {0:F0} yalms trước khi xuống thú cưỡi</value></data>
+  <data name="K650" xml:space="preserve"><value>Hạ cánh không khả dụng: {0}</value></data>
+  <data name="K651" xml:space="preserve"><value>Chờ xuống thú cưỡi trong {0:F0} yalms</value></data>
+  <data name="K652" xml:space="preserve"><value>Xuống thú cưỡi trong {0:F0} yalms</value></data>
+  <data name="K653" xml:space="preserve"><value>Xuống thú cưỡi không khả dụng: {0}</value></data>
+  <data name="K654" xml:space="preserve"><value>bay không khả dụng: {0}</value></data>
+  <data name="K655" xml:space="preserve"><value>IPC theo sau vnavmesh thất bại</value></data>
+  <data name="K656" xml:space="preserve"><value>Theo sát ({0:F1} yalms)</value></data>
+  <data name="K657" xml:space="preserve"><value>Làm mới đích Quester mới nhất</value></data>
+  <data name="K658" xml:space="preserve"><value>Bay ở khoảng cách {0:F1} yalms</value></data>
+  <data name="K659" xml:space="preserve"><value>Theo sau trên mặt đất ở khoảng cách {0:F1} yalms</value></data>
+  <data name="K660" xml:space="preserve"><value>vnavmesh từ chối bắt đầu tuyến; chờ hoạt động kết thúc hoặc ảnh di chuyển mới</value></data>
+  <data name="K661" xml:space="preserve"><value>Chờ navmesh</value></data>
+  <data name="K662" xml:space="preserve"><value>Xếp {0} ở {1:F1} yalms</value></data>
+  <data name="K663" xml:space="preserve"><value>vnavmesh từ chối bắt đầu tuyến {0}; chờ hoạt động kết thúc hoặc ảnh di chuyển mới</value></data>
+  <data name="K664" xml:space="preserve"><value>IPC theo sau vnavmesh thất bại; chờ ảnh di chuyển mới</value></data>
+  <data name="K665" xml:space="preserve"><value>Chờ dữ liệu phân khu công cộng Trợ giúp và Quester đã xác minh</value></data>
+  <data name="K666" xml:space="preserve"><value>Chờ khu vực không phân khu đã xác minh của Quester</value></data>
+  <data name="K667" xml:space="preserve"><value>Chờ di chuyển an toàn, nhàn rỗi trước khi đổi phân khu công cộng</value></data>
+  <data name="K668" xml:space="preserve"><value>Chờ thử lại phân khu công cộng {0}</value></data>
+  <data name="K669" xml:space="preserve"><value>Chờ điều hướng dừng trước khi đổi phân khu công cộng</value></data>
+  <data name="K670" xml:space="preserve"><value>Gặp nhau trong phân khu công cộng: {0}</value></data>
+  <data name="K671" xml:space="preserve"><value>Hạ cánh và xuống thú cưỡi bên aetheryte trước /li</value></data>
+  <data name="K672" xml:space="preserve"><value>Xác minh phân khu công cộng {0} sau /li</value></data>
+  <data name="K673" xml:space="preserve"><value>Lifestream từ chối /li {0}; chờ năm giây để thử lại</value></data>
+  <data name="K674" xml:space="preserve"><value>Lệnh phân khu Lifestream thất bại; chờ năm giây để thử lại</value></data>
+  <data name="K675" xml:space="preserve"><value>Dò về trước theo lần vượt ranh giới lãnh thổ đã quan sát</value></data>
+  <data name="K676" xml:space="preserve"><value>Đã quan sát chuyển lãnh thổ; chờ trợ giúp tải an toàn</value></data>
+  <data name="K677" xml:space="preserve"><value>lãnh thổ {0} không cho phép thú cưỡi</value></data>
+  <data name="K678" xml:space="preserve"><value>kiểm tra thú cưỡi trong lãnh thổ thất bại: {0}</value></data>
+  <data name="K679" xml:space="preserve"><value>không thể bay ở lãnh thổ {0}</value></data>
+  <data name="K680" xml:space="preserve"><value>trợ giúp chưa mở khóa bay trong lãnh thổ này</value></data>
+  <data name="K681" xml:space="preserve"><value>đang dò khả năng bay ARR</value></data>
+  <data name="K682" xml:space="preserve"><value>kiểm tra bay thất bại: {0}</value></data>
+  <data name="K683" xml:space="preserve"><value>ActionManager không khả dụng</value></data>
+  <data name="K684" xml:space="preserve"><value>hành động chung {0} không khả dụng (trạng thái {1})</value></data>
+  <data name="K685" xml:space="preserve"><value>hành động chung {0} bị từ chối</value></data>
+  <data name="K686" xml:space="preserve"><value>hành động chung {0} thất bại: {1}</value></data>
+  <data name="K687" xml:space="preserve"><value>IPC trạng thái di chuyển Lifestream thất bại</value></data>
+  <data name="K688" xml:space="preserve"><value>{0}; chờ ảnh di chuyển mới hơn</value></data>
+  <data name="K689" xml:space="preserve"><value>Chờ di chuyển Lifestream hiện có hoàn tất</value></data>
+  <data name="K690" xml:space="preserve"><value>IPC di chuyển Lifestream thất bại</value></data>
+  <data name="K691" xml:space="preserve"><value>Lifestream từ chối yêu cầu: {0}</value></data>
+  <data name="K692" xml:space="preserve"><value>Đích dịch chuyển chính xác của Quester không có trong danh sách dịch chuyển của trợ giúp.</value></data>
+  <data name="K693" xml:space="preserve"><value>Không aetheryte nào trong lãnh thổ Quester có trong danh sách dịch chuyển của trợ giúp.</value></data>
+  <data name="K694" xml:space="preserve"><value>Giải quyết aetheryte thất bại: {0}</value></data>
+  <data name="K695" xml:space="preserve"><value>Đích dịch chuyển Quester đã chấp nhận không khả dụng.</value></data>
+  <data name="K696" xml:space="preserve"><value>Chờ vị trí Quester ở lãnh thổ đích để dùng aetheryte gần nhất dự phòng.</value></data>
+  <data name="K697" xml:space="preserve"><value>Danh sách dịch chuyển của trợ giúp không khả dụng hoặc vẫn đang tải.</value></data>
+  <data name="K698" xml:space="preserve"><value>PowerlevelBot sẵn sàng.</value></data>
+  <data name="K699" xml:space="preserve"><value>Chọn BRD hoặc MCH trước khi bật PowerlevelBot.</value></data>
+  <data name="K700" xml:space="preserve"><value>Chưa mở khóa {0}.</value></data>
+  <data name="K701" xml:space="preserve"><value>Nghề hiện tại phải khớp nghề PowerlevelBot {0} đã chọn.</value></data>
+  <data name="K702" xml:space="preserve"><value>Fren đã cấu hình của FrenRider không hiển thị.</value></data>
+  <data name="K703" xml:space="preserve"><value>Giải tán chocobo đồng hành đang hoạt động trước khi dùng PowerlevelBot.</value></data>
+  <data name="K704" xml:space="preserve"><value>{0} không phải hành động chỉ nhắm địch.</value></data>
+  <data name="K705" xml:space="preserve"><value>{0} cần niệm.</value></data>
+  <data name="K706" xml:space="preserve"><value>{0} là AoE.</value></data>
+  <data name="K707" xml:space="preserve"><value>{0} không khả dụng.</value></data>
+  <data name="K708" xml:space="preserve"><value>{0} đang hồi chiêu.</value></data>
+  <data name="K709" xml:space="preserve"><value>Cổng 47789 được dành riêng. Chọn cổng ghép nối khác.</value></data>
+  <data name="K710" xml:space="preserve"><value>Cổng ghép nối phải trong khoảng 1024 đến 65535.</value></data>
+  <data name="K711" xml:space="preserve"><value>Bí mật chung phải chứa ít nhất 16 ký tự.</value></data>
+  <data name="K712" xml:space="preserve"><value>Nhập một địa chỉ IPv4 Trợ giúp hợp lệ, như 127.0.0.1 hoặc 192.168.1.25.</value></data>
+  <data name="K713" xml:space="preserve"><value>Chocobo</value></data>
+  <data name="K714" xml:space="preserve"><value>Thành viên nhóm NPC</value></data>
+  <data name="K715" xml:space="preserve"><value>Mục tiêu thủ công</value></data>
+  <data name="K716" xml:space="preserve"><value>Jacqueline of All Trades cần Rotation Solver Reborn để tấn công.</value></data>
+  <data name="K717" xml:space="preserve"><value>Newb là vai trò vận hành, không phải hành vi độc lập.</value></data>
+  <data name="K718" xml:space="preserve"><value>Kéo xuống kênh "The Dumpster Fire" để thảo luận lỗi / đề xuất cho plugin cụ thể.</value></data>
+  <data name="K719" xml:space="preserve"><value>BossMod Reborn (BMR) hoặc VBM</value></data>
+  <data name="K720" xml:space="preserve"><value>Rotation Solver Reborn (RSR) - trợ giúp cách ly/khôi phục tùy chọn</value></data>
+  <data name="K721" xml:space="preserve"><value>{0}; dự phòng mặt đất an toàn ({1})</value></data>
+  <data name="K722" xml:space="preserve"><value>NPC chiến đấu thân thiện</value></data>
+  <data name="K723" xml:space="preserve"><value>Trợ giúp ghép nối</value></data>
+  <data name="K724" xml:space="preserve"><value>LOS</value></data>
+  <data name="K725" xml:space="preserve"><value>Giải cứu</value></data>
+  <data name="K726" xml:space="preserve"><value>bay tới</value></data>
+  <data name="K727" xml:space="preserve"><value>theo sau mặt đất</value></data>
+  <data name="K728" xml:space="preserve"><value>Tiếp cận</value></data>
+  <data name="K729" xml:space="preserve"><value>Đã đến</value></data>
+  <data name="K730" xml:space="preserve"><value>Đang đến</value></data>
+  <data name="K731" xml:space="preserve"><value>Lên ghế</value></data>
+  <data name="K732" xml:space="preserve"><value>Đã hủy</value></data>
+  <data name="K733" xml:space="preserve"><value>Đang hủy</value></data>
+  <data name="K734" xml:space="preserve"><value>Đang chuẩn bị</value></data>
+  <data name="K735" xml:space="preserve"><value>Đang di chuyển</value></data>
+  <data name="K736" xml:space="preserve"><value>Đang chờ</value></data>
+  <data name="K737" xml:space="preserve"><value>Chờ tiếp tục</value></data>
+  <data name="K738" xml:space="preserve"><value>Chuyển khu vực</value></data>
+  <data name="K739" xml:space="preserve"><value>hạ cánh</value></data>
+  <data name="K740" xml:space="preserve"><value>xuống thú cưỡi</value></data>
+  <data name="K741" xml:space="preserve"><value>HealRider bị chặn: {0}</value></data>
+  <data name="K742" xml:space="preserve"><value>Dọn dẹp HealRider: {0}</value></data>
+  <data name="K743" xml:space="preserve"><value>HealRider: {0}</value></data>
+  <data name="K744" xml:space="preserve"><value>HealRider: {0}: {1}</value></data>
+  <data name="K745" xml:space="preserve"><value>Dọn dẹp Trợ giúp hết thời gian khi chờ {0}; chờ thử lại dọn dẹp phối hợp.</value></data>
+  <data name="K746" xml:space="preserve"><value>nhân vật đã ghi nhận sẵn sàng</value></data>
+  <data name="K747" xml:space="preserve"><value>hành động lên thú cưỡi hoàn tất</value></data>
+  <data name="K748" xml:space="preserve"><value>Hạ cánh để dọn dẹp</value></data>
+  <data name="K749" xml:space="preserve"><value>Xuống thú cưỡi để dọn dẹp</value></data>
+  <data name="K750" xml:space="preserve"><value>Xuống thú cưỡi để dọn dẹp vận chuyển</value></data>
+  <data name="K751" xml:space="preserve"><value>Chuẩn bị thú cưỡi chở khách đã chọn để theo sau</value></data>
+  <data name="K752" xml:space="preserve"><value>Chính sách thú cưỡi của phân công đã đổi</value></data>
+  <data name="K753" xml:space="preserve"><value>Đích hoặc chặng cưỡi đã đổi</value></data>
+  <data name="K754" xml:space="preserve"><value>Bàn giao nhiệm vụ</value></data>
+  <data name="K755" xml:space="preserve"><value>Đã hủy đón</value></data>
+  <data name="K756" xml:space="preserve"><value>Hành động chế độ thú cưỡi của phân công không được hỗ trợ.</value></data>
+  <data name="K757" xml:space="preserve"><value>Hoàn tất chuyến cưỡi đang hoạt động trước khi đổi chính sách thú cưỡi.</value></data>
+  <data name="K758" xml:space="preserve"><value>Chọn thú cưỡi đã mở khóa có ghế hành khách trên Trợ giúp.</value></data>
+  <data name="K759" xml:space="preserve"><value>Chuẩn bị thú cưỡi chở khách đã chọn bị từ chối hoặc vượt thời gian đón cho phép.</value></data>
+  <data name="K760" xml:space="preserve"><value>Cần HealRider v2. Cập nhật cả Trợ giúp và Quester.</value></data>
+  <data name="K761" xml:space="preserve"><value>Yêu cầu HealRider v2 không hợp lệ.</value></data>
+  <data name="K762" xml:space="preserve"><value>Chặng cưỡi này đã bị chặng mới hơn thay thế.</value></data>
+  <data name="K763" xml:space="preserve"><value>Lần tiếp tục cưỡi này đã hết hiệu lực.</value></data>
+  <data name="K764" xml:space="preserve"><value>Chờ chuyến cưỡi trước xuống thú cưỡi.</value></data>
+  <data name="K765" xml:space="preserve"><value>Thử lại dọn dẹp cần nhân vật và nhóm đã ghi nhận.</value></data>
+  <data name="K766" xml:space="preserve"><value>Hành động HealRider không được hỗ trợ.</value></data>
+  <data name="K767" xml:space="preserve"><value>Chính sách thú cưỡi chở khách của phân công chưa sẵn sàng.</value></data>
+  <data name="K768" xml:space="preserve"><value>Chặng cưỡi này đã kết thúc.</value></data>
+  <data name="K769" xml:space="preserve"><value>Thời gian chờ đón chung hết trước khi đón được chấp nhận.</value></data>
+  <data name="K770" xml:space="preserve"><value>Đón cần thú cưỡi chở khách đã mở khóa, Trợ giúp bay được, Quester không bay và xa hơn ngưỡng đi bộ, cùng đúng nhóm trong khu vực này.</value></data>
+  <data name="K771" xml:space="preserve"><value>Bối cảnh cưỡi bị mất, chặn hoặc hết thời gian</value></data>
+  <data name="K772" xml:space="preserve"><value>Thời gian chờ đón chung hết trong lúc tiếp cận hoặc lên ghế</value></data>
+  <data name="K773" xml:space="preserve"><value>Chờ cả hai máy khách tải trong chuyến cưỡi.</value></data>
+  <data name="K774" xml:space="preserve"><value>Chờ tiếp tục cưỡi và cả hai xác nhận hành khách.</value></data>
+  <data name="K775" xml:space="preserve"><value>Không thể xác minh việc vượt ranh giới khi cưỡi</value></data>
+  <data name="K776" xml:space="preserve"><value>Lãnh thổ và phân khu công cộng của Trợ giúp và Quester không còn được xác minh cùng nhau</value></data>
+  <data name="K777" xml:space="preserve"><value>Quester hoặc nhóm chính xác không còn khả dụng</value></data>
+  <data name="K778" xml:space="preserve"><value>Mất xác minh hành khách khi chờ bước di chuyển tiếp theo</value></data>
+  <data name="K779" xml:space="preserve"><value>Hạ cánh hoặc xuống thú cưỡi bị từ chối</value></data>
+  <data name="K780" xml:space="preserve"><value>Đã đến đích di chuyển; chờ bước đã xác minh tiếp theo.</value></data>
+  <data name="K781" xml:space="preserve"><value>Điều hướng hạ cánh chính xác từ chối đích đã ghi nhận</value></data>
+  <data name="K782" xml:space="preserve"><value>IPC điều hướng hạ cánh chính xác thất bại</value></data>
+  <data name="K783" xml:space="preserve"><value>Trạng thái điều hướng hạ cánh chính xác không khả dụng</value></data>
+  <data name="K784" xml:space="preserve"><value>Tuyến hạ cánh chính xác thất bại trước khi đến XYZ đã ghi nhận</value></data>
+  <data name="K785" xml:space="preserve"><value>Trạng thái điều hướng chuyến cưỡi không khả dụng</value></data>
+  <data name="K786" xml:space="preserve"><value>Tuyến hành khách thất bại trước khi đến</value></data>
+  <data name="K787" xml:space="preserve"><value>Điều hướng chuyến cưỡi từ chối đích</value></data>
+  <data name="K788" xml:space="preserve"><value>IPC điều hướng chuyến cưỡi thất bại</value></data>
+  <data name="K789" xml:space="preserve"><value>Hạ cánh lệch ngoài dung sai đến.</value></data>
+  <data name="K790" xml:space="preserve"><value>Quester chính xác rời ghế hành khách hoặc nhóm.</value></data>
+  <data name="K791" xml:space="preserve"><value>Thú cưỡi đã chọn bị xuống trước khi lên ghế.</value></data>
+  <data name="K792" xml:space="preserve"><value>Không thể chuẩn bị thú cưỡi chở khách đã chọn.</value></data>
+  <data name="K793" xml:space="preserve"><value>Chờ cả hai xác nhận hành khách.</value></data>
+  <data name="K794" xml:space="preserve"><value>Chờ quan sát chạm đất tại đích đã ghi nhận.</value></data>
+  <data name="K795" xml:space="preserve"><value>Chờ quan sát hành khách bản địa của Trợ giúp.</value></data>
+  <data name="K796" xml:space="preserve"><value>Chờ xác nhận hành khách của Quester.</value></data>
+  <data name="K797" xml:space="preserve"><value>Tuyến Epilogue Gate bị hủy hoặc hết thời gian</value></data>
+  <data name="K798" xml:space="preserve"><value>Di chuyển qua Epilogue Gate của Idyllshire</value></data>
+  <data name="K799" xml:space="preserve"><value>Lệnh Epilogue Gate của Lifestream không khả dụng</value></data>
+  <data name="K800" xml:space="preserve"><value>Lifestream từ chối tuyến Epilogue Gate</value></data>
+  <data name="K801" xml:space="preserve"><value>Di chuyển đến {0} để đổi phân khu công cộng</value></data>
+  <data name="K802" xml:space="preserve"><value>Không đến aetheryte đổi phân khu {0}</value></data>
+  <data name="K803" xml:space="preserve"><value>Đã nhả phân công</value></data>
+  <data name="K804" xml:space="preserve"><value>Di chuyển Dravanian Hinterlands cần Trợ giúp này bay được</value></data>
+  <data name="K805" xml:space="preserve"><value>IPC di chuyển Lifestream không khả dụng.</value></data>
+  <data name="K806" xml:space="preserve"><value>IPC di chuyển vnavmesh không khả dụng.</value></data>
+  <data name="K807" xml:space="preserve"><value>IPC di chuyển Lifestream bắt buộc không khả dụng.</value></data>
+  <data name="K808" xml:space="preserve"><value>IPC di chuyển vnavmesh bắt buộc không khả dụng.</value></data>
+  <data name="K809" xml:space="preserve"><value>LOS bị chặn; di chuyển ghép nối hoạt động</value></data>
+  <data name="K810" xml:space="preserve"><value>LOS bị chặn; di chuyển ghép nối đang giải quyết vị trí từ xa</value></data>
+  <data name="K811" xml:space="preserve"><value>LOS bị chặn; mục tiêu ngoài tầm giải cứu</value></data>
+  <data name="K812" xml:space="preserve"><value>Tạm dừng trong nhiệm vụ</value></data>
+  <data name="K813" xml:space="preserve"><value>IPC Powerlevel FrenRider không tương thích. Cập nhật FrenRider.</value></data>
+  <data name="K814" xml:space="preserve"><value>IPC Powerlevel FrenRider không khả dụng.</value></data>
+  <data name="K815" xml:space="preserve"><value>Trạng thái Powerlevel FrenRider rỗng.</value></data>
+  <data name="K816" xml:space="preserve"><value>Chưa truy vấn IPC Powerlevel FrenRider.</value></data>
+  <data name="K817" xml:space="preserve"><value>FrenRider trả về phản hồi rỗng.</value></data>
+  <data name="K818" xml:space="preserve"><value>Trạng thái Powerlevel FrenRider không tương thích.</value></data>
+  <data name="K819" xml:space="preserve"><value>Khung TCP ghép nối không đầy đủ.</value></data>
+  <data name="K820" xml:space="preserve"><value>Thẻ xác thực ghép nối không hợp lệ.</value></data>
+  <data name="K821" xml:space="preserve"><value>Dấu thời gian ghép nối không hợp lệ.</value></data>
+  <data name="K822" xml:space="preserve"><value>Xác thực ghép nối thất bại.</value></data>
+  <data name="K823" xml:space="preserve"><value>Khung TCP ghép nối vượt 64 KiB.</value></data>
+  <data name="K824" xml:space="preserve"><value>Gói ghép nối bị phát lại.</value></data>
+  <data name="K825" xml:space="preserve"><value>Gói ghép nối cũ.</value></data>
+  <data name="K826" xml:space="preserve"><value>Bí mật chung chưa được cấu hình.</value></data>
+  <data name="K827" xml:space="preserve"><value>Gói ghép nối chưa ký hoặc không tương thích.</value></data>
+  <data name="K828" xml:space="preserve"><value>Ghép nối HealBot đang gỡ tải.</value></data>
+  <data name="K829" xml:space="preserve"><value>Chọn vai trò Trợ giúp trên máy khách hồi máu.</value></data>
+  <data name="K830" xml:space="preserve"><value>Nhà cung cấp Trợ giúp không do ghép nối Newb trực tiếp quản lý.</value></data>
+  <data name="K831" xml:space="preserve"><value>QST hiện quản lý bật nhà cung cấp.</value></data>
+  <data name="K832" xml:space="preserve"><value>Ghép nối Newb trực tiếp không quản lý bật Trợ giúp.</value></data>
+  <data name="K833" xml:space="preserve"><value>ID phiên Newb không hợp lệ.</value></data>
+  <data name="K834" xml:space="preserve"><value>HealBot đã có phân công QST hoặc Newb hoạt động.</value></data>
+  <data name="K835" xml:space="preserve"><value>Danh tính Newb không hợp lệ.</value></data>
+  <data name="K836" xml:space="preserve"><value>Phiên Newb không quản lý phân công hoạt động.</value></data>
+  <data name="K837" xml:space="preserve"><value>Phiên Newb không quản lý phân công đang hoạt động nào.</value></data>
+  <data name="K838" xml:space="preserve"><value>Cập nhật di chuyển không khớp Newb chính xác được phân công.</value></data>
+  <data name="K839" xml:space="preserve"><value>HealBot không thể bật JOAT.</value></data>
+  <data name="K840" xml:space="preserve"><value>HealBot bị tắt.</value></data>
+  <data name="K841" xml:space="preserve"><value>Tự động hóa HealBot bị tắt.</value></data>
+  <data name="K842" xml:space="preserve"><value>Chọn Jacqueline of All Trades (JOAT).</value></data>
+  <data name="K843" xml:space="preserve"><value>Cần Rotation Solver Reborn để JOAT tấn công.</value></data>
+  <data name="K844" xml:space="preserve"><value>Tự động hóa tắt.</value></data>
+  <data name="K845" xml:space="preserve"><value>Chọn bật tự động hóa ngay hay giữ tắt.</value></data>
+  <data name="K846" xml:space="preserve"><value>HealBot không thể bắt đầu vai trò đã chọn.</value></data>
+  <data name="K847" xml:space="preserve"><value>Đã lưu thiết lập {0}. Vai trò vận hành vẫn Tắt.</value></data>
+  <data name="K848" xml:space="preserve"><value>Đã lưu và bắt đầu thiết lập {0}.</value></data>
+  <data name="K849" xml:space="preserve"><value>Vai trò vận hành không rõ.</value></data>
+  <data name="K850" xml:space="preserve"><value>QST ghép nối</value></data>
+  <data name="K851" xml:space="preserve"><value>Hồi máu {0}; tấn công {1}</value></data>
+  <data name="K852" xml:space="preserve"><value>{0}: {1} Nhấn để mở cửa sổ chính.</value></data>
+  <data name="K853" xml:space="preserve"><value> Hành vi: {0}.</value></data>
+  <data name="K854" xml:space="preserve"><value>Vai trò: {0}.{1} Trạng thái: {2} Tiếp theo: {3} Danh tính: {4}</value></data>
+  <data name="K855" xml:space="preserve"><value>Hỗ trợ tự động cho những cuộc phiêu lưu của bạn</value></data>
+  <data name="K856" xml:space="preserve"><value>Bạn đồng hành gọn nhẹ cho mỗi ngày chơi</value></data>
+  <data name="Window appearance" xml:space="preserve">
+    <value>Giao diện cửa sổ</value>
+  </data>
+  <data name="Compact visible on main window" xml:space="preserve">
+    <value>Hiển thị chế độ gọn trên cửa sổ chính</value>
+  </data>
+  <data name="Language visible on main window" xml:space="preserve">
+    <value>Hiển thị lựa chọn ngôn ngữ trên cửa sổ chính</value>
+  </data>
+  <data name="Transparency" xml:space="preserve">
+    <value>Độ trong suốt</value>
+  </data>
+  <data name="Opacity (%)" xml:space="preserve">
+    <value>Độ đục (%)</value>
+  </data>
+  <data name="Auto-fade when unfocused" xml:space="preserve">
+    <value>Tự giảm độ đục khi mất tiêu điểm</value>
+  </data>
+  <data name="Unfocused opacity (%)" xml:space="preserve">
+    <value>Độ đục khi mất tiêu điểm (%)</value>
+  </data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve">
+    <value>Độ trễ khi mất tiêu điểm (giây)</value>
+  </data>
+</root>

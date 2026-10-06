@@ -84,10 +84,14 @@ Activation requires compatible FrenRider Powerlevel IPC, FrenRider enabled, a co
 
 HealBot provides four windows:
 
-- **Main** begins with Off, Stand-alone, Helper, and Newb, then shows one primary state, one next action, and the active or paired identity.
+- **Main** presents the role and Stand-alone behavior controls, primary state, next action, active or paired identity, last action and rule, dependencies, and watched targets in a dashboard. The Details disclosure retains the full diagnostic status.
 - **Settings** contains Quick Setup, General, role-specific networking, JOAT DoTs-only/full-RSR radios, HealBot Actions, and Requirements / Help tabs. QST temporarily disables the local attack radios while it owns the mode; Helper owns port/shared-secret fields, and Newb additionally owns the Helper IPv4 address.
 - **Watch** manages the shared HealBot/JOAT filters, persistence, retained targets, and the live eligible-target table.
-- **Mini** provides the four operational role controls, Stand-alone behavior selection, JOAT attack-mode radios when applicable, live status, and a Settings button; it does not edit networking fields. QST ownership disables the radios and shows the effective paired mode.
+- **Mini** provides the four operational role controls, Stand-alone behavior selection, JOAT attack-mode radios when applicable, summon controls, a read-only watched-target summary, and Settings, Watch, and Main navigation. QST ownership disables the local controls it owns and shows the effective paired mode.
+
+Main and Settings share a **C** compact-mode checkbox, a colour selector with teal, blue, pink, and custom RGB choices, and a language selector. These preferences apply to all four windows and Quick Setup through the existing configuration save path. Ready, pending, and blocked status colours retain their meanings across accent choices.
+
+The interface supports English, German, French, Spanish, Italian, Russian, Japanese, Korean, Simplified Chinese, Vietnamese, Brazilian Portuguese, Indonesian, Polish, Turkish, and Hindi using embedded resources and host-managed fonts. Hindi uses the consumer-owned Windows text renderer for shaping; game-owned DTR text remains English for that selection. Plugin names, commands, player identities, and game catalog names retain their original text. The layouts follow the approved HealBot dashboard and compact references; Settings and Quick Setup retain their original editing flow. The current Debug/x64 build and offline Hindi catalog, appearance/save, Watch and Main/Mini/Settings checks pass. The window matrix covers both densities, 100%/150% scales, reference/minimum sizes and a non-default caller font scale. Managed-host, game, GPU and IME acceptance remain pending.
 
 Main, Settings, and Watch positions are saved independently. `/healbot ws` resets those positions and `/healbot j` moves Main to a random visible location.
 
@@ -108,11 +112,15 @@ Commands:
 
 ## Build
 
-The solution targets .NET 10, x64, and Dalamud API 15.
+The plugin targets .NET 10, x64, and Dalamud API 15, and references the sibling AethertekUI checkout. The local launcher uses its pinned SDK environment:
 
 ```powershell
-dotnet test Coppelia.sln -c Debug --no-restore
-dotnet build Coppelia.sln -c Release --no-restore
+& Z:\healbot.bat
+
+. Z:\aethertekUI\eng\Enter-RepoEnv.ps1
+Set-Location Z:\aethertekUI
+dotnet restore Z:\Coppelia\Coppelia\Coppelia.csproj -p:Configuration=Release -p:Platform=x64
+dotnet build Z:\Coppelia\Coppelia\Coppelia.csproj -c Release --no-restore -p:Platform=x64
 ```
 
 The Dalamud packager can emit a local `latest.zip` during a normal Release build. Building does not publish a release.

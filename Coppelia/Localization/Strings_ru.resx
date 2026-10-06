@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="K015" xml:space="preserve"><value>{0} Настройки</value></data>
+  <data name="K017" xml:space="preserve"><value>{0}%</value></data>
+  <data name="K018" xml:space="preserve"><value>{0}% HP</value></data>
+  <data name="K024" xml:space="preserve"><value>Действие</value></data>
+  <data name="K035" xml:space="preserve"><value>Атакующая стойка</value></data>
+  <data name="K041" xml:space="preserve"><value>Доступно</value></data>
+  <data name="K043" xml:space="preserve"><value>Назад</value></data>
+  <data name="K046" xml:space="preserve"><value>BMR или VBM</value></data>
+  <data name="K050" xml:space="preserve"><value>Отмена</value></data>
+  <data name="K052" xml:space="preserve"><value>Чокобо</value></data>
+  <data name="K059" xml:space="preserve"><value>Спутник</value></data>
+  <data name="K062" xml:space="preserve"><value>Стойка спутника</value></data>
+  <data name="K068" xml:space="preserve"><value>настроено</value></data>
+  <data name="K071" xml:space="preserve"><value>Копировать</value></data>
+  <data name="K074" xml:space="preserve"><value>Мёртв</value></data>
+  <data name="K076" xml:space="preserve"><value>Защитная стойка</value></data>
+  <data name="K078" xml:space="preserve"><value>Подробности</value></data>
+  <data name="K079" xml:space="preserve"><value>Выключено</value></data>
+  <data name="K080" xml:space="preserve"><value>Discord</value></data>
+  <data name="K082" xml:space="preserve"><value>Расст.</value></data>
+  <data name="K085" xml:space="preserve"><value>Панель DTR</value></data>
+  <data name="K086" xml:space="preserve"><value>Режим DTR</value></data>
+  <data name="K088" xml:space="preserve"><value>Включено</value></data>
+  <data name="K098" xml:space="preserve"><value>Следование</value></data>
+  <data name="K100" xml:space="preserve"><value>Свободная стойка</value></data>
+  <data name="K102" xml:space="preserve"><value>FrenRider</value></data>
+  <data name="K108" xml:space="preserve"><value>Общие</value></data>
+  <data name="K113" xml:space="preserve"><value>HealBot</value></data>
+  <data name="K124" xml:space="preserve"><value>Лечебная стойка</value></data>
+  <data name="K147" xml:space="preserve"><value>HP</value></data>
+  <data name="K149" xml:space="preserve"><value>HP%</value></data>
+  <data name="K153" xml:space="preserve"><value>Значок + текст</value></data>
+  <data name="K154" xml:space="preserve"><value>Только значок</value></data>
+  <data name="K157" xml:space="preserve"><value>Jacqueline of All Trades (JOAT)</value></data>
+  <data name="K159" xml:space="preserve"><value>JOAT</value></data>
+  <data name="K170" xml:space="preserve"><value>Класс</value></data>
+  <data name="K173" xml:space="preserve"><value>Ko-fi</value></data>
+  <data name="K174" xml:space="preserve"><value>Krangle</value></data>
+  <data name="K175" xml:space="preserve"><value>Изменять имена</value></data>
+  <data name="K179" xml:space="preserve"><value>Язык</value></data>
+  <data name="K183" xml:space="preserve"><value>Загружено</value></data>
+  <data name="K196" xml:space="preserve"><value>Нет</value></data>
+  <data name="K198" xml:space="preserve"><value>MP%</value></data>
+  <data name="K200" xml:space="preserve"><value>Имя</value></data>
+  <data name="K208" xml:space="preserve"><value>Следующее действие</value></data>
+  <data name="K209" xml:space="preserve"><value>Следующее действие: {0}</value></data>
+  <data name="K214" xml:space="preserve"><value>Нет</value></data>
+  <data name="K219" xml:space="preserve"><value>Не виден</value></data>
+  <data name="K222" xml:space="preserve"><value>Нет</value></data>
+  <data name="K223" xml:space="preserve"><value>Да</value></data>
+  <data name="K225" xml:space="preserve"><value>OOC</value></data>
+  <data name="K242" xml:space="preserve"><value>PowerlevelBot</value></data>
+  <data name="K250" xml:space="preserve"><value>Приоритет</value></data>
+  <data name="K256" xml:space="preserve"><value>Быстрая настройка</value></data>
+  <data name="K258" xml:space="preserve"><value>Готово</value></data>
+  <data name="K260" xml:space="preserve"><value>Обновление</value></data>
+  <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
+  <data name="K277" xml:space="preserve"><value>RSR</value></data>
+  <data name="K283" xml:space="preserve"><value>Повторить настройку</value></data>
+  <data name="K290" xml:space="preserve"><value>сохранено</value></data>
+  <data name="K300" xml:space="preserve"><value>Выбрано</value></data>
+  <data name="K304" xml:space="preserve"><value>Самостоятельно</value></data>
+  <data name="K308" xml:space="preserve"><value>Настройки</value></data>
+  <data name="K309" xml:space="preserve"><value>Общий секрет</value></data>
+  <data name="K311" xml:space="preserve"><value>Показывать элемент в панели DTR</value></data>
+  <data name="K319" xml:space="preserve"><value>Состояние</value></data>
+  <data name="K322" xml:space="preserve"><value>Вывести состояние в чат</value></data>
+  <data name="K323" xml:space="preserve"><value>Шаг {0} из 3</value></data>
+  <data name="K332" xml:space="preserve"><value>Только текст</value></data>
+  <data name="K343" xml:space="preserve"><value>Отслеживается</value></data>
+  <data name="K346" xml:space="preserve"><value>Событие</value></data>
+  <data name="K347" xml:space="preserve"><value>Тип</value></data>
+  <data name="K348" xml:space="preserve"><value>Недоступно</value></data>
+  <data name="K356" xml:space="preserve"><value>Видимы</value></data>
+  <data name="K359" xml:space="preserve"><value>vnavmesh</value></data>
+  <data name="K000" xml:space="preserve"><value>%d секунд</value></data>
+  <data name="K001" xml:space="preserve"><value>%d я</value></data>
+  <data name="K002" xml:space="preserve"><value>…и ещё {0} наблюдаемых целей.</value></data>
+  <data name="K003" xml:space="preserve"><value>{0} — отслеживает {1}</value></data>
+  <data name="K004" xml:space="preserve"><value>{0} / {1}% ОЗ</value></data>
+  <data name="K005" xml:space="preserve"><value>{0} / отсутствует / Ctrl для удаления</value></data>
+  <data name="K006" xml:space="preserve"><value>{0} / мёртв</value></data>
+  <data name="K007" xml:space="preserve"><value>{0} / скрыт фильтрами</value></data>
+  <data name="K008" xml:space="preserve"><value>{0} / сохранён в списке</value></data>
+  <data name="K010" xml:space="preserve"><value>Прямое соединение {0}</value></data>
+  <data name="K011" xml:space="preserve"><value>{0} выбран</value></data>
+  <data name="K012" xml:space="preserve"><value>{0} не открыт</value></data>
+  <data name="K013" xml:space="preserve"><value>{0} Мини</value></data>
+  <data name="K016" xml:space="preserve"><value>{0} Наблюдение</value></data>
+  <data name="K020" xml:space="preserve"><value>47789 зарезервирован</value></data>
+  <data name="K025" xml:space="preserve"><value>Активен — отзовите</value></data>
+  <data name="K026" xml:space="preserve"><value>Активный / связанный персонаж</value></data>
+  <data name="K027" xml:space="preserve"><value>Активный / связанный персонаж: {0}</value></data>
+  <data name="K028" xml:space="preserve"><value>Активных: {0}/{1} | На месте: {2} | Сохранено: {3}</value></data>
+  <data name="K029" xml:space="preserve"><value>Активных: 1/{0} | На месте: {1} | Сохранённые без изменений</value></data>
+  <data name="K031" xml:space="preserve"><value>Астролог (AST)</value></data>
+  <data name="K032" xml:space="preserve"><value>Не менее 16 символов</value></data>
+  <data name="K033" xml:space="preserve"><value>Атакующее действие: {0}</value></data>
+  <data name="K034" xml:space="preserve"><value>Цель атаки: {0}</value></data>
+  <data name="K036" xml:space="preserve"><value>Готовность к атаке</value></data>
+  <data name="K037" xml:space="preserve"><value>Атака: {0}</value></data>
+  <data name="K040" xml:space="preserve"><value>Обновлять точки карты при входе</value></data>
+  <data name="K042" xml:space="preserve"><value>Доступен и совместим</value></data>
+  <data name="K044" xml:space="preserve"><value>Бард (BRD)</value></data>
+  <data name="K045" xml:space="preserve"><value>Боевой NPC</value></data>
+  <data name="K056" xml:space="preserve"><value>Очистить наблюдение</value></data>
+  <data name="K057" xml:space="preserve"><value>Наблюдаемые и сохранённые цели удалены.</value></data>
+  <data name="K058" xml:space="preserve"><value>Команды и окна</value></data>
+  <data name="K060" xml:space="preserve"><value>Боевой чокобо</value></data>
+  <data name="K061" xml:space="preserve"><value>Боевые чокобо</value></data>
+  <data name="K069" xml:space="preserve"><value>Настроенный Fren</value></data>
+  <data name="K070" xml:space="preserve"><value>Продолжить</value></data>
+  <data name="K072" xml:space="preserve"><value>Копировать секрет</value></data>
+  <data name="K073" xml:space="preserve"><value>ID текущего класса {0} не совпадает</value></data>
+  <data name="K075" xml:space="preserve"><value>по умолчанию</value></data>
+  <data name="K077" xml:space="preserve"><value>Готовность зависимостей</value></data>
+  <data name="K081" xml:space="preserve"><value>Отозван</value></data>
+  <data name="K083" xml:space="preserve"><value>Не использовать эфирит Тамамидзу</value></data>
+  <data name="K084" xml:space="preserve"><value>Только периодический урон</value></data>
+  <data name="K087" xml:space="preserve"><value>Включить {0}</value></data>
+  <data name="K089" xml:space="preserve"><value>Включён, настроен и виден</value></data>
+  <data name="K090" xml:space="preserve"><value>Адрес: {0}</value></data>
+  <data name="K092" xml:space="preserve"><value>Выбран</value></data>
+  <data name="K093" xml:space="preserve"><value>Поиск по имени, типу или классу</value></data>
+  <data name="K094" xml:space="preserve"><value>Фильтр имён…</value></data>
+  <data name="K097" xml:space="preserve"><value>Завершить настройку</value></data>
+  <data name="K099" xml:space="preserve"><value>Длительность поиска перехода вперёд</value></data>
+  <data name="K101" xml:space="preserve"><value>Видимость Fren</value></data>
+  <data name="K103" xml:space="preserve"><value>IPC атаки FrenRider</value></data>
+  <data name="K104" xml:space="preserve"><value>Источник атаки FrenRider</value></data>
+  <data name="K105" xml:space="preserve"><value>IPC FrenRider</value></data>
+  <data name="K009" xml:space="preserve"><value>{0} [{1}] - {2}</value></data>
+  <data name="K019" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="K373" xml:space="preserve"><value>Бирюзовый</value></data>
+  <data name="K402" xml:space="preserve"><value>Неактивно</value></data>
+  <data name="K400" xml:space="preserve"><value>Заблокировано: {0}</value></data>
+  <data name="K425" xml:space="preserve"><value>заблокирован</value></data>
+  <data name="K415" xml:space="preserve"><value>Ожидание</value></data>
+  <data name="K376" xml:space="preserve"><value>Свой RGB</value></data>
+  <data name="K375" xml:space="preserve"><value>Розовый</value></data>
+  <data name="K586" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="K378" xml:space="preserve"><value>Загрузка шрифтов интерфейса...</value></data>
+  <data name="K718" xml:space="preserve"><value>Проблемы и предложения по плагинам обсуждаются в канале «The Dumpster Fire».</value></data>
+  <data name="K372" xml:space="preserve"><value>Цвет</value></data>
+  <data name="K413" xml:space="preserve"><value>Нет</value></data>
+  <data name="K374" xml:space="preserve"><value>Синий</value></data>
+  <data name="K713" xml:space="preserve"><value>Чокобо</value></data>
+  <data name="K412" xml:space="preserve"><value>Да</value></data>
+  <data name="K504" xml:space="preserve"><value>занят или в сцене</value></data>
+  <data name="K389" xml:space="preserve"><value>Цель</value></data>
+  <data name="K431" xml:space="preserve"><value>чтение заклинания</value></data>
+  <data name="K377" xml:space="preserve"><value>Компактный режим</value></data>
+  <data name="K502" xml:space="preserve"><value>между зонами</value></data>
+  <data name="K379" xml:space="preserve"><value>Не удалось загрузить шрифты интерфейса. См. журнал плагина.</value></data>
+  <data name="K380" xml:space="preserve"><value>Никогда</value></data>
+  <data name="K106" xml:space="preserve"><value>Дружественные боевые NPC</value></data>
+  <data name="K107" xml:space="preserve"><value>Полная ротация RSR</value></data>
+  <data name="K109" xml:space="preserve"><value>Создать 64-значный шестнадцатеричный секрет</value></data>
+  <data name="K110" xml:space="preserve"><value>Создать секрет</value></data>
+  <data name="K111" xml:space="preserve"><value>Зелень гисал (NQ + HQ): {0}</value></data>
+  <data name="K112" xml:space="preserve"><value>Зелень гисал (NQ + HQ): недоступно</value></data>
+  <data name="K115" xml:space="preserve"><value>Действия HealBot</value></data>
+  <data name="K118" xml:space="preserve"><value>HealBot Мини</value></data>
+  <data name="K119" xml:space="preserve"><value>Дополнительная интеграция HealBot</value></data>
+  <data name="K120" xml:space="preserve"><value>Путь HealBot</value></data>
+  <data name="K122" xml:space="preserve"><value>HealBot Наблюдение</value></data>
+  <data name="K123" xml:space="preserve"><value>Матрица действий целителя</value></data>
+  <data name="K125" xml:space="preserve"><value>Лечение: {0} | Атака: {1}</value></data>
+  <data name="K126" xml:space="preserve"><value>Настройка лечения</value></data>
+  <data name="K127" xml:space="preserve"><value>Сведения о лечении</value></data>
+  <data name="K128" xml:space="preserve"><value>Зависимости лечения</value></data>
+  <data name="K129" xml:space="preserve"><value>Условия лечения</value></data>
+  <data name="K130" xml:space="preserve"><value>Готовность лечения</value></data>
+  <data name="K132" xml:space="preserve"><value>Лечение: {0}</value></data>
+  <data name="K133" xml:space="preserve"><value>Помощник</value></data>
+  <data name="K134" xml:space="preserve"><value>Требования связи помощника и новичка</value></data>
+  <data name="K135" xml:space="preserve"><value>Адрес помощника</value></data>
+  <data name="K136" xml:space="preserve"><value>Адрес помощника: {0}:{1}.</value></data>
+  <data name="K137" xml:space="preserve"><value>IPv4-адрес помощника</value></data>
+  <data name="K138" xml:space="preserve"><value>Порт ожидания помощника: {0}.</value></data>
+  <data name="K143" xml:space="preserve"><value>Скрыт фильтрами</value></data>
+  <data name="K144" xml:space="preserve"><value>Удерживайте Ctrl для удаления наблюдаемых и сохранённых целей.</value></data>
+  <data name="K145" xml:space="preserve"><value>Удерживайте Ctrl при снятии отметки с отсутствующей цели {0}.</value></data>
+  <data name="K148" xml:space="preserve"><value>ОЗ недоступны</value></data>
+  <data name="K150" xml:space="preserve"><value>ОЗ: {0}</value></data>
+  <data name="K151" xml:space="preserve"><value>ОЗ: недоступны</value></data>
+  <data name="K152" xml:space="preserve"><value>ОЗ: цель не видна</value></data>
+  <data name="K155" xml:space="preserve"><value>Несовместим</value></data>
+  <data name="K156" xml:space="preserve"><value>Недопустимый IPv4-адрес</value></data>
+  <data name="K158" xml:space="preserve"><value>Требования JOAT</value></data>
+  <data name="K160" xml:space="preserve"><value>Режим атаки JOAT</value></data>
+  <data name="K162" xml:space="preserve"><value>Готовность атаки JOAT</value></data>
+  <data name="K164" xml:space="preserve"><value>Матрица лечения JOAT</value></data>
+  <data name="K165" xml:space="preserve"><value>Путь лечения JOAT</value></data>
+  <data name="K167" xml:space="preserve"><value>Готовность JOAT ещё не проверена.</value></data>
+  <data name="K168" xml:space="preserve"><value>Наблюдаемые цели JOAT</value></data>
+  <data name="K171" xml:space="preserve"><value>Класс выбран</value></data>
+  <data name="K172" xml:space="preserve"><value>Класс открыт</value></data>
+  <data name="K176" xml:space="preserve"><value>Скрытие имён: ВЫКЛ</value></data>
+  <data name="K177" xml:space="preserve"><value>Скрытие имён: ВКЛ</value></data>
+  <data name="K180" xml:space="preserve"><value>Последнее действие</value></data>
+  <data name="K181" xml:space="preserve"><value>Последнее правило</value></data>
+  <data name="K182" xml:space="preserve"><value>Подходящие цели на месте ({0})</value></data>
+  <data name="K185" xml:space="preserve"><value>Локальный целитель: {0} ({1})</value></data>
+  <data name="K186" xml:space="preserve"><value>ОЗ локального новичка: {0}</value></data>
+  <data name="K187" xml:space="preserve"><value>Локальный персонаж новичка</value></data>
+  <data name="K188" xml:space="preserve"><value>Полностью войдите перед запуском новичка</value></data>
+  <data name="K189" xml:space="preserve"><value>Видимость: {0}</value></data>
+  <data name="K190" xml:space="preserve"><value>Видимость: цель не видна</value></data>
+  <data name="K191" xml:space="preserve"><value>Машинист (MCH)</value></data>
+  <data name="K192" xml:space="preserve"><value>Основное окно</value></data>
+  <data name="K193" xml:space="preserve"><value>Управляйте наблюдением и ищите союзников.</value></data>
+  <data name="K195" xml:space="preserve"><value>Мини</value></data>
+  <data name="K197" xml:space="preserve"><value>Отсутствует (необязательно)</value></data>
+  <data name="K199" xml:space="preserve"><value>Лимит: {0} активных и {1} сохранённых целей.</value></data>
+  <data name="K201" xml:space="preserve"><value>Требовать отсутствие эффекта</value></data>
+  <data name="K202" xml:space="preserve"><value>Сетевые настройки уже сохранены.</value></data>
+  <data name="K203" xml:space="preserve"><value>Сеть сохранена; прямое соединение перезапущено один раз.</value></data>
+  <data name="K204" xml:space="preserve"><value>Новичок</value></data>
+  <data name="K210" xml:space="preserve"><value>Нет активного помощника/квестера</value></data>
+  <data name="K211" xml:space="preserve"><value>Нет активной наблюдаемой цели</value></data>
+  <data name="K212" xml:space="preserve"><value>Нет подходящих целей для выбранных фильтров.</value></data>
+  <data name="K213" xml:space="preserve"><value>Наблюдаемые цели ещё не выбраны.</value></data>
+  <data name="K215" xml:space="preserve"><value>Ничего не выбрано</value></data>
+  <data name="K216" xml:space="preserve"><value>Не получено</value></data>
+  <data name="K217" xml:space="preserve"><value>Не настроен</value></data>
+  <data name="K218" xml:space="preserve"><value>Не открыт</value></data>
+  <data name="K220" xml:space="preserve"><value>NPC группы</value></data>
+  <data name="K221" xml:space="preserve"><value>NPC — участники группы</value></data>
+  <data name="K114" xml:space="preserve"><value>HealBot {0}</value></data>
+  <data name="K169" xml:space="preserve"><value>JOAT: {0}</value></data>
+  <data name="K226" xml:space="preserve"><value>Открыть основное окно</value></data>
+  <data name="K227" xml:space="preserve"><value>Открыть мини</value></data>
+  <data name="K229" xml:space="preserve"><value>Открыть наблюдение</value></data>
+  <data name="K230" xml:space="preserve"><value>Открыть окно наблюдения</value></data>
+  <data name="K231" xml:space="preserve"><value>Рабочая роль</value></data>
+  <data name="K233" xml:space="preserve"><value>Рабочее состояние</value></data>
+  <data name="K234" xml:space="preserve"><value>Порт связи</value></data>
+  <data name="K235" xml:space="preserve"><value>Связанный помощник: {0}</value></data>
+  <data name="K236" xml:space="preserve"><value>TCP-порт связи</value></data>
+  <data name="K237" xml:space="preserve"><value>Связь: {0} — {1}</value></data>
+  <data name="K238" xml:space="preserve"><value>Игроки</value></data>
+  <data name="K239" xml:space="preserve"><value>Класс Powerlevel</value></data>
+  <data name="K241" xml:space="preserve"><value>Готовность Powerlevel ещё не проверена.</value></data>
+  <data name="K246" xml:space="preserve"><value>Путь PowerlevelBot</value></data>
+  <data name="K247" xml:space="preserve"><value>Требования PowerlevelBot</value></data>
+  <data name="K248" xml:space="preserve"><value>Основное состояние</value></data>
+  <data name="K251" xml:space="preserve"><value>Поставщик: {0}</value></data>
+  <data name="K252" xml:space="preserve"><value>QST управляет атаками JOAT ({0}). </value></data>
+  <data name="K253" xml:space="preserve"><value>QST управляет призывом ({0}). </value></data>
+  <data name="K255" xml:space="preserve"><value>Перемещение QST</value></data>
+  <data name="K259" xml:space="preserve"><value>Готово, когда лечение не требуется</value></data>
+  <data name="K261" xml:space="preserve"><value>Обновить готовность</value></data>
+  <data name="K263" xml:space="preserve"><value>Радиус возврата в список</value></data>
+  <data name="K264" xml:space="preserve"><value>Удалённое следование: {0}</value></data>
+  <data name="K265" xml:space="preserve"><value>Удалённое лечение: {0}</value></data>
+  <data name="K266" xml:space="preserve"><value>Требования / Справка</value></data>
+  <data name="K267" xml:space="preserve"><value>Требования и справка</value></data>
+  <data name="K268" xml:space="preserve"><value>Восстановление видимости: {0}</value></data>
+  <data name="K269" xml:space="preserve"><value>Восстановление видимости: неактивно</value></data>
+  <data name="K270" xml:space="preserve"><value>Ограниченный выбор врагов</value></data>
+  <data name="K271" xml:space="preserve"><value>Сохранён в списке — отсутствует</value></data>
+  <data name="K272" xml:space="preserve"><value>Сохранённые или отсутствующие цели ({0})</value></data>
+  <data name="K273" xml:space="preserve"><value>Проверить и завершить</value></data>
+  <data name="K274" xml:space="preserve"><value>Сеть для роли</value></data>
+  <data name="K275" xml:space="preserve"><value>Роль: {0}</value></data>
+  <data name="K278" xml:space="preserve"><value>Управление RSR</value></data>
+  <data name="K282" xml:space="preserve"><value>Запустить быструю настройку</value></data>
+  <data name="K285" xml:space="preserve"><value>Мудрец (SGE)</value></data>
+  <data name="K286" xml:space="preserve"><value>Сохранять отмеченные цели лечения</value></data>
+  <data name="K287" xml:space="preserve"><value>Сохранять цели лечения</value></data>
+  <data name="K289" xml:space="preserve"><value>Сохранить и оставить роль выключенной</value></data>
+  <data name="K291" xml:space="preserve"><value>Радиус поиска сохранённых целей</value></data>
+  <data name="K293" xml:space="preserve"><value>Сохранение целей выключено.</value></data>
+  <data name="K294" xml:space="preserve"><value>Сохранение включено; поиск возврата в радиусе {0} я.</value></data>
+  <data name="K295" xml:space="preserve"><value>Радиус (я)</value></data>
+  <data name="K296" xml:space="preserve"><value>Учёный (SCH)</value></data>
+  <data name="K297" xml:space="preserve"><value>Выберите BRD или MCH</value></data>
+  <data name="K299" xml:space="preserve"><value>Выберите помощника или новичка для настройки прямой связи.</value></data>
+  <data name="K301" xml:space="preserve"><value>Выбран — удалённый</value></data>
+  <data name="K302" xml:space="preserve"><value>Выбранный класс</value></data>
+  <data name="K305" xml:space="preserve"><value>Настроить помощника</value></data>
+  <data name="K306" xml:space="preserve"><value>Настроить новичка</value></data>
+  <data name="K307" xml:space="preserve"><value>Настроить автономный режим</value></data>
+  <data name="K310" xml:space="preserve"><value>Показывать уведомления о зависимостях</value></data>
+  <data name="K312" xml:space="preserve"><value>Исключает Тамамидзу при выборе телепорта QST.</value></data>
+  <data name="K313" xml:space="preserve"><value>Автономный</value></data>
+  <data name="K314" xml:space="preserve"><value>Автономное поведение</value></data>
+  <data name="K315" xml:space="preserve"><value>Требования автономного HealBot</value></data>
+  <data name="K318" xml:space="preserve"><value>Запустить эту роль сейчас</value></data>
+  <data name="K320" xml:space="preserve"><value>Состояние и поведение</value></data>
+  <data name="K321" xml:space="preserve"><value>Панель состояния</value></data>
+  <data name="K324" xml:space="preserve"><value>Призывать боевого чокобо</value></data>
+  <data name="K327" xml:space="preserve"><value>Поддерживаемый целитель</value></data>
+  <data name="K328" xml:space="preserve"><value>Добавить текущую цель</value></data>
+  <data name="K329" xml:space="preserve"><value>Поиск и сохранение целей</value></data>
+  <data name="K330" xml:space="preserve"><value>Цель не видна</value></data>
+  <data name="K331" xml:space="preserve"><value>TCP-порт</value></data>
+  <data name="K342" xml:space="preserve"><value>Слишком короткий</value></data>
+  <data name="K345" xml:space="preserve"><value>Перемещение: {0}</value></data>
+  <data name="K349" xml:space="preserve"><value>Открыт</value></data>
+  <data name="K351" xml:space="preserve"><value>Используйте 1024–65535</value></data>
+  <data name="K354" xml:space="preserve"><value>Допустимо</value></data>
+  <data name="K355" xml:space="preserve"><value>Допустимый IPv4</value></data>
+  <data name="K357" xml:space="preserve"><value>Виден — штатная цель HealBot</value></data>
+  <data name="K358" xml:space="preserve"><value>Видимый общий секрет</value></data>
+  <data name="K360" xml:space="preserve"><value>Наблюдение</value></data>
+  <data name="K361" xml:space="preserve"><value>Фильтры наблюдения</value></data>
+  <data name="K362" xml:space="preserve"><value>Под наблюдением</value></data>
+  <data name="K363" xml:space="preserve"><value>Наблюдаемый новичок</value></data>
+  <data name="K364" xml:space="preserve"><value>Наблюдаемый квестер</value></data>
+  <data name="K365" xml:space="preserve"><value>Наблюдаемая цель</value></data>
+  <data name="K367" xml:space="preserve"><value>Наблюдаемые цели</value></data>
+  <data name="K369" xml:space="preserve"><value>Белый маг (WHM)</value></data>
+  <data name="K381" xml:space="preserve"><value>GCD с чтением</value></data>
+  <data name="K382" xml:space="preserve"><value>Мгновенные oGCD</value></data>
+  <data name="K383" xml:space="preserve"><value>Эффекты с чтением</value></data>
+  <data name="K384" xml:space="preserve"><value>Мгновенные эффекты</value></data>
+  <data name="K385" xml:space="preserve"><value>ОЗ ниже</value></data>
+  <data name="K386" xml:space="preserve"><value>Мёртвая цель</value></data>
+  <data name="K387" xml:space="preserve"><value>Отсутствующий эффект</value></data>
+  <data name="K388" xml:space="preserve"><value>Всегда</value></data>
+  <data name="K390" xml:space="preserve"><value>Игрок</value></data>
+  <data name="K391" xml:space="preserve"><value>NPC группы</value></data>
+  <data name="K392" xml:space="preserve"><value>Дружественный NPC</value></data>
+  <data name="K723" xml:space="preserve"><value>Связанный помощник</value></data>
+  <data name="K724" xml:space="preserve"><value>Видимость</value></data>
+  <data name="K725" xml:space="preserve"><value>Восстановление видимости</value></data>
+  <data name="K232" xml:space="preserve"><value>Рабочая роль: {0}</value></data>
+  <data name="K240" xml:space="preserve"><value>Класс Powerlevel: {0}.</value></data>
+  <data name="K249" xml:space="preserve"><value>Основное состояние: {0}</value></data>
+  <data name="K303" xml:space="preserve"><value>Выбранный класс: {0}</value></data>
+  <data name="K366" xml:space="preserve"><value>Наблюдаемая цель: {0}</value></data>
+  <data name="K014" xml:space="preserve"><value>{0} сохранённых целей скрыты или отсутствуют. Управляйте ими в окне наблюдения.</value></data>
+  <data name="K021" xml:space="preserve"><value>Настроенный видимый Fren; без призванного боевого чокобо.</value></data>
+  <data name="K022" xml:space="preserve"><value>Открытый и выбранный BRD или MCH.</value></data>
+  <data name="K023" xml:space="preserve"><value>Снимайте отметки с отсутствующих целей с Ctrl. Сохранённая копия тоже удалится.</value></data>
+  <data name="K030" xml:space="preserve"><value>Живые: мгновенный эффект → мгновенный oGCD → эффект с чтением → GCD с чтением. Перед воскрешением проверяются мгновенные эффекты.</value></data>
+  <data name="K038" xml:space="preserve"><value>Прямая связь подтверждается видимым общим секретом.</value></data>
+  <data name="K039" xml:space="preserve"><value>Подтверждённый трафик LAN не шифруется; имена и координаты видны в сети.</value></data>
+  <data name="K047" xml:space="preserve"><value>Оба режима используют RSR Manual. Только периодический урон включает DoT целителя; полная ротация восстанавливает сохранённые атаки и AoE без автоматического выбора цели.</value></data>
+  <data name="K048" xml:space="preserve"><value>Оба используют RSR Manual. Полная ротация меняет только атаки и AoE.</value></data>
+  <data name="K049" xml:space="preserve"><value>Обе стороны должны поддерживать прямой протокол v2 и использовать одинаковые порт и секрет.</value></data>
+  <data name="K051" xml:space="preserve"><value>Применяет настроенное лечение к наблюдаемым союзникам.</value></data>
+  <data name="K053" xml:space="preserve"><value>Выберите роль, затем автономное поведение. Завершение применяет черновик; отмена удаляет его.</value></data>
+  <data name="K054" xml:space="preserve"><value>Выберите уже экипированный дальнобойный класс. HealBot не меняет комплекты и не использует список наблюдения в этом режиме.</value></data>
+  <data name="K055" xml:space="preserve"><value>Выберите союзников для окна наблюдения. Лечатся и сохраняются только явно отмеченные цели.</value></data>
+  <data name="K063" xml:space="preserve"><value>Совместимый Powerlevel IPC FrenRider, включённый FrenRider и видимый настроенный Fren.</value></data>
+  <data name="K064" xml:space="preserve"><value>Совместимый Powerlevel IPC FrenRider при включённом FrenRider.</value></data>
+  <data name="K065" xml:space="preserve"><value>Настройте прямой TCP-адрес с подтверждением. Новичок не лечит и не атакует локально.</value></data>
+  <data name="K066" xml:space="preserve"><value>Настройте порт приёма и видимый общий секрет для подтверждения.</value></data>
+  <data name="K067" xml:space="preserve"><value>Настройте HealBot, JOAT или PowerlevelBot без сети.</value></data>
+  <data name="K091" xml:space="preserve"><value>Выбираются только повреждённые враги, уже атакующие Fren или локального игрока.</value></data>
+  <data name="K095" xml:space="preserve"><value>Фильтры: игроки {0}, чокобо {1}, NPC группы {2}, дружественные боевые NPC {3}.</value></data>
+  <data name="K096" xml:space="preserve"><value>Завершите запуском роли или сохраните её для /healbot on, оставив текущую роль выключенной.</value></data>
+  <data name="K116" xml:space="preserve"><value>HealBot и JOAT используют общую матрицу лечения для класса. PowerlevelBot не использует эти правила.</value></data>
+  <data name="K117" xml:space="preserve"><value>HealBot проверяет до {0} наблюдаемых целей по матрице WHM/SCH/AST/SGE. Допускаются союзники вне группы.</value></data>
+  <data name="K121" xml:space="preserve"><value>HealBot поддерживает /healbot, /hb и /copellia с off, on, standalone, helper, newb, heal, joat (или jot), powerlevel, mini, status, config, watch, ws и j.</value></data>
+  <data name="K131" xml:space="preserve"><value>Лечение приоритетно каждые 900 мс: Coppelia выключает RSR перед правилом наблюдения и удерживает его при очереди, блокировке или чтении. JOAT использует RSR Manual только без нужды в лечении, при связи в пределах 30 я. Врага в бою выбирает Coppelia.</value></data>
+  <data name="K139" xml:space="preserve"><value>Помощник ждёт одного подтверждённого новичка и включает JOAT после совместимого запроса состояния.</value></data>
+  <data name="K140" xml:space="preserve"><value>Помощнику нужны допустимый TCP-порт и видимый секрет; новичку также нужен IPv4 помощника.</value></data>
+  <data name="K141" xml:space="preserve"><value>Помощнику нужны зависимости HealBot/JOAT, а для совместного перемещения — Lifestream и vnavmesh.</value></data>
+  <data name="K142" xml:space="preserve"><value>Помощник задаёт порт и секрет; новичок дополнительно задаёт IPv4 помощника.</value></data>
+  <data name="K146" xml:space="preserve"><value>Время движения помощника вперёд при переходе новичка/квестера в другую зону без телепорта.</value></data>
+  <data name="K161" xml:space="preserve"><value>Режим атаки JOAT: {0}; оба используют RSR Manual только без нужды в лечении.</value></data>
+  <data name="K163" xml:space="preserve"><value>JOAT не добавляет Fren автоматически. Отметьте его в наблюдении, если это защищаемая низкоуровневая цель.</value></data>
+  <data name="K166" xml:space="preserve"><value>Отметьте Fren для лечения JOAT: он не добавляется автоматически. Атакуются только враги, уже бьющие видимого Fren или локального целителя.</value></data>
+  <data name="K178" xml:space="preserve"><value>Трафик LAN подтверждается, но не шифруется; имена и координаты видны. Подключение, подтверждение, назначение и переподключение асинхронны.</value></data>
+  <data name="K184" xml:space="preserve"><value>Загруженный рабочий Rotation Solver Reborn; урон JOAT выполняется только через RSR.</value></data>
+  <data name="K194" xml:space="preserve"><value>Управляйте целями только в наблюдении. Очистка с Ctrl удаляет активные и сохранённые цели.</value></data>
+  <data name="K205" xml:space="preserve"><value>Новичок асинхронно подключается к одному точному IPv4 помощника и не лечит или атакует локально.</value></data>
+  <data name="K206" xml:space="preserve"><value>Новичок не лечит и не атакует локально; автономный список наблюдения не меняется.</value></data>
+  <data name="K207" xml:space="preserve"><value>Новичок не лечит и не атакует локально. Список сохранён для последующего HealBot или JOAT.</value></data>
+  <data name="K224" xml:space="preserve"><value>Допустимы только повреждённые враги, уже атакующие видимого Fren или локального игрока.</value></data>
+  <data name="K228" xml:space="preserve"><value>Откройте наблюдение сейчас. Фильтры черновика применятся только после завершения.</value></data>
+  <data name="K243" xml:space="preserve"><value>PowerlevelBot выбирает живых доступных повреждённых врагов, атакующих видимого настроенного Fren или локального игрока. Используются мгновенные враждебные одиночные BRD/MCH-действия; нетронутые враги не привлекаются.</value></data>
+  <data name="K244" xml:space="preserve"><value>PowerlevelBot не использует наблюдение HealBot и считает настроенного Fren лидером.</value></data>
+  <data name="K245" xml:space="preserve"><value>PowerlevelBot не меняет комплекты; текущий класс должен совпадать с выбором.</value></data>
+  <data name="K254" xml:space="preserve"><value>QST управляет режимом атаки; после освобождения вернётся локальный выбор.</value></data>
+  <data name="K257" xml:space="preserve"><value>Быстрая настройка завершена. Её можно повторить с этой вкладки.</value></data>
+  <data name="K262" xml:space="preserve"><value>Обновляет общие точки LootGoblin один раз на версию HealBot для выбора ближайшего эфирита.</value></data>
+  <data name="K279" xml:space="preserve"><value>RSR обязателен и единолично выполняет урон JOAT. Coppelia напрямую лечит наблюдаемые цели и управляет остановкой/возобновлением RSR.</value></data>
+  <data name="K280" xml:space="preserve"><value>При загруженном RSR используются изоляция и точное восстановление сеанса; HealBot по-прежнему лечит напрямую.</value></data>
+  <data name="K281" xml:space="preserve"><value>Настройте автономный режим, помощника или новичка с мастером; изменения только при завершении.</value></data>
+  <data name="K284" xml:space="preserve"><value>Сначала лечит наблюдаемые цели; RSR атакует только при отсутствии нужды в лечении.</value></data>
+  <data name="K288" xml:space="preserve"><value>Сохраняются только отмеченные цели. Снятие отметки удаляет сохранённую копию.</value></data>
+  <data name="K292" xml:space="preserve"><value>Радиус влияет только на возврат сохранённых целей; новые цели не обнаруживаются.</value></data>
+  <data name="K298" xml:space="preserve"><value>Явно выберите низкоуровневого Fren для лечения; JOAT не добавляет его автоматически.</value></data>
+  <data name="K316" xml:space="preserve"><value>Автономный режим выполняет HealBot, JOAT или PowerlevelBot без сети. Помощник ждёт подтверждённого новичка и удалённо включает JOAT. Новичок подключается асинхронно без локального лечения и атак.</value></data>
+  <data name="K317" xml:space="preserve"><value>Автономный режим выполняет HealBot, JOAT или PowerlevelBot без сети. Помощник ждёт одного подтверждённого новичка; новичок подключается асинхронно без локального лечения и атак.</value></data>
+  <data name="K333" xml:space="preserve"><value>Точная цель принадлежит только сеансу QST или новичка. Сохранённые цели не меняются и возвращаются после освобождения.</value></data>
+  <data name="K334" xml:space="preserve"><value>Fren не добавляется автоматически; выберите его для лечения низкоуровневой цели.</value></data>
+  <data name="K335" xml:space="preserve"><value>Зависимости HealBot, выбранный поддерживаемый целитель, включённая матрица и отмеченная цель.</value></data>
+  <data name="K336" xml:space="preserve"><value>После освобождения вернётся сохранённый локальный выбор.</value></data>
+  <data name="K337" xml:space="preserve"><value>После освобождения вернётся сохранённая локальная настройка.</value></data>
+  <data name="K338" xml:space="preserve"><value>Радиус возвращает только сохранённые цели. Новые цели не ищутся и не выбираются автоматически.</value></data>
+  <data name="K339" xml:space="preserve"><value>Эти настройки применяются сразу. Быстрая настройка хранит черновик до завершения.</value></data>
+  <data name="K340" xml:space="preserve"><value>Эти фильтры определяют союзников в наблюдении HealBot/JOAT.</value></data>
+  <data name="K325" xml:space="preserve"><value>Призывать боевого чокобо (Зелень гисал : {0})</value></data>
+  <data name="K326" xml:space="preserve"><value>Призывать боевого чокобо (Зелень гисал : недоступно)</value></data>
+  <data name="K341" xml:space="preserve"><value>Локальный выбор действует автономно и после освобождения QST. Оба режима используют RSR Manual; полная ротация меняет сохранённые атаки и AoE, но не выбор цели.</value></data>
+  <data name="K344" xml:space="preserve"><value>Трафик подтверждается, но не шифруется; имена и координаты видны в сети.</value></data>
+  <data name="K350" xml:space="preserve"><value>Снятие отметки или очистка с Ctrl удаляет и сохранённые цели. Радиус влияет только на возвращение в список.</value></data>
+  <data name="K352" xml:space="preserve"><value>Добавляйте/удаляйте цели в наблюдении. Сохраняются только явно отмеченные цели.</value></data>
+  <data name="K353" xml:space="preserve"><value>Применяет мгновенные одиночные дальние действия BRD/MCH к врагам, сражающимся с Fren/локальным игроком.</value></data>
+  <data name="K368" xml:space="preserve"><value>Наблюдение: {0}/{1} активных целей. Сохранено: {2}.</value></data>
+  <data name="K370" xml:space="preserve"><value>После освобождения QST вернётся ваш сохранённый локальный выбор.</value></data>
+  <data name="K371" xml:space="preserve"><value>После освобождения QST вернётся ваша сохранённая локальная настройка.</value></data>
+  <data name="K393" xml:space="preserve"><value>Помощник активен (управляет QST)</value></data>
+  <data name="K394" xml:space="preserve"><value>Освободите или выключите сеанс поставщика через QST.</value></data>
+  <data name="K395" xml:space="preserve"><value>Используйте /healbot on для возобновления {0}.</value></data>
+  <data name="K397" xml:space="preserve"><value>Устраните блокировку из основного состояния.</value></data>
+  <data name="K398" xml:space="preserve"><value>Действий не требуется.</value></data>
+  <data name="K399" xml:space="preserve"><value>Устраните: {0}</value></data>
+  <data name="K401" xml:space="preserve"><value>Приостановлено: {0}</value></data>
+  <data name="K403" xml:space="preserve"><value>Видимость недоступна</value></data>
+  <data name="K404" xml:space="preserve"><value>Прямая видимость</value></data>
+  <data name="K405" xml:space="preserve"><value>Видимость перекрыта</value></data>
+  <data name="K406" xml:space="preserve"><value>Движение для видимости приостановлено на время перевозки HealBot</value></data>
+  <data name="K407" xml:space="preserve"><value>Видимость перекрыта; подход на 1 я</value></data>
+  <data name="K408" xml:space="preserve"><value>Видимость перекрыта; ожидание текущего владельца движения</value></data>
+  <data name="K409" xml:space="preserve"><value>QST управляет активным режимом ({0}); после освобождения вернётся локальный выбор.</value></data>
+  <data name="K410" xml:space="preserve"><value>QST управляет призывом ({0}); после освобождения вернётся локальная настройка.</value></data>
+  <data name="K411" xml:space="preserve"><value>Точная цель сеанса заменяет сохранённые цели автоматизации, не изменяя и не сохраняя их.</value></data>
+  <data name="K396" xml:space="preserve"><value>Лечение: {0} Атака: {1}</value></data>
+  <data name="K414" xml:space="preserve"><value>Режим HealBot выключен.</value></data>
+  <data name="K416" xml:space="preserve"><value>Подходящее правило не найдено.</value></data>
+  <data name="K417" xml:space="preserve"><value>Плагин выгружается.</value></data>
+  <data name="K418" xml:space="preserve"><value>HealBot поддерживает только WHM, SCH, AST и SGE.</value></data>
+  <data name="K419" xml:space="preserve"><value>Действия приостановлены при перевозке HealRider.</value></data>
+  <data name="K420" xml:space="preserve"><value>Перемещение</value></data>
+  <data name="K421" xml:space="preserve"><value>HealRider управляет движением.</value></data>
+  <data name="K422" xml:space="preserve"><value>Приостановлено во время перехода зоны.</value></data>
+  <data name="K423" xml:space="preserve"><value>Идёт переход в другую зону.</value></data>
+  <data name="K424" xml:space="preserve"><value>Плагин выключен.</value></data>
+  <data name="K426" xml:space="preserve"><value>Отсутствуют зависимости.</value></data>
+  <data name="K427" xml:space="preserve"><value>Локальный класс не поддерживается.</value></data>
+  <data name="K428" xml:space="preserve"><value>Связанное лечение приостановлено, пока помощник садится или находится верхом.</value></data>
+  <data name="K429" xml:space="preserve"><value>Связанный помощник верхом или садится.</value></data>
+  <data name="K430" xml:space="preserve"><value>Приостановлено при чтении действия {0}.</value></data>
+  <data name="K432" xml:space="preserve"><value>Ожидание окончания текущего чтения.</value></data>
+  <data name="K433" xml:space="preserve"><value>Матрица HealBot готова для {0}. Для атаки JOAT нужен RSR.</value></data>
+  <data name="K434" xml:space="preserve"><value>Матрица HealBot готова для {0}. Изоляция RSR недоступна.</value></data>
+  <data name="K435" xml:space="preserve"><value>Матрица HealBot готова для {0}. Управление RSR JOAT активно.</value></data>
+  <data name="K436" xml:space="preserve"><value>Матрица HealBot готова для {0}. Изоляция RSR активна.</value></data>
+  <data name="K437" xml:space="preserve"><value>Матрица HealBot готова для {0}. Управление RSR не удалось; атака JOAT блокирована, прямое лечение активно.</value></data>
+  <data name="K438" xml:space="preserve"><value>Матрица HealBot готова для {0}. Изоляция RSR не удалась; прямое лечение активно.</value></data>
+  <data name="K439" xml:space="preserve"><value>Нет активных наблюдаемых целей.</value></data>
+  <data name="K440" xml:space="preserve"><value>Нет наблюдаемых целей.</value></data>
+  <data name="K441" xml:space="preserve"><value>Автоматизация {0} выключена в настройках HealBot.</value></data>
+  <data name="K442" xml:space="preserve"><value>Вкладка {0} выключена.</value></data>
+  <data name="K443" xml:space="preserve"><value>Цель {0} {1} выбрана, но удалённая.</value></data>
+  <data name="K444" xml:space="preserve"><value>Наблюдение за {0} целями. Целей на месте нет.</value></data>
+  <data name="K445" xml:space="preserve"><value>Точная цель {0} удалённая.</value></data>
+  <data name="K446" xml:space="preserve"><value>Нет наблюдаемых целей на месте.</value></data>
+  <data name="K447" xml:space="preserve"><value>Движение</value></data>
+  <data name="K448" xml:space="preserve"><value>{0} — видимость перекрыта.</value></data>
+  <data name="K449" xml:space="preserve"><value>Наблюдение за {0} целями. {1}</value></data>
+  <data name="K451" xml:space="preserve"><value>Наблюдение за {0} целями. Нет активного правила для мёртвых, способного помочь {1}.</value></data>
+  <data name="K452" xml:space="preserve"><value>{0} — нет подходящего правила для мёртвых.</value></data>
+  <data name="K453" xml:space="preserve"><value>Наблюдение за {0} целями. Минимум ОЗ у {1}: {2}%.</value></data>
+  <data name="K454" xml:space="preserve"><value>{0} — нет подходящего правила для живых.</value></data>
+  <data name="K456" xml:space="preserve"><value>{0} поставлено в очередь для подготовки воскрешения {1}.</value></data>
+  <data name="K457" xml:space="preserve"><value>{0} поставлено в очередь для {1}.</value></data>
+  <data name="K458" xml:space="preserve"><value>{0} в очереди, наблюдается {1} с {2}% ОЗ.</value></data>
+  <data name="K459" xml:space="preserve"><value>{0} поставлено в очередь для {1} с {2}% ОЗ.</value></data>
+  <data name="K450" xml:space="preserve"><value>{0} - {1}</value></data>
+  <data name="K455" xml:space="preserve"><value>{0}: {1} [{2}]</value></data>
+  <data name="K460" xml:space="preserve"><value>Атака JOAT выключена.</value></data>
+  <data name="K461" xml:space="preserve"><value>Ожидание решения без нужды в лечении.</value></data>
+  <data name="K462" xml:space="preserve"><value>Атака JOAT ждёт отсутствия нужды в лечении.</value></data>
+  <data name="K463" xml:space="preserve"><value>Не удалось поддержать владение FrenRider.</value></data>
+  <data name="K464" xml:space="preserve"><value>Приостановлено: лечение поставило {0} в очередь.</value></data>
+  <data name="K465" xml:space="preserve"><value>Приостановлено</value></data>
+  <data name="K466" xml:space="preserve"><value>Лечение получило приоритет в этом цикле.</value></data>
+  <data name="K467" xml:space="preserve"><value>Приостановлено: текущее чтение блокирует атаку. {0}</value></data>
+  <data name="K468" xml:space="preserve"><value>Приостановлено: лечение блокировано. {0}</value></data>
+  <data name="K469" xml:space="preserve"><value>Текущее чтение блокирует этот цикл атаки.</value></data>
+  <data name="K470" xml:space="preserve"><value>Подходящее действие лечения блокировано.</value></data>
+  <data name="K471" xml:space="preserve"><value>Блокировано: лечение не готово. {0}</value></data>
+  <data name="K472" xml:space="preserve"><value>Зависимости, настройки или наблюдаемые цели лечения недоступны.</value></data>
+  <data name="K473" xml:space="preserve"><value>Блокировано: управление RSR неактивно, JOAT не может атаковать.</value></data>
+  <data name="K474" xml:space="preserve"><value>Управление Rotation Solver Reborn не удалось.</value></data>
+  <data name="K475" xml:space="preserve"><value>Приостановлено: {0}.</value></data>
+  <data name="K476" xml:space="preserve"><value>IPC FrenRider недоступен.</value></data>
+  <data name="K477" xml:space="preserve"><value>Условия атаки FrenRider не выполнены.</value></data>
+  <data name="K478" xml:space="preserve"><value>Не удалось получить владение FrenRider.</value></data>
+  <data name="K479" xml:space="preserve"><value>Блокировано: локальный целитель недоступен.</value></data>
+  <data name="K480" xml:space="preserve"><value>Локальный целитель недоступен.</value></data>
+  <data name="K481" xml:space="preserve"><value>Поддерживаемый локальный целитель недоступен.</value></data>
+  <data name="K482" xml:space="preserve"><value>Ожидание: точная связанная цель выбрана, но удалённая.</value></data>
+  <data name="K483" xml:space="preserve"><value>Точная связанная цель удалённая.</value></data>
+  <data name="K484" xml:space="preserve"><value>Приостановлено: точная связанная цель в {0:0.0} ялмах.</value></data>
+  <data name="K485" xml:space="preserve"><value>Точная связанная цель дальше 30 ялмов.</value></data>
+  <data name="K486" xml:space="preserve"><value>RSR Manual не сработал.</value></data>
+  <data name="K487" xml:space="preserve"><value>Блокировано: RSR отклонил Manual для связанного назначения JOAT.</value></data>
+  <data name="K488" xml:space="preserve"><value>RSR Manual</value></data>
+  <data name="K489" xml:space="preserve"><value>Ожидание врага, вступившего в бой со связанным союзником.</value></data>
+  <data name="K490" xml:space="preserve"><value>RSR Manual ({0}) ожидает: в связанном радиусе нет подходящих врагов.</value></data>
+  <data name="K491" xml:space="preserve"><value>Выбранный связанный враг исчез.</value></data>
+  <data name="K492" xml:space="preserve"><value>RSR Manual ({0}) ожидает: выбранный враг исчез.</value></data>
+  <data name="K493" xml:space="preserve"><value>связанная цель</value></data>
+  <data name="K494" xml:space="preserve"><value>атакует пару/целителя</value></data>
+  <data name="K495" xml:space="preserve"><value>RSR Manual ({0}) на {1} с {2:P0} ОЗ.</value></data>
+  <data name="K496" xml:space="preserve"><value>Ожидание: лечение не требуется, но нет повреждённого врага, атакующего Fren или целителя.</value></data>
+  <data name="K497" xml:space="preserve"><value>Нет подходящего отмеченного врага.</value></data>
+  <data name="K498" xml:space="preserve"><value>Ожидание: выбранный враг исчез.</value></data>
+  <data name="K499" xml:space="preserve"><value>Цель исчезла.</value></data>
+  <data name="K500" xml:space="preserve"><value>{0} — RSR Manual не сработал</value></data>
+  <data name="K501" xml:space="preserve"><value>Блокировано: RSR отклонил Manual для {0}.</value></data>
+  <data name="K503" xml:space="preserve"><value>верхом или садится</value></data>
+  <data name="K505" xml:space="preserve"><value>чтение действия {0}</value></data>
+  <data name="K506" xml:space="preserve"><value>Отсутствуют обязательные зависимости лечения.</value></data>
+  <data name="K507" xml:space="preserve"><value>Матрица выбранного целителя выключена.</value></data>
+  <data name="K508" xml:space="preserve"><value>Выберите цель в наблюдении или дождитесь назначения QST.</value></data>
+  <data name="K509" xml:space="preserve"><value>Лечение JOAT готово.</value></data>
+  <data name="K510" xml:space="preserve"><value>Атака ждёт готовности лечения: {0}</value></data>
+  <data name="K511" xml:space="preserve"><value>Для атаки JOAT должен быть загружен RSR.</value></data>
+  <data name="K512" xml:space="preserve"><value>Coppelia не получила рабочее управление RSR.</value></data>
+  <data name="K513" xml:space="preserve"><value>Атака JOAT готова при отсутствии нужды в лечении.</value></data>
+  <data name="K514" xml:space="preserve"><value>Точная цель QST выбрана, но удалённая.</value></data>
+  <data name="K515" xml:space="preserve"><value>FrenRider должен быть включён.</value></data>
+  <data name="K516" xml:space="preserve"><value>В FrenRider должен быть настроен Fren.</value></data>
+  <data name="K517" xml:space="preserve"><value>Настроенный Fren должен быть виден.</value></data>
+  <data name="K518" xml:space="preserve"><value>Режим PowerlevelBot выключен.</value></data>
+  <data name="K519" xml:space="preserve"><value>Цель не выбрана.</value></data>
+  <data name="K520" xml:space="preserve"><value>Подготовка PowerlevelBot.</value></data>
+  <data name="K521" xml:space="preserve"><value>Условия Powerlevel не выполнены.</value></data>
+  <data name="K522" xml:space="preserve"><value>Локальный игрок недоступен.</value></data>
+  <data name="K523" xml:space="preserve"><value>Нет локального игрока.</value></data>
+  <data name="K524" xml:space="preserve"><value>Нет повреждённого врага, атакующего Fren или локального игрока.</value></data>
+  <data name="K525" xml:space="preserve"><value>Нет подходящей цели.</value></data>
+  <data name="K526" xml:space="preserve"><value>Выбранная цель исчезла.</value></data>
+  <data name="K527" xml:space="preserve"><value>{0} в очереди на {1} с {2:P0} ОЗ.</value></data>
+  <data name="K528" xml:space="preserve"><value>Цель {0} блокирована: {1}</value></data>
+  <data name="K529" xml:space="preserve"><value>Helper слушает вместо подключения.</value></data>
+  <data name="K530" xml:space="preserve"><value>Newb подключается вместо прослушивания.</value></data>
+  <data name="K531" xml:space="preserve"><value>Рабочая роль выключена.</value></data>
+  <data name="K532" xml:space="preserve"><value>Автономный режим не использует прямое сопряжение.</value></data>
+  <data name="K533" xml:space="preserve"><value>Локальная личность Newb недоступна. Полностью войдите в игру перед запуском роли Newb.</value></data>
+  <data name="K534" xml:space="preserve"><value>Введите один допустимый IPv4-адрес Helper.</value></data>
+  <data name="K535" xml:space="preserve"><value>Настройки сопряжения сохранены; перезапуск.</value></data>
+  <data name="K536" xml:space="preserve"><value>Требуется HealBot direct pairing v2. Обновите устаревшую сторону перед сопряжением.</value></data>
+  <data name="K537" xml:space="preserve"><value>Локальная личность HealBot недоступна.</value></data>
+  <data name="K538" xml:space="preserve"><value>У HealBot уже есть активное назначение QST.</value></data>
+  <data name="K539" xml:space="preserve"><value>Сопряжено</value></data>
+  <data name="K540" xml:space="preserve"><value>Прослушивание</value></data>
+  <data name="K541" xml:space="preserve"><value>Данные команды сопряжения недопустимы.</value></data>
+  <data name="K542" xml:space="preserve"><value>Команда не адресована точному имени и родному миру этого HealBot.</value></data>
+  <data name="K543" xml:space="preserve"><value>Newb освободил назначение.</value></data>
+  <data name="K544" xml:space="preserve"><value>Неизвестное действие сопряжения Newb.</value></data>
+  <data name="K545" xml:space="preserve"><value>HealBot выгружается.</value></data>
+  <data name="K546" xml:space="preserve"><value>TCP {0}</value></data>
+  <data name="K547" xml:space="preserve"><value>Перезапуск слушателя HealBot.</value></data>
+  <data name="K548" xml:space="preserve"><value>Подключено</value></data>
+  <data name="K549" xml:space="preserve"><value>Ожидайте проверенного назначения.</value></data>
+  <data name="K550" xml:space="preserve"><value>Запустите Newb с этим портом и общим секретом.</value></data>
+  <data name="K551" xml:space="preserve"><value>Ожидайте запуска слушателя.</value></data>
+  <data name="K552" xml:space="preserve"><value>Ожидание проверенного состояния Newb</value></data>
+  <data name="K553" xml:space="preserve"><value>Провайдер JOAT активен</value></data>
+  <data name="K554" xml:space="preserve"><value>Удалённый провайдер недоступен</value></data>
+  <data name="K555" xml:space="preserve"><value>Удалённый JOAT недоступен</value></data>
+  <data name="K556" xml:space="preserve"><value>Удалённое перемещение недоступно</value></data>
+  <data name="K557" xml:space="preserve"><value>Перезапуск подключения Newb.</value></data>
+  <data name="K558" xml:space="preserve"><value>Проверка подлинности</value></data>
+  <data name="K559" xml:space="preserve"><value>Подключение</value></data>
+  <data name="K560" xml:space="preserve"><value>Ожидайте подтверждения назначения.</value></data>
+  <data name="K561" xml:space="preserve"><value>Ожидайте свежего проверенного состояния и назначения.</value></data>
+  <data name="K562" xml:space="preserve"><value>Ожидайте асинхронного подключения или переподключения.</value></data>
+  <data name="K563" xml:space="preserve"><value>Ожидание состояния удалённого провайдера</value></data>
+  <data name="K564" xml:space="preserve"><value>Удалённый провайдер готов</value></data>
+  <data name="K565" xml:space="preserve"><value>Ожидание состояния удалённого JOAT</value></data>
+  <data name="K566" xml:space="preserve"><value>Ожидание состояния удалённого перемещения</value></data>
+  <data name="K567" xml:space="preserve"><value>Обновите устаревшую сторону до совместимой сборки HealBot direct pairing v2.</value></data>
+  <data name="K568" xml:space="preserve"><value>Введите одинаковый общий секрет в настройках Helper и Newb.</value></data>
+  <data name="K569" xml:space="preserve"><value>Локальная личность Newb недоступна.</value></data>
+  <data name="K570" xml:space="preserve"><value>Потеряно подключение или проверенное состояние сопряжённого HealBot.</value></data>
+  <data name="K571" xml:space="preserve"><value>Настроенный адрес или личность HealBot изменились.</value></data>
+  <data name="K572" xml:space="preserve"><value>Сопряжённый HealBot всё ещё сообщает об освобождённом сеансе {0}.</value></data>
+  <data name="K573" xml:space="preserve"><value>У сопряжённого HealBot есть активное назначение QST.</value></data>
+  <data name="K574" xml:space="preserve"><value>Сопряжённый HealBot принадлежит другому сеансу Newb.</value></data>
+  <data name="K575" xml:space="preserve"><value>Сопряжённый HealBot сообщает об устаревшем сеансе для этого Newb.</value></data>
+  <data name="K576" xml:space="preserve"><value>Сопряжённый HealBot не готов.</value></data>
+  <data name="K577" xml:space="preserve"><value>Сопряжённый HealBot сообщил об отсутствующем или несовпадающем сеансе Newb.</value></data>
+  <data name="K578" xml:space="preserve"><value>Ожидание подтверждения точного сеанса Newb от сопряжённого HealBot.</value></data>
+  <data name="K579" xml:space="preserve"><value>Сопряжённый HealBot отклонил назначение Newb.</value></data>
+  <data name="K580" xml:space="preserve"><value>Сопряжённый HealBot отклонил {0}.</value></data>
+  <data name="K581" xml:space="preserve"><value>Сопряжённый HealBot не принял {0} для активного сеанса.</value></data>
+  <data name="K582" xml:space="preserve"><value>Сопряжённый HealBot не подтвердил освобождение устаревшего сеанса.</value></data>
+  <data name="K583" xml:space="preserve"><value>Выберите Helper или Newb для прямого сопряжения.</value></data>
+  <data name="K584" xml:space="preserve"><value>TCP-порт {0} уже используется.</value></data>
+  <data name="K585" xml:space="preserve"><value>Не удалось запустить слушатель сопряжения: {0}</value></data>
+  <data name="K587" xml:space="preserve"><value>Некорректный конверт сопряжения.</value></data>
+  <data name="K588" xml:space="preserve"><value>Потеряно подключение сопряжённого Newb.</value></data>
+  <data name="K589" xml:space="preserve"><value>Слушатель сопряжения HealBot останавливается.</value></data>
+  <data name="K590" xml:space="preserve"><value>Тип сообщения сопряжения не соответствует его команде.</value></data>
+  <data name="K591" xml:space="preserve"><value>Это подключение уже владеет другим сеансом Newb.</value></data>
+  <data name="K592" xml:space="preserve"><value>Сеанс Newb уже принадлежит другому активному подключению.</value></data>
+  <data name="K593" xml:space="preserve"><value>Это подключение не владеет активным сеансом Newb.</value></data>
+  <data name="K594" xml:space="preserve"><value>Сеанс Newb всё ещё принадлежит другому активному подключению.</value></data>
+  <data name="K595" xml:space="preserve"><value>Отключено</value></data>
+  <data name="K596" xml:space="preserve"><value>Сопряжённый HealBot не подключён.</value></data>
+  <data name="K597" xml:space="preserve"><value>Сопряжённый HealBot не подтвердил команду.</value></data>
+  <data name="K598" xml:space="preserve"><value>Сопряжённое подключение закрыто.</value></data>
+  <data name="K599" xml:space="preserve"><value>Требуется HealBot direct pairing v2. Обновите устаревший Helper перед сопряжением.</value></data>
+  <data name="K600" xml:space="preserve"><value>Подключено; ожидание</value></data>
+  <data name="K601" xml:space="preserve"><value>Сопряжённый HealBot не вернул связанное проверенное состояние. Проверьте общий секрет и протокол.</value></data>
+  <data name="K602" xml:space="preserve"><value>Сбой контроля сопряжения: {0}</value></data>
+  <data name="K603" xml:space="preserve"><value>Подключено; ожидание проверенного состояния HealBot.</value></data>
+  <data name="K604" xml:space="preserve"><value>Время подключения к {0}:{1} истекло.</value></data>
+  <data name="K605" xml:space="preserve"><value>На {0}:{1} нет слушающего HealBot.</value></data>
+  <data name="K606" xml:space="preserve"><value>Сбой подключения к {0}:{1}: {2}</value></data>
+  <data name="K607" xml:space="preserve"><value>Сопряжённый адрес вернул некорректный JSON сопряжения.</value></data>
+  <data name="K608" xml:space="preserve"><value>Подключение сопряжённого HealBot потеряно: {0}</value></data>
+  <data name="K609" xml:space="preserve"><value>Подключение сопряжённого HealBot потеряно.</value></data>
+  <data name="K610" xml:space="preserve"><value>Сопряжённый HealBot вернул несовпадающий ответ на команду.</value></data>
+  <data name="K611" xml:space="preserve"><value>Сбой сопряжённого подключения: {0}</value></data>
+  <data name="K612" xml:space="preserve"><value>Переподключение через {0}с</value></data>
+  <data name="K613" xml:space="preserve"><value>Все необходимые зависимости HealBot готовы.</value></data>
+  <data name="K614" xml:space="preserve"><value>HealBot требует {0}. Установите недостающие плагины или отключите автоматизацию в настройках.</value></data>
+  <data name="K615" xml:space="preserve"><value>Локальный игрок недоступен.</value></data>
+  <data name="K616" xml:space="preserve"><value>Уже идёт применение.</value></data>
+  <data name="K617" xml:space="preserve"><value>Действие {0} не найдено в таблице действий.</value></data>
+  <data name="K618" xml:space="preserve"><value>Недостаточно ОМ для {0}.</value></data>
+  <data name="K619" xml:space="preserve"><value>ActionManager недоступен.</value></data>
+  <data name="K620" xml:space="preserve"><value>{0} на перезарядке.</value></data>
+  <data name="K621" xml:space="preserve"><value>Выбранная цель недоступна.</value></data>
+  <data name="K622" xml:space="preserve"><value>{0} нельзя выбрать целью.</value></data>
+  <data name="K623" xml:space="preserve"><value>{0} вне радиуса.</value></data>
+  <data name="K624" xml:space="preserve"><value>UseAction отклонил {0}.</value></data>
+  <data name="K625" xml:space="preserve"><value>Сейчас нет доступных действий PowerlevelBot.</value></data>
+  <data name="K626" xml:space="preserve"><value>Пауза для действия HealBot</value></data>
+  <data name="K627" xml:space="preserve"><value>Следование HealRider приостановлено из-за управления подземельем</value></data>
+  <data name="K628" xml:space="preserve"><value>Подготовка выбранного пассажирского средства превысила допустимое время посадки.</value></data>
+  <data name="K629" xml:space="preserve"><value>Ожидание завершения смены копии и загрузки Lifestream</value></data>
+  <data name="K630" xml:space="preserve"><value>Проверка публичной копии Helper после /li</value></data>
+  <data name="K631" xml:space="preserve"><value>Ожидание свежего снимка перемещения Quester после HealRider</value></data>
+  <data name="K632" xml:space="preserve"><value>Ожидание персонажа Helper</value></data>
+  <data name="K633" xml:space="preserve"><value>Пауза для применения {0}</value></data>
+  <data name="K634" xml:space="preserve"><value>Посещение мира {0}</value></data>
+  <data name="K635" xml:space="preserve"><value>Посещение мира {0} не достигло цели</value></data>
+  <data name="K636" xml:space="preserve"><value>Телепортация в {0}</value></data>
+  <data name="K637" xml:space="preserve"><value>Телепортация в {0} не достигла территории {1}</value></data>
+  <data name="K638" xml:space="preserve"><value>проверка полёта ARR отклонена для этой территории</value></data>
+  <data name="K639" xml:space="preserve"><value>Ожидание завершения текущей активности vnavmesh</value></data>
+  <data name="K640" xml:space="preserve"><value>средство передвижения недоступно: {0}</value></data>
+  <data name="K641" xml:space="preserve"><value>ожидание повтора рулетки средств передвижения</value></data>
+  <data name="K642" xml:space="preserve"><value>Повторение посадки Quester через рулетку средств передвижения</value></data>
+  <data name="K643" xml:space="preserve"><value>Посадка для сближения при расстоянии более {0:F0} ялмов</value></data>
+  <data name="K644" xml:space="preserve"><value>Ожидание повторения посадки Quester</value></data>
+  <data name="K645" xml:space="preserve"><value>Ожидание посадки для сближения</value></data>
+  <data name="K646" xml:space="preserve"><value>Ожидание завершения посадки перед спешиванием</value></data>
+  <data name="K647" xml:space="preserve"><value>Следование активному маршруту перед посадкой</value></data>
+  <data name="K648" xml:space="preserve"><value>Посадка без спешивания</value></data>
+  <data name="K649" xml:space="preserve"><value>Посадка в пределах {0:F0} ялмов перед спешиванием</value></data>
+  <data name="K650" xml:space="preserve"><value>Посадка недоступна: {0}</value></data>
+  <data name="K651" xml:space="preserve"><value>Ожидание спешивания в пределах {0:F0} ялмов</value></data>
+  <data name="K652" xml:space="preserve"><value>Спешивание в пределах {0:F0} ялмов</value></data>
+  <data name="K653" xml:space="preserve"><value>Спешивание недоступно: {0}</value></data>
+  <data name="K654" xml:space="preserve"><value>полёт недоступен: {0}</value></data>
+  <data name="K655" xml:space="preserve"><value>Сбой IPC следования vnavmesh</value></data>
+  <data name="K656" xml:space="preserve"><value>Ближнее следование ({0:F1} ялмов)</value></data>
+  <data name="K657" xml:space="preserve"><value>Обновление последней цели Quester</value></data>
+  <data name="K658" xml:space="preserve"><value>Полёт на расстоянии {0:F1} ялмов</value></data>
+  <data name="K659" xml:space="preserve"><value>Следование по земле на расстоянии {0:F1} ялмов</value></data>
+  <data name="K660" xml:space="preserve"><value>vnavmesh отклонил запуск маршрута; ожидание завершения активности или нового снимка перемещения</value></data>
+  <data name="K661" xml:space="preserve"><value>Ожидание vnavmesh</value></data>
+  <data name="K662" xml:space="preserve"><value>Постановка {0} в очередь на расстоянии {1:F1} ялмов</value></data>
+  <data name="K663" xml:space="preserve"><value>vnavmesh отклонил запуск маршрута {0}; ожидание завершения активности или нового снимка перемещения</value></data>
+  <data name="K664" xml:space="preserve"><value>Сбой IPC следования vnavmesh; ожидание нового снимка перемещения</value></data>
+  <data name="K665" xml:space="preserve"><value>Ожидание проверенных данных публичных копий Helper и Quester</value></data>
+  <data name="K666" xml:space="preserve"><value>Ожидание проверенной области Quester без копий</value></data>
+  <data name="K667" xml:space="preserve"><value>Ожидание безопасного простоя перемещения перед сменой публичной копии</value></data>
+  <data name="K668" xml:space="preserve"><value>Ожидание повтора перехода в публичную копию {0}</value></data>
+  <data name="K669" xml:space="preserve"><value>Ожидание остановки навигации перед сменой публичной копии</value></data>
+  <data name="K670" xml:space="preserve"><value>Встреча в публичной копии: {0}</value></data>
+  <data name="K671" xml:space="preserve"><value>Посадка и спешивание рядом с эфиритом перед /li</value></data>
+  <data name="K672" xml:space="preserve"><value>Проверка публичной копии {0} после /li</value></data>
+  <data name="K673" xml:space="preserve"><value>Lifestream отклонил /li {0}; ожидание пяти секунд до повтора</value></data>
+  <data name="K674" xml:space="preserve"><value>Сбой команды смены копии Lifestream; ожидание пяти секунд до повтора</value></data>
+  <data name="K675" xml:space="preserve"><value>Проверка движения вперёд для наблюдаемого перехода территории</value></data>
+  <data name="K676" xml:space="preserve"><value>Переход территории обнаружен; ожидание безопасной загрузки Helper</value></data>
+  <data name="K677" xml:space="preserve"><value>территория {0} не позволяет использовать средства передвижения</value></data>
+  <data name="K678" xml:space="preserve"><value>сбой проверки средств передвижения на территории: {0}</value></data>
+  <data name="K679" xml:space="preserve"><value>полёт недоступен на территории {0}</value></data>
+  <data name="K680" xml:space="preserve"><value>Helper не открыл полёт на этой территории</value></data>
+  <data name="K681" xml:space="preserve"><value>проверка доступности полёта ARR</value></data>
+  <data name="K682" xml:space="preserve"><value>сбой проверки полёта: {0}</value></data>
+  <data name="K683" xml:space="preserve"><value>ActionManager недоступен</value></data>
+  <data name="K684" xml:space="preserve"><value>общее действие {0} недоступно (состояние {1})</value></data>
+  <data name="K685" xml:space="preserve"><value>общее действие {0} отклонено</value></data>
+  <data name="K686" xml:space="preserve"><value>сбой общего действия {0}: {1}</value></data>
+  <data name="K687" xml:space="preserve"><value>Сбой IPC состояния перемещения Lifestream</value></data>
+  <data name="K688" xml:space="preserve"><value>{0}; ожидание более нового снимка перемещения</value></data>
+  <data name="K689" xml:space="preserve"><value>Ожидание завершения текущего перемещения Lifestream</value></data>
+  <data name="K690" xml:space="preserve"><value>Сбой IPC перемещения Lifestream</value></data>
+  <data name="K691" xml:space="preserve"><value>Lifestream отклонил запрос: {0}</value></data>
+  <data name="K692" xml:space="preserve"><value>Точная цель телепортации Quester отсутствует в списке телепортации этого Helper.</value></data>
+  <data name="K693" xml:space="preserve"><value>В списке телепортации этого Helper нет эфиритов на территории Quester.</value></data>
+  <data name="K694" xml:space="preserve"><value>Сбой определения эфирита: {0}</value></data>
+  <data name="K695" xml:space="preserve"><value>Принятая цель телепортации Quester недоступна.</value></data>
+  <data name="K696" xml:space="preserve"><value>Ожидание позиции Quester на целевой территории для перехода к ближайшему эфириту.</value></data>
+  <data name="K697" xml:space="preserve"><value>Список телепортации Helper недоступен или ещё загружается.</value></data>
+  <data name="K698" xml:space="preserve"><value>PowerlevelBot готов.</value></data>
+  <data name="K699" xml:space="preserve"><value>Выберите BRD или MCH перед включением PowerlevelBot.</value></data>
+  <data name="K700" xml:space="preserve"><value>{0} не открыто.</value></data>
+  <data name="K701" xml:space="preserve"><value>Текущий класс должен совпадать с выбранным для PowerlevelBot классом {0}.</value></data>
+  <data name="K702" xml:space="preserve"><value>Настроенный Fren в FrenRider не виден.</value></data>
+  <data name="K703" xml:space="preserve"><value>Отзовите активного чокобо-компаньона перед использованием PowerlevelBot.</value></data>
+  <data name="K704" xml:space="preserve"><value>{0} не предназначено только для врагов.</value></data>
+  <data name="K705" xml:space="preserve"><value>{0} требует времени применения.</value></data>
+  <data name="K706" xml:space="preserve"><value>{0} действует по области.</value></data>
+  <data name="K707" xml:space="preserve"><value>{0} недоступно.</value></data>
+  <data name="K708" xml:space="preserve"><value>{0} перезаряжается.</value></data>
+  <data name="K709" xml:space="preserve"><value>Порт 47789 зарезервирован. Выберите другой порт сопряжения.</value></data>
+  <data name="K710" xml:space="preserve"><value>Порт сопряжения должен быть от 1024 до 65535.</value></data>
+  <data name="K711" xml:space="preserve"><value>Общий секрет должен содержать не менее 16 символов.</value></data>
+  <data name="K712" xml:space="preserve"><value>Введите один допустимый IPv4-адрес Helper, например 127.0.0.1 или 192.168.1.25.</value></data>
+  <data name="K714" xml:space="preserve"><value>NPC — член группы</value></data>
+  <data name="K715" xml:space="preserve"><value>Ручная цель</value></data>
+  <data name="K716" xml:space="preserve"><value>Jacqueline of All Trades требует Rotation Solver Reborn для атаки.</value></data>
+  <data name="K717" xml:space="preserve"><value>Newb — рабочая роль, а не поведение автономного режима.</value></data>
+  <data name="K719" xml:space="preserve"><value>BossMod Reborn (BMR) или VBM</value></data>
+  <data name="K720" xml:space="preserve"><value>Rotation Solver Reborn (RSR) — необязательная помощь изоляции/восстановления</value></data>
+  <data name="K721" xml:space="preserve"><value>{0}; безопасное наземное перемещение ({1})</value></data>
+  <data name="K722" xml:space="preserve"><value>Дружественный боевой NPC</value></data>
+  <data name="K726" xml:space="preserve"><value>полёт к цели</value></data>
+  <data name="K727" xml:space="preserve"><value>следование по земле</value></data>
+  <data name="K728" xml:space="preserve"><value>Сближение</value></data>
+  <data name="K729" xml:space="preserve"><value>Прибыл</value></data>
+  <data name="K730" xml:space="preserve"><value>Прибытие</value></data>
+  <data name="K731" xml:space="preserve"><value>Посадка пассажира</value></data>
+  <data name="K732" xml:space="preserve"><value>Отменено</value></data>
+  <data name="K733" xml:space="preserve"><value>Отмена</value></data>
+  <data name="K734" xml:space="preserve"><value>Подготовка</value></data>
+  <data name="K735" xml:space="preserve"><value>В пути</value></data>
+  <data name="K736" xml:space="preserve"><value>Ожидание</value></data>
+  <data name="K737" xml:space="preserve"><value>Ожидание продолжения</value></data>
+  <data name="K738" xml:space="preserve"><value>Смена зоны</value></data>
+  <data name="K739" xml:space="preserve"><value>посадка</value></data>
+  <data name="K740" xml:space="preserve"><value>спешивание</value></data>
+  <data name="K741" xml:space="preserve"><value>HealRider заблокирован: {0}</value></data>
+  <data name="K742" xml:space="preserve"><value>Очистка HealRider: {0}</value></data>
+  <data name="K743" xml:space="preserve"><value>HealRider: {0}</value></data>
+  <data name="K744" xml:space="preserve"><value>HealRider: {0}: {1}</value></data>
+  <data name="K745" xml:space="preserve"><value>Время очистки Helper истекло при ожидании {0}; ожидание согласованного повтора очистки.</value></data>
+  <data name="K746" xml:space="preserve"><value>готовности сохранённого персонажа</value></data>
+  <data name="K747" xml:space="preserve"><value>завершения действия средства передвижения</value></data>
+  <data name="K748" xml:space="preserve"><value>Посадка для очистки</value></data>
+  <data name="K749" xml:space="preserve"><value>Спешивание для очистки</value></data>
+  <data name="K750" xml:space="preserve"><value>Спешивание для очистки перевозки</value></data>
+  <data name="K751" xml:space="preserve"><value>Подготовка выбранного пассажирского средства для следования</value></data>
+  <data name="K752" xml:space="preserve"><value>Правила средства передвижения назначения изменились</value></data>
+  <data name="K753" xml:space="preserve"><value>Цель или этап поездки изменились</value></data>
+  <data name="K754" xml:space="preserve"><value>Передача подземелья</value></data>
+  <data name="K755" xml:space="preserve"><value>Посадка отменена</value></data>
+  <data name="K756" xml:space="preserve"><value>Неподдерживаемое действие режима средства передвижения назначения.</value></data>
+  <data name="K757" xml:space="preserve"><value>Завершите текущую поездку перед изменением правил средства передвижения.</value></data>
+  <data name="K758" xml:space="preserve"><value>Выберите на Helper открытое средство передвижения с пассажирскими местами.</value></data>
+  <data name="K759" xml:space="preserve"><value>Подготовка выбранного пассажирского средства отклонена или превысила допустимое время посадки.</value></data>
+  <data name="K760" xml:space="preserve"><value>Требуется HealRider v2. Обновите Helper и Quester.</value></data>
+  <data name="K761" xml:space="preserve"><value>Недопустимый запрос HealRider v2.</value></data>
+  <data name="K762" xml:space="preserve"><value>Этот этап поездки заменён более новым.</value></data>
+  <data name="K763" xml:space="preserve"><value>Это продолжение поездки было отменено.</value></data>
+  <data name="K764" xml:space="preserve"><value>Ожидание спешивания после предыдущей поездки.</value></data>
+  <data name="K765" xml:space="preserve"><value>Повтор очистки требует сохранённых персонажа и группы.</value></data>
+  <data name="K766" xml:space="preserve"><value>Неподдерживаемое действие HealRider.</value></data>
+  <data name="K767" xml:space="preserve"><value>Правила пассажирского средства передвижения назначения не готовы.</value></data>
+  <data name="K768" xml:space="preserve"><value>Этот этап поездки уже завершён.</value></data>
+  <data name="K769" xml:space="preserve"><value>Общее время ожидания посадки истекло до её принятия.</value></data>
+  <data name="K770" xml:space="preserve"><value>Для посадки нужны открытое пассажирское средство, полёт Helper, не летающий Quester дальше порога ходьбы и точная группа в этой области.</value></data>
+  <data name="K771" xml:space="preserve"><value>Контекст поездки потерян, заблокирован или просрочен</value></data>
+  <data name="K772" xml:space="preserve"><value>Общее время ожидания посадки истекло при сближении или посадке</value></data>
+  <data name="K773" xml:space="preserve"><value>Ожидание загрузки обоих клиентов во время поездки.</value></data>
+  <data name="K774" xml:space="preserve"><value>Ожидание продолжения поездки и обоих подтверждений пассажира.</value></data>
+  <data name="K775" xml:space="preserve"><value>Не удалось проверить пересечение границы верхом</value></data>
+  <data name="K776" xml:space="preserve"><value>Территория и публичные копии Helper и Quester больше не подтверждены совместно</value></data>
+  <data name="K777" xml:space="preserve"><value>Точный Quester или группа больше недоступны</value></data>
+  <data name="K778" xml:space="preserve"><value>Проверка пассажира потеряна при ожидании следующего шага движения</value></data>
+  <data name="K779" xml:space="preserve"><value>Посадка или спешивание отклонены</value></data>
+  <data name="K780" xml:space="preserve"><value>Цель движения достигнута; ожидание следующего проверенного шага.</value></data>
+  <data name="K781" xml:space="preserve"><value>Навигация точной посадки отклонила сохранённую цель</value></data>
+  <data name="K782" xml:space="preserve"><value>Сбой IPC навигации точной посадки</value></data>
+  <data name="K783" xml:space="preserve"><value>Состояние навигации точной посадки недоступно</value></data>
+  <data name="K784" xml:space="preserve"><value>Маршрут точной посадки завершился с ошибкой до сохранённых XYZ</value></data>
+  <data name="K785" xml:space="preserve"><value>Состояние навигации поездки недоступно</value></data>
+  <data name="K786" xml:space="preserve"><value>Маршрут пассажира завершился с ошибкой до прибытия</value></data>
+  <data name="K787" xml:space="preserve"><value>Навигация поездки отклонила цель</value></data>
+  <data name="K788" xml:space="preserve"><value>Сбой IPC навигации поездки</value></data>
+  <data name="K789" xml:space="preserve"><value>Посадка вышла за пределы допуска прибытия.</value></data>
+  <data name="K790" xml:space="preserve"><value>Точный Quester покинул пассажирское место или группу.</value></data>
+  <data name="K791" xml:space="preserve"><value>С выбранного средства спешились до посадки пассажира.</value></data>
+  <data name="K792" xml:space="preserve"><value>Не удалось подготовить выбранное пассажирское средство.</value></data>
+  <data name="K793" xml:space="preserve"><value>Ожидание обоих подтверждений пассажира.</value></data>
+  <data name="K794" xml:space="preserve"><value>Ожидание подтверждённого приземления в сохранённой цели.</value></data>
+  <data name="K795" xml:space="preserve"><value>Ожидание нативного наблюдения пассажира Helper.</value></data>
+  <data name="K796" xml:space="preserve"><value>Ожидание подтверждения пассажира Quester.</value></data>
+  <data name="K797" xml:space="preserve"><value>Маршрут Epilogue Gate отменён или просрочен</value></data>
+  <data name="K798" xml:space="preserve"><value>Перемещение через Epilogue Gate в Idyllshire</value></data>
+  <data name="K799" xml:space="preserve"><value>Команда Lifestream Epilogue Gate недоступна</value></data>
+  <data name="K800" xml:space="preserve"><value>Lifestream отклонил маршрут Epilogue Gate</value></data>
+  <data name="K801" xml:space="preserve"><value>Перемещение к {0} для смены публичной копии</value></data>
+  <data name="K802" xml:space="preserve"><value>Эфирит {0} для смены копии не достигнут</value></data>
+  <data name="K803" xml:space="preserve"><value>Назначение освобождено</value></data>
+  <data name="K804" xml:space="preserve"><value>Перемещение в Dravanian Hinterlands требует полёта этого Helper</value></data>
+  <data name="K805" xml:space="preserve"><value>IPC перемещения Lifestream недоступен.</value></data>
+  <data name="K806" xml:space="preserve"><value>IPC перемещения vnavmesh недоступен.</value></data>
+  <data name="K807" xml:space="preserve"><value>Необходимый IPC перемещения Lifestream недоступен.</value></data>
+  <data name="K808" xml:space="preserve"><value>Необходимый IPC перемещения vnavmesh недоступен.</value></data>
+  <data name="K809" xml:space="preserve"><value>LOS перекрыта; сопряжённое перемещение активно</value></data>
+  <data name="K810" xml:space="preserve"><value>LOS перекрыта; сопряжённое перемещение определяет удалённое место</value></data>
+  <data name="K811" xml:space="preserve"><value>LOS перекрыта; цель вне радиуса спасения</value></data>
+  <data name="K812" xml:space="preserve"><value>Приостановлено в подземелье</value></data>
+  <data name="K813" xml:space="preserve"><value>IPC Powerlevel FrenRider несовместим. Обновите FrenRider.</value></data>
+  <data name="K814" xml:space="preserve"><value>IPC Powerlevel FrenRider недоступен.</value></data>
+  <data name="K815" xml:space="preserve"><value>Пустое состояние Powerlevel FrenRider.</value></data>
+  <data name="K816" xml:space="preserve"><value>IPC Powerlevel FrenRider ещё не запрашивался.</value></data>
+  <data name="K817" xml:space="preserve"><value>FrenRider вернул пустой ответ.</value></data>
+  <data name="K818" xml:space="preserve"><value>Несовместимое состояние Powerlevel FrenRider.</value></data>
+  <data name="K819" xml:space="preserve"><value>Неполный TCP-кадр сопряжения.</value></data>
+  <data name="K820" xml:space="preserve"><value>Недопустимая метка проверки сопряжения.</value></data>
+  <data name="K821" xml:space="preserve"><value>Недопустимая временная метка сопряжения.</value></data>
+  <data name="K822" xml:space="preserve"><value>Проверка подлинности сопряжения не пройдена.</value></data>
+  <data name="K823" xml:space="preserve"><value>TCP-кадр сопряжения превышает 64 КиБ.</value></data>
+  <data name="K824" xml:space="preserve"><value>Повторно переданный конверт сопряжения.</value></data>
+  <data name="K825" xml:space="preserve"><value>Устаревший конверт сопряжения.</value></data>
+  <data name="K826" xml:space="preserve"><value>Общий секрет не настроен.</value></data>
+  <data name="K827" xml:space="preserve"><value>Неподписанный или несовместимый конверт сопряжения.</value></data>
+  <data name="K828" xml:space="preserve"><value>Сопряжение HealBot выгружается.</value></data>
+  <data name="K829" xml:space="preserve"><value>Выберите роль Helper на клиенте лекаря.</value></data>
+  <data name="K830" xml:space="preserve"><value>Провайдер Helper не принадлежит прямому сопряжению Newb.</value></data>
+  <data name="K831" xml:space="preserve"><value>QST сейчас владеет активацией провайдера.</value></data>
+  <data name="K832" xml:space="preserve"><value>Прямое сопряжение Newb не владеет активацией Helper.</value></data>
+  <data name="K833" xml:space="preserve"><value>Недопустимый ID сеанса Newb.</value></data>
+  <data name="K834" xml:space="preserve"><value>У HealBot уже есть активное назначение QST или Newb.</value></data>
+  <data name="K835" xml:space="preserve"><value>Недопустимая личность Newb.</value></data>
+  <data name="K836" xml:space="preserve"><value>Сеанс Newb не владеет активным назначением.</value></data>
+  <data name="K837" xml:space="preserve"><value>Сеанс Newb не владеет активным назначением.</value></data>
+  <data name="K838" xml:space="preserve"><value>Обновление перемещения не соответствует точному назначенному Newb.</value></data>
+  <data name="K839" xml:space="preserve"><value>HealBot не смог активировать JOAT.</value></data>
+  <data name="K840" xml:space="preserve"><value>HealBot отключён.</value></data>
+  <data name="K841" xml:space="preserve"><value>Автоматизация HealBot отключена.</value></data>
+  <data name="K842" xml:space="preserve"><value>Выберите Jacqueline of All Trades (JOAT).</value></data>
+  <data name="K843" xml:space="preserve"><value>Rotation Solver Reborn требуется для атак JOAT.</value></data>
+  <data name="K844" xml:space="preserve"><value>Автоматизация выключена.</value></data>
+  <data name="K845" xml:space="preserve"><value>Выберите, включить ли автоматизацию сейчас или оставить выключенной.</value></data>
+  <data name="K846" xml:space="preserve"><value>HealBot не смог запустить выбранную роль.</value></data>
+  <data name="K847" xml:space="preserve"><value>Настройка {0} сохранена. Рабочая роль остаётся выключенной.</value></data>
+  <data name="K848" xml:space="preserve"><value>Настройка {0} сохранена и запущена.</value></data>
+  <data name="K849" xml:space="preserve"><value>Неизвестная рабочая роль.</value></data>
+  <data name="K850" xml:space="preserve"><value>QST сопряжён</value></data>
+  <data name="K851" xml:space="preserve"><value>Лечение {0}; атака {1}</value></data>
+  <data name="K852" xml:space="preserve"><value>{0}: {1} Нажмите, чтобы открыть главное окно.</value></data>
+  <data name="K853" xml:space="preserve"><value> Поведение: {0}.</value></data>
+  <data name="K854" xml:space="preserve"><value>Роль: {0}.{1} Состояние: {2} Далее: {3} Личность: {4}</value></data>
+  <data name="K855" xml:space="preserve"><value>Автоматическая поддержка в ваших приключениях</value></data>
+  <data name="K856" xml:space="preserve"><value>Компактный помощник для повседневной игры</value></data>
+  <data name="Window appearance" xml:space="preserve">
+    <value>Внешний вид окна</value>
+  </data>
+  <data name="Compact visible on main window" xml:space="preserve">
+    <value>Показывать компактный режим в главном окне</value>
+  </data>
+  <data name="Language visible on main window" xml:space="preserve">
+    <value>Показывать выбор языка в главном окне</value>
+  </data>
+  <data name="Transparency" xml:space="preserve">
+    <value>Прозрачность</value>
+  </data>
+  <data name="Opacity (%)" xml:space="preserve">
+    <value>Непрозрачность (%)</value>
+  </data>
+  <data name="Auto-fade when unfocused" xml:space="preserve">
+    <value>Автоматически затемнять без фокуса</value>
+  </data>
+  <data name="Unfocused opacity (%)" xml:space="preserve">
+    <value>Непрозрачность без фокуса (%)</value>
+  </data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve">
+    <value>Задержка без фокуса (секунды)</value>
+  </data>
+</root>

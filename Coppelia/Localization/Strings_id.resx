@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="K000" xml:space="preserve"><value>%d detik</value></data>
+  <data name="K001" xml:space="preserve"><value>%d y</value></data>
+  <data name="K002" xml:space="preserve"><value>...dan {0} target pantauan lainnya.</value></data>
+  <data name="K003" xml:space="preserve"><value>{0} - memantau {1}</value></data>
+  <data name="K004" xml:space="preserve"><value>{0} / {1}% HP</value></data>
+  <data name="K005" xml:space="preserve"><value>{0} / tidak ada / Ctrl untuk hapus</value></data>
+  <data name="K006" xml:space="preserve"><value>{0} / mati</value></data>
+  <data name="K007" xml:space="preserve"><value>{0} / disembunyikan filter</value></data>
+  <data name="K008" xml:space="preserve"><value>{0} / dipertahankan</value></data>
+  <data name="K009" xml:space="preserve"><value>{0} [{1}] - {2}</value></data>
+  <data name="K010" xml:space="preserve"><value>{0} pemasangan langsung</value></data>
+  <data name="K011" xml:space="preserve"><value>{0} terpasang</value></data>
+  <data name="K012" xml:space="preserve"><value>{0} belum dibuka</value></data>
+  <data name="K013" xml:space="preserve"><value>{0} Mini</value></data>
+  <data name="K014" xml:space="preserve"><value>{0} target tersimpan/dipertahankan tersembunyi atau tidak ada. Buka jendela pantauan untuk mengelolanya.</value></data>
+  <data name="K015" xml:space="preserve"><value>{0} Pengaturan</value></data>
+  <data name="K016" xml:space="preserve"><value>{0} Pantauan</value></data>
+  <data name="K017" xml:space="preserve"><value>{0}%</value></data>
+  <data name="K018" xml:space="preserve"><value>{0}% HP</value></data>
+  <data name="K019" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="K020" xml:space="preserve"><value>47789 dicadangkan</value></data>
+  <data name="K021" xml:space="preserve"><value>Fren yang dikonfigurasi dan terlihat, tanpa chocobo pendamping aktif.</value></data>
+  <data name="K022" xml:space="preserve"><value>BRD atau MCH yang sedang terpasang dan sudah dibuka.</value></data>
+  <data name="K023" xml:space="preserve"><value>Baris yang tidak ada memerlukan Ctrl+hapus centang. Menghapus di sini juga menghapus salinan tersimpan.</value></data>
+  <data name="K024" xml:space="preserve"><value>Aksi</value></data>
+  <data name="K025" xml:space="preserve"><value>Aktif - bubarkan</value></data>
+  <data name="K026" xml:space="preserve"><value>Aktif / identitas terpasang</value></data>
+  <data name="K027" xml:space="preserve"><value>Aktif / identitas terpasang: {0}</value></data>
+  <data name="K028" xml:space="preserve"><value>Aktif: {0}/{1} | Ada: {2} | Tersimpan: {3}</value></data>
+  <data name="K029" xml:space="preserve"><value>Aktif: 1/{0} | Ada: {1} | Tersimpan: tidak berubah</value></data>
+  <data name="K030" xml:space="preserve"><value>Urutan hidup: BUFF instan -&gt; oGCD instan -&gt; BUFF dengan cast -&gt; GCD dengan cast. Persiapan target mati memeriksa buff instan sebelum membangkitkan.</value></data>
+  <data name="K031" xml:space="preserve"><value>Astrologian (AST)</value></data>
+  <data name="K032" xml:space="preserve"><value>Minimal 16 karakter</value></data>
+  <data name="K033" xml:space="preserve"><value>Aksi serangan: {0}</value></data>
+  <data name="K034" xml:space="preserve"><value>Target serangan: {0}</value></data>
+  <data name="K035" xml:space="preserve"><value>Sikap penyerang</value></data>
+  <data name="K036" xml:space="preserve"><value>Kesiapan menyerang</value></data>
+  <data name="K037" xml:space="preserve"><value>Menyerang: {0}</value></data>
+  <data name="K038" xml:space="preserve"><value>Pemasangan langsung terautentikasi memakai rahasia bersama yang terlihat.</value></data>
+  <data name="K039" xml:space="preserve"><value>Lalu lintas LAN terautentikasi tidak dienkripsi; nama karakter dan koordinat tetap terlihat di jaringan.</value></data>
+  <data name="K040" xml:space="preserve"><value>Perbarui lokasi peta saat masuk</value></data>
+  <data name="K041" xml:space="preserve"><value>Tersedia</value></data>
+  <data name="K042" xml:space="preserve"><value>Tersedia dan kompatibel</value></data>
+  <data name="K043" xml:space="preserve"><value>Kembali</value></data>
+  <data name="K044" xml:space="preserve"><value>Bard (BRD)</value></data>
+  <data name="K045" xml:space="preserve"><value>NPC pertempuran</value></data>
+  <data name="K046" xml:space="preserve"><value>BMR atau VBM</value></data>
+  <data name="K047" xml:space="preserve"><value>Keduanya memakai penargetan RSR Manual. Hanya DoT mengaktifkan aksi kerusakan berkala healer yang terpasang; RSR penuh memulihkan aksi ofensif dan mode AoE yang direkam tanpa mengaktifkan penargetan otomatis.</value></data>
+  <data name="K048" xml:space="preserve"><value>Keduanya memakai penargetan RSR Manual. RSR penuh hanya mengubah aksi ofensif dan AoE.</value></data>
+  <data name="K049" xml:space="preserve"><value>Kedua pihak harus memakai protokol pemasangan langsung v2 yang kompatibel dengan port dan rahasia bersama yang sama.</value></data>
+  <data name="K050" xml:space="preserve"><value>Batal</value></data>
+  <data name="K051" xml:space="preserve"><value>Menjalankan aksi penyembuhan yang dikonfigurasi pada target ramah yang dipantau.</value></data>
+  <data name="K052" xml:space="preserve"><value>Chocobo</value></data>
+  <data name="K053" xml:space="preserve"><value>Pilih peran operasi. Mode mandiri memakai satu perilaku lokal. Pengaturan tetap dalam draf hingga Selesai; Batal membuang draf.</value></data>
+  <data name="K054" xml:space="preserve"><value>Pilih job jarak jauh yang sudah terpasang. HealBot tidak pernah mengganti gearset dan tidak memakai daftar target pantauan dalam mode ini.</value></data>
+  <data name="K055" xml:space="preserve"><value>Pilih objek ramah yang tampil di Pantauan. Hanya target yang Anda centang secara eksplisit yang disembuhkan atau disimpan.</value></data>
+  <data name="K056" xml:space="preserve"><value>Hapus pantauan</value></data>
+  <data name="K057" xml:space="preserve"><value>Target pantauan dan tersimpan dihapus.</value></data>
+  <data name="K058" xml:space="preserve"><value>Perintah dan jendela</value></data>
+  <data name="K059" xml:space="preserve"><value>Pendamping</value></data>
+  <data name="K060" xml:space="preserve"><value>Chocobo pendamping</value></data>
+  <data name="K061" xml:space="preserve"><value>Chocobo pendamping</value></data>
+  <data name="K062" xml:space="preserve"><value>Sikap pendamping</value></data>
+  <data name="K063" xml:space="preserve"><value>IPC Powerlevel FrenRider kompatibel, FrenRider aktif, dan Fren yang dikonfigurasi terlihat.</value></data>
+  <data name="K064" xml:space="preserve"><value>IPC Powerlevel FrenRider kompatibel dengan FrenRider aktif.</value></data>
+  <data name="K065" xml:space="preserve"><value>Konfigurasikan satu endpoint HealBot TCP langsung terautentikasi. Newb tidak pernah menyembuhkan atau menyerang secara lokal.</value></data>
+  <data name="K066" xml:space="preserve"><value>Konfigurasikan port pendengar terautentikasi dan rahasia bersama yang terlihat.</value></data>
+  <data name="K067" xml:space="preserve"><value>Konfigurasikan perilaku HealBot, JOAT, atau PowerlevelBot terpilih tanpa jaringan.</value></data>
+  <data name="K068" xml:space="preserve"><value>Dikonfigurasi</value></data>
+  <data name="K069" xml:space="preserve"><value>Fren yang dikonfigurasi</value></data>
+  <data name="K070" xml:space="preserve"><value>Lanjutkan</value></data>
+  <data name="K071" xml:space="preserve"><value>Salin</value></data>
+  <data name="K072" xml:space="preserve"><value>Salin rahasia</value></data>
+  <data name="K073" xml:space="preserve"><value>ID job saat ini {0} tidak cocok</value></data>
+  <data name="K074" xml:space="preserve"><value>Mati</value></data>
+  <data name="K075" xml:space="preserve"><value>bawaan</value></data>
+  <data name="K076" xml:space="preserve"><value>Sikap bertahan</value></data>
+  <data name="K077" xml:space="preserve"><value>Kesiapan dependensi</value></data>
+  <data name="K078" xml:space="preserve"><value>Detail</value></data>
+  <data name="K079" xml:space="preserve"><value>Nonaktif</value></data>
+  <data name="K080" xml:space="preserve"><value>Discord</value></data>
+  <data name="K081" xml:space="preserve"><value>Dibubarkan</value></data>
+  <data name="K082" xml:space="preserve"><value>Jarak</value></data>
+  <data name="K083" xml:space="preserve"><value>Jangan gunakan aetheryte Tamamizu</value></data>
+  <data name="K084" xml:space="preserve"><value>Hanya DoT</value></data>
+  <data name="K085" xml:space="preserve"><value>Bilah DTR</value></data>
+  <data name="K086" xml:space="preserve"><value>Mode DTR</value></data>
+  <data name="K087" xml:space="preserve"><value>Aktifkan {0}</value></data>
+  <data name="K088" xml:space="preserve"><value>Diaktifkan</value></data>
+  <data name="K089" xml:space="preserve"><value>Aktif, dikonfigurasi, dan terlihat</value></data>
+  <data name="K090" xml:space="preserve"><value>Endpoint: {0}</value></data>
+  <data name="K091" xml:space="preserve"><value>Pemilihan musuh tetap terbatas pada musuh terluka yang sudah melawan Fren atau pemain lokal.</value></data>
+  <data name="K092" xml:space="preserve"><value>Terpasang</value></data>
+  <data name="K093" xml:space="preserve"><value>Filter berdasarkan nama, jenis, atau job</value></data>
+  <data name="K094" xml:space="preserve"><value>Filter nama...</value></data>
+  <data name="K095" xml:space="preserve"><value>Filter: pemain {0}, chocobo {1}, party NPC {2}, NPC pertempuran ramah {3}.</value></data>
+  <data name="K096" xml:space="preserve"><value>Selesai harus memulai peran terpilih sekarang atau menyimpannya untuk dilanjutkan dengan /healbot on sambil tetap Nonaktif.</value></data>
+  <data name="K097" xml:space="preserve"><value>Selesaikan pengaturan</value></data>
+  <data name="K098" xml:space="preserve"><value>Ikuti</value></data>
+  <data name="K099" xml:space="preserve"><value>Durasi pemeriksaan wilayah dengan maju</value></data>
+  <data name="K100" xml:space="preserve"><value>Sikap bebas</value></data>
+  <data name="K101" xml:space="preserve"><value>Visibilitas Fren</value></data>
+  <data name="K102" xml:space="preserve"><value>FrenRider</value></data>
+  <data name="K103" xml:space="preserve"><value>IPC serangan FrenRider</value></data>
+  <data name="K104" xml:space="preserve"><value>Sumber serangan FrenRider</value></data>
+  <data name="K105" xml:space="preserve"><value>IPC FrenRider</value></data>
+  <data name="K106" xml:space="preserve"><value>NPC pertempuran ramah</value></data>
+  <data name="K107" xml:space="preserve"><value>Rotasi RSR penuh</value></data>
+  <data name="K108" xml:space="preserve"><value>Umum</value></data>
+  <data name="K109" xml:space="preserve"><value>Buat rahasia heksadesimal 64 karakter</value></data>
+  <data name="K110" xml:space="preserve"><value>Buat rahasia</value></data>
+  <data name="K111" xml:space="preserve"><value>Gysahl Greens (NQ + HQ): {0}</value></data>
+  <data name="K112" xml:space="preserve"><value>Gysahl Greens (NQ + HQ): tidak tersedia</value></data>
+  <data name="K113" xml:space="preserve"><value>HealBot</value></data>
+  <data name="K114" xml:space="preserve"><value>HealBot {0}</value></data>
+  <data name="K115" xml:space="preserve"><value>Aksi HealBot</value></data>
+  <data name="K116" xml:space="preserve"><value>HealBot dan JOAT berbagi matriks aksi penyembuhan per job ini. PowerlevelBot tidak memakai aturan ini.</value></data>
+  <data name="K117" xml:space="preserve"><value>HealBot mengevaluasi daftar pantauan {0} target yang dikonfigurasi dan memakai matriks WHM, SCH, AST, atau SGE yang ada. Target bisa berupa pemain ramah di luar party.</value></data>
+  <data name="K118" xml:space="preserve"><value>HealBot Mini</value></data>
+  <data name="K119" xml:space="preserve"><value>Integrasi HealBot opsional</value></data>
+  <data name="K120" xml:space="preserve"><value>Jalur HealBot</value></data>
+  <data name="K121" xml:space="preserve"><value>HealBot mendukung /healbot, /hb, dan /copellia dengan off, on, standalone, helper, newb, heal, joat (atau jot), powerlevel, mini, status, config, watch, ws, dan j.</value></data>
+  <data name="K122" xml:space="preserve"><value>HealBot Pantauan</value></data>
+  <data name="K123" xml:space="preserve"><value>Matriks aksi healer</value></data>
+  <data name="K124" xml:space="preserve"><value>Sikap penyembuh</value></data>
+  <data name="K125" xml:space="preserve"><value>Aksi penyembuhan: {0} | Aksi serangan: {1}</value></data>
+  <data name="K126" xml:space="preserve"><value>Konfigurasi penyembuhan</value></data>
+  <data name="K127" xml:space="preserve"><value>Konteks penyembuhan</value></data>
+  <data name="K128" xml:space="preserve"><value>Dependensi penyembuhan</value></data>
+  <data name="K129" xml:space="preserve"><value>Syarat penyembuhan</value></data>
+  <data name="K130" xml:space="preserve"><value>Kesiapan penyembuhan</value></data>
+  <data name="K131" xml:space="preserve"><value>Penyembuhan didahulukan setiap siklus keputusan 900 ms. Coppelia mematikan RSR sebelum aturan Pantauan yang cocok bertindak, mempertahankannya saat penyembuhan antre, terhalang, atau sedang cast, dan memakai RSR Manual hanya saat penyembuhan benar-benar menganggur. JOAT terpasang menunggu dalam Manual pada jarak paling jauh 30 yalms, sementara Coppelia sendiri memilih musuh yang sudah bertempur.</value></data>
+  <data name="K132" xml:space="preserve"><value>Penyembuhan: {0}</value></data>
+  <data name="K133" xml:space="preserve"><value>Pembantu</value></data>
+  <data name="K134" xml:space="preserve"><value>Persyaratan pemasangan Pembantu / Newb</value></data>
+  <data name="K135" xml:space="preserve"><value>Alamat Pembantu</value></data>
+  <data name="K136" xml:space="preserve"><value>Endpoint Pembantu: {0}:{1}.</value></data>
+  <data name="K137" xml:space="preserve"><value>Alamat IPv4 Pembantu</value></data>
+  <data name="K138" xml:space="preserve"><value>Port pendengar Pembantu: {0}.</value></data>
+  <data name="K139" xml:space="preserve"><value>Pembantu mendengarkan satu Newb terautentikasi dan mengaktifkan JOAT hanya setelah permintaan status yang kompatibel.</value></data>
+  <data name="K140" xml:space="preserve"><value>Pembantu memerlukan port TCP valid dan rahasia bersama yang terlihat; Newb juga memerlukan alamat IPv4 Pembantu.</value></data>
+  <data name="K141" xml:space="preserve"><value>Pembantu membutuhkan dependensi HealBot/JOAT ditambah Lifestream dan vnavmesh untuk perjalanan berpasangan.</value></data>
+  <data name="K142" xml:space="preserve"><value>Pembantu mengelola port pendengar dan rahasia bersama. Newb juga mengelola alamat IPv4 Pembantu.</value></data>
+  <data name="K143" xml:space="preserve"><value>Disembunyikan filter</value></data>
+  <data name="K144" xml:space="preserve"><value>Tahan Ctrl untuk menghapus semua target pantauan dan tersimpan.</value></data>
+  <data name="K145" xml:space="preserve"><value>Tahan Ctrl saat menghapus centang target dipertahankan yang tidak ada {0}.</value></data>
+  <data name="K146" xml:space="preserve"><value>Lama Pembantu bergerak maju saat Newb/Quester pasangannya berganti wilayah tanpa teleport.</value></data>
+  <data name="K147" xml:space="preserve"><value>HP</value></data>
+  <data name="K148" xml:space="preserve"><value>HP tidak tersedia</value></data>
+  <data name="K149" xml:space="preserve"><value>HP%</value></data>
+  <data name="K150" xml:space="preserve"><value>HP: {0}</value></data>
+  <data name="K151" xml:space="preserve"><value>HP: HP tidak tersedia</value></data>
+  <data name="K152" xml:space="preserve"><value>HP: Target tidak terlihat</value></data>
+  <data name="K153" xml:space="preserve"><value>Ikon dan teks</value></data>
+  <data name="K154" xml:space="preserve"><value>Ikon saja</value></data>
+  <data name="K155" xml:space="preserve"><value>Tidak kompatibel</value></data>
+  <data name="K156" xml:space="preserve"><value>Alamat IPv4 tidak valid</value></data>
+  <data name="K157" xml:space="preserve"><value>Jacqueline of All Trades (JOAT)</value></data>
+  <data name="K158" xml:space="preserve"><value>Persyaratan Jacqueline of All Trades (JOAT)</value></data>
+  <data name="K159" xml:space="preserve"><value>JOAT</value></data>
+  <data name="K160" xml:space="preserve"><value>Mode serangan JOAT</value></data>
+  <data name="K161" xml:space="preserve"><value>Mode serangan JOAT: {0}; keduanya memakai penargetan RSR Manual saat siklus penyembuhan benar-benar menganggur.</value></data>
+  <data name="K162" xml:space="preserve"><value>Kesiapan serangan JOAT</value></data>
+  <data name="K163" xml:space="preserve"><value>JOAT tidak otomatis menambahkan Fren dari FrenRider. Pilih Fren tersebut secara eksplisit di Pantauan saat ia menjadi target level rendah yang harus dilindungi dengan penyembuhan.</value></data>
+  <data name="K164" xml:space="preserve"><value>Matriks penyembuhan JOAT</value></data>
+  <data name="K165" xml:space="preserve"><value>Jalur penyembuhan JOAT</value></data>
+  <data name="K166" xml:space="preserve"><value>JOAT tidak pernah menambahkan Fren dari FrenRider ke Pantauan. Pilih Fren di sana agar penyembuhan melindunginya; serangan terbatas pada musuh yang sudah menargetkan Fren terlihat itu atau healer lokal.</value></data>
+  <data name="K167" xml:space="preserve"><value>Kesiapan JOAT belum diperiksa.</value></data>
+  <data name="K168" xml:space="preserve"><value>Target pantauan JOAT</value></data>
+  <data name="K169" xml:space="preserve"><value>JOAT: {0}</value></data>
+  <data name="K170" xml:space="preserve"><value>Job</value></data>
+  <data name="K171" xml:space="preserve"><value>Job terpasang</value></data>
+  <data name="K172" xml:space="preserve"><value>Job dibuka</value></data>
+  <data name="K173" xml:space="preserve"><value>Ko-fi</value></data>
+  <data name="K174" xml:space="preserve"><value>Krangle</value></data>
+  <data name="K175" xml:space="preserve"><value>Ubah Nama</value></data>
+  <data name="K176" xml:space="preserve"><value>Acak nama: NONAKTIF</value></data>
+  <data name="K177" xml:space="preserve"><value>Acak nama: AKTIF</value></data>
+  <data name="K178" xml:space="preserve"><value>Lalu lintas LAN diautentikasi tetapi tidak dienkripsi. Nama karakter dan koordinat tetap terlihat di jaringan lokal. Koneksi, autentikasi, penugasan, dan koneksi ulang tetap asinkron.</value></data>
+  <data name="K179" xml:space="preserve"><value>Bahasa</value></data>
+  <data name="K180" xml:space="preserve"><value>Aksi terakhir</value></data>
+  <data name="K181" xml:space="preserve"><value>Aturan terakhir</value></data>
+  <data name="K182" xml:space="preserve"><value>Target layak yang ada ({0})</value></data>
+  <data name="K183" xml:space="preserve"><value>Dimuat</value></data>
+  <data name="K184" xml:space="preserve"><value>Rotation Solver Reborn dimuat dan bekerja; kerusakan JOAT dijalankan hanya melalui RSR.</value></data>
+  <data name="K185" xml:space="preserve"><value>Healer lokal: {0} ({1})</value></data>
+  <data name="K186" xml:space="preserve"><value>HP Newb lokal: {0}</value></data>
+  <data name="K187" xml:space="preserve"><value>Identitas Newb lokal</value></data>
+  <data name="K188" xml:space="preserve"><value>Selesaikan login sebelum memulai Newb</value></data>
+  <data name="K189" xml:space="preserve"><value>LOS: {0}</value></data>
+  <data name="K190" xml:space="preserve"><value>LOS: Target tidak terlihat</value></data>
+  <data name="K191" xml:space="preserve"><value>Machinist (MCH)</value></data>
+  <data name="K192" xml:space="preserve"><value>Utama</value></data>
+  <data name="K193" xml:space="preserve"><value>Kelola target pantauan dan pindai sekutu.</value></data>
+  <data name="K194" xml:space="preserve"><value>Kelola target pantauan hanya di jendela Pantauan. Penghapusan dengan Ctrl di sana menghapus target pantauan aktif dan tersimpan.</value></data>
+  <data name="K195" xml:space="preserve"><value>Mini</value></data>
+  <data name="K196" xml:space="preserve"><value>Hilang</value></data>
+  <data name="K197" xml:space="preserve"><value>Tidak ada (opsional)</value></data>
+  <data name="K198" xml:space="preserve"><value>MP%</value></data>
+  <data name="K199" xml:space="preserve"><value>Batas pantauan mult target: {0} target aktif dan {1} tersimpan.</value></data>
+  <data name="K200" xml:space="preserve"><value>Nama</value></data>
+  <data name="K201" xml:space="preserve"><value>Perlu buff yang belum ada</value></data>
+  <data name="K202" xml:space="preserve"><value>Pengaturan jaringan sudah tersimpan.</value></data>
+  <data name="K203" xml:space="preserve"><value>Jaringan disimpan; pemasangan langsung dimulai ulang sekali.</value></data>
+  <data name="K204" xml:space="preserve"><value>Newb</value></data>
+  <data name="K205" xml:space="preserve"><value>Newb terhubung asinkron ke satu endpoint IPv4 Pembantu yang tepat dan tidak pernah menyembuhkan atau menyerang secara lokal.</value></data>
+  <data name="K206" xml:space="preserve"><value>Newb tidak melakukan penyembuhan atau serangan lokal dan tidak mengubah daftar pantauan mandiri.</value></data>
+  <data name="K207" xml:space="preserve"><value>Newb tidak melakukan penyembuhan atau serangan lokal. Daftar target pantauan ini tetap sama untuk penggunaan HealBot atau JOAT nanti.</value></data>
+  <data name="K208" xml:space="preserve"><value>Aksi berikutnya</value></data>
+  <data name="K209" xml:space="preserve"><value>Aksi berikutnya: {0}</value></data>
+  <data name="K210" xml:space="preserve"><value>Tidak ada pembantu/quester aktif</value></data>
+  <data name="K211" xml:space="preserve"><value>Tidak ada target pantauan aktif</value></data>
+  <data name="K212" xml:space="preserve"><value>Tidak ada target layak yang cocok dengan filter saat ini.</value></data>
+  <data name="K213" xml:space="preserve"><value>Belum ada target pantauan yang dipilih.</value></data>
+  <data name="K214" xml:space="preserve"><value>Tidak ada</value></data>
+  <data name="K215" xml:space="preserve"><value>Tidak ada yang dipilih</value></data>
+  <data name="K216" xml:space="preserve"><value>Belum diperoleh</value></data>
+  <data name="K217" xml:space="preserve"><value>Belum diatur</value></data>
+  <data name="K218" xml:space="preserve"><value>Belum dibuka</value></data>
+  <data name="K219" xml:space="preserve"><value>Tidak terlihat</value></data>
+  <data name="K220" xml:space="preserve"><value>Party NPC</value></data>
+  <data name="K221" xml:space="preserve"><value>Anggota party NPC</value></data>
+  <data name="K222" xml:space="preserve"><value>Nonaktif</value></data>
+  <data name="K223" xml:space="preserve"><value>aktif</value></data>
+  <data name="K224" xml:space="preserve"><value>Hanya musuh terluka yang sudah menargetkan Fren yang dikonfigurasi dan terlihat atau pemain lokal yang layak.</value></data>
+  <data name="K225" xml:space="preserve"><value>Di luar pertempuran</value></data>
+  <data name="K226" xml:space="preserve"><value>Buka Utama</value></data>
+  <data name="K227" xml:space="preserve"><value>Buka Mini</value></data>
+  <data name="K228" xml:space="preserve"><value>Buka jendela Pantauan yang ada sekarang. Perubahan filter draf diterapkan hanya setelah Selesai.</value></data>
+  <data name="K229" xml:space="preserve"><value>Buka Pantauan</value></data>
+  <data name="K230" xml:space="preserve"><value>Buka jendela pantauan</value></data>
+  <data name="K231" xml:space="preserve"><value>Peran operasi</value></data>
+  <data name="K232" xml:space="preserve"><value>Peran operasi: {0}</value></data>
+  <data name="K233" xml:space="preserve"><value>Status operasi</value></data>
+  <data name="K234" xml:space="preserve"><value>Port pemasangan</value></data>
+  <data name="K235" xml:space="preserve"><value>Pembantu terpasang: {0}</value></data>
+  <data name="K236" xml:space="preserve"><value>Port TCP pemasangan</value></data>
+  <data name="K237" xml:space="preserve"><value>Pemasangan: {0} - {1}</value></data>
+  <data name="K238" xml:space="preserve"><value>Pemain</value></data>
+  <data name="K239" xml:space="preserve"><value>Job Powerlevel</value></data>
+  <data name="K240" xml:space="preserve"><value>Job Powerlevel: {0}.</value></data>
+  <data name="K241" xml:space="preserve"><value>Kesiapan Powerlevel belum diperiksa.</value></data>
+  <data name="K242" xml:space="preserve"><value>PowerlevelBot</value></data>
+  <data name="K243" xml:space="preserve"><value>PowerlevelBot hanya mempertimbangkan musuh hidup, bisa ditargetkan, dan terluka yang sudah menargetkan Fren terlihat dari FrenRider atau pemain lokal. Memakai aksi BRD/MCH instan, khusus musuh, dan target tunggal tanpa menarik musuh yang belum tersentuh.</value></data>
+  <data name="K244" xml:space="preserve"><value>PowerlevelBot mengabaikan daftar target pantauan HealBot dan memakai Fren yang dikonfigurasi di FrenRider sebagai pemimpin.</value></data>
+  <data name="K245" xml:space="preserve"><value>PowerlevelBot tidak pernah mengganti gearset; job saat ini harus sesuai pilihan ini.</value></data>
+  <data name="K246" xml:space="preserve"><value>Jalur PowerlevelBot</value></data>
+  <data name="K247" xml:space="preserve"><value>Persyaratan PowerlevelBot</value></data>
+  <data name="K248" xml:space="preserve"><value>Status utama</value></data>
+  <data name="K249" xml:space="preserve"><value>Status utama: {0}</value></data>
+  <data name="K250" xml:space="preserve"><value>Prioritas</value></data>
+  <data name="K251" xml:space="preserve"><value>Penyedia: {0}</value></data>
+  <data name="K252" xml:space="preserve"><value>QST mengendalikan serangan JOAT ({0}). </value></data>
+  <data name="K253" xml:space="preserve"><value>QST mengendalikan pemanggilan ({0}). </value></data>
+  <data name="K254" xml:space="preserve"><value>QST mengendalikan mode serangan aktif; pilihan lokal tersimpan dilanjutkan setelah dilepas.</value></data>
+  <data name="K255" xml:space="preserve"><value>Perjalanan QST</value></data>
+  <data name="K256" xml:space="preserve"><value>Penyiapan cepat</value></data>
+  <data name="K257" xml:space="preserve"><value>Pengaturan cepat selesai. Anda dapat menjalankannya lagi kapan saja dari tab permanen ini.</value></data>
+  <data name="K258" xml:space="preserve"><value>Siap</value></data>
+  <data name="K259" xml:space="preserve"><value>Siap saat penyembuhan menganggur</value></data>
+  <data name="K260" xml:space="preserve"><value>Segarkan</value></data>
+  <data name="K261" xml:space="preserve"><value>Segarkan kesiapan</value></data>
+  <data name="K262" xml:space="preserve"><value>Menyegarkan data lokasi peta komunitas LootGoblin sekali per versi HealBot untuk memilih aetheryte terdekat.</value></data>
+  <data name="K263" xml:space="preserve"><value>Jarak pemindaian bergabung kembali</value></data>
+  <data name="K264" xml:space="preserve"><value>Pengejaran jarak jauh: {0}</value></data>
+  <data name="K265" xml:space="preserve"><value>Penyembuhan jarak jauh: {0}</value></data>
+  <data name="K266" xml:space="preserve"><value>Persyaratan / Bantuan</value></data>
+  <data name="K267" xml:space="preserve"><value>Persyaratan dan bantuan</value></data>
+  <data name="K268" xml:space="preserve"><value>Penyelamatan: {0}</value></data>
+  <data name="K269" xml:space="preserve"><value>Penyelamatan: Tidak aktif</value></data>
+  <data name="K270" xml:space="preserve"><value>Kebijakan musuh terbatas</value></data>
+  <data name="K271" xml:space="preserve"><value>Dipertahankan - tidak ada</value></data>
+  <data name="K272" xml:space="preserve"><value>Target dipertahankan atau tidak ada ({0})</value></data>
+  <data name="K273" xml:space="preserve"><value>Tinjau dan selesaikan</value></data>
+  <data name="K274" xml:space="preserve"><value>Jaringan peran</value></data>
+  <data name="K275" xml:space="preserve"><value>Peran: {0}</value></data>
+  <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
+  <data name="K277" xml:space="preserve"><value>RSR</value></data>
+  <data name="K278" xml:space="preserve"><value>Kontrol RSR</value></data>
+  <data name="K279" xml:space="preserve"><value>RSR wajib dan secara eksklusif menjalankan kerusakan JOAT. Coppelia tetap menjalankan penyembuhan Pantauan langsung dan mengelola penghentian RSR serta pelanjutan saat menganggur.</value></data>
+  <data name="K280" xml:space="preserve"><value>Isolasi RSR dan pemulihan sesi yang tepat dipakai saat RSR dimuat; penyembuhan HealBot tetap langsung.</value></data>
+  <data name="K281" xml:space="preserve"><value>Jalankan pengaturan terpandu Mandiri, Pembantu, atau Newb tanpa mengubah apa pun hingga Selesai.</value></data>
+  <data name="K282" xml:space="preserve"><value>Jalankan Pengaturan cepat</value></data>
+  <data name="K283" xml:space="preserve"><value>Jalankan penyiapan cepat lagi</value></data>
+  <data name="K284" xml:space="preserve"><value>Menyembuhkan target pantauan dahulu, lalu mengizinkan RSR menyerang hanya saat siklus penyembuhan benar-benar menganggur.</value></data>
+  <data name="K285" xml:space="preserve"><value>Sage (SGE)</value></data>
+  <data name="K286" xml:space="preserve"><value>Simpan target penyembuhan yang dipantau secara eksplisit</value></data>
+  <data name="K287" xml:space="preserve"><value>Simpan target penyembuhan</value></data>
+  <data name="K288" xml:space="preserve"><value>Simpan target penyembuhan hanya menyimpan target yang Anda centang secara eksplisit. Menghapus centang juga menghapusnya dari daftar tersimpan.</value></data>
+  <data name="K289" xml:space="preserve"><value>Simpan pengaturan dan biarkan peran Nonaktif</value></data>
+  <data name="K290" xml:space="preserve"><value>Tersimpan</value></data>
+  <data name="K291" xml:space="preserve"><value>Jarak pemindaian target tersimpan</value></data>
+  <data name="K292" xml:space="preserve"><value>Jarak pemindaian target tersimpan hanya menentukan kapan target tersimpan dapat bergabung kembali saat kembali; tidak menemukan target baru.</value></data>
+  <data name="K293" xml:space="preserve"><value>Target tersimpan nonaktif.</value></data>
+  <data name="K294" xml:space="preserve"><value>Target tersimpan aktif; pemindaian kembali {0} y.</value></data>
+  <data name="K295" xml:space="preserve"><value>Pindai y</value></data>
+  <data name="K296" xml:space="preserve"><value>Scholar (SCH)</value></data>
+  <data name="K297" xml:space="preserve"><value>Pilih BRD atau MCH</value></data>
+  <data name="K298" xml:space="preserve"><value>Pilih Fren yang dikonfigurasi di FrenRider secara eksplisit saat ia menjadi target level rendah untuk disembuhkan. JOAT tidak pernah memasukkannya ke daftar ini.</value></data>
+  <data name="K299" xml:space="preserve"><value>Pilih Pembantu atau Newb untuk mengedit pengaturan pemasangan langsung.</value></data>
+  <data name="K300" xml:space="preserve"><value>Terpilih</value></data>
+  <data name="K301" xml:space="preserve"><value>Terpilih - jarak jauh</value></data>
+  <data name="K302" xml:space="preserve"><value>Job terpilih</value></data>
+  <data name="K303" xml:space="preserve"><value>Job terpilih: {0}</value></data>
+  <data name="K304" xml:space="preserve"><value>diri sendiri</value></data>
+  <data name="K305" xml:space="preserve"><value>Atur Pembantu</value></data>
+  <data name="K306" xml:space="preserve"><value>Atur Newb</value></data>
+  <data name="K307" xml:space="preserve"><value>Atur Mandiri</value></data>
+  <data name="K308" xml:space="preserve"><value>Pengaturan</value></data>
+  <data name="K309" xml:space="preserve"><value>Rahasia bersama</value></data>
+  <data name="K310" xml:space="preserve"><value>Tampilkan notifikasi dependensi</value></data>
+  <data name="K311" xml:space="preserve"><value>Tampilkan entri bar DTR</value></data>
+  <data name="K312" xml:space="preserve"><value>Melewati Tamamizu saat memilih tujuan teleport QST.</value></data>
+  <data name="K313" xml:space="preserve"><value>Mandiri</value></data>
+  <data name="K314" xml:space="preserve"><value>Perilaku mandiri</value></data>
+  <data name="K315" xml:space="preserve"><value>Persyaratan HealBot mandiri</value></data>
+  <data name="K316" xml:space="preserve"><value>Mandiri menjalankan HealBot, JOAT, atau PowerlevelBot tanpa jaringan. Pembantu mendengarkan dan mengaktifkan JOAT dari jauh untuk satu Newb terautentikasi. Newb terhubung asinkron dan tidak melakukan penyembuhan atau serangan lokal.</value></data>
+  <data name="K317" xml:space="preserve"><value>Mandiri menjalankan HealBot, JOAT, atau PowerlevelBot tanpa jaringan. Pembantu mendengarkan satu Newb terautentikasi. Newb terhubung asinkron dan tidak melakukan penyembuhan atau serangan lokal.</value></data>
+  <data name="K318" xml:space="preserve"><value>Mulai peran ini sekarang</value></data>
+  <data name="K319" xml:space="preserve"><value>Status</value></data>
+  <data name="K320" xml:space="preserve"><value>Status dan perilaku</value></data>
+  <data name="K321" xml:space="preserve"><value>Dasbor status</value></data>
+  <data name="K322" xml:space="preserve"><value>Status ke obrolan</value></data>
+  <data name="K323" xml:space="preserve"><value>Langkah {0} dari 3</value></data>
+  <data name="K324" xml:space="preserve"><value>Panggil chocobo pendamping</value></data>
+  <data name="K325" xml:space="preserve"><value>Panggil chocobo pendamping (Gysahl Greens: {0})</value></data>
+  <data name="K326" xml:space="preserve"><value>Panggil chocobo pendamping (Gysahl Greens: tidak tersedia)</value></data>
+  <data name="K327" xml:space="preserve"><value>Healer yang didukung</value></data>
+  <data name="K328" xml:space="preserve"><value>Pilih target saat ini</value></data>
+  <data name="K329" xml:space="preserve"><value>Penemuan dan penyimpanan target</value></data>
+  <data name="K330" xml:space="preserve"><value>Target tidak terlihat</value></data>
+  <data name="K331" xml:space="preserve"><value>Port TCP</value></data>
+  <data name="K332" xml:space="preserve"><value>Teks saja</value></data>
+  <data name="K333" xml:space="preserve"><value>Sesi QST atau Newb aktif mengendalikan target dalam memori ini secara eksklusif. Target pantauan tersimpan tidak berubah dan dilanjutkan setelah dilepas.</value></data>
+  <data name="K334" xml:space="preserve"><value>Fren tidak pernah ditambahkan otomatis ke Pantauan; pilih secara eksplisit saat ia menjadi target penyembuhan level rendah.</value></data>
+  <data name="K335" xml:space="preserve"><value>Dependensi HealBot, healer didukung yang terpasang, matriks aksi penyembuhan aktif, dan target yang dipantau secara eksplisit.</value></data>
+  <data name="K336" xml:space="preserve"><value>pilihan lokal tersimpan dilanjutkan setelah dilepas.</value></data>
+  <data name="K337" xml:space="preserve"><value>pengaturan lokal tersimpan dilanjutkan setelah dilepas.</value></data>
+  <data name="K338" xml:space="preserve"><value>Jarak pemindaian hanya memungkinkan target yang sudah disimpan bergabung kembali saat kembali. Tidak pernah menemukan atau memilih otomatis target baru.</value></data>
+  <data name="K339" xml:space="preserve"><value>Kontrol ini langsung diterapkan. Pengaturan cepat memakai draf terpisah dan tidak mengubah apa pun hingga Selesai.</value></data>
+  <data name="K340" xml:space="preserve"><value>Filter ini menentukan objek ramah yang tampil di jendela Pantauan HealBot/JOAT.</value></data>
+  <data name="K341" xml:space="preserve"><value>Pilihan lokal tersimpan ini dipakai JOAT mandiri dan dilanjutkan setelah QST melepas penggantian sementaranya. Keduanya memakai RSR Manual; RSR penuh mengubah aksi ofensif dan AoE yang direkam, bukan penargetan.</value></data>
+  <data name="K342" xml:space="preserve"><value>Terlalu pendek</value></data>
+  <data name="K343" xml:space="preserve"><value>Terlacak</value></data>
+  <data name="K344" xml:space="preserve"><value>Lalu lintas diautentikasi tetapi tidak dienkripsi; nama dan koordinat tetap terlihat di jaringan.</value></data>
+  <data name="K345" xml:space="preserve"><value>Perjalanan: {0}</value></data>
+  <data name="K346" xml:space="preserve"><value>Pemicu</value></data>
+  <data name="K347" xml:space="preserve"><value>Tipe</value></data>
+  <data name="K348" xml:space="preserve"><value>Tidak tersedia</value></data>
+  <data name="K349" xml:space="preserve"><value>Dibuka</value></data>
+  <data name="K350" xml:space="preserve"><value>Menghapus centang target pantauan atau membersihkannya dengan Ctrl juga menghapusnya dari daftar tersimpan. Jarak pemindaian hanya memengaruhi target tersimpan yang bergabung kembali.</value></data>
+  <data name="K351" xml:space="preserve"><value>Gunakan 1024-65535</value></data>
+  <data name="K352" xml:space="preserve"><value>Gunakan jendela Pantauan untuk menambah atau menghapus target. Simpan target penyembuhan hanya menyimpan target yang Anda pertahankan secara eksplisit.</value></data>
+  <data name="K353" xml:space="preserve"><value>Memakai aksi BRD/MCH instan jarak jauh target tunggal pada musuh yang sudah melawan Fren/pemain lokal.</value></data>
+  <data name="K354" xml:space="preserve"><value>Valid</value></data>
+  <data name="K355" xml:space="preserve"><value>IPv4 valid</value></data>
+  <data name="K356" xml:space="preserve"><value>Terlihat</value></data>
+  <data name="K357" xml:space="preserve"><value>Terlihat - target asli HealBot</value></data>
+  <data name="K358" xml:space="preserve"><value>Rahasia bersama terlihat</value></data>
+  <data name="K359" xml:space="preserve"><value>vnavmesh</value></data>
+  <data name="K360" xml:space="preserve"><value>Pantauan</value></data>
+  <data name="K361" xml:space="preserve"><value>Filter pantauan</value></data>
+  <data name="K362" xml:space="preserve"><value>Dipantau</value></data>
+  <data name="K363" xml:space="preserve"><value>Newb dipantau</value></data>
+  <data name="K364" xml:space="preserve"><value>Quester dipantau</value></data>
+  <data name="K365" xml:space="preserve"><value>target pantauan</value></data>
+  <data name="K366" xml:space="preserve"><value>Target pantauan: {0}</value></data>
+  <data name="K367" xml:space="preserve"><value>Target pantauan</value></data>
+  <data name="K368" xml:space="preserve"><value>Memantau {0}/{1} target aktif. Target tersimpan: {2}.</value></data>
+  <data name="K369" xml:space="preserve"><value>White Mage (WHM)</value></data>
+  <data name="K370" xml:space="preserve"><value>Pilihan lokal tersimpan dilanjutkan saat QST melepasnya.</value></data>
+  <data name="K371" xml:space="preserve"><value>Pengaturan lokal tersimpan dilanjutkan saat QST melepasnya.</value></data>
+  <data name="K372" xml:space="preserve"><value>Warna</value></data>
+  <data name="K373" xml:space="preserve"><value>Hijau kebiruan</value></data>
+  <data name="K374" xml:space="preserve"><value>Biru</value></data>
+  <data name="K375" xml:space="preserve"><value>Merah muda</value></data>
+  <data name="K376" xml:space="preserve"><value>RGB khusus</value></data>
+  <data name="K377" xml:space="preserve"><value>Mode ringkas</value></data>
+  <data name="K378" xml:space="preserve"><value>Memuat font UI...</value></data>
+  <data name="K379" xml:space="preserve"><value>Font UI gagal dimuat. Lihat log plugin.</value></data>
+  <data name="K380" xml:space="preserve"><value>Belum pernah</value></data>
+  <data name="K381" xml:space="preserve"><value>GCD dengan cast</value></data>
+  <data name="K382" xml:space="preserve"><value>oGCD instan</value></data>
+  <data name="K383" xml:space="preserve"><value>BUFF dengan cast</value></data>
+  <data name="K384" xml:space="preserve"><value>BUFF instan</value></data>
+  <data name="K385" xml:space="preserve"><value>HP di bawah</value></data>
+  <data name="K386" xml:space="preserve"><value>Target mati</value></data>
+  <data name="K387" xml:space="preserve"><value>Buff belum ada</value></data>
+  <data name="K388" xml:space="preserve"><value>Selalu</value></data>
+  <data name="K389" xml:space="preserve"><value>Target</value></data>
+  <data name="K390" xml:space="preserve"><value>Pemain</value></data>
+  <data name="K391" xml:space="preserve"><value>NPC party</value></data>
+  <data name="K392" xml:space="preserve"><value>NPC ramah</value></data>
+  <data name="K393" xml:space="preserve"><value>Pembantu aktif (dikendalikan QST)</value></data>
+  <data name="K394" xml:space="preserve"><value>Gunakan QST untuk melepas atau menonaktifkan sesi penyedia ini.</value></data>
+  <data name="K395" xml:space="preserve"><value>Gunakan /healbot on untuk melanjutkan {0}.</value></data>
+  <data name="K396" xml:space="preserve"><value>Penyembuhan: {0} Serangan: {1}</value></data>
+  <data name="K397" xml:space="preserve"><value>Atasi penghalang yang ditampilkan dalam status utama.</value></data>
+  <data name="K398" xml:space="preserve"><value>Tidak perlu tindakan.</value></data>
+  <data name="K399" xml:space="preserve"><value>Atasi: {0}</value></data>
+  <data name="K400" xml:space="preserve"><value>Terhalang: {0}</value></data>
+  <data name="K401" xml:space="preserve"><value>Ditahan: {0}</value></data>
+  <data name="K402" xml:space="preserve"><value>Tidak aktif</value></data>
+  <data name="K403" xml:space="preserve"><value>LOS tidak tersedia</value></data>
+  <data name="K404" xml:space="preserve"><value>LOS bebas</value></data>
+  <data name="K405" xml:space="preserve"><value>LOS terhalang</value></data>
+  <data name="K406" xml:space="preserve"><value>Gerakan LOS ditahan untuk transportasi HealBot</value></data>
+  <data name="K407" xml:space="preserve"><value>LOS terhalang; bergerak ke 1y</value></data>
+  <data name="K408" xml:space="preserve"><value>LOS terhalang; menunggu pengendali gerakan saat ini</value></data>
+  <data name="K409" xml:space="preserve"><value>QST mengendalikan mode aktif ({0}); pilihan lokal tersimpan dilanjutkan setelah dilepas.</value></data>
+  <data name="K410" xml:space="preserve"><value>QST mengendalikan pemanggilan ({0}); pengaturan lokal tersimpan dilanjutkan setelah dilepas.</value></data>
+  <data name="K411" xml:space="preserve"><value>Target tepat khusus sesi ini menggantikan target pantauan tersimpan untuk otomatisasi tanpa mengubah atau menyimpannya.</value></data>
+  <data name="K412" xml:space="preserve"><value>Ya</value></data>
+  <data name="K413" xml:space="preserve"><value>Tidak</value></data>
+  <data name="K414" xml:space="preserve"><value>Mode Healbot nonaktif.</value></data>
+  <data name="K415" xml:space="preserve"><value>Menganggur</value></data>
+  <data name="K416" xml:space="preserve"><value>Tidak ada aturan yang cocok.</value></data>
+  <data name="K417" xml:space="preserve"><value>Plugin sedang dilepas.</value></data>
+  <data name="K418" xml:space="preserve"><value>HealBot hanya mendukung WHM, SCH, AST, dan SGE.</value></data>
+  <data name="K419" xml:space="preserve"><value>Aksi ditahan selama transportasi HealRider.</value></data>
+  <data name="K420" xml:space="preserve"><value>Perjalanan</value></data>
+  <data name="K421" xml:space="preserve"><value>HealRider mengendalikan gerakan.</value></data>
+  <data name="K422" xml:space="preserve"><value>Ditahan selama perpindahan area.</value></data>
+  <data name="K423" xml:space="preserve"><value>Perpindahan area berlangsung.</value></data>
+  <data name="K424" xml:space="preserve"><value>Plugin dinonaktifkan.</value></data>
+  <data name="K425" xml:space="preserve"><value>Diblokir</value></data>
+  <data name="K426" xml:space="preserve"><value>Dependensi tidak ada.</value></data>
+  <data name="K427" xml:space="preserve"><value>Job lokal tidak didukung.</value></data>
+  <data name="K428" xml:space="preserve"><value>Penyembuhan berpasangan ditahan saat pembantu naik atau sedang menaiki tunggangan.</value></data>
+  <data name="K429" xml:space="preserve"><value>Pembantu terpasang sedang naik atau menaiki tunggangan.</value></data>
+  <data name="K430" xml:space="preserve"><value>Ditahan saat menjalankan cast aksi {0}.</value></data>
+  <data name="K431" xml:space="preserve"><value>Sedang cast</value></data>
+  <data name="K432" xml:space="preserve"><value>Menunggu cast saat ini selesai.</value></data>
+  <data name="K433" xml:space="preserve"><value>Matriks aksi Healbot siap untuk {0}. RSR diperlukan sebelum JOAT menyerang.</value></data>
+  <data name="K434" xml:space="preserve"><value>Matriks aksi Healbot siap untuk {0}. Isolasi RSR tidak tersedia.</value></data>
+  <data name="K435" xml:space="preserve"><value>Matriks aksi Healbot siap untuk {0}. Kontrol RSR JOAT aktif.</value></data>
+  <data name="K436" xml:space="preserve"><value>Matriks aksi Healbot siap untuk {0}. Isolasi RSR aktif.</value></data>
+  <data name="K437" xml:space="preserve"><value>Matriks aksi Healbot siap untuk {0}. Kontrol RSR gagal; serangan JOAT terhalang dan penyembuhan langsung tetap aktif.</value></data>
+  <data name="K438" xml:space="preserve"><value>Matriks aksi Healbot siap untuk {0}. Isolasi RSR gagal; penyembuhan langsung tetap aktif.</value></data>
+  <data name="K439" xml:space="preserve"><value>Tidak ada target pantauan yang aktif.</value></data>
+  <data name="K440" xml:space="preserve"><value>Tidak ada target pantauan.</value></data>
+  <data name="K441" xml:space="preserve"><value>Otomatisasi {0} dinonaktifkan dalam pengaturan HealBot.</value></data>
+  <data name="K442" xml:space="preserve"><value>Tab {0} dinonaktifkan.</value></data>
+  <data name="K443" xml:space="preserve"><value>Target {0} {1} dipilih tetapi jauh.</value></data>
+  <data name="K444" xml:space="preserve"><value>Memantau {0} target. Tidak ada target pantauan yang hadir saat ini.</value></data>
+  <data name="K445" xml:space="preserve"><value>Target tepat {0} berada jauh.</value></data>
+  <data name="K446" xml:space="preserve"><value>Tidak ada target pantauan yang hadir.</value></data>
+  <data name="K447" xml:space="preserve"><value>Pergerakan</value></data>
+  <data name="K448" xml:space="preserve"><value>{0} - LOS terhalang.</value></data>
+  <data name="K449" xml:space="preserve"><value>Memantau {0} target. {1}</value></data>
+  <data name="K450" xml:space="preserve"><value>{0} - {1}</value></data>
+  <data name="K451" xml:space="preserve"><value>Memantau {0} target. Tidak ada aturan target mati aktif yang dapat bertindak pada {1}.</value></data>
+  <data name="K452" xml:space="preserve"><value>{0} - Tidak ada aturan target mati yang cocok.</value></data>
+  <data name="K453" xml:space="preserve"><value>Memantau {0} target. Target pantauan dengan HP terendah adalah {1} pada {2}% HP.</value></data>
+  <data name="K454" xml:space="preserve"><value>{0} - Tidak ada aturan target hidup yang cocok.</value></data>
+  <data name="K455" xml:space="preserve"><value>{0}: {1} [{2}]</value></data>
+  <data name="K456" xml:space="preserve"><value>{0} diantrekan sebagai persiapan target mati untuk {1}.</value></data>
+  <data name="K457" xml:space="preserve"><value>{0} diantrekan untuk {1}.</value></data>
+  <data name="K458" xml:space="preserve"><value>{0} diantrekan sambil memantau {1} pada {2}% HP.</value></data>
+  <data name="K459" xml:space="preserve"><value>{0} diantrekan untuk {1} pada {2}% HP.</value></data>
+  <data name="K460" xml:space="preserve"><value>Serangan JOAT nonaktif.</value></data>
+  <data name="K461" xml:space="preserve"><value>Menunggu keputusan penyembuhan menganggur.</value></data>
+  <data name="K462" xml:space="preserve"><value>Serangan JOAT menunggu penyembuhan menganggur.</value></data>
+  <data name="K463" xml:space="preserve"><value>Heartbeat izin FrenRider gagal.</value></data>
+  <data name="K464" xml:space="preserve"><value>Ditahan: penyembuhan mengantrekan {0}.</value></data>
+  <data name="K465" xml:space="preserve"><value>Ditahan</value></data>
+  <data name="K466" xml:space="preserve"><value>Aksi penyembuhan didahulukan dalam siklus ini.</value></data>
+  <data name="K467" xml:space="preserve"><value>Ditahan: cast saat ini menghalangi serangan. {0}</value></data>
+  <data name="K468" xml:space="preserve"><value>Ditahan: penyembuhan terhalang. {0}</value></data>
+  <data name="K469" xml:space="preserve"><value>Cast saat ini menghalangi siklus serangan ini.</value></data>
+  <data name="K470" xml:space="preserve"><value>Aksi penyembuhan yang cocok terhalang.</value></data>
+  <data name="K471" xml:space="preserve"><value>Terhalang: penyembuhan belum siap. {0}</value></data>
+  <data name="K472" xml:space="preserve"><value>Dependensi penyembuhan, konfigurasi, atau target pantauan tidak tersedia.</value></data>
+  <data name="K473" xml:space="preserve"><value>Terhalang: kontrol Rotation Solver Reborn tidak aktif, sehingga JOAT tidak dapat menyerang.</value></data>
+  <data name="K474" xml:space="preserve"><value>Kontrol Rotation Solver Reborn gagal.</value></data>
+  <data name="K475" xml:space="preserve"><value>Ditahan: {0}.</value></data>
+  <data name="K476" xml:space="preserve"><value>IPC FrenRider tidak tersedia.</value></data>
+  <data name="K477" xml:space="preserve"><value>Syarat serangan FrenRider gagal.</value></data>
+  <data name="K478" xml:space="preserve"><value>Perolehan izin FrenRider gagal.</value></data>
+  <data name="K479" xml:space="preserve"><value>Terhalang: healer lokal tidak tersedia.</value></data>
+  <data name="K480" xml:space="preserve"><value>Healer lokal tidak tersedia.</value></data>
+  <data name="K481" xml:space="preserve"><value>Healer lokal yang didukung tidak tersedia.</value></data>
+  <data name="K482" xml:space="preserve"><value>Menganggur: target pasangan yang tepat dipilih tetapi jauh.</value></data>
+  <data name="K483" xml:space="preserve"><value>Target pasangan yang tepat berada jauh.</value></data>
+  <data name="K484" xml:space="preserve"><value>Ditahan: target pasangan yang tepat berjarak {0:0.0} yalms.</value></data>
+  <data name="K485" xml:space="preserve"><value>Target pasangan yang tepat berada lebih dari 30 yalms.</value></data>
+  <data name="K486" xml:space="preserve"><value>RSR Manual gagal.</value></data>
+  <data name="K487" xml:space="preserve"><value>Terhalang: Rotation Solver Reborn menolak mode Manual untuk penugasan JOAT berpasangan.</value></data>
+  <data name="K488" xml:space="preserve"><value>RSR Manual</value></data>
+  <data name="K489" xml:space="preserve"><value>Menunggu musuh bertempur pada target ramah pasangan.</value></data>
+  <data name="K490" xml:space="preserve"><value>RSR Manual ({0}) menunggu; tidak ada musuh bertempur yang layak dalam jarak pasangan.</value></data>
+  <data name="K491" xml:space="preserve"><value>Musuh pasangan terpilih menghilang.</value></data>
+  <data name="K492" xml:space="preserve"><value>RSR Manual ({0}) menunggu; musuh terpilih menghilang.</value></data>
+  <data name="K493" xml:space="preserve"><value>target pasangan</value></data>
+  <data name="K494" xml:space="preserve"><value>melawan pasangan/healer</value></data>
+  <data name="K495" xml:space="preserve"><value>RSR Manual ({0}) pada {1} dengan {2:P0} HP.</value></data>
+  <data name="K496" xml:space="preserve"><value>Menganggur: penyembuhan bebas, tetapi tidak ada musuh terluka yang menargetkan Fren atau healer lokal.</value></data>
+  <data name="K497" xml:space="preserve"><value>Tidak ada musuh tertandai yang layak.</value></data>
+  <data name="K498" xml:space="preserve"><value>Menganggur: musuh terpilih menghilang.</value></data>
+  <data name="K499" xml:space="preserve"><value>Target menghilang.</value></data>
+  <data name="K500" xml:space="preserve"><value>{0} - RSR Manual gagal</value></data>
+  <data name="K501" xml:space="preserve"><value>Terhalang: Rotation Solver Reborn menolak mode Manual untuk {0}.</value></data>
+  <data name="K502" xml:space="preserve"><value>antararea</value></data>
+  <data name="K503" xml:space="preserve"><value>naik atau sedang menaiki tunggangan</value></data>
+  <data name="K504" xml:space="preserve"><value>sibuk atau dalam cutscene</value></data>
+  <data name="K505" xml:space="preserve"><value>sedang cast aksi {0}</value></data>
+  <data name="K506" xml:space="preserve"><value>Dependensi penyembuhan wajib tidak ada.</value></data>
+  <data name="K507" xml:space="preserve"><value>Matriks aksi healer yang terpasang dinonaktifkan.</value></data>
+  <data name="K508" xml:space="preserve"><value>Pilih minimal satu target di Pantauan atau tunggu penugasan QST.</value></data>
+  <data name="K509" xml:space="preserve"><value>Penyembuhan JOAT siap.</value></data>
+  <data name="K510" xml:space="preserve"><value>Serangan menunggu kesiapan penyembuhan: {0}</value></data>
+  <data name="K511" xml:space="preserve"><value>Rotation Solver Reborn harus dimuat untuk serangan JOAT.</value></data>
+  <data name="K512" xml:space="preserve"><value>Coppelia tidak dapat memperoleh kontrol Rotation Solver Reborn yang berfungsi.</value></data>
+  <data name="K513" xml:space="preserve"><value>Serangan JOAT siap saat penyembuhan menganggur.</value></data>
+  <data name="K514" xml:space="preserve"><value>Target QST yang tepat dipilih tetapi jauh.</value></data>
+  <data name="K515" xml:space="preserve"><value>FrenRider harus diaktifkan.</value></data>
+  <data name="K516" xml:space="preserve"><value>FrenRider harus memiliki Fren yang dikonfigurasi.</value></data>
+  <data name="K517" xml:space="preserve"><value>Fren yang dikonfigurasi di FrenRider harus terlihat.</value></data>
+  <data name="K518" xml:space="preserve"><value>Mode PowerlevelBot nonaktif.</value></data>
+  <data name="K519" xml:space="preserve"><value>Tidak ada target dipilih.</value></data>
+  <data name="K520" xml:space="preserve"><value>PowerlevelBot bersiap.</value></data>
+  <data name="K521" xml:space="preserve"><value>Syarat Powerlevel gagal.</value></data>
+  <data name="K522" xml:space="preserve"><value>Pemain lokal tidak tersedia.</value></data>
+  <data name="K523" xml:space="preserve"><value>Tidak ada pemain lokal.</value></data>
+  <data name="K524" xml:space="preserve"><value>Tidak ada musuh terluka yang menargetkan Fren atau pemain lokal.</value></data>
+  <data name="K525" xml:space="preserve"><value>Tidak ada target layak.</value></data>
+  <data name="K526" xml:space="preserve"><value>Target terpilih menghilang.</value></data>
+  <data name="K527" xml:space="preserve"><value>{0} diantrekan pada {1} dengan {2:P0} HP.</value></data>
+  <data name="K528" xml:space="preserve"><value>Target {0} terhalang: {1}</value></data>
+  <data name="K529" xml:space="preserve"><value>Pembantu mendengarkan, bukan menghubungkan.</value></data>
+  <data name="K530" xml:space="preserve"><value>Newb menghubungkan, bukan mendengarkan.</value></data>
+  <data name="K531" xml:space="preserve"><value>Peran operasi Nonaktif.</value></data>
+  <data name="K532" xml:space="preserve"><value>Mandiri tidak memakai pemasangan langsung.</value></data>
+  <data name="K533" xml:space="preserve"><value>Identitas Newb lokal tidak tersedia. Selesaikan login sebelum memulai peran Newb.</value></data>
+  <data name="K534" xml:space="preserve"><value>Masukkan satu alamat IPv4 Pembantu yang valid.</value></data>
+  <data name="K535" xml:space="preserve"><value>Pengaturan pemasangan disimpan; memulai ulang.</value></data>
+  <data name="K536" xml:space="preserve"><value>Pemasangan langsung HealBot v2 diperlukan. Perbarui pihak yang lebih lama sebelum memasangkan.</value></data>
+  <data name="K537" xml:space="preserve"><value>Identitas HealBot lokal tidak tersedia.</value></data>
+  <data name="K538" xml:space="preserve"><value>HealBot sudah memiliki penugasan QST aktif.</value></data>
+  <data name="K539" xml:space="preserve"><value>Terpasang</value></data>
+  <data name="K540" xml:space="preserve"><value>Mendengarkan</value></data>
+  <data name="K541" xml:space="preserve"><value>Payload perintah pemasangan tidak valid.</value></data>
+  <data name="K542" xml:space="preserve"><value>Perintah tidak menargetkan nama HealBot dan dunia asal yang tepat ini.</value></data>
+  <data name="K543" xml:space="preserve"><value>Newb melepas penugasan.</value></data>
+  <data name="K544" xml:space="preserve"><value>Aksi pemasangan Newb tidak dikenal.</value></data>
+  <data name="K545" xml:space="preserve"><value>HealBot sedang dilepas.</value></data>
+  <data name="K546" xml:space="preserve"><value>TCP {0}</value></data>
+  <data name="K547" xml:space="preserve"><value>Memulai ulang pendengar HealBot.</value></data>
+  <data name="K548" xml:space="preserve"><value>Terhubung</value></data>
+  <data name="K549" xml:space="preserve"><value>Tunggu penugasan terautentikasi.</value></data>
+  <data name="K550" xml:space="preserve"><value>Mulai Newb dengan port dan rahasia bersama ini.</value></data>
+  <data name="K551" xml:space="preserve"><value>Tunggu pendengar dimulai.</value></data>
+  <data name="K552" xml:space="preserve"><value>Menunggu status Newb terautentikasi</value></data>
+  <data name="K553" xml:space="preserve"><value>Penyedia JOAT aktif</value></data>
+  <data name="K554" xml:space="preserve"><value>Penyedia jarak jauh tidak tersedia</value></data>
+  <data name="K555" xml:space="preserve"><value>JOAT jarak jauh tidak tersedia</value></data>
+  <data name="K556" xml:space="preserve"><value>Perjalanan jarak jauh tidak tersedia</value></data>
+  <data name="K557" xml:space="preserve"><value>Memulai ulang koneksi Newb.</value></data>
+  <data name="K558" xml:space="preserve"><value>Mengautentikasi</value></data>
+  <data name="K559" xml:space="preserve"><value>Menghubungkan</value></data>
+  <data name="K560" xml:space="preserve"><value>Tunggu konfirmasi penugasan.</value></data>
+  <data name="K561" xml:space="preserve"><value>Tunggu status dan penugasan terautentikasi baru.</value></data>
+  <data name="K562" xml:space="preserve"><value>Tunggu koneksi atau koneksi ulang asinkron.</value></data>
+  <data name="K563" xml:space="preserve"><value>Menunggu status penyedia jarak jauh</value></data>
+  <data name="K564" xml:space="preserve"><value>Penyedia jarak jauh siap</value></data>
+  <data name="K565" xml:space="preserve"><value>Menunggu status JOAT jarak jauh</value></data>
+  <data name="K566" xml:space="preserve"><value>Menunggu status perjalanan jarak jauh</value></data>
+  <data name="K567" xml:space="preserve"><value>Perbarui pihak yang lebih lama ke versi pemasangan langsung HealBot v2 yang kompatibel.</value></data>
+  <data name="K568" xml:space="preserve"><value>Masukkan rahasia bersama yang sama pada Pembantu dan Newb di Pengaturan.</value></data>
+  <data name="K569" xml:space="preserve"><value>Identitas Newb lokal tidak tersedia.</value></data>
+  <data name="K570" xml:space="preserve"><value>Koneksi HealBot terpasang atau status terautentikasi hilang.</value></data>
+  <data name="K571" xml:space="preserve"><value>Endpoint yang dikonfigurasi atau identitas HealBot berubah.</value></data>
+  <data name="K572" xml:space="preserve"><value>HealBot terpasang masih melaporkan sesi {0} yang dilepas.</value></data>
+  <data name="K573" xml:space="preserve"><value>HealBot terpasang memiliki penugasan QST aktif.</value></data>
+  <data name="K574" xml:space="preserve"><value>HealBot terpasang milik sesi Newb lain.</value></data>
+  <data name="K575" xml:space="preserve"><value>HealBot terpasang melaporkan sesi usang untuk Newb ini.</value></data>
+  <data name="K576" xml:space="preserve"><value>HealBot terpasang belum siap.</value></data>
+  <data name="K577" xml:space="preserve"><value>HealBot terpasang melaporkan sesi Newb yang hilang atau tidak cocok.</value></data>
+  <data name="K578" xml:space="preserve"><value>Menunggu HealBot terpasang mengonfirmasi sesi Newb yang tepat.</value></data>
+  <data name="K579" xml:space="preserve"><value>HealBot terpasang menolak penugasan Newb.</value></data>
+  <data name="K580" xml:space="preserve"><value>HealBot terpasang menolak {0}.</value></data>
+  <data name="K581" xml:space="preserve"><value>HealBot terpasang tidak menerima {0} untuk sesi aktif.</value></data>
+  <data name="K582" xml:space="preserve"><value>HealBot terpasang tidak mengonfirmasi pelepasan sesi usangnya.</value></data>
+  <data name="K583" xml:space="preserve"><value>Pilih Pembantu atau Newb untuk pemasangan langsung.</value></data>
+  <data name="K584" xml:space="preserve"><value>Port TCP {0} sudah dipakai.</value></data>
+  <data name="K585" xml:space="preserve"><value>Pendengar pemasangan tidak dapat dimulai: {0}</value></data>
+  <data name="K586" xml:space="preserve"><value>tidak dikenal</value></data>
+  <data name="K587" xml:space="preserve"><value>Amplop pemasangan rusak.</value></data>
+  <data name="K588" xml:space="preserve"><value>Koneksi Newb terpasang hilang.</value></data>
+  <data name="K589" xml:space="preserve"><value>Pendengar pemasangan HealBot sedang berhenti.</value></data>
+  <data name="K590" xml:space="preserve"><value>Jenis pesan pemasangan tidak cocok dengan perintahnya.</value></data>
+  <data name="K591" xml:space="preserve"><value>Koneksi ini sudah mengendalikan sesi Newb lain.</value></data>
+  <data name="K592" xml:space="preserve"><value>Sesi Newb sudah milik koneksi aktif lain.</value></data>
+  <data name="K593" xml:space="preserve"><value>Koneksi ini tidak mengendalikan sesi Newb aktif.</value></data>
+  <data name="K594" xml:space="preserve"><value>Sesi Newb masih milik koneksi aktif lain.</value></data>
+  <data name="K595" xml:space="preserve"><value>Terputus</value></data>
+  <data name="K596" xml:space="preserve"><value>HealBot terpasang tidak terhubung.</value></data>
+  <data name="K597" xml:space="preserve"><value>HealBot terpasang tidak mengonfirmasi perintah.</value></data>
+  <data name="K598" xml:space="preserve"><value>Koneksi terpasang ditutup.</value></data>
+  <data name="K599" xml:space="preserve"><value>Pemasangan langsung HealBot v2 diperlukan. Perbarui Pembantu yang lebih lama sebelum memasangkan.</value></data>
+  <data name="K600" xml:space="preserve"><value>Terhubung; menunggu</value></data>
+  <data name="K601" xml:space="preserve"><value>HealBot terpasang tidak mengembalikan status terautentikasi yang sesuai. Periksa rahasia bersama dan protokol.</value></data>
+  <data name="K602" xml:space="preserve"><value>Pemantauan pemasangan gagal: {0}</value></data>
+  <data name="K603" xml:space="preserve"><value>Terhubung; menunggu status HealBot terautentikasi.</value></data>
+  <data name="K604" xml:space="preserve"><value>Koneksi ke {0}:{1} kehabisan waktu.</value></data>
+  <data name="K605" xml:space="preserve"><value>Tidak ada HealBot mendengarkan di {0}:{1}.</value></data>
+  <data name="K606" xml:space="preserve"><value>Koneksi ke {0}:{1} gagal: {2}</value></data>
+  <data name="K607" xml:space="preserve"><value>Endpoint terpasang mengembalikan JSON pemasangan rusak.</value></data>
+  <data name="K608" xml:space="preserve"><value>Koneksi HealBot terpasang hilang: {0}</value></data>
+  <data name="K609" xml:space="preserve"><value>Koneksi HealBot terpasang hilang.</value></data>
+  <data name="K610" xml:space="preserve"><value>HealBot terpasang mengembalikan respons perintah tidak cocok.</value></data>
+  <data name="K611" xml:space="preserve"><value>Koneksi terpasang gagal: {0}</value></data>
+  <data name="K612" xml:space="preserve"><value>Hubungkan ulang dalam {0}s</value></data>
+  <data name="K613" xml:space="preserve"><value>Semua dependensi wajib HealBot siap.</value></data>
+  <data name="K614" xml:space="preserve"><value>HealBot memerlukan {0}. Pasang plugin yang belum ada atau nonaktifkan otomatisasi di pengaturan.</value></data>
+  <data name="K615" xml:space="preserve"><value>Pemain lokal tidak tersedia.</value></data>
+  <data name="K616" xml:space="preserve"><value>Sudah sedang cast.</value></data>
+  <data name="K617" xml:space="preserve"><value>Aksi {0} tidak ditemukan dalam tabel aksi.</value></data>
+  <data name="K618" xml:space="preserve"><value>MP tidak cukup untuk {0}.</value></data>
+  <data name="K619" xml:space="preserve"><value>ActionManager tidak tersedia.</value></data>
+  <data name="K620" xml:space="preserve"><value>{0} sedang cooldown.</value></data>
+  <data name="K621" xml:space="preserve"><value>Target terpilih tidak tersedia.</value></data>
+  <data name="K622" xml:space="preserve"><value>{0} tidak dapat ditargetkan.</value></data>
+  <data name="K623" xml:space="preserve"><value>{0} di luar jangkauan.</value></data>
+  <data name="K624" xml:space="preserve"><value>UseAction menolak {0}.</value></data>
+  <data name="K625" xml:space="preserve"><value>Tidak ada aksi PowerlevelBot yang dapat dipakai saat ini.</value></data>
+  <data name="K626" xml:space="preserve"><value>Dijeda untuk aksi HealBot</value></data>
+  <data name="K627" xml:space="preserve"><value>Mengikuti dengan HealRider ditangguhkan karena kepemilikan tugas</value></data>
+  <data name="K628" xml:space="preserve"><value>Persiapan tunggangan penumpang terpilih melebihi waktu penjemputan yang diizinkan.</value></data>
+  <data name="K629" xml:space="preserve"><value>Menunggu perpindahan instans Lifestream dan pemuatan selesai</value></data>
+  <data name="K630" xml:space="preserve"><value>Memverifikasi instans publik Pembantu setelah /li</value></data>
+  <data name="K631" xml:space="preserve"><value>Menunggu snapshot perjalanan Quester baru setelah HealRider</value></data>
+  <data name="K632" xml:space="preserve"><value>Menunggu karakter pembantu</value></data>
+  <data name="K633" xml:space="preserve"><value>Dijeda untuk cast {0}</value></data>
+  <data name="K634" xml:space="preserve"><value>Mengunjungi dunia {0}</value></data>
+  <data name="K635" xml:space="preserve"><value>Kunjungan dunia {0} tidak mencapai tujuan</value></data>
+  <data name="K636" xml:space="preserve"><value>Teleport ke {0}</value></data>
+  <data name="K637" xml:space="preserve"><value>Teleport ke {0} tidak mencapai wilayah {1}</value></data>
+  <data name="K638" xml:space="preserve"><value>pemeriksaan terbang ARR ditolak untuk wilayah ini</value></data>
+  <data name="K639" xml:space="preserve"><value>Menunggu aktivitas vnavmesh yang ada selesai</value></data>
+  <data name="K640" xml:space="preserve"><value>tunggangan tidak tersedia: {0}</value></data>
+  <data name="K641" xml:space="preserve"><value>menunggu percobaan ulang Mount Roulette</value></data>
+  <data name="K642" xml:space="preserve"><value>Meniru Quester dengan Mount Roulette</value></data>
+  <data name="K643" xml:space="preserve"><value>Naik tunggangan untuk menyusul di atas {0:F0} yalms</value></data>
+  <data name="K644" xml:space="preserve"><value>Menunggu meniru tunggangan Quester</value></data>
+  <data name="K645" xml:space="preserve"><value>Menunggu naik tunggangan untuk menyusul</value></data>
+  <data name="K646" xml:space="preserve"><value>Menunggu selesai naik tunggangan sebelum turun</value></data>
+  <data name="K647" xml:space="preserve"><value>Mengikuti rute aktif sebelum mendarat</value></data>
+  <data name="K648" xml:space="preserve"><value>Mendarat sambil tetap di tunggangan</value></data>
+  <data name="K649" xml:space="preserve"><value>Mendarat dalam {0:F0} yalms sebelum turun</value></data>
+  <data name="K650" xml:space="preserve"><value>Pendaratan tidak tersedia: {0}</value></data>
+  <data name="K651" xml:space="preserve"><value>Menunggu turun dalam {0:F0} yalms</value></data>
+  <data name="K652" xml:space="preserve"><value>Turun dalam {0:F0} yalms</value></data>
+  <data name="K653" xml:space="preserve"><value>Turun tunggangan tidak tersedia: {0}</value></data>
+  <data name="K654" xml:space="preserve"><value>terbang tidak tersedia: {0}</value></data>
+  <data name="K655" xml:space="preserve"><value>IPC mengikuti vnavmesh gagal</value></data>
+  <data name="K656" xml:space="preserve"><value>Mengikuti dekat ({0:F1} yalms)</value></data>
+  <data name="K657" xml:space="preserve"><value>Menyegarkan tujuan Quester terbaru</value></data>
+  <data name="K658" xml:space="preserve"><value>Terbang pada jarak {0:F1} yalms</value></data>
+  <data name="K659" xml:space="preserve"><value>Mengikuti di darat pada jarak {0:F1} yalms</value></data>
+  <data name="K660" xml:space="preserve"><value>vnavmesh menolak memulai rute; menunggu aktivitas selesai atau snapshot perjalanan baru</value></data>
+  <data name="K661" xml:space="preserve"><value>Menunggu navmesh</value></data>
+  <data name="K662" xml:space="preserve"><value>Mengantrekan {0} pada {1:F1} yalms</value></data>
+  <data name="K663" xml:space="preserve"><value>vnavmesh menolak memulai rute {0}; menunggu aktivitas selesai atau snapshot perjalanan baru</value></data>
+  <data name="K664" xml:space="preserve"><value>IPC mengikuti vnavmesh gagal; menunggu snapshot perjalanan baru</value></data>
+  <data name="K665" xml:space="preserve"><value>Menunggu metadata instans publik Pembantu dan Quester yang terverifikasi</value></data>
+  <data name="K666" xml:space="preserve"><value>Menunggu area Quester tanpa instans yang terverifikasi</value></data>
+  <data name="K667" xml:space="preserve"><value>Menunggu perjalanan aman dan menganggur sebelum berganti instans publik</value></data>
+  <data name="K668" xml:space="preserve"><value>Menunggu mencoba ulang instans publik {0}</value></data>
+  <data name="K669" xml:space="preserve"><value>Menunggu navigasi berhenti sebelum berganti instans publik</value></data>
+  <data name="K670" xml:space="preserve"><value>Pertemuan instans publik: {0}</value></data>
+  <data name="K671" xml:space="preserve"><value>Mendarat dan turun di samping aetheryte sebelum /li</value></data>
+  <data name="K672" xml:space="preserve"><value>Memverifikasi instans publik {0} setelah /li</value></data>
+  <data name="K673" xml:space="preserve"><value>Lifestream menolak /li {0}; menunggu lima detik untuk mencoba ulang</value></data>
+  <data name="K674" xml:space="preserve"><value>Perintah instans Lifestream gagal; menunggu lima detik untuk mencoba ulang</value></data>
+  <data name="K675" xml:space="preserve"><value>Memeriksa ke depan untuk perpindahan wilayah yang diamati</value></data>
+  <data name="K676" xml:space="preserve"><value>Perpindahan wilayah diamati; menunggu pembantu dimuat dengan aman</value></data>
+  <data name="K677" xml:space="preserve"><value>wilayah {0} tidak mengizinkan tunggangan</value></data>
+  <data name="K678" xml:space="preserve"><value>pemeriksaan tunggangan wilayah gagal: {0}</value></data>
+  <data name="K679" xml:space="preserve"><value>terbang tidak tersedia di wilayah {0}</value></data>
+  <data name="K680" xml:space="preserve"><value>pembantu belum membuka terbang di wilayah ini</value></data>
+  <data name="K681" xml:space="preserve"><value>memeriksa ketersediaan terbang ARR</value></data>
+  <data name="K682" xml:space="preserve"><value>pemeriksaan terbang gagal: {0}</value></data>
+  <data name="K683" xml:space="preserve"><value>ActionManager tidak tersedia</value></data>
+  <data name="K684" xml:space="preserve"><value>aksi umum {0} tidak tersedia (status {1})</value></data>
+  <data name="K685" xml:space="preserve"><value>aksi umum {0} ditolak</value></data>
+  <data name="K686" xml:space="preserve"><value>aksi umum {0} gagal: {1}</value></data>
+  <data name="K687" xml:space="preserve"><value>IPC status perjalanan Lifestream gagal</value></data>
+  <data name="K688" xml:space="preserve"><value>{0}; menunggu snapshot perjalanan lebih baru</value></data>
+  <data name="K689" xml:space="preserve"><value>Menunggu perjalanan Lifestream yang ada selesai</value></data>
+  <data name="K690" xml:space="preserve"><value>IPC perjalanan Lifestream gagal</value></data>
+  <data name="K691" xml:space="preserve"><value>Lifestream menolak permintaan: {0}</value></data>
+  <data name="K692" xml:space="preserve"><value>Tujuan teleport Quester yang tepat tidak ada dalam daftar teleport pembantu.</value></data>
+  <data name="K693" xml:space="preserve"><value>Tidak ada aetheryte di wilayah Quester dalam daftar teleport pembantu.</value></data>
+  <data name="K694" xml:space="preserve"><value>Penentuan aetheryte gagal: {0}</value></data>
+  <data name="K695" xml:space="preserve"><value>Tujuan teleport Quester yang diterima tidak tersedia.</value></data>
+  <data name="K696" xml:space="preserve"><value>Menunggu posisi Quester di wilayah tujuan untuk alternatif aetheryte terdekat.</value></data>
+  <data name="K697" xml:space="preserve"><value>Daftar teleport pembantu tidak tersedia atau masih dimuat.</value></data>
+  <data name="K698" xml:space="preserve"><value>PowerlevelBot siap.</value></data>
+  <data name="K699" xml:space="preserve"><value>Pilih BRD atau MCH sebelum mengaktifkan PowerlevelBot.</value></data>
+  <data name="K700" xml:space="preserve"><value>{0} belum dibuka.</value></data>
+  <data name="K701" xml:space="preserve"><value>Job saat ini harus sesuai job PowerlevelBot {0} terpilih.</value></data>
+  <data name="K702" xml:space="preserve"><value>Fren yang dikonfigurasi di FrenRider tidak terlihat.</value></data>
+  <data name="K703" xml:space="preserve"><value>Bubarkan chocobo pendamping aktif sebelum memakai PowerlevelBot.</value></data>
+  <data name="K704" xml:space="preserve"><value>{0} bukan aksi khusus musuh.</value></data>
+  <data name="K705" xml:space="preserve"><value>{0} memerlukan cast.</value></data>
+  <data name="K706" xml:space="preserve"><value>{0} adalah AoE.</value></data>
+  <data name="K707" xml:space="preserve"><value>{0} tidak tersedia.</value></data>
+  <data name="K708" xml:space="preserve"><value>{0} sedang cooldown.</value></data>
+  <data name="K709" xml:space="preserve"><value>Port 47789 dicadangkan. Pilih port pemasangan lain.</value></data>
+  <data name="K710" xml:space="preserve"><value>Port pemasangan harus antara 1024 dan 65535.</value></data>
+  <data name="K711" xml:space="preserve"><value>Rahasia bersama harus minimal 16 karakter.</value></data>
+  <data name="K712" xml:space="preserve"><value>Masukkan satu alamat IPv4 Pembantu yang valid, seperti 127.0.0.1 atau 192.168.1.25.</value></data>
+  <data name="K713" xml:space="preserve"><value>Chocobo</value></data>
+  <data name="K714" xml:space="preserve"><value>Anggota party NPC</value></data>
+  <data name="K715" xml:space="preserve"><value>Target manual</value></data>
+  <data name="K716" xml:space="preserve"><value>Jacqueline of All Trades memerlukan Rotation Solver Reborn untuk menyerang.</value></data>
+  <data name="K717" xml:space="preserve"><value>Newb adalah peran operasi, bukan perilaku Mandiri.</value></data>
+  <data name="K718" xml:space="preserve"><value>Gulir ke saluran "The Dumpster Fire" untuk membahas masalah / saran untuk plugin tertentu.</value></data>
+  <data name="K719" xml:space="preserve"><value>BossMod Reborn (BMR) atau VBM</value></data>
+  <data name="K720" xml:space="preserve"><value>Rotation Solver Reborn (RSR) - pembantu isolasi/pemulihan opsional</value></data>
+  <data name="K721" xml:space="preserve"><value>{0}; alternatif darat aman ({1})</value></data>
+  <data name="K722" xml:space="preserve"><value>NPC pertempuran ramah</value></data>
+  <data name="K723" xml:space="preserve"><value>Pembantu terpasang</value></data>
+  <data name="K724" xml:space="preserve"><value>LOS</value></data>
+  <data name="K725" xml:space="preserve"><value>Penyelamatan</value></data>
+  <data name="K726" xml:space="preserve"><value>terbang ke</value></data>
+  <data name="K727" xml:space="preserve"><value>mengikuti di darat</value></data>
+  <data name="K728" xml:space="preserve"><value>Mendekat</value></data>
+  <data name="K729" xml:space="preserve"><value>Tiba</value></data>
+  <data name="K730" xml:space="preserve"><value>Tiba</value></data>
+  <data name="K731" xml:space="preserve"><value>Naik penumpang</value></data>
+  <data name="K732" xml:space="preserve"><value>Dibatalkan</value></data>
+  <data name="K733" xml:space="preserve"><value>Membatalkan</value></data>
+  <data name="K734" xml:space="preserve"><value>Menyiapkan</value></data>
+  <data name="K735" xml:space="preserve"><value>Transit</value></data>
+  <data name="K736" xml:space="preserve"><value>Menunggu</value></data>
+  <data name="K737" xml:space="preserve"><value>Menunggu kelanjutan</value></data>
+  <data name="K738" xml:space="preserve"><value>Perpindahan zona</value></data>
+  <data name="K739" xml:space="preserve"><value>mendarat</value></data>
+  <data name="K740" xml:space="preserve"><value>turun tunggangan</value></data>
+  <data name="K741" xml:space="preserve"><value>HealRider terhalang: {0}</value></data>
+  <data name="K742" xml:space="preserve"><value>Pembersihan HealRider: {0}</value></data>
+  <data name="K743" xml:space="preserve"><value>HealRider: {0}</value></data>
+  <data name="K744" xml:space="preserve"><value>HealRider: {0}: {1}</value></data>
+  <data name="K745" xml:space="preserve"><value>Pembersihan Pembantu kehabisan waktu menunggu {0}; menunggu percobaan pembersihan terkoordinasi ulang.</value></data>
+  <data name="K746" xml:space="preserve"><value>karakter yang direkam siap</value></data>
+  <data name="K747" xml:space="preserve"><value>aksi menaiki tunggangan selesai</value></data>
+  <data name="K748" xml:space="preserve"><value>Mendarat untuk pembersihan</value></data>
+  <data name="K749" xml:space="preserve"><value>Turun untuk pembersihan</value></data>
+  <data name="K750" xml:space="preserve"><value>Turun untuk pembersihan transportasi</value></data>
+  <data name="K751" xml:space="preserve"><value>Mempersiapkan tunggangan penumpang terpilih untuk mengikuti</value></data>
+  <data name="K752" xml:space="preserve"><value>Kebijakan tunggangan penugasan berubah</value></data>
+  <data name="K753" xml:space="preserve"><value>Tujuan atau tahap perjalanan berubah</value></data>
+  <data name="K754" xml:space="preserve"><value>Serah terima tugas</value></data>
+  <data name="K755" xml:space="preserve"><value>Penjemputan dibatalkan</value></data>
+  <data name="K756" xml:space="preserve"><value>Aksi mode tunggangan penugasan tidak didukung.</value></data>
+  <data name="K757" xml:space="preserve"><value>Selesaikan perjalanan aktif sebelum mengubah kebijakan tunggangan.</value></data>
+  <data name="K758" xml:space="preserve"><value>Pilih tunggangan yang sudah dibuka dengan kursi penumpang pada Pembantu.</value></data>
+  <data name="K759" xml:space="preserve"><value>Persiapan tunggangan penumpang terpilih ditolak atau melebihi waktu penjemputan.</value></data>
+  <data name="K760" xml:space="preserve"><value>HealRider v2 diperlukan. Perbarui Pembantu dan Quester.</value></data>
+  <data name="K761" xml:space="preserve"><value>Permintaan HealRider v2 tidak valid.</value></data>
+  <data name="K762" xml:space="preserve"><value>Tahap perjalanan ini digantikan tahap lebih baru.</value></data>
+  <data name="K763" xml:space="preserve"><value>Kelanjutan berkendara ini dihentikan.</value></data>
+  <data name="K764" xml:space="preserve"><value>Menunggu perjalanan sebelumnya turun tunggangan.</value></data>
+  <data name="K765" xml:space="preserve"><value>Percobaan pembersihan ulang memerlukan karakter dan party yang direkam.</value></data>
+  <data name="K766" xml:space="preserve"><value>Aksi HealRider tidak didukung.</value></data>
+  <data name="K767" xml:space="preserve"><value>Kebijakan tunggangan penumpang penugasan belum siap.</value></data>
+  <data name="K768" xml:space="preserve"><value>Tahap perjalanan ini sudah berakhir.</value></data>
+  <data name="K769" xml:space="preserve"><value>Waktu tunggu penjemputan bersama habis sebelum penjemputan diterima.</value></data>
+  <data name="K770" xml:space="preserve"><value>Penjemputan memerlukan tunggangan penumpang terbuka, Pembantu dapat terbang, Quester tidak terbang dan di luar batas berjalan, serta party yang tepat di area ini.</value></data>
+  <data name="K771" xml:space="preserve"><value>Konteks perjalanan hilang, terhalang, atau kehabisan waktu</value></data>
+  <data name="K772" xml:space="preserve"><value>Waktu tunggu penjemputan bersama habis saat mendekat atau naik</value></data>
+  <data name="K773" xml:space="preserve"><value>Menunggu kedua klien dimuat dalam perjalanan berkendara.</value></data>
+  <data name="K774" xml:space="preserve"><value>Menunggu kelanjutan berkendara dan kedua konfirmasi penumpang.</value></data>
+  <data name="K775" xml:space="preserve"><value>Perpindahan batas saat berkendara tidak dapat diverifikasi</value></data>
+  <data name="K776" xml:space="preserve"><value>Wilayah dan instans publik Pembantu dan Quester tidak lagi terverifikasi bersama</value></data>
+  <data name="K777" xml:space="preserve"><value>Quester atau party yang tepat tidak lagi tersedia</value></data>
+  <data name="K778" xml:space="preserve"><value>Verifikasi penumpang hilang saat menunggu langkah gerakan berikutnya</value></data>
+  <data name="K779" xml:space="preserve"><value>Pendaratan atau turun ditolak</value></data>
+  <data name="K780" xml:space="preserve"><value>Tujuan gerakan dicapai; menunggu langkah terverifikasi berikutnya.</value></data>
+  <data name="K781" xml:space="preserve"><value>Navigasi pendaratan presisi menolak tujuan yang direkam</value></data>
+  <data name="K782" xml:space="preserve"><value>IPC navigasi pendaratan presisi gagal</value></data>
+  <data name="K783" xml:space="preserve"><value>Status navigasi pendaratan presisi tidak tersedia</value></data>
+  <data name="K784" xml:space="preserve"><value>Rute pendaratan presisi gagal sebelum mencapai XYZ yang direkam</value></data>
+  <data name="K785" xml:space="preserve"><value>Status navigasi perjalanan tidak tersedia</value></data>
+  <data name="K786" xml:space="preserve"><value>Rute penumpang gagal sebelum tiba</value></data>
+  <data name="K787" xml:space="preserve"><value>Navigasi perjalanan menolak tujuan</value></data>
+  <data name="K788" xml:space="preserve"><value>IPC navigasi perjalanan gagal</value></data>
+  <data name="K789" xml:space="preserve"><value>Pendaratan keluar dari toleransi kedatangan.</value></data>
+  <data name="K790" xml:space="preserve"><value>Quester yang tepat meninggalkan kursi penumpang atau party.</value></data>
+  <data name="K791" xml:space="preserve"><value>Tunggangan terpilih dituruni sebelum penumpang naik.</value></data>
+  <data name="K792" xml:space="preserve"><value>Tunggangan penumpang terpilih tidak dapat disiapkan.</value></data>
+  <data name="K793" xml:space="preserve"><value>Menunggu kedua konfirmasi penumpang.</value></data>
+  <data name="K794" xml:space="preserve"><value>Menunggu pendaratan teramati pada tujuan yang direkam.</value></data>
+  <data name="K795" xml:space="preserve"><value>Menunggu pengamatan penumpang asli Pembantu.</value></data>
+  <data name="K796" xml:space="preserve"><value>Menunggu konfirmasi penumpang Quester.</value></data>
+  <data name="K797" xml:space="preserve"><value>Rute Epilogue Gate dibatalkan atau kehabisan waktu</value></data>
+  <data name="K798" xml:space="preserve"><value>Melalui Epilogue Gate di Idyllshire</value></data>
+  <data name="K799" xml:space="preserve"><value>Perintah Epilogue Gate Lifestream tidak tersedia</value></data>
+  <data name="K800" xml:space="preserve"><value>Lifestream menolak rute Epilogue Gate</value></data>
+  <data name="K801" xml:space="preserve"><value>Menuju {0} untuk berganti instans publik</value></data>
+  <data name="K802" xml:space="preserve"><value>Aetheryte pergantian instans {0} tidak dicapai</value></data>
+  <data name="K803" xml:space="preserve"><value>Penugasan dilepas</value></data>
+  <data name="K804" xml:space="preserve"><value>Perjalanan Dravanian Hinterlands memerlukan Pembantu ini dapat terbang</value></data>
+  <data name="K805" xml:space="preserve"><value>IPC perjalanan Lifestream tidak tersedia.</value></data>
+  <data name="K806" xml:space="preserve"><value>IPC perjalanan vnavmesh tidak tersedia.</value></data>
+  <data name="K807" xml:space="preserve"><value>IPC perjalanan Lifestream yang diperlukan tidak tersedia.</value></data>
+  <data name="K808" xml:space="preserve"><value>IPC perjalanan vnavmesh yang diperlukan tidak tersedia.</value></data>
+  <data name="K809" xml:space="preserve"><value>LOS terhalang; perjalanan berpasangan aktif</value></data>
+  <data name="K810" xml:space="preserve"><value>LOS terhalang; perjalanan berpasangan menentukan lokasi jauh</value></data>
+  <data name="K811" xml:space="preserve"><value>LOS terhalang; target di luar jarak penyelamatan</value></data>
+  <data name="K812" xml:space="preserve"><value>Ditangguhkan di dalam tugas</value></data>
+  <data name="K813" xml:space="preserve"><value>IPC Powerlevel FrenRider tidak kompatibel. Perbarui FrenRider.</value></data>
+  <data name="K814" xml:space="preserve"><value>IPC Powerlevel FrenRider tidak tersedia.</value></data>
+  <data name="K815" xml:space="preserve"><value>Status Powerlevel FrenRider kosong.</value></data>
+  <data name="K816" xml:space="preserve"><value>IPC Powerlevel FrenRider belum ditanyakan.</value></data>
+  <data name="K817" xml:space="preserve"><value>FrenRider mengembalikan respons kosong.</value></data>
+  <data name="K818" xml:space="preserve"><value>Status Powerlevel FrenRider tidak kompatibel.</value></data>
+  <data name="K819" xml:space="preserve"><value>Frame TCP pemasangan tidak lengkap.</value></data>
+  <data name="K820" xml:space="preserve"><value>Tag autentikasi pemasangan tidak valid.</value></data>
+  <data name="K821" xml:space="preserve"><value>Timestamp pemasangan tidak valid.</value></data>
+  <data name="K822" xml:space="preserve"><value>Autentikasi pemasangan gagal.</value></data>
+  <data name="K823" xml:space="preserve"><value>Frame TCP pemasangan melebihi 64 KiB.</value></data>
+  <data name="K824" xml:space="preserve"><value>Amplop pemasangan diputar ulang.</value></data>
+  <data name="K825" xml:space="preserve"><value>Amplop pemasangan usang.</value></data>
+  <data name="K826" xml:space="preserve"><value>Rahasia bersama belum dikonfigurasi.</value></data>
+  <data name="K827" xml:space="preserve"><value>Amplop pemasangan tidak ditandatangani atau tidak kompatibel.</value></data>
+  <data name="K828" xml:space="preserve"><value>Pemasangan HealBot sedang dilepas.</value></data>
+  <data name="K829" xml:space="preserve"><value>Pilih peran Pembantu pada klien penyembuhan.</value></data>
+  <data name="K830" xml:space="preserve"><value>Penyedia Pembantu tidak dikendalikan pemasangan Newb langsung.</value></data>
+  <data name="K831" xml:space="preserve"><value>QST mengendalikan aktivasi penyedia.</value></data>
+  <data name="K832" xml:space="preserve"><value>Pemasangan Newb langsung tidak mengendalikan aktivasi Pembantu.</value></data>
+  <data name="K833" xml:space="preserve"><value>ID sesi Newb tidak valid.</value></data>
+  <data name="K834" xml:space="preserve"><value>HealBot sudah memiliki penugasan QST atau Newb aktif.</value></data>
+  <data name="K835" xml:space="preserve"><value>Identitas Newb tidak valid.</value></data>
+  <data name="K836" xml:space="preserve"><value>Sesi Newb tidak mengendalikan penugasan aktif.</value></data>
+  <data name="K837" xml:space="preserve"><value>Sesi Newb tidak mengendalikan penugasan yang aktif.</value></data>
+  <data name="K838" xml:space="preserve"><value>Pembaruan perjalanan tidak cocok dengan Newb tepat yang ditugaskan.</value></data>
+  <data name="K839" xml:space="preserve"><value>HealBot tidak dapat mengaktifkan JOAT.</value></data>
+  <data name="K840" xml:space="preserve"><value>HealBot dinonaktifkan.</value></data>
+  <data name="K841" xml:space="preserve"><value>Otomatisasi HealBot dinonaktifkan.</value></data>
+  <data name="K842" xml:space="preserve"><value>Pilih Jacqueline of All Trades (JOAT).</value></data>
+  <data name="K843" xml:space="preserve"><value>Rotation Solver Reborn diperlukan untuk serangan JOAT.</value></data>
+  <data name="K844" xml:space="preserve"><value>Otomatisasi nonaktif.</value></data>
+  <data name="K845" xml:space="preserve"><value>Pilih untuk mengaktifkan otomatisasi sekarang atau tetap nonaktif.</value></data>
+  <data name="K846" xml:space="preserve"><value>HealBot tidak dapat memulai peran terpilih.</value></data>
+  <data name="K847" xml:space="preserve"><value>Pengaturan {0} disimpan. Peran operasi tetap Nonaktif.</value></data>
+  <data name="K848" xml:space="preserve"><value>Pengaturan {0} disimpan dan dimulai.</value></data>
+  <data name="K849" xml:space="preserve"><value>Peran operasi tidak dikenal.</value></data>
+  <data name="K850" xml:space="preserve"><value>QST terpasang</value></data>
+  <data name="K851" xml:space="preserve"><value>Penyembuhan {0}; serangan {1}</value></data>
+  <data name="K852" xml:space="preserve"><value>{0}: {1} Klik untuk membuka jendela utama.</value></data>
+  <data name="K853" xml:space="preserve"><value> Perilaku: {0}.</value></data>
+  <data name="K854" xml:space="preserve"><value>Peran: {0}.{1} Status: {2} Berikutnya: {3} Identitas: {4}</value></data>
+  <data name="K855" xml:space="preserve"><value>Dukungan otomatis untuk petualanganmu</value></data>
+  <data name="K856" xml:space="preserve"><value>Pendamping ringkas untuk bermain sehari-hari</value></data>
+  <data name="Window appearance" xml:space="preserve">
+    <value>Tampilan jendela</value>
+  </data>
+  <data name="Compact visible on main window" xml:space="preserve">
+    <value>Tampilkan mode ringkas di jendela utama</value>
+  </data>
+  <data name="Language visible on main window" xml:space="preserve">
+    <value>Tampilkan pilihan bahasa di jendela utama</value>
+  </data>
+  <data name="Transparency" xml:space="preserve">
+    <value>Transparansi</value>
+  </data>
+  <data name="Opacity (%)" xml:space="preserve">
+    <value>Opasitas (%)</value>
+  </data>
+  <data name="Auto-fade when unfocused" xml:space="preserve">
+    <value>Redupkan otomatis saat tidak fokus</value>
+  </data>
+  <data name="Unfocused opacity (%)" xml:space="preserve">
+    <value>Opasitas saat tidak fokus (%)</value>
+  </data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve">
+    <value>Jeda saat tidak fokus (detik)</value>
+  </data>
+</root>

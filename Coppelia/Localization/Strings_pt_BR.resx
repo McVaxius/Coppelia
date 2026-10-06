@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="K000" xml:space="preserve"><value>%d segundos</value></data>
+  <data name="K001" xml:space="preserve"><value>%d y</value></data>
+  <data name="K002" xml:space="preserve"><value>...e mais {0} alvos monitorados.</value></data>
+  <data name="K003" xml:space="preserve"><value>{0} - monitora {1}</value></data>
+  <data name="K004" xml:space="preserve"><value>{0} / {1}% HP</value></data>
+  <data name="K005" xml:space="preserve"><value>{0} / ausente / Ctrl para remover</value></data>
+  <data name="K006" xml:space="preserve"><value>{0} / morto</value></data>
+  <data name="K007" xml:space="preserve"><value>{0} / oculto pelos filtros</value></data>
+  <data name="K008" xml:space="preserve"><value>{0} / mantido</value></data>
+  <data name="K009" xml:space="preserve"><value>{0} [{1}] - {2}</value></data>
+  <data name="K010" xml:space="preserve"><value>{0} pareamento direto</value></data>
+  <data name="K011" xml:space="preserve"><value>{0} equipado</value></data>
+  <data name="K012" xml:space="preserve"><value>{0} não está desbloqueado</value></data>
+  <data name="K013" xml:space="preserve"><value>{0} Mini</value></data>
+  <data name="K014" xml:space="preserve"><value>{0} alvo(s) mantido(s)/salvo(s) estão ocultos ou ausentes. Abra a janela de monitoramento para gerenciá-los.</value></data>
+  <data name="K015" xml:space="preserve"><value>Configurações {0}</value></data>
+  <data name="K016" xml:space="preserve"><value>{0} Monitoramento</value></data>
+  <data name="K017" xml:space="preserve"><value>{0}%</value></data>
+  <data name="K018" xml:space="preserve"><value>{0}% HP</value></data>
+  <data name="K019" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="K020" xml:space="preserve"><value>47789 é reservado</value></data>
+  <data name="K021" xml:space="preserve"><value>Um Fren configurado e visível, sem chocobo companheiro ativo.</value></data>
+  <data name="K022" xml:space="preserve"><value>Um BRD ou MCH atualmente equipado e desbloqueado.</value></data>
+  <data name="K023" xml:space="preserve"><value>Linhas ausentes exigem Ctrl+desmarcar. Remover aqui também remove a cópia salva.</value></data>
+  <data name="K024" xml:space="preserve"><value>Ação</value></data>
+  <data name="K025" xml:space="preserve"><value>Ativo - dispensar</value></data>
+  <data name="K026" xml:space="preserve"><value>Ativo / identidade pareada</value></data>
+  <data name="K027" xml:space="preserve"><value>Ativo / identidade pareada: {0}</value></data>
+  <data name="K028" xml:space="preserve"><value>Ativos: {0}/{1} | Presentes: {2} | Salvos: {3}</value></data>
+  <data name="K029" xml:space="preserve"><value>Ativos: 1/{0} | Presentes: {1} | Salvos: inalterados</value></data>
+  <data name="K030" xml:space="preserve"><value>Ordem em vida: BUFF instantâneo -&gt; oGCD instantâneo -&gt; BUFF conjurado -&gt; GCD conjurado. A preparação de alvos mortos verifica buffs instantâneos antes de ressuscitar.</value></data>
+  <data name="K031" xml:space="preserve"><value>Astrólogo (AST)</value></data>
+  <data name="K032" xml:space="preserve"><value>Pelo menos 16 caracteres</value></data>
+  <data name="K033" xml:space="preserve"><value>Ação de ataque: {0}</value></data>
+  <data name="K034" xml:space="preserve"><value>Alvo de ataque: {0}</value></data>
+  <data name="K035" xml:space="preserve"><value>Postura atacante</value></data>
+  <data name="K036" xml:space="preserve"><value>Prontidão de ataque</value></data>
+  <data name="K037" xml:space="preserve"><value>Ataque: {0}</value></data>
+  <data name="K038" xml:space="preserve"><value>O pareamento direto autenticado usa o segredo compartilhado visível.</value></data>
+  <data name="K039" xml:space="preserve"><value>O tráfego LAN autenticado não é criptografado; nomes de personagens e coordenadas ficam visíveis na rede.</value></data>
+  <data name="K040" xml:space="preserve"><value>Atualizar locais do mapa ao entrar</value></data>
+  <data name="K041" xml:space="preserve"><value>Disponível</value></data>
+  <data name="K042" xml:space="preserve"><value>Disponível e compatível</value></data>
+  <data name="K043" xml:space="preserve"><value>Voltar</value></data>
+  <data name="K044" xml:space="preserve"><value>Bardo (BRD)</value></data>
+  <data name="K045" xml:space="preserve"><value>NPC de batalha</value></data>
+  <data name="K046" xml:space="preserve"><value>BMR ou VBM</value></data>
+  <data name="K047" xml:space="preserve"><value>Ambas as opções usam seleção de alvo RSR Manual. Apenas DoTs ativa somente o dano ao longo do tempo do curandeiro equipado; RSR completo restaura as ações ofensivas e o modo AoE capturados sem ativar a seleção automática de alvo.</value></data>
+  <data name="K048" xml:space="preserve"><value>Ambas usam seleção de alvo RSR Manual. RSR completo altera somente ações ofensivas e AoE.</value></data>
+  <data name="K049" xml:space="preserve"><value>Ambos devem usar protocolo de pareamento direto v2 compatível, com a mesma porta e segredo compartilhado.</value></data>
+  <data name="K050" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="K051" xml:space="preserve"><value>Usa ações de cura configuradas nos alvos aliados monitorados.</value></data>
+  <data name="K052" xml:space="preserve"><value>Chocobos</value></data>
+  <data name="K053" xml:space="preserve"><value>Escolha uma função operacional. Independente usa um comportamento local. As configurações ficam no rascunho até Concluir; Cancelar descarta o rascunho.</value></data>
+  <data name="K054" xml:space="preserve"><value>Escolha a profissão à distância já equipada. HealBot nunca troca conjuntos de equipamento nem usa a lista de alvos monitorados neste modo.</value></data>
+  <data name="K055" xml:space="preserve"><value>Escolha os objetos aliados exibidos em Monitoramento. Somente alvos marcados explicitamente são curados ou salvos.</value></data>
+  <data name="K056" xml:space="preserve"><value>Limpar monitorados</value></data>
+  <data name="K057" xml:space="preserve"><value>Alvos monitorados e salvos removidos.</value></data>
+  <data name="K058" xml:space="preserve"><value>Comandos e janelas</value></data>
+  <data name="K059" xml:space="preserve"><value>Companheiro</value></data>
+  <data name="K060" xml:space="preserve"><value>Chocobo companheiro</value></data>
+  <data name="K061" xml:space="preserve"><value>Chocobos companheiros</value></data>
+  <data name="K062" xml:space="preserve"><value>Postura do companheiro</value></data>
+  <data name="K063" xml:space="preserve"><value>IPC Powerlevel do FrenRider compatível, com FrenRider ativado e seu Fren configurado visível.</value></data>
+  <data name="K064" xml:space="preserve"><value>IPC Powerlevel do FrenRider compatível, com FrenRider ativado.</value></data>
+  <data name="K065" xml:space="preserve"><value>Configure um endpoint HealBot TCP direto autenticado. Newb nunca cura nem ataca localmente.</value></data>
+  <data name="K066" xml:space="preserve"><value>Configure a porta de escuta autenticada e o segredo compartilhado visível.</value></data>
+  <data name="K067" xml:space="preserve"><value>Configure o comportamento HealBot, JOAT ou PowerlevelBot selecionado sem rede.</value></data>
+  <data name="K068" xml:space="preserve"><value>Configurado</value></data>
+  <data name="K069" xml:space="preserve"><value>Fren configurado</value></data>
+  <data name="K070" xml:space="preserve"><value>Continuar</value></data>
+  <data name="K071" xml:space="preserve"><value>Copiar</value></data>
+  <data name="K072" xml:space="preserve"><value>Copiar segredo</value></data>
+  <data name="K073" xml:space="preserve"><value>ID da profissão atual {0} não corresponde</value></data>
+  <data name="K074" xml:space="preserve"><value>Morto</value></data>
+  <data name="K075" xml:space="preserve"><value>padrão</value></data>
+  <data name="K076" xml:space="preserve"><value>Postura defensora</value></data>
+  <data name="K077" xml:space="preserve"><value>Prontidão das dependências</value></data>
+  <data name="K078" xml:space="preserve"><value>Detalhes</value></data>
+  <data name="K079" xml:space="preserve"><value>Desativado</value></data>
+  <data name="K080" xml:space="preserve"><value>Discord</value></data>
+  <data name="K081" xml:space="preserve"><value>Dispensado</value></data>
+  <data name="K082" xml:space="preserve"><value>Dist</value></data>
+  <data name="K083" xml:space="preserve"><value>Não usar aetheryte Tamamizu</value></data>
+  <data name="K084" xml:space="preserve"><value>Apenas DoTs</value></data>
+  <data name="K085" xml:space="preserve"><value>Barra DTR</value></data>
+  <data name="K086" xml:space="preserve"><value>Modo DTR</value></data>
+  <data name="K087" xml:space="preserve"><value>Ativar {0}</value></data>
+  <data name="K088" xml:space="preserve"><value>Ativado</value></data>
+  <data name="K089" xml:space="preserve"><value>Ativado, configurado e visível</value></data>
+  <data name="K090" xml:space="preserve"><value>Endpoint: {0}</value></data>
+  <data name="K091" xml:space="preserve"><value>A seleção fica restrita a inimigos feridos já enfrentando o Fren ou jogador local.</value></data>
+  <data name="K092" xml:space="preserve"><value>Equipado</value></data>
+  <data name="K093" xml:space="preserve"><value>Filtrar por nome, tipo ou profissão</value></data>
+  <data name="K094" xml:space="preserve"><value>Filtrar nomes...</value></data>
+  <data name="K095" xml:space="preserve"><value>Filtros: jogadores {0}, chocobos {1}, grupo NPC {2}, NPCs de batalha aliados {3}.</value></data>
+  <data name="K096" xml:space="preserve"><value>Concluir deve iniciar a função escolhida agora ou salvá-la para retomada por /healbot on, permanecendo Desligado.</value></data>
+  <data name="K097" xml:space="preserve"><value>Concluir configuração</value></data>
+  <data name="K098" xml:space="preserve"><value>Seguir</value></data>
+  <data name="K099" xml:space="preserve"><value>Duração da sondagem de território avançando</value></data>
+  <data name="K100" xml:space="preserve"><value>Postura livre</value></data>
+  <data name="K101" xml:space="preserve"><value>Visibilidade do Fren</value></data>
+  <data name="K102" xml:space="preserve"><value>FrenRider</value></data>
+  <data name="K103" xml:space="preserve"><value>IPC de ataque do FrenRider</value></data>
+  <data name="K104" xml:space="preserve"><value>Fonte de ataque do FrenRider</value></data>
+  <data name="K105" xml:space="preserve"><value>IPC FrenRider</value></data>
+  <data name="K106" xml:space="preserve"><value>NPCs de batalha aliados</value></data>
+  <data name="K107" xml:space="preserve"><value>Rotação RSR completa</value></data>
+  <data name="K108" xml:space="preserve"><value>Geral</value></data>
+  <data name="K109" xml:space="preserve"><value>Gerar segredo hexadecimal de 64 caracteres</value></data>
+  <data name="K110" xml:space="preserve"><value>Gerar segredo</value></data>
+  <data name="K111" xml:space="preserve"><value>Gysahl Greens (NQ + HQ): {0}</value></data>
+  <data name="K112" xml:space="preserve"><value>Gysahl Greens (NQ + HQ): indisponível</value></data>
+  <data name="K113" xml:space="preserve"><value>HealBot</value></data>
+  <data name="K114" xml:space="preserve"><value>HealBot {0}</value></data>
+  <data name="K115" xml:space="preserve"><value>Ações HealBot</value></data>
+  <data name="K116" xml:space="preserve"><value>HealBot e JOAT compartilham esta matriz de ações de cura por profissão. PowerlevelBot não usa essas regras.</value></data>
+  <data name="K117" xml:space="preserve"><value>HealBot avalia a lista de {0} alvos monitorados configurada e usa a matriz WHM, SCH, AST ou SGE existente. Os alvos podem ser aliados fora do seu grupo.</value></data>
+  <data name="K118" xml:space="preserve"><value>HealBot Mini</value></data>
+  <data name="K119" xml:space="preserve"><value>Integração HealBot opcional</value></data>
+  <data name="K120" xml:space="preserve"><value>Caminho HealBot</value></data>
+  <data name="K121" xml:space="preserve"><value>HealBot aceita /healbot, /hb e /copellia com off, on, standalone, helper, newb, heal, joat (ou jot), powerlevel, mini, status, config, watch, ws e j.</value></data>
+  <data name="K122" xml:space="preserve"><value>HealBot Monitoramento</value></data>
+  <data name="K123" xml:space="preserve"><value>Matriz de ações do curandeiro</value></data>
+  <data name="K124" xml:space="preserve"><value>Postura curadora</value></data>
+  <data name="K125" xml:space="preserve"><value>Ação de cura: {0} | Ação de ataque: {1}</value></data>
+  <data name="K126" xml:space="preserve"><value>Configuração de cura</value></data>
+  <data name="K127" xml:space="preserve"><value>Contexto de cura</value></data>
+  <data name="K128" xml:space="preserve"><value>Dependências de cura</value></data>
+  <data name="K129" xml:space="preserve"><value>Condição de cura</value></data>
+  <data name="K130" xml:space="preserve"><value>Prontidão de cura</value></data>
+  <data name="K131" xml:space="preserve"><value>A cura tem prioridade em cada ciclo de 900 ms. Coppelia desliga RSR antes de uma regra de Monitoramento agir, mantém desligado enquanto a cura está enfileirada, bloqueada ou conjurando e usa RSR Manual somente quando não há cura pendente. JOAT pareado espera em Manual a até 30 yalms, enquanto Coppelia seleciona um inimigo em combate.</value></data>
+  <data name="K132" xml:space="preserve"><value>Cura: {0}</value></data>
+  <data name="K133" xml:space="preserve"><value>Auxiliar</value></data>
+  <data name="K134" xml:space="preserve"><value>Requisitos de pareamento Auxiliar / Newb</value></data>
+  <data name="K135" xml:space="preserve"><value>Endereço do Auxiliar</value></data>
+  <data name="K136" xml:space="preserve"><value>Endpoint do Auxiliar: {0}:{1}.</value></data>
+  <data name="K137" xml:space="preserve"><value>Endereço IPv4 do Auxiliar</value></data>
+  <data name="K138" xml:space="preserve"><value>Porta de escuta do Auxiliar: {0}.</value></data>
+  <data name="K139" xml:space="preserve"><value>Auxiliar escuta um Newb autenticado e ativa JOAT somente após uma solicitação de status compatível.</value></data>
+  <data name="K140" xml:space="preserve"><value>Auxiliar precisa de porta TCP válida e segredo compartilhado visível; Newb também precisa do IPv4 do Auxiliar.</value></data>
+  <data name="K141" xml:space="preserve"><value>Auxiliar precisa das dependências HealBot/JOAT, além de Lifestream e vnavmesh para viagem pareada.</value></data>
+  <data name="K142" xml:space="preserve"><value>Auxiliar controla sua porta de escuta e segredo compartilhado. Newb também controla o IPv4 do Auxiliar.</value></data>
+  <data name="K143" xml:space="preserve"><value>Oculto pelos filtros</value></data>
+  <data name="K144" xml:space="preserve"><value>Segure Ctrl para remover todos os alvos monitorados e salvos.</value></data>
+  <data name="K145" xml:space="preserve"><value>Segure Ctrl ao desmarcar o alvo mantido ausente {0}.</value></data>
+  <data name="K146" xml:space="preserve"><value>Por quanto tempo o Auxiliar avança quando seu Newb/Quester pareado muda de território sem teleporte.</value></data>
+  <data name="K147" xml:space="preserve"><value>HP</value></data>
+  <data name="K148" xml:space="preserve"><value>HP indisponível</value></data>
+  <data name="K149" xml:space="preserve"><value>HP%</value></data>
+  <data name="K150" xml:space="preserve"><value>HP: {0}</value></data>
+  <data name="K151" xml:space="preserve"><value>HP: HP indisponível</value></data>
+  <data name="K152" xml:space="preserve"><value>HP: Alvo não visível</value></data>
+  <data name="K153" xml:space="preserve"><value>Ícone e texto</value></data>
+  <data name="K154" xml:space="preserve"><value>Somente ícone</value></data>
+  <data name="K155" xml:space="preserve"><value>Incompatível</value></data>
+  <data name="K156" xml:space="preserve"><value>Endereço IPv4 inválido</value></data>
+  <data name="K157" xml:space="preserve"><value>Jacqueline of All Trades (JOAT)</value></data>
+  <data name="K158" xml:space="preserve"><value>Requisitos de Jacqueline of All Trades (JOAT)</value></data>
+  <data name="K159" xml:space="preserve"><value>JOAT</value></data>
+  <data name="K160" xml:space="preserve"><value>Modo de ataque JOAT</value></data>
+  <data name="K161" xml:space="preserve"><value>Modo de ataque JOAT: {0}; ambos usam seleção RSR Manual quando a cura está realmente ociosa.</value></data>
+  <data name="K162" xml:space="preserve"><value>Prontidão de ataque JOAT</value></data>
+  <data name="K163" xml:space="preserve"><value>JOAT não adiciona automaticamente o Fren do FrenRider. Marque-o em Monitoramento quando for o alvo de nível baixo que precisa de cura.</value></data>
+  <data name="K164" xml:space="preserve"><value>Matriz de cura JOAT</value></data>
+  <data name="K165" xml:space="preserve"><value>Caminho de cura JOAT</value></data>
+  <data name="K166" xml:space="preserve"><value>JOAT nunca adiciona o Fren do FrenRider ao Monitoramento. Marque-o lá para protegê-lo com cura; ataques ficam limitados a inimigos já mirando esse Fren visível ou o curandeiro local.</value></data>
+  <data name="K167" xml:space="preserve"><value>A prontidão JOAT ainda não foi verificada.</value></data>
+  <data name="K168" xml:space="preserve"><value>Alvos monitorados JOAT</value></data>
+  <data name="K169" xml:space="preserve"><value>JOAT: {0}</value></data>
+  <data name="K170" xml:space="preserve"><value>Classe</value></data>
+  <data name="K171" xml:space="preserve"><value>Profissão equipada</value></data>
+  <data name="K172" xml:space="preserve"><value>Profissão desbloqueada</value></data>
+  <data name="K173" xml:space="preserve"><value>Ko-fi</value></data>
+  <data name="K174" xml:space="preserve"><value>Krangle</value></data>
+  <data name="K175" xml:space="preserve"><value>Ofuscar nomes</value></data>
+  <data name="K176" xml:space="preserve"><value>Embaralhar nomes: DESLIGADO</value></data>
+  <data name="K177" xml:space="preserve"><value>Embaralhar nomes: LIGADO</value></data>
+  <data name="K178" xml:space="preserve"><value>O tráfego LAN é autenticado, mas não criptografado. Nomes e coordenadas ficam visíveis na rede local. Conexão, autenticação, atribuição e reconexão permanecem assíncronas.</value></data>
+  <data name="K179" xml:space="preserve"><value>Idioma</value></data>
+  <data name="K180" xml:space="preserve"><value>Última ação</value></data>
+  <data name="K181" xml:space="preserve"><value>Última regra</value></data>
+  <data name="K182" xml:space="preserve"><value>Alvos elegíveis presentes ({0})</value></data>
+  <data name="K183" xml:space="preserve"><value>Carregado</value></data>
+  <data name="K184" xml:space="preserve"><value>Rotation Solver Reborn carregado e funcional; o dano JOAT é executado somente por RSR.</value></data>
+  <data name="K185" xml:space="preserve"><value>Curandeiro local: {0} ({1})</value></data>
+  <data name="K186" xml:space="preserve"><value>HP do Newb local: {0}</value></data>
+  <data name="K187" xml:space="preserve"><value>Identidade do Newb local</value></data>
+  <data name="K188" xml:space="preserve"><value>Conclua o login antes de iniciar Newb</value></data>
+  <data name="K189" xml:space="preserve"><value>LOS: {0}</value></data>
+  <data name="K190" xml:space="preserve"><value>LOS: Alvo não visível</value></data>
+  <data name="K191" xml:space="preserve"><value>Maquinista (MCH)</value></data>
+  <data name="K192" xml:space="preserve"><value>Principal</value></data>
+  <data name="K193" xml:space="preserve"><value>Gerencie alvos monitorados e procure aliados.</value></data>
+  <data name="K194" xml:space="preserve"><value>Gerencie alvos somente na janela Monitoramento. Limpar com Ctrl remove tanto os monitorados ativos quanto os salvos.</value></data>
+  <data name="K195" xml:space="preserve"><value>Mini</value></data>
+  <data name="K196" xml:space="preserve"><value>Ausente</value></data>
+  <data name="K197" xml:space="preserve"><value>Ausente (opcional)</value></data>
+  <data name="K198" xml:space="preserve"><value>MP%</value></data>
+  <data name="K199" xml:space="preserve"><value>Limite de monitoramento: {0} alvos ativos e {1} salvos.</value></data>
+  <data name="K200" xml:space="preserve"><value>Nome</value></data>
+  <data name="K201" xml:space="preserve"><value>Precisa do buff ausente</value></data>
+  <data name="K202" xml:space="preserve"><value>A rede já está salva.</value></data>
+  <data name="K203" xml:space="preserve"><value>Rede salva; pareamento direto reiniciado uma vez.</value></data>
+  <data name="K204" xml:space="preserve"><value>Newb</value></data>
+  <data name="K205" xml:space="preserve"><value>Newb conecta de forma assíncrona a um endpoint IPv4 exato do Auxiliar e nunca cura nem ataca localmente.</value></data>
+  <data name="K206" xml:space="preserve"><value>Newb não cura nem ataca localmente e mantém a lista de monitoramento Independente inalterada.</value></data>
+  <data name="K207" xml:space="preserve"><value>Newb não cura nem ataca localmente. Esta lista permanece inalterada para uso posterior de HealBot ou JOAT.</value></data>
+  <data name="K208" xml:space="preserve"><value>Próxima ação</value></data>
+  <data name="K209" xml:space="preserve"><value>Próxima ação: {0}</value></data>
+  <data name="K210" xml:space="preserve"><value>Nenhum auxiliar/quester ativo</value></data>
+  <data name="K211" xml:space="preserve"><value>Nenhum alvo monitorado ativo</value></data>
+  <data name="K212" xml:space="preserve"><value>Nenhum alvo elegível corresponde aos filtros atuais.</value></data>
+  <data name="K213" xml:space="preserve"><value>Nenhum alvo monitorado selecionado ainda.</value></data>
+  <data name="K214" xml:space="preserve"><value>Nenhum</value></data>
+  <data name="K215" xml:space="preserve"><value>Nenhum selecionado</value></data>
+  <data name="K216" xml:space="preserve"><value>Não adquirido</value></data>
+  <data name="K217" xml:space="preserve"><value>Não configurado</value></data>
+  <data name="K218" xml:space="preserve"><value>Não desbloqueado</value></data>
+  <data name="K219" xml:space="preserve"><value>Não visível</value></data>
+  <data name="K220" xml:space="preserve"><value>Grupo NPC</value></data>
+  <data name="K221" xml:space="preserve"><value>Membros do grupo NPC</value></data>
+  <data name="K222" xml:space="preserve"><value>Desligado</value></data>
+  <data name="K223" xml:space="preserve"><value>ativado</value></data>
+  <data name="K224" xml:space="preserve"><value>Somente inimigos feridos já mirando o Fren configurado visível ou o jogador local são elegíveis.</value></data>
+  <data name="K225" xml:space="preserve"><value>Fora de combate</value></data>
+  <data name="K226" xml:space="preserve"><value>Abrir Principal</value></data>
+  <data name="K227" xml:space="preserve"><value>Abrir Mini</value></data>
+  <data name="K228" xml:space="preserve"><value>Abra agora a janela Monitoramento existente. Alterações de filtro do rascunho só se aplicam após Concluir.</value></data>
+  <data name="K229" xml:space="preserve"><value>Abrir Monitoramento</value></data>
+  <data name="K230" xml:space="preserve"><value>Abrir janela de monitoramento</value></data>
+  <data name="K231" xml:space="preserve"><value>Função operacional</value></data>
+  <data name="K232" xml:space="preserve"><value>Função operacional: {0}</value></data>
+  <data name="K233" xml:space="preserve"><value>Status operacional</value></data>
+  <data name="K234" xml:space="preserve"><value>Porta de pareamento</value></data>
+  <data name="K235" xml:space="preserve"><value>Auxiliar pareado: {0}</value></data>
+  <data name="K236" xml:space="preserve"><value>Porta TCP de pareamento</value></data>
+  <data name="K237" xml:space="preserve"><value>Pareamento: {0} - {1}</value></data>
+  <data name="K238" xml:space="preserve"><value>Jogadores</value></data>
+  <data name="K239" xml:space="preserve"><value>Profissão Powerlevel</value></data>
+  <data name="K240" xml:space="preserve"><value>Profissão Powerlevel: {0}.</value></data>
+  <data name="K241" xml:space="preserve"><value>A prontidão Powerlevel ainda não foi verificada.</value></data>
+  <data name="K242" xml:space="preserve"><value>PowerlevelBot</value></data>
+  <data name="K243" xml:space="preserve"><value>PowerlevelBot considera apenas inimigos vivos, selecionáveis e feridos já mirando o Fren configurado visível do FrenRider ou o jogador local. Usa ações BRD/MCH instantâneas, somente hostis e de alvo único, sem atrair inimigos intactos.</value></data>
+  <data name="K244" xml:space="preserve"><value>PowerlevelBot ignora a lista HealBot e usa o Fren configurado do FrenRider como líder.</value></data>
+  <data name="K245" xml:space="preserve"><value>PowerlevelBot nunca troca conjuntos de equipamento; sua profissão atual deve corresponder à seleção.</value></data>
+  <data name="K246" xml:space="preserve"><value>Caminho PowerlevelBot</value></data>
+  <data name="K247" xml:space="preserve"><value>Requisitos PowerlevelBot</value></data>
+  <data name="K248" xml:space="preserve"><value>Estado principal</value></data>
+  <data name="K249" xml:space="preserve"><value>Estado principal: {0}</value></data>
+  <data name="K250" xml:space="preserve"><value>Prioridade</value></data>
+  <data name="K251" xml:space="preserve"><value>Provedor: {0}</value></data>
+  <data name="K252" xml:space="preserve"><value>QST controla os ataques JOAT ({0}). </value></data>
+  <data name="K253" xml:space="preserve"><value>QST controla a invocação ({0}). </value></data>
+  <data name="K254" xml:space="preserve"><value>QST controla o modo de ataque ativo; a escolha local salva retorna após liberar.</value></data>
+  <data name="K255" xml:space="preserve"><value>Viagem QST</value></data>
+  <data name="K256" xml:space="preserve"><value>Configuração rápida</value></data>
+  <data name="K257" xml:space="preserve"><value>A Configuração rápida está concluída. Você pode executá-la novamente a qualquer momento nesta aba permanente.</value></data>
+  <data name="K258" xml:space="preserve"><value>Pronto</value></data>
+  <data name="K259" xml:space="preserve"><value>Pronto quando a cura está ociosa</value></data>
+  <data name="K260" xml:space="preserve"><value>Atualizar</value></data>
+  <data name="K261" xml:space="preserve"><value>Atualizar prontidão</value></data>
+  <data name="K262" xml:space="preserve"><value>Atualiza os dados comunitários de locais do mapa do LootGoblin uma vez por versão HealBot para escolher o aetheryte mais próximo.</value></data>
+  <data name="K263" xml:space="preserve"><value>Alcance de busca de retorno</value></data>
+  <data name="K264" xml:space="preserve"><value>Perseguição remota: {0}</value></data>
+  <data name="K265" xml:space="preserve"><value>Cura remota: {0}</value></data>
+  <data name="K266" xml:space="preserve"><value>Requisitos / Ajuda</value></data>
+  <data name="K267" xml:space="preserve"><value>Requisitos e ajuda</value></data>
+  <data name="K268" xml:space="preserve"><value>Resgate: {0}</value></data>
+  <data name="K269" xml:space="preserve"><value>Resgate: Inativo</value></data>
+  <data name="K270" xml:space="preserve"><value>Política restrita de inimigos</value></data>
+  <data name="K271" xml:space="preserve"><value>Mantido - ausente</value></data>
+  <data name="K272" xml:space="preserve"><value>Alvos mantidos ou ausentes ({0})</value></data>
+  <data name="K273" xml:space="preserve"><value>Revisar e concluir</value></data>
+  <data name="K274" xml:space="preserve"><value>Rede por função</value></data>
+  <data name="K275" xml:space="preserve"><value>Função: {0}</value></data>
+  <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
+  <data name="K277" xml:space="preserve"><value>RSR</value></data>
+  <data name="K278" xml:space="preserve"><value>Controle RSR</value></data>
+  <data name="K279" xml:space="preserve"><value>RSR é obrigatório e executa exclusivamente o dano JOAT. Coppelia continua a cura direta do Monitoramento e controla a passagem entre RSR desligado e retomada ociosa.</value></data>
+  <data name="K280" xml:space="preserve"><value>O isolamento RSR e a restauração exata da sessão são usados quando RSR está carregado; HealBot continua curando diretamente.</value></data>
+  <data name="K281" xml:space="preserve"><value>Execute a configuração guiada de Independente, Auxiliar ou Newb sem alterar nada até Concluir.</value></data>
+  <data name="K282" xml:space="preserve"><value>Executar Configuração rápida</value></data>
+  <data name="K283" xml:space="preserve"><value>Executar configuração rápida novamente</value></data>
+  <data name="K284" xml:space="preserve"><value>Cura primeiro os alvos monitorados e permite ataques RSR somente quando a cura está realmente ociosa.</value></data>
+  <data name="K285" xml:space="preserve"><value>Sábio (SGE)</value></data>
+  <data name="K286" xml:space="preserve"><value>Salvar alvos de cura monitorados explicitamente</value></data>
+  <data name="K287" xml:space="preserve"><value>Salvar alvos de cura</value></data>
+  <data name="K288" xml:space="preserve"><value>Salvar alvos de cura persiste somente os marcados explicitamente. Desmarcar também remove do conjunto salvo.</value></data>
+  <data name="K289" xml:space="preserve"><value>Salvar configuração e manter função Desligada</value></data>
+  <data name="K290" xml:space="preserve"><value>Salvo</value></data>
+  <data name="K291" xml:space="preserve"><value>Alcance de busca de alvos salvos</value></data>
+  <data name="K292" xml:space="preserve"><value>O alcance só afeta quando um alvo salvo pode voltar automaticamente; não descobre novos alvos.</value></data>
+  <data name="K293" xml:space="preserve"><value>Alvos salvos desligados.</value></data>
+  <data name="K294" xml:space="preserve"><value>Alvos salvos ligados; busca de retorno de {0} y.</value></data>
+  <data name="K295" xml:space="preserve"><value>Busca y</value></data>
+  <data name="K296" xml:space="preserve"><value>Erudito (SCH)</value></data>
+  <data name="K297" xml:space="preserve"><value>Selecione BRD ou MCH</value></data>
+  <data name="K298" xml:space="preserve"><value>Marque explicitamente o Fren configurado do FrenRider quando for o alvo de nível baixo a curar. JOAT nunca o adiciona a esta lista.</value></data>
+  <data name="K299" xml:space="preserve"><value>Selecione Auxiliar ou Newb para editar o pareamento direto.</value></data>
+  <data name="K300" xml:space="preserve"><value>Selecionado</value></data>
+  <data name="K301" xml:space="preserve"><value>Selecionado - remoto</value></data>
+  <data name="K302" xml:space="preserve"><value>Profissão selecionada</value></data>
+  <data name="K303" xml:space="preserve"><value>Profissão selecionada: {0}</value></data>
+  <data name="K304" xml:space="preserve"><value>próprio</value></data>
+  <data name="K305" xml:space="preserve"><value>Configurar Auxiliar</value></data>
+  <data name="K306" xml:space="preserve"><value>Configurar Newb</value></data>
+  <data name="K307" xml:space="preserve"><value>Configurar Independente</value></data>
+  <data name="K308" xml:space="preserve"><value>Configurações</value></data>
+  <data name="K309" xml:space="preserve"><value>Segredo compartilhado</value></data>
+  <data name="K310" xml:space="preserve"><value>Mostrar avisos de dependências</value></data>
+  <data name="K311" xml:space="preserve"><value>Mostrar entrada na barra DTR</value></data>
+  <data name="K312" xml:space="preserve"><value>Ignora Tamamizu ao escolher um destino de teleporte QST.</value></data>
+  <data name="K313" xml:space="preserve"><value>Independente</value></data>
+  <data name="K314" xml:space="preserve"><value>Comportamento independente</value></data>
+  <data name="K315" xml:space="preserve"><value>Requisitos HealBot independente</value></data>
+  <data name="K316" xml:space="preserve"><value>Independente executa HealBot, JOAT ou PowerlevelBot sem rede. Auxiliar escuta e ativa JOAT remotamente para um Newb autenticado. Newb conecta de forma assíncrona e não cura nem ataca localmente.</value></data>
+  <data name="K317" xml:space="preserve"><value>Independente executa HealBot, JOAT ou PowerlevelBot sem rede. Auxiliar escuta um Newb autenticado. Newb conecta de forma assíncrona e não cura nem ataca localmente.</value></data>
+  <data name="K318" xml:space="preserve"><value>Iniciar esta função agora</value></data>
+  <data name="K319" xml:space="preserve"><value>Estado</value></data>
+  <data name="K320" xml:space="preserve"><value>Status e comportamento</value></data>
+  <data name="K321" xml:space="preserve"><value>Painel de status</value></data>
+  <data name="K322" xml:space="preserve"><value>Status no chat</value></data>
+  <data name="K323" xml:space="preserve"><value>Passo {0} de 3</value></data>
+  <data name="K324" xml:space="preserve"><value>Invocar chocobo companheiro</value></data>
+  <data name="K325" xml:space="preserve"><value>Invocar chocobo companheiro (Gysahl Greens: {0})</value></data>
+  <data name="K326" xml:space="preserve"><value>Invocar chocobo companheiro (Gysahl Greens: indisponível)</value></data>
+  <data name="K327" xml:space="preserve"><value>Curandeiro suportado</value></data>
+  <data name="K328" xml:space="preserve"><value>Selecionar alvo atual</value></data>
+  <data name="K329" xml:space="preserve"><value>Descoberta e persistência de alvos</value></data>
+  <data name="K330" xml:space="preserve"><value>Alvo não visível</value></data>
+  <data name="K331" xml:space="preserve"><value>Porta TCP</value></data>
+  <data name="K332" xml:space="preserve"><value>Somente texto</value></data>
+  <data name="K333" xml:space="preserve"><value>A sessão QST ou Newb ativa controla exclusivamente este alvo em memória. Alvos monitorados salvos ficam inalterados e retornam após liberar.</value></data>
+  <data name="K334" xml:space="preserve"><value>O Fren nunca é adicionado automaticamente ao Monitoramento; marque-o quando for o alvo de cura de nível baixo.</value></data>
+  <data name="K335" xml:space="preserve"><value>Dependências HealBot, um curandeiro suportado equipado, uma matriz de cura ativada e um alvo monitorado explicitamente.</value></data>
+  <data name="K336" xml:space="preserve"><value>a escolha local salva retorna após liberar.</value></data>
+  <data name="K337" xml:space="preserve"><value>a configuração local salva retorna após liberar.</value></data>
+  <data name="K338" xml:space="preserve"><value>O alcance só permite o retorno de um alvo previamente salvo. Nunca descobre nem seleciona automaticamente novos alvos.</value></data>
+  <data name="K339" xml:space="preserve"><value>Estes controles se aplicam imediatamente. Configuração rápida usa um rascunho separado e não altera nada até Concluir.</value></data>
+  <data name="K340" xml:space="preserve"><value>Estes filtros controlam os objetos aliados exibidos na janela Monitoramento HealBot/JOAT.</value></data>
+  <data name="K341" xml:space="preserve"><value>A escolha local salva é usada pelo JOAT independente e retorna após QST liberar a substituição temporária. Ambas usam RSR Manual; RSR completo altera ações ofensivas e AoE capturadas, não a seleção de alvo.</value></data>
+  <data name="K342" xml:space="preserve"><value>Curto demais</value></data>
+  <data name="K343" xml:space="preserve"><value>Monitorado</value></data>
+  <data name="K344" xml:space="preserve"><value>O tráfego é autenticado, mas não criptografado; nomes e coordenadas ficam visíveis na rede.</value></data>
+  <data name="K345" xml:space="preserve"><value>Viagem: {0}</value></data>
+  <data name="K346" xml:space="preserve"><value>Acionamento</value></data>
+  <data name="K347" xml:space="preserve"><value>Tipo</value></data>
+  <data name="K348" xml:space="preserve"><value>Indisponível</value></data>
+  <data name="K349" xml:space="preserve"><value>Desbloqueado</value></data>
+  <data name="K350" xml:space="preserve"><value>Desmarcar um alvo ou limpar com Ctrl também remove do conjunto salvo. O alcance só afeta o retorno de alvos salvos.</value></data>
+  <data name="K351" xml:space="preserve"><value>Use 1024-65535</value></data>
+  <data name="K352" xml:space="preserve"><value>Use Monitoramento para adicionar ou remover alvos. Salvar alvos de cura persiste só os que você mantém explicitamente monitorados.</value></data>
+  <data name="K353" xml:space="preserve"><value>Usa ações BRD/MCH instantâneas, à distância e de alvo único em inimigos já lutando com Fren/jogador local.</value></data>
+  <data name="K354" xml:space="preserve"><value>Válido</value></data>
+  <data name="K355" xml:space="preserve"><value>IPv4 válido</value></data>
+  <data name="K356" xml:space="preserve"><value>Visível</value></data>
+  <data name="K357" xml:space="preserve"><value>Visível - alvo nativo HealBot</value></data>
+  <data name="K358" xml:space="preserve"><value>Segredo compartilhado visível</value></data>
+  <data name="K359" xml:space="preserve"><value>vnavmesh</value></data>
+  <data name="K360" xml:space="preserve"><value>Monitoramento</value></data>
+  <data name="K361" xml:space="preserve"><value>Filtros de monitoramento</value></data>
+  <data name="K362" xml:space="preserve"><value>Monitorado</value></data>
+  <data name="K363" xml:space="preserve"><value>Newb monitorado</value></data>
+  <data name="K364" xml:space="preserve"><value>Quester monitorado</value></data>
+  <data name="K365" xml:space="preserve"><value>alvo monitorado</value></data>
+  <data name="K366" xml:space="preserve"><value>Alvo monitorado: {0}</value></data>
+  <data name="K367" xml:space="preserve"><value>Alvos monitorados</value></data>
+  <data name="K368" xml:space="preserve"><value>Monitorando {0}/{1} alvos ativos. Alvos salvos: {2}.</value></data>
+  <data name="K369" xml:space="preserve"><value>Mago Branco (WHM)</value></data>
+  <data name="K370" xml:space="preserve"><value>Sua escolha local salva retorna quando QST libera.</value></data>
+  <data name="K371" xml:space="preserve"><value>Sua configuração local salva retorna quando QST libera.</value></data>
+  <data name="K372" xml:space="preserve"><value>Cor</value></data>
+  <data name="K373" xml:space="preserve"><value>Verde-azulado</value></data>
+  <data name="K374" xml:space="preserve"><value>Azul</value></data>
+  <data name="K375" xml:space="preserve"><value>Rosa</value></data>
+  <data name="K376" xml:space="preserve"><value>RGB personalizado</value></data>
+  <data name="K377" xml:space="preserve"><value>Modo compacto</value></data>
+  <data name="K378" xml:space="preserve"><value>Carregando fontes da interface...</value></data>
+  <data name="K379" xml:space="preserve"><value>Falha ao carregar fontes da interface. Veja o log do plugin.</value></data>
+  <data name="K380" xml:space="preserve"><value>Nunca</value></data>
+  <data name="K381" xml:space="preserve"><value>GCD conjurado</value></data>
+  <data name="K382" xml:space="preserve"><value>oGCD instantâneo</value></data>
+  <data name="K383" xml:space="preserve"><value>BUFF conjurado</value></data>
+  <data name="K384" xml:space="preserve"><value>BUFF instantâneo</value></data>
+  <data name="K385" xml:space="preserve"><value>HP abaixo</value></data>
+  <data name="K386" xml:space="preserve"><value>Alvo morto</value></data>
+  <data name="K387" xml:space="preserve"><value>Buff ausente</value></data>
+  <data name="K388" xml:space="preserve"><value>Sempre</value></data>
+  <data name="K389" xml:space="preserve"><value>Alvo</value></data>
+  <data name="K390" xml:space="preserve"><value>Jogador</value></data>
+  <data name="K391" xml:space="preserve"><value>NPC do grupo</value></data>
+  <data name="K392" xml:space="preserve"><value>NPC aliado</value></data>
+  <data name="K393" xml:space="preserve"><value>Auxiliar ativo (controlado por QST)</value></data>
+  <data name="K394" xml:space="preserve"><value>Use QST para liberar ou desativar esta sessão de provedor.</value></data>
+  <data name="K395" xml:space="preserve"><value>Use /healbot on para retomar {0}.</value></data>
+  <data name="K396" xml:space="preserve"><value>Cura: {0} Ataque: {1}</value></data>
+  <data name="K397" xml:space="preserve"><value>Resolva o bloqueio exibido no estado principal.</value></data>
+  <data name="K398" xml:space="preserve"><value>Nenhuma ação necessária.</value></data>
+  <data name="K399" xml:space="preserve"><value>Resolver: {0}</value></data>
+  <data name="K400" xml:space="preserve"><value>Bloqueado: {0}</value></data>
+  <data name="K401" xml:space="preserve"><value>Em espera: {0}</value></data>
+  <data name="K402" xml:space="preserve"><value>Inativo</value></data>
+  <data name="K403" xml:space="preserve"><value>LOS indisponível</value></data>
+  <data name="K404" xml:space="preserve"><value>LOS livre</value></data>
+  <data name="K405" xml:space="preserve"><value>LOS bloqueada</value></data>
+  <data name="K406" xml:space="preserve"><value>Movimento LOS em espera por transporte HealBot</value></data>
+  <data name="K407" xml:space="preserve"><value>LOS bloqueada; movendo para 1y</value></data>
+  <data name="K408" xml:space="preserve"><value>LOS bloqueada; aguardando o controlador do movimento</value></data>
+  <data name="K409" xml:space="preserve"><value>QST controla o modo ativo ({0}); a escolha local salva retorna após liberar.</value></data>
+  <data name="K410" xml:space="preserve"><value>QST controla a invocação ({0}); a configuração local salva retorna após liberar.</value></data>
+  <data name="K411" xml:space="preserve"><value>Este alvo exato só da sessão substitui os monitorados salvos na automação sem alterá-los nem salvá-los.</value></data>
+  <data name="K412" xml:space="preserve"><value>Sim</value></data>
+  <data name="K413" xml:space="preserve"><value>Não</value></data>
+  <data name="K414" xml:space="preserve"><value>Modo Healbot desligado.</value></data>
+  <data name="K415" xml:space="preserve"><value>Ocioso</value></data>
+  <data name="K416" xml:space="preserve"><value>Nenhuma regra correspondeu.</value></data>
+  <data name="K417" xml:space="preserve"><value>Descarregando plugin.</value></data>
+  <data name="K418" xml:space="preserve"><value>HealBot suporta apenas WHM, SCH, AST e SGE.</value></data>
+  <data name="K419" xml:space="preserve"><value>Ações em espera durante transporte HealRider.</value></data>
+  <data name="K420" xml:space="preserve"><value>Viagem</value></data>
+  <data name="K421" xml:space="preserve"><value>HealRider controla o movimento.</value></data>
+  <data name="K422" xml:space="preserve"><value>Em espera durante a transição de área.</value></data>
+  <data name="K423" xml:space="preserve"><value>Transição de área em andamento.</value></data>
+  <data name="K424" xml:space="preserve"><value>Plugin desativado.</value></data>
+  <data name="K425" xml:space="preserve"><value>Bloqueado</value></data>
+  <data name="K426" xml:space="preserve"><value>Dependências ausentes.</value></data>
+  <data name="K427" xml:space="preserve"><value>Profissão local não suportada.</value></data>
+  <data name="K428" xml:space="preserve"><value>Cura pareada em espera enquanto o auxiliar está montado ou montando.</value></data>
+  <data name="K429" xml:space="preserve"><value>Auxiliar pareado montado ou montando.</value></data>
+  <data name="K430" xml:space="preserve"><value>Em espera enquanto conjura a ação {0}.</value></data>
+  <data name="K431" xml:space="preserve"><value>Conjurando</value></data>
+  <data name="K432" xml:space="preserve"><value>Aguardando a conjuração atual terminar.</value></data>
+  <data name="K433" xml:space="preserve"><value>Matriz Healbot armada para {0}. RSR é necessário antes de JOAT atacar.</value></data>
+  <data name="K434" xml:space="preserve"><value>Matriz Healbot armada para {0}. Isolamento RSR indisponível.</value></data>
+  <data name="K435" xml:space="preserve"><value>Matriz Healbot armada para {0}. Controle RSR JOAT ativo.</value></data>
+  <data name="K436" xml:space="preserve"><value>Matriz Healbot armada para {0}. Isolamento RSR ativo.</value></data>
+  <data name="K437" xml:space="preserve"><value>Matriz Healbot armada para {0}. Controle RSR falhou; ataque JOAT bloqueado e cura direta ativa.</value></data>
+  <data name="K438" xml:space="preserve"><value>Matriz Healbot armada para {0}. Isolamento RSR falhou; cura direta ativa.</value></data>
+  <data name="K439" xml:space="preserve"><value>Nenhum alvo monitorado ativo.</value></data>
+  <data name="K440" xml:space="preserve"><value>Nenhum alvo monitorado.</value></data>
+  <data name="K441" xml:space="preserve"><value>Automação {0} desativada nas configurações HealBot.</value></data>
+  <data name="K442" xml:space="preserve"><value>Aba {0} desativada.</value></data>
+  <data name="K443" xml:space="preserve"><value>Alvo {0} {1} selecionado, mas remoto.</value></data>
+  <data name="K444" xml:space="preserve"><value>Monitorando {0} alvos. Nenhum alvo monitorado está presente agora.</value></data>
+  <data name="K445" xml:space="preserve"><value>O alvo exato {0} está remoto.</value></data>
+  <data name="K446" xml:space="preserve"><value>Nenhum alvo monitorado presente.</value></data>
+  <data name="K447" xml:space="preserve"><value>Movimento</value></data>
+  <data name="K448" xml:space="preserve"><value>{0} - LOS bloqueada.</value></data>
+  <data name="K449" xml:space="preserve"><value>Monitorando {0} alvos. {1}</value></data>
+  <data name="K450" xml:space="preserve"><value>{0} - {1}</value></data>
+  <data name="K451" xml:space="preserve"><value>Monitorando {0} alvos. Nenhuma regra ativa de alvo morto pode agir em {1}.</value></data>
+  <data name="K452" xml:space="preserve"><value>{0} - Nenhuma regra de alvo morto correspondeu.</value></data>
+  <data name="K453" xml:space="preserve"><value>Monitorando {0} alvos. O monitorado de menor HP é {1} com {2}% HP.</value></data>
+  <data name="K454" xml:space="preserve"><value>{0} - Nenhuma regra de alvo vivo correspondeu.</value></data>
+  <data name="K455" xml:space="preserve"><value>{0}: {1} [{2}]</value></data>
+  <data name="K456" xml:space="preserve"><value>{0} enfileirado como preparo de alvo morto para {1}.</value></data>
+  <data name="K457" xml:space="preserve"><value>{0} enfileirado para {1}.</value></data>
+  <data name="K458" xml:space="preserve"><value>{0} enfileirado monitorando {1} com {2}% HP.</value></data>
+  <data name="K459" xml:space="preserve"><value>{0} enfileirado para {1} com {2}% HP.</value></data>
+  <data name="K460" xml:space="preserve"><value>Ataque JOAT desligado.</value></data>
+  <data name="K461" xml:space="preserve"><value>Aguardando uma decisão de cura ociosa.</value></data>
+  <data name="K462" xml:space="preserve"><value>Ataque JOAT aguardando a cura ficar ociosa.</value></data>
+  <data name="K463" xml:space="preserve"><value>Heartbeat da concessão FrenRider falhou.</value></data>
+  <data name="K464" xml:space="preserve"><value>Em espera: cura enfileirou {0}.</value></data>
+  <data name="K465" xml:space="preserve"><value>Em espera</value></data>
+  <data name="K466" xml:space="preserve"><value>A cura teve prioridade neste ciclo.</value></data>
+  <data name="K467" xml:space="preserve"><value>Em espera: a conjuração atual bloqueia o ataque. {0}</value></data>
+  <data name="K468" xml:space="preserve"><value>Em espera: cura bloqueada. {0}</value></data>
+  <data name="K469" xml:space="preserve"><value>A conjuração atual bloqueia este ciclo de ataque.</value></data>
+  <data name="K470" xml:space="preserve"><value>Uma ação de cura correspondente está bloqueada.</value></data>
+  <data name="K471" xml:space="preserve"><value>Bloqueado: cura não pronta. {0}</value></data>
+  <data name="K472" xml:space="preserve"><value>Dependências, configuração de cura ou alvos monitorados indisponíveis.</value></data>
+  <data name="K473" xml:space="preserve"><value>Bloqueado: controle Rotation Solver Reborn inativo; JOAT não pode atacar.</value></data>
+  <data name="K474" xml:space="preserve"><value>Controle Rotation Solver Reborn falhou.</value></data>
+  <data name="K475" xml:space="preserve"><value>Em espera: {0}.</value></data>
+  <data name="K476" xml:space="preserve"><value>IPC FrenRider indisponível.</value></data>
+  <data name="K477" xml:space="preserve"><value>Condição de ataque FrenRider falhou.</value></data>
+  <data name="K478" xml:space="preserve"><value>Aquisição da concessão FrenRider falhou.</value></data>
+  <data name="K479" xml:space="preserve"><value>Bloqueado: curandeiro local indisponível.</value></data>
+  <data name="K480" xml:space="preserve"><value>Curandeiro local indisponível.</value></data>
+  <data name="K481" xml:space="preserve"><value>Curandeiro local suportado indisponível.</value></data>
+  <data name="K482" xml:space="preserve"><value>Ocioso: alvo pareado exato selecionado, mas remoto.</value></data>
+  <data name="K483" xml:space="preserve"><value>O alvo pareado exato está remoto.</value></data>
+  <data name="K484" xml:space="preserve"><value>Em espera: alvo pareado exato a {0:0.0} yalms.</value></data>
+  <data name="K485" xml:space="preserve"><value>O alvo pareado exato está além de 30 yalms.</value></data>
+  <data name="K486" xml:space="preserve"><value>RSR Manual falhou.</value></data>
+  <data name="K487" xml:space="preserve"><value>Bloqueado: Rotation Solver Reborn rejeitou modo Manual para a atribuição JOAT pareada.</value></data>
+  <data name="K488" xml:space="preserve"><value>RSR Manual</value></data>
+  <data name="K489" xml:space="preserve"><value>Aguardando no alvo aliado pareado por um inimigo em combate.</value></data>
+  <data name="K490" xml:space="preserve"><value>RSR Manual ({0}) aguardando; nenhum inimigo em combate elegível no alcance pareado.</value></data>
+  <data name="K491" xml:space="preserve"><value>O inimigo pareado selecionado desapareceu.</value></data>
+  <data name="K492" xml:space="preserve"><value>RSR Manual ({0}) aguardando; o inimigo selecionado desapareceu.</value></data>
+  <data name="K493" xml:space="preserve"><value>alvo pareado</value></data>
+  <data name="K494" xml:space="preserve"><value>enfrentando par/curandeiro</value></data>
+  <data name="K495" xml:space="preserve"><value>RSR Manual ({0}) em {1} com {2:P0} HP.</value></data>
+  <data name="K496" xml:space="preserve"><value>Ocioso: cura livre, mas nenhum inimigo ferido mira o Fren ou curandeiro local.</value></data>
+  <data name="K497" xml:space="preserve"><value>Nenhum inimigo marcado elegível.</value></data>
+  <data name="K498" xml:space="preserve"><value>Ocioso: inimigo selecionado desapareceu.</value></data>
+  <data name="K499" xml:space="preserve"><value>O alvo desapareceu.</value></data>
+  <data name="K500" xml:space="preserve"><value>{0} - RSR Manual falhou</value></data>
+  <data name="K501" xml:space="preserve"><value>Bloqueado: Rotation Solver Reborn rejeitou modo Manual para {0}.</value></data>
+  <data name="K502" xml:space="preserve"><value>entre áreas</value></data>
+  <data name="K503" xml:space="preserve"><value>montado ou montando</value></data>
+  <data name="K504" xml:space="preserve"><value>ocupado ou em cena</value></data>
+  <data name="K505" xml:space="preserve"><value>conjurando ação {0}</value></data>
+  <data name="K506" xml:space="preserve"><value>Dependências de cura obrigatórias ausentes.</value></data>
+  <data name="K507" xml:space="preserve"><value>A matriz do curandeiro equipado está desativada.</value></data>
+  <data name="K508" xml:space="preserve"><value>Selecione ao menos um alvo em Monitoramento ou aguarde uma atribuição QST.</value></data>
+  <data name="K509" xml:space="preserve"><value>Cura JOAT pronta.</value></data>
+  <data name="K510" xml:space="preserve"><value>Ataque aguarda prontidão da cura: {0}</value></data>
+  <data name="K511" xml:space="preserve"><value>Rotation Solver Reborn deve estar carregado para JOAT atacar.</value></data>
+  <data name="K512" xml:space="preserve"><value>Coppelia não conseguiu controle funcional do Rotation Solver Reborn.</value></data>
+  <data name="K513" xml:space="preserve"><value>Ataque JOAT pronto quando a cura está ociosa.</value></data>
+  <data name="K514" xml:space="preserve"><value>O alvo QST exato está selecionado, mas remoto.</value></data>
+  <data name="K515" xml:space="preserve"><value>FrenRider deve estar ativado.</value></data>
+  <data name="K516" xml:space="preserve"><value>FrenRider deve ter um Fren configurado.</value></data>
+  <data name="K517" xml:space="preserve"><value>O Fren configurado do FrenRider deve estar visível.</value></data>
+  <data name="K518" xml:space="preserve"><value>Modo PowerlevelBot desligado.</value></data>
+  <data name="K519" xml:space="preserve"><value>Nenhum alvo selecionado.</value></data>
+  <data name="K520" xml:space="preserve"><value>PowerlevelBot preparando.</value></data>
+  <data name="K521" xml:space="preserve"><value>Condição Powerlevel falhou.</value></data>
+  <data name="K522" xml:space="preserve"><value>Jogador local indisponível.</value></data>
+  <data name="K523" xml:space="preserve"><value>Nenhum jogador local.</value></data>
+  <data name="K524" xml:space="preserve"><value>Nenhum inimigo ferido mira o Fren ou jogador local.</value></data>
+  <data name="K525" xml:space="preserve"><value>Nenhum alvo elegível.</value></data>
+  <data name="K526" xml:space="preserve"><value>O alvo selecionado desapareceu.</value></data>
+  <data name="K527" xml:space="preserve"><value>{0} enfileirado em {1} com {2:P0} HP.</value></data>
+  <data name="K528" xml:space="preserve"><value>Alvo {0} bloqueado: {1}</value></data>
+  <data name="K529" xml:space="preserve"><value>Auxiliar escuta em vez de conectar.</value></data>
+  <data name="K530" xml:space="preserve"><value>Newb conecta em vez de escutar.</value></data>
+  <data name="K531" xml:space="preserve"><value>A função operacional está Desligada.</value></data>
+  <data name="K532" xml:space="preserve"><value>Independente não usa pareamento direto.</value></data>
+  <data name="K533" xml:space="preserve"><value>Identidade do Newb local indisponível. Conclua o login antes de iniciar a função Newb.</value></data>
+  <data name="K534" xml:space="preserve"><value>Insira um endereço IPv4 válido do Auxiliar.</value></data>
+  <data name="K535" xml:space="preserve"><value>Pareamento salvo; reiniciando.</value></data>
+  <data name="K536" xml:space="preserve"><value>HealBot pareamento direto v2 é obrigatório. Atualize o par mais antigo antes de parear.</value></data>
+  <data name="K537" xml:space="preserve"><value>Identidade do HealBot local indisponível.</value></data>
+  <data name="K538" xml:space="preserve"><value>HealBot já tem uma atribuição QST ativa.</value></data>
+  <data name="K539" xml:space="preserve"><value>Pareado</value></data>
+  <data name="K540" xml:space="preserve"><value>Escutando</value></data>
+  <data name="K541" xml:space="preserve"><value>O conteúdo do comando de pareamento é inválido.</value></data>
+  <data name="K542" xml:space="preserve"><value>O comando não aponta para este nome e mundo de origem exatos do HealBot.</value></data>
+  <data name="K543" xml:space="preserve"><value>Newb liberou a atribuição.</value></data>
+  <data name="K544" xml:space="preserve"><value>Ação de pareamento Newb desconhecida.</value></data>
+  <data name="K545" xml:space="preserve"><value>HealBot descarregando.</value></data>
+  <data name="K546" xml:space="preserve"><value>TCP {0}</value></data>
+  <data name="K547" xml:space="preserve"><value>Reiniciando o ouvinte HealBot.</value></data>
+  <data name="K548" xml:space="preserve"><value>Conectado</value></data>
+  <data name="K549" xml:space="preserve"><value>Aguarde a atribuição autenticada.</value></data>
+  <data name="K550" xml:space="preserve"><value>Inicie Newb com esta porta e segredo compartilhado.</value></data>
+  <data name="K551" xml:space="preserve"><value>Aguarde o ouvinte iniciar.</value></data>
+  <data name="K552" xml:space="preserve"><value>Aguardando status Newb autenticado</value></data>
+  <data name="K553" xml:space="preserve"><value>Provedor JOAT ativo</value></data>
+  <data name="K554" xml:space="preserve"><value>Provedor remoto indisponível</value></data>
+  <data name="K555" xml:space="preserve"><value>JOAT remoto indisponível</value></data>
+  <data name="K556" xml:space="preserve"><value>Viagem remota indisponível</value></data>
+  <data name="K557" xml:space="preserve"><value>Reiniciando a conexão Newb.</value></data>
+  <data name="K558" xml:space="preserve"><value>Autenticando</value></data>
+  <data name="K559" xml:space="preserve"><value>Conectando</value></data>
+  <data name="K560" xml:space="preserve"><value>Aguarde confirmação da atribuição.</value></data>
+  <data name="K561" xml:space="preserve"><value>Aguarde status e atribuição autenticados recentes.</value></data>
+  <data name="K562" xml:space="preserve"><value>Aguarde conexão ou reconexão assíncrona.</value></data>
+  <data name="K563" xml:space="preserve"><value>Aguardando status do provedor remoto</value></data>
+  <data name="K564" xml:space="preserve"><value>Provedor remoto pronto</value></data>
+  <data name="K565" xml:space="preserve"><value>Aguardando status JOAT remoto</value></data>
+  <data name="K566" xml:space="preserve"><value>Aguardando status de viagem remota</value></data>
+  <data name="K567" xml:space="preserve"><value>Atualize o par antigo para uma versão compatível de pareamento direto HealBot v2.</value></data>
+  <data name="K568" xml:space="preserve"><value>Insira o mesmo segredo compartilhado em Auxiliar e Newb nas Configurações.</value></data>
+  <data name="K569" xml:space="preserve"><value>Identidade do Newb local indisponível.</value></data>
+  <data name="K570" xml:space="preserve"><value>A conexão HealBot pareada ou o status autenticado foi perdido.</value></data>
+  <data name="K571" xml:space="preserve"><value>O endpoint configurado ou a identidade HealBot mudou.</value></data>
+  <data name="K572" xml:space="preserve"><value>O HealBot pareado ainda informa a sessão liberada {0}.</value></data>
+  <data name="K573" xml:space="preserve"><value>O HealBot pareado tem uma atribuição QST ativa.</value></data>
+  <data name="K574" xml:space="preserve"><value>O HealBot pareado pertence a outra sessão Newb.</value></data>
+  <data name="K575" xml:space="preserve"><value>O HealBot pareado informa uma sessão obsoleta para este Newb.</value></data>
+  <data name="K576" xml:space="preserve"><value>O HealBot pareado não está pronto.</value></data>
+  <data name="K577" xml:space="preserve"><value>O HealBot pareado informou sessão Newb ausente ou divergente.</value></data>
+  <data name="K578" xml:space="preserve"><value>Aguardando o HealBot pareado confirmar a sessão Newb exata.</value></data>
+  <data name="K579" xml:space="preserve"><value>O HealBot pareado rejeitou a atribuição Newb.</value></data>
+  <data name="K580" xml:space="preserve"><value>O HealBot pareado rejeitou {0}.</value></data>
+  <data name="K581" xml:space="preserve"><value>O HealBot pareado não aceitou {0} na sessão ativa.</value></data>
+  <data name="K582" xml:space="preserve"><value>O HealBot pareado não confirmou a liberação da sessão obsoleta.</value></data>
+  <data name="K583" xml:space="preserve"><value>Selecione Auxiliar ou Newb para pareamento direto.</value></data>
+  <data name="K584" xml:space="preserve"><value>A porta TCP {0} já está em uso.</value></data>
+  <data name="K585" xml:space="preserve"><value>O ouvinte de pareamento não iniciou: {0}</value></data>
+  <data name="K586" xml:space="preserve"><value>desconhecido</value></data>
+  <data name="K587" xml:space="preserve"><value>Envelope de pareamento malformado.</value></data>
+  <data name="K588" xml:space="preserve"><value>A conexão Newb pareada foi perdida.</value></data>
+  <data name="K589" xml:space="preserve"><value>O ouvinte de pareamento HealBot está parando.</value></data>
+  <data name="K590" xml:space="preserve"><value>O tipo da mensagem de pareamento não corresponde ao comando.</value></data>
+  <data name="K591" xml:space="preserve"><value>Esta conexão já controla outra sessão Newb.</value></data>
+  <data name="K592" xml:space="preserve"><value>A sessão Newb já pertence a outra conexão ativa.</value></data>
+  <data name="K593" xml:space="preserve"><value>Esta conexão não controla a sessão Newb ativa.</value></data>
+  <data name="K594" xml:space="preserve"><value>A sessão Newb ainda pertence a outra conexão ativa.</value></data>
+  <data name="K595" xml:space="preserve"><value>Desconectado</value></data>
+  <data name="K596" xml:space="preserve"><value>O HealBot pareado não está conectado.</value></data>
+  <data name="K597" xml:space="preserve"><value>O HealBot pareado não confirmou o comando.</value></data>
+  <data name="K598" xml:space="preserve"><value>A conexão pareada foi fechada.</value></data>
+  <data name="K599" xml:space="preserve"><value>HealBot pareamento direto v2 é obrigatório. Atualize o Auxiliar antigo antes de parear.</value></data>
+  <data name="K600" xml:space="preserve"><value>Conectado; aguardando</value></data>
+  <data name="K601" xml:space="preserve"><value>O HealBot pareado não retornou status autenticado correlacionado. Verifique o segredo compartilhado e o protocolo.</value></data>
+  <data name="K602" xml:space="preserve"><value>Monitor de pareamento falhou: {0}</value></data>
+  <data name="K603" xml:space="preserve"><value>Conectado; aguardando status HealBot autenticado.</value></data>
+  <data name="K604" xml:space="preserve"><value>A conexão a {0}:{1} expirou.</value></data>
+  <data name="K605" xml:space="preserve"><value>Nenhum HealBot escuta em {0}:{1}.</value></data>
+  <data name="K606" xml:space="preserve"><value>Conexão a {0}:{1} falhou: {2}</value></data>
+  <data name="K607" xml:space="preserve"><value>O endpoint pareado retornou JSON de pareamento malformado.</value></data>
+  <data name="K608" xml:space="preserve"><value>A conexão HealBot pareada foi perdida: {0}</value></data>
+  <data name="K609" xml:space="preserve"><value>A conexão HealBot pareada foi perdida.</value></data>
+  <data name="K610" xml:space="preserve"><value>O HealBot pareado retornou resposta de comando divergente.</value></data>
+  <data name="K611" xml:space="preserve"><value>A conexão pareada falhou: {0}</value></data>
+  <data name="K612" xml:space="preserve"><value>Reconectar em {0}s</value></data>
+  <data name="K613" xml:space="preserve"><value>Todas as dependências obrigatórias HealBot estão prontas.</value></data>
+  <data name="K614" xml:space="preserve"><value>HealBot requer {0}. Instale os plugins ausentes ou desative a automação nas configurações.</value></data>
+  <data name="K615" xml:space="preserve"><value>Jogador local indisponível.</value></data>
+  <data name="K616" xml:space="preserve"><value>Já conjurando.</value></data>
+  <data name="K617" xml:space="preserve"><value>A ação {0} não foi encontrada na tabela de ações.</value></data>
+  <data name="K618" xml:space="preserve"><value>MP insuficiente para {0}.</value></data>
+  <data name="K619" xml:space="preserve"><value>ActionManager indisponível.</value></data>
+  <data name="K620" xml:space="preserve"><value>{0} está em recarga.</value></data>
+  <data name="K621" xml:space="preserve"><value>Alvo selecionado indisponível.</value></data>
+  <data name="K622" xml:space="preserve"><value>{0} não pode ser selecionado.</value></data>
+  <data name="K623" xml:space="preserve"><value>{0} fora de alcance.</value></data>
+  <data name="K624" xml:space="preserve"><value>UseAction rejeitou {0}.</value></data>
+  <data name="K625" xml:space="preserve"><value>Nenhuma ação PowerlevelBot utilizável agora.</value></data>
+  <data name="K626" xml:space="preserve"><value>Pausado para ação HealBot</value></data>
+  <data name="K627" xml:space="preserve"><value>Seguimento HealRider suspenso por controle da instância</value></data>
+  <data name="K628" xml:space="preserve"><value>A preparação da montaria de passageiros selecionada excedeu o tempo de coleta.</value></data>
+  <data name="K629" xml:space="preserve"><value>Aguardando troca de instância Lifestream e carregamento</value></data>
+  <data name="K630" xml:space="preserve"><value>Verificando instância pública do Auxiliar após /li</value></data>
+  <data name="K631" xml:space="preserve"><value>Aguardando estado de viagem Quester recente após HealRider</value></data>
+  <data name="K632" xml:space="preserve"><value>Aguardando personagem auxiliar</value></data>
+  <data name="K633" xml:space="preserve"><value>Pausado para conjuração {0}</value></data>
+  <data name="K634" xml:space="preserve"><value>Visitando mundo {0}</value></data>
+  <data name="K635" xml:space="preserve"><value>Visita ao mundo {0} não alcançou o destino</value></data>
+  <data name="K636" xml:space="preserve"><value>Teleportando para {0}</value></data>
+  <data name="K637" xml:space="preserve"><value>Teleporte para {0} não alcançou o território {1}</value></data>
+  <data name="K638" xml:space="preserve"><value>a sondagem de voo ARR foi rejeitada neste território</value></data>
+  <data name="K639" xml:space="preserve"><value>Aguardando atividade vnavmesh atual terminar</value></data>
+  <data name="K640" xml:space="preserve"><value>montaria indisponível: {0}</value></data>
+  <data name="K641" xml:space="preserve"><value>aguardando nova tentativa de Mount Roulette</value></data>
+  <data name="K642" xml:space="preserve"><value>Imitando Quester com Mount Roulette</value></data>
+  <data name="K643" xml:space="preserve"><value>Montando para alcançar além de {0:F0} yalms</value></data>
+  <data name="K644" xml:space="preserve"><value>Aguardando imitar a montaria do Quester</value></data>
+  <data name="K645" xml:space="preserve"><value>Aguardando montar para alcançar</value></data>
+  <data name="K646" xml:space="preserve"><value>Aguardando montar terminar antes de desmontar</value></data>
+  <data name="K647" xml:space="preserve"><value>Seguindo a rota ativa antes de pousar</value></data>
+  <data name="K648" xml:space="preserve"><value>Pousando sem desmontar</value></data>
+  <data name="K649" xml:space="preserve"><value>Pousando dentro de {0:F0} yalms antes de desmontar</value></data>
+  <data name="K650" xml:space="preserve"><value>Pouso indisponível: {0}</value></data>
+  <data name="K651" xml:space="preserve"><value>Aguardando desmontar dentro de {0:F0} yalms</value></data>
+  <data name="K652" xml:space="preserve"><value>Desmontando dentro de {0:F0} yalms</value></data>
+  <data name="K653" xml:space="preserve"><value>Desmontar indisponível: {0}</value></data>
+  <data name="K654" xml:space="preserve"><value>voo indisponível: {0}</value></data>
+  <data name="K655" xml:space="preserve"><value>IPC de seguimento vnavmesh falhou</value></data>
+  <data name="K656" xml:space="preserve"><value>Seguindo perto ({0:F1} yalms)</value></data>
+  <data name="K657" xml:space="preserve"><value>Atualizando o destino Quester mais recente</value></data>
+  <data name="K658" xml:space="preserve"><value>Voando a {0:F1} yalms</value></data>
+  <data name="K659" xml:space="preserve"><value>Seguindo no chão a {0:F1} yalms</value></data>
+  <data name="K660" xml:space="preserve"><value>vnavmesh rejeitou iniciar rota; aguardando atividade terminar ou estado de viagem novo</value></data>
+  <data name="K661" xml:space="preserve"><value>Esperando navmesh</value></data>
+  <data name="K662" xml:space="preserve"><value>Enfileirando {0} a {1:F1} yalms</value></data>
+  <data name="K663" xml:space="preserve"><value>vnavmesh rejeitou iniciar rota {0}; aguardando atividade terminar ou estado de viagem novo</value></data>
+  <data name="K664" xml:space="preserve"><value>IPC de seguimento vnavmesh falhou; aguardando estado de viagem novo</value></data>
+  <data name="K665" xml:space="preserve"><value>Aguardando metadados verificados da instância pública de Auxiliar e Quester</value></data>
+  <data name="K666" xml:space="preserve"><value>Aguardando área sem instância verificada do Quester</value></data>
+  <data name="K667" xml:space="preserve"><value>Aguardando viagem segura e ociosa antes de mudar instância pública</value></data>
+  <data name="K668" xml:space="preserve"><value>Aguardando tentar instância pública {0} novamente</value></data>
+  <data name="K669" xml:space="preserve"><value>Aguardando navegação parar antes de mudar instância pública</value></data>
+  <data name="K670" xml:space="preserve"><value>Encontro em instância pública: {0}</value></data>
+  <data name="K671" xml:space="preserve"><value>Pousando e desmontando junto ao aetheryte antes de /li</value></data>
+  <data name="K672" xml:space="preserve"><value>Verificando instância pública {0} após /li</value></data>
+  <data name="K673" xml:space="preserve"><value>Lifestream rejeitou /li {0}; aguardando cinco segundos para tentar</value></data>
+  <data name="K674" xml:space="preserve"><value>Comando de instância Lifestream falhou; aguardando cinco segundos para tentar</value></data>
+  <data name="K675" xml:space="preserve"><value>Sondando à frente a travessia de território observada</value></data>
+  <data name="K676" xml:space="preserve"><value>Transição de território observada; aguardando auxiliar carregar com segurança</value></data>
+  <data name="K677" xml:space="preserve"><value>território {0} não permite montar</value></data>
+  <data name="K678" xml:space="preserve"><value>verificação de montaria do território falhou: {0}</value></data>
+  <data name="K679" xml:space="preserve"><value>voo indisponível no território {0}</value></data>
+  <data name="K680" xml:space="preserve"><value>o auxiliar não desbloqueou voo neste território</value></data>
+  <data name="K681" xml:space="preserve"><value>sondando disponibilidade de voo ARR</value></data>
+  <data name="K682" xml:space="preserve"><value>verificação de voo falhou: {0}</value></data>
+  <data name="K683" xml:space="preserve"><value>ActionManager indisponível</value></data>
+  <data name="K684" xml:space="preserve"><value>ação geral {0} indisponível (status {1})</value></data>
+  <data name="K685" xml:space="preserve"><value>ação geral {0} rejeitada</value></data>
+  <data name="K686" xml:space="preserve"><value>ação geral {0} falhou: {1}</value></data>
+  <data name="K687" xml:space="preserve"><value>IPC de status de viagem Lifestream falhou</value></data>
+  <data name="K688" xml:space="preserve"><value>{0}; aguardando estado de viagem mais recente</value></data>
+  <data name="K689" xml:space="preserve"><value>Aguardando viagem Lifestream atual terminar</value></data>
+  <data name="K690" xml:space="preserve"><value>IPC de viagem Lifestream falhou</value></data>
+  <data name="K691" xml:space="preserve"><value>Lifestream rejeitou a solicitação: {0}</value></data>
+  <data name="K692" xml:space="preserve"><value>O destino de teleporte exato do Quester não está na lista do auxiliar.</value></data>
+  <data name="K693" xml:space="preserve"><value>Nenhum aetheryte no território Quester está na lista de teleporte do auxiliar.</value></data>
+  <data name="K694" xml:space="preserve"><value>Resolução de aetheryte falhou: {0}</value></data>
+  <data name="K695" xml:space="preserve"><value>O destino de teleporte Quester aceito está indisponível.</value></data>
+  <data name="K696" xml:space="preserve"><value>Aguardando posição Quester no território de destino para alternativa de aetheryte próximo.</value></data>
+  <data name="K697" xml:space="preserve"><value>A lista de teleporte do auxiliar está indisponível ou carregando.</value></data>
+  <data name="K698" xml:space="preserve"><value>PowerlevelBot pronto.</value></data>
+  <data name="K699" xml:space="preserve"><value>Selecione BRD ou MCH antes de ativar PowerlevelBot.</value></data>
+  <data name="K700" xml:space="preserve"><value>{0} não está desbloqueado.</value></data>
+  <data name="K701" xml:space="preserve"><value>A profissão atual deve corresponder à profissão PowerlevelBot {0} selecionada.</value></data>
+  <data name="K702" xml:space="preserve"><value>O Fren configurado do FrenRider não está visível.</value></data>
+  <data name="K703" xml:space="preserve"><value>Dispense o chocobo companheiro ativo antes de usar PowerlevelBot.</value></data>
+  <data name="K704" xml:space="preserve"><value>{0} não é ação exclusiva para hostis.</value></data>
+  <data name="K705" xml:space="preserve"><value>{0} exige conjuração.</value></data>
+  <data name="K706" xml:space="preserve"><value>{0} é AoE.</value></data>
+  <data name="K707" xml:space="preserve"><value>{0} indisponível.</value></data>
+  <data name="K708" xml:space="preserve"><value>{0} está recarregando.</value></data>
+  <data name="K709" xml:space="preserve"><value>A porta 47789 é reservada. Escolha outra porta de pareamento.</value></data>
+  <data name="K710" xml:space="preserve"><value>A porta de pareamento deve ser entre 1024 e 65535.</value></data>
+  <data name="K711" xml:space="preserve"><value>O segredo compartilhado deve ter pelo menos 16 caracteres.</value></data>
+  <data name="K712" xml:space="preserve"><value>Insira um IPv4 válido do Auxiliar, como 127.0.0.1 ou 192.168.1.25.</value></data>
+  <data name="K713" xml:space="preserve"><value>Chocobo</value></data>
+  <data name="K714" xml:space="preserve"><value>Membro do grupo NPC</value></data>
+  <data name="K715" xml:space="preserve"><value>Alvo manual</value></data>
+  <data name="K716" xml:space="preserve"><value>Jacqueline of All Trades exige Rotation Solver Reborn para atacar.</value></data>
+  <data name="K717" xml:space="preserve"><value>Newb é uma função operacional, não um comportamento Independente.</value></data>
+  <data name="K718" xml:space="preserve"><value>Role até o canal "The Dumpster Fire" para discutir problemas e sugestões de plugins específicos.</value></data>
+  <data name="K719" xml:space="preserve"><value>BossMod Reborn (BMR) ou VBM</value></data>
+  <data name="K720" xml:space="preserve"><value>Rotation Solver Reborn (RSR) - auxiliar opcional de isolamento/restauração</value></data>
+  <data name="K721" xml:space="preserve"><value>{0}; alternativa segura no chão ({1})</value></data>
+  <data name="K722" xml:space="preserve"><value>NPC de batalha aliado</value></data>
+  <data name="K723" xml:space="preserve"><value>Auxiliar pareado</value></data>
+  <data name="K724" xml:space="preserve"><value>LOS</value></data>
+  <data name="K725" xml:space="preserve"><value>Resgate</value></data>
+  <data name="K726" xml:space="preserve"><value>voar até</value></data>
+  <data name="K727" xml:space="preserve"><value>seguir no chão</value></data>
+  <data name="K728" xml:space="preserve"><value>Aproximação</value></data>
+  <data name="K729" xml:space="preserve"><value>Chegou</value></data>
+  <data name="K730" xml:space="preserve"><value>Chegando</value></data>
+  <data name="K731" xml:space="preserve"><value>Embarcando</value></data>
+  <data name="K732" xml:space="preserve"><value>Cancelado</value></data>
+  <data name="K733" xml:space="preserve"><value>Cancelando</value></data>
+  <data name="K734" xml:space="preserve"><value>Preparando</value></data>
+  <data name="K735" xml:space="preserve"><value>Em trânsito</value></data>
+  <data name="K736" xml:space="preserve"><value>Aguardando</value></data>
+  <data name="K737" xml:space="preserve"><value>Aguardando continuação</value></data>
+  <data name="K738" xml:space="preserve"><value>Transição de zona</value></data>
+  <data name="K739" xml:space="preserve"><value>pouso</value></data>
+  <data name="K740" xml:space="preserve"><value>desmontar</value></data>
+  <data name="K741" xml:space="preserve"><value>HealRider bloqueado: {0}</value></data>
+  <data name="K742" xml:space="preserve"><value>Limpeza HealRider: {0}</value></data>
+  <data name="K743" xml:space="preserve"><value>HealRider: {0}</value></data>
+  <data name="K744" xml:space="preserve"><value>HealRider: {0}: {1}</value></data>
+  <data name="K745" xml:space="preserve"><value>Limpeza do Auxiliar expirou esperando {0}; aguardando nova tentativa coordenada.</value></data>
+  <data name="K746" xml:space="preserve"><value>o personagem capturado ficar pronto</value></data>
+  <data name="K747" xml:space="preserve"><value>a ação de montar terminar</value></data>
+  <data name="K748" xml:space="preserve"><value>Pousando para limpeza</value></data>
+  <data name="K749" xml:space="preserve"><value>Desmontando para limpeza</value></data>
+  <data name="K750" xml:space="preserve"><value>Desmontando para limpeza do transporte</value></data>
+  <data name="K751" xml:space="preserve"><value>Preparando montaria de passageiros selecionada para seguir</value></data>
+  <data name="K752" xml:space="preserve"><value>A política de montaria da atribuição mudou</value></data>
+  <data name="K753" xml:space="preserve"><value>O destino ou trecho da viagem mudou</value></data>
+  <data name="K754" xml:space="preserve"><value>Transferência da instância</value></data>
+  <data name="K755" xml:space="preserve"><value>Coleta cancelada</value></data>
+  <data name="K756" xml:space="preserve"><value>Ação de modo de montaria da atribuição não suportada.</value></data>
+  <data name="K757" xml:space="preserve"><value>Conclua a viagem ativa antes de mudar a política de montaria.</value></data>
+  <data name="K758" xml:space="preserve"><value>Selecione no Auxiliar uma montaria desbloqueada com assentos de passageiros.</value></data>
+  <data name="K759" xml:space="preserve"><value>Preparação da montaria selecionada rejeitada ou excedeu o tempo de coleta.</value></data>
+  <data name="K760" xml:space="preserve"><value>HealRider v2 é obrigatório. Atualize Auxiliar e Quester.</value></data>
+  <data name="K761" xml:space="preserve"><value>Solicitação HealRider v2 inválida.</value></data>
+  <data name="K762" xml:space="preserve"><value>Este trecho foi substituído por um mais recente.</value></data>
+  <data name="K763" xml:space="preserve"><value>Esta continuação montada foi encerrada.</value></data>
+  <data name="K764" xml:space="preserve"><value>Aguardando a viagem anterior desmontar.</value></data>
+  <data name="K765" xml:space="preserve"><value>A nova tentativa de limpeza exige personagem e grupo capturados.</value></data>
+  <data name="K766" xml:space="preserve"><value>Ação HealRider não suportada.</value></data>
+  <data name="K767" xml:space="preserve"><value>A política de montaria de passageiros da atribuição não está pronta.</value></data>
+  <data name="K768" xml:space="preserve"><value>Este trecho da viagem já terminou.</value></data>
+  <data name="K769" xml:space="preserve"><value>O tempo de espera compartilhado expirou antes da coleta ser aceita.</value></data>
+  <data name="K770" xml:space="preserve"><value>A coleta exige montaria de passageiros desbloqueada, voo no Auxiliar, Quester não voando além do limite de caminhada e o grupo exato nesta área.</value></data>
+  <data name="K771" xml:space="preserve"><value>Contexto de viagem perdido, bloqueado ou expirado</value></data>
+  <data name="K772" xml:space="preserve"><value>A espera compartilhada expirou durante aproximação ou embarque</value></data>
+  <data name="K773" xml:space="preserve"><value>Aguardando ambos os clientes carregarem na viagem montada.</value></data>
+  <data name="K774" xml:space="preserve"><value>Aguardando continuação montada e as duas confirmações de passageiro.</value></data>
+  <data name="K775" xml:space="preserve"><value>A travessia de fronteira montada não pôde ser verificada</value></data>
+  <data name="K776" xml:space="preserve"><value>Território e instâncias públicas de Auxiliar e Quester não estão mais verificados juntos</value></data>
+  <data name="K777" xml:space="preserve"><value>O Quester ou grupo exato não está mais disponível</value></data>
+  <data name="K778" xml:space="preserve"><value>Verificação do passageiro perdida ao aguardar o próximo movimento</value></data>
+  <data name="K779" xml:space="preserve"><value>Pouso ou desmontar rejeitado</value></data>
+  <data name="K780" xml:space="preserve"><value>Destino de movimento alcançado; aguardando próximo passo verificado.</value></data>
+  <data name="K781" xml:space="preserve"><value>Navegação precisa de pouso rejeitou o destino capturado</value></data>
+  <data name="K782" xml:space="preserve"><value>IPC de navegação precisa de pouso falhou</value></data>
+  <data name="K783" xml:space="preserve"><value>Status de navegação precisa de pouso indisponível</value></data>
+  <data name="K784" xml:space="preserve"><value>Rota precisa de pouso falhou antes do XYZ capturado</value></data>
+  <data name="K785" xml:space="preserve"><value>Status de navegação da viagem indisponível</value></data>
+  <data name="K786" xml:space="preserve"><value>A rota do passageiro falhou antes de chegar</value></data>
+  <data name="K787" xml:space="preserve"><value>Navegação da viagem rejeitou o destino</value></data>
+  <data name="K788" xml:space="preserve"><value>IPC de navegação da viagem falhou</value></data>
+  <data name="K789" xml:space="preserve"><value>O pouso saiu da tolerância de chegada.</value></data>
+  <data name="K790" xml:space="preserve"><value>O Quester exato saiu do assento de passageiro ou grupo.</value></data>
+  <data name="K791" xml:space="preserve"><value>A montaria selecionada foi desmontada antes do embarque.</value></data>
+  <data name="K792" xml:space="preserve"><value>Não foi possível preparar a montaria de passageiros selecionada.</value></data>
+  <data name="K793" xml:space="preserve"><value>Aguardando as duas confirmações de passageiro.</value></data>
+  <data name="K794" xml:space="preserve"><value>Aguardando observar o pouso no destino capturado.</value></data>
+  <data name="K795" xml:space="preserve"><value>Aguardando observação nativa do passageiro no Auxiliar.</value></data>
+  <data name="K796" xml:space="preserve"><value>Aguardando confirmação de passageiro do Quester.</value></data>
+  <data name="K797" xml:space="preserve"><value>Rota Epilogue Gate cancelada ou expirada</value></data>
+  <data name="K798" xml:space="preserve"><value>Viajando pelo Epilogue Gate de Idyllshire</value></data>
+  <data name="K799" xml:space="preserve"><value>Comando Epilogue Gate do Lifestream indisponível</value></data>
+  <data name="K800" xml:space="preserve"><value>Lifestream rejeitou a rota Epilogue Gate</value></data>
+  <data name="K801" xml:space="preserve"><value>Viajando para {0} para mudar instância pública</value></data>
+  <data name="K802" xml:space="preserve"><value>Aetheryte de mudança de instância {0} não alcançado</value></data>
+  <data name="K803" xml:space="preserve"><value>Atribuição liberada</value></data>
+  <data name="K804" xml:space="preserve"><value>Viagem a Dravanian Hinterlands exige voo neste Auxiliar</value></data>
+  <data name="K805" xml:space="preserve"><value>IPC de viagem Lifestream indisponível.</value></data>
+  <data name="K806" xml:space="preserve"><value>IPC de viagem vnavmesh indisponível.</value></data>
+  <data name="K807" xml:space="preserve"><value>IPC de viagem Lifestream obrigatório indisponível.</value></data>
+  <data name="K808" xml:space="preserve"><value>IPC de viagem vnavmesh obrigatório indisponível.</value></data>
+  <data name="K809" xml:space="preserve"><value>LOS bloqueada; viagem pareada ativa</value></data>
+  <data name="K810" xml:space="preserve"><value>LOS bloqueada; viagem pareada resolvendo local remoto</value></data>
+  <data name="K811" xml:space="preserve"><value>LOS bloqueada; alvo fora do alcance de resgate</value></data>
+  <data name="K812" xml:space="preserve"><value>Suspenso dentro da instância</value></data>
+  <data name="K813" xml:space="preserve"><value>IPC Powerlevel FrenRider incompatível. Atualize FrenRider.</value></data>
+  <data name="K814" xml:space="preserve"><value>IPC Powerlevel FrenRider indisponível.</value></data>
+  <data name="K815" xml:space="preserve"><value>Status Powerlevel FrenRider vazio.</value></data>
+  <data name="K816" xml:space="preserve"><value>IPC Powerlevel FrenRider ainda não consultado.</value></data>
+  <data name="K817" xml:space="preserve"><value>FrenRider retornou resposta vazia.</value></data>
+  <data name="K818" xml:space="preserve"><value>Status Powerlevel FrenRider incompatível.</value></data>
+  <data name="K819" xml:space="preserve"><value>Quadro TCP de pareamento incompleto.</value></data>
+  <data name="K820" xml:space="preserve"><value>Etiqueta de autenticação de pareamento inválida.</value></data>
+  <data name="K821" xml:space="preserve"><value>Carimbo de tempo de pareamento inválido.</value></data>
+  <data name="K822" xml:space="preserve"><value>Autenticação de pareamento falhou.</value></data>
+  <data name="K823" xml:space="preserve"><value>Quadro TCP de pareamento excede 64 KiB.</value></data>
+  <data name="K824" xml:space="preserve"><value>Envelope de pareamento repetido.</value></data>
+  <data name="K825" xml:space="preserve"><value>Envelope de pareamento obsoleto.</value></data>
+  <data name="K826" xml:space="preserve"><value>O segredo compartilhado não está configurado.</value></data>
+  <data name="K827" xml:space="preserve"><value>Envelope de pareamento sem assinatura ou incompatível.</value></data>
+  <data name="K828" xml:space="preserve"><value>Pareamento HealBot descarregando.</value></data>
+  <data name="K829" xml:space="preserve"><value>Selecione Auxiliar no cliente de cura.</value></data>
+  <data name="K830" xml:space="preserve"><value>O provedor Auxiliar não é controlado por pareamento Newb direto.</value></data>
+  <data name="K831" xml:space="preserve"><value>QST controla a ativação do provedor.</value></data>
+  <data name="K832" xml:space="preserve"><value>Pareamento Newb direto não controla a ativação do Auxiliar.</value></data>
+  <data name="K833" xml:space="preserve"><value>ID de sessão Newb inválido.</value></data>
+  <data name="K834" xml:space="preserve"><value>HealBot já tem uma atribuição QST ou Newb ativa.</value></data>
+  <data name="K835" xml:space="preserve"><value>Identidade Newb inválida.</value></data>
+  <data name="K836" xml:space="preserve"><value>A sessão Newb não controla a atribuição ativa.</value></data>
+  <data name="K837" xml:space="preserve"><value>A sessão Newb não controla uma atribuição ativa.</value></data>
+  <data name="K838" xml:space="preserve"><value>A atualização de viagem não corresponde ao Newb exato atribuído.</value></data>
+  <data name="K839" xml:space="preserve"><value>HealBot não conseguiu ativar JOAT.</value></data>
+  <data name="K840" xml:space="preserve"><value>HealBot desativado.</value></data>
+  <data name="K841" xml:space="preserve"><value>Automação HealBot desativada.</value></data>
+  <data name="K842" xml:space="preserve"><value>Selecione Jacqueline of All Trades (JOAT).</value></data>
+  <data name="K843" xml:space="preserve"><value>Rotation Solver Reborn obrigatório para ataque JOAT.</value></data>
+  <data name="K844" xml:space="preserve"><value>Automação desligada.</value></data>
+  <data name="K845" xml:space="preserve"><value>Escolha ativar a automação agora ou mantê-la desligada.</value></data>
+  <data name="K846" xml:space="preserve"><value>HealBot não conseguiu iniciar a função selecionada.</value></data>
+  <data name="K847" xml:space="preserve"><value>Configuração {0} salva. A função permanece Desligada.</value></data>
+  <data name="K848" xml:space="preserve"><value>Configuração {0} salva e iniciada.</value></data>
+  <data name="K849" xml:space="preserve"><value>Função operacional desconhecida.</value></data>
+  <data name="K850" xml:space="preserve"><value>QST pareado</value></data>
+  <data name="K851" xml:space="preserve"><value>Cura {0}; ataque {1}</value></data>
+  <data name="K852" xml:space="preserve"><value>{0}: {1} Clique para abrir a janela principal.</value></data>
+  <data name="K853" xml:space="preserve"><value> Comportamento: {0}.</value></data>
+  <data name="K854" xml:space="preserve"><value>Função: {0}.{1} Estado: {2} Próxima: {3} Identidade: {4}</value></data>
+  <data name="K855" xml:space="preserve"><value>Apoio automatizado para suas aventuras</value></data>
+  <data name="K856" xml:space="preserve"><value>Um companheiro compacto para jogar no dia a dia</value></data>
+  <data name="Window appearance" xml:space="preserve">
+    <value>Aparência da janela</value>
+  </data>
+  <data name="Compact visible on main window" xml:space="preserve">
+    <value>Mostrar modo compacto na janela principal</value>
+  </data>
+  <data name="Language visible on main window" xml:space="preserve">
+    <value>Mostrar idioma na janela principal</value>
+  </data>
+  <data name="Transparency" xml:space="preserve">
+    <value>Transparência</value>
+  </data>
+  <data name="Opacity (%)" xml:space="preserve">
+    <value>Opacidade (%)</value>
+  </data>
+  <data name="Auto-fade when unfocused" xml:space="preserve">
+    <value>Esmaecer automaticamente sem foco</value>
+  </data>
+  <data name="Unfocused opacity (%)" xml:space="preserve">
+    <value>Opacidade sem foco (%)</value>
+  </data>
+  <data name="Unfocused delay (seconds)" xml:space="preserve">
+    <value>Espera sem foco (segundos)</value>
+  </data>
+</root>

@@ -1,4 +1,7 @@
 using System.Numerics;
+using AethertekUI;
+using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility;
 using Coppelia.Models;
 using Coppelia.Services;
 using Dalamud.Game.ClientState.Conditions;
@@ -27,6 +30,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
     [PluginService] internal static IPartyList PartyList { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
+    [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     [PluginService] internal static IUnlockState UnlockState { get; private set; } = null!;
     [PluginService] internal static IDtrBar DtrBar { get; private set; } = null!;
     [PluginService] internal static IToastGui ToastGui { get; private set; } = null!;
@@ -37,6 +41,19 @@ public sealed class Plugin : IDalamudPlugin
     private readonly ConfigWindow configWindow;
     private readonly WatchWindow watchWindow;
     private readonly MiniWindow miniWindow;
+    private CoppeliaFonts uiFonts = null!;
+    private UiText uiText = null!;
+    private readonly AethertekUI.Dalamud.MaterialTextHost shapedText;
+    private MaterialTheme uiTheme = null!;
+    private readonly MaterialWindowFold fontStatusFold = new();
+    private readonly MaterialWindowDecorations fontStatusDecorations = new();
+    private readonly Dictionary<string, MaterialWindowOpacity> windowOpacities = new();
+    private MaterialOptions<string> languageOptions = null!;
+    private string appliedLanguage = string.Empty;
+    private uint appliedAccent;
+    private Vector3 accentDraft;
+    private int checkedFontGeneration = -1;
+    private bool fontIssueLogged;
     private IDtrBarEntry? dtrEntry;
     private DateTimeOffset nextDependencyToastUtc = DateTimeOffset.MinValue;
     private bool runtimeStartPending = true;
@@ -45,6 +62,7 @@ public sealed class Plugin : IDalamudPlugin
 
     public Plugin()
     {
+        shapedText = new(TextureProvider);
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         if (Configuration.MigrateIfNeeded())
             Configuration.Save();
@@ -132,7 +150,7 @@ public sealed class Plugin : IDalamudPlugin
             if (!legacyAliasRegistered)
                 throw new InvalidOperationException($"Could not register {PluginInfo.LegacyAliasCommand}.");
 
-            PluginInterface.UiBuilder.Draw += WindowSystem.Draw;
+            PluginInterface.UiBuilder.Draw += DrawUi;
             drawRegistered = true;
             PluginInterface.UiBuilder.OpenConfigUi += OpenConfigUi;
             openConfigRegistered = true;
@@ -156,7 +174,7 @@ public sealed class Plugin : IDalamudPlugin
             if (openConfigRegistered)
                 PluginInterface.UiBuilder.OpenConfigUi -= OpenConfigUi;
             if (drawRegistered)
-                PluginInterface.UiBuilder.Draw -= WindowSystem.Draw;
+                PluginInterface.UiBuilder.Draw -= DrawUi;
             if (legacyAliasRegistered)
                 CommandManager.RemoveHandler(PluginInfo.LegacyAliasCommand);
             if (shortAliasRegistered)
@@ -176,7 +194,10 @@ public sealed class Plugin : IDalamudPlugin
         PowerlevelRuntimeService.Dispose();
         HealbotRuntimeService.Dispose();
         Framework.Update -= OnFrameworkUpdate;
-        PluginInterface.UiBuilder.Draw -= WindowSystem.Draw;
+        PluginInterface.UiBuilder.Draw -= DrawUi;
+        uiFonts?.Dispose();
+        uiText?.Dispose();
+        shapedText.Dispose();
         PluginInterface.UiBuilder.OpenConfigUi -= OpenConfigUi;
         PluginInterface.UiBuilder.OpenMainUi -= OpenMainUi;
         CommandManager.RemoveHandler(PluginInfo.Command);
@@ -189,6 +210,115 @@ public sealed class Plugin : IDalamudPlugin
         watchWindow.Dispose();
         miniWindow.Dispose();
         Log.Information("[Coppelia] HealBot plugin unloaded.");
+    }
+
+    private void DrawUi()
+    {
+        using var shaping=shapedText.Push();
+        ApplyAppearance();
+        using var text = uiText.Enter();
+        if (!uiFonts.Ready)
+        {
+            if (!fontIssueLogged && uiFonts.LoadException is { } error)
+            { Log.Error(error, "[Coppelia] Required UI fonts failed to load."); fontIssueLogged = true; }
+            DrawFontStatus(uiFonts.LoadException is null);
+            return;
+        }
+        if (checkedFontGeneration != uiFonts.Generation)
+        {
+            try
+            {
+                var generation = uiFonts.Generation;
+                uiFonts.CheckGlyphs(uiText.RequiredText);
+                checkedFontGeneration = generation;
+            }
+            catch (Exception error)
+            {
+                if (!fontIssueLogged) { Log.Error(error, "[Coppelia] Required UI glyph coverage failed."); fontIssueLogged = true; }
+                DrawFontStatus(false); return;
+            }
+        }
+        CoppeliaPresentation.Compact = Configuration.UiCompact;
+        using var theme = MaterialTheme.Push(uiTheme, ImGuiHelpers.GlobalScale, MaterialStyleMode.ColorsOnly);
+        using var geometry = new MaterialStyleScope();
+        var scale = ImGuiHelpers.GlobalScale;
+        geometry.Style(ImGuiStyleVar.WindowPadding, new Vector2(Configuration.UiCompact ? 10 : 14) * scale);
+        geometry.Style(ImGuiStyleVar.FramePadding, new Vector2(Configuration.UiCompact ? 6 : 8, Configuration.UiCompact ? 3 : 5) * scale);
+        geometry.Style(ImGuiStyleVar.ItemSpacing, new Vector2(Configuration.UiCompact ? 6 : 10, Configuration.UiCompact ? 4 : 6) * scale);
+        geometry.Style(ImGuiStyleVar.CellPadding, new Vector2(Configuration.UiCompact ? 6 : 10, Configuration.UiCompact ? 4 : 6) * scale);
+        geometry.Style(ImGuiStyleVar.FrameRounding, 4 * scale);
+        geometry.Style(ImGuiStyleVar.ChildRounding, 4 * scale);
+        geometry.Style(ImGuiStyleVar.FrameBorderSize, scale);
+        using var font = uiFonts.Push(UiFontRole.Body);
+        using var chrome = MaterialWindowChrome.Push();
+        WindowSystem.Draw();
+        foreach (var window in WindowSystem.Windows)
+            if (window.IsOpen) ApplyWindowOpacity(window.WindowName);
+    }
+
+    private void DrawFontStatus(bool loading)
+    {
+        using var statusPalette = MaterialTheme.Push(uiTheme, ImGuiHelpers.GlobalScale, MaterialStyleMode.ColorsOnly);
+        using var statusChrome = MaterialWindowChrome.Push();
+        ImGui.SetNextWindowSize(new Vector2(460 * ImGuiHelpers.GlobalScale, 0), ImGuiCond.Always);
+        fontStatusFold.PreDraw("HealBot##FontStatus", null, null, reducedMotion: false,
+            prepareDecorations: fontStatusDecorations.Prepare);
+        try
+        {
+            if (ImGui.Begin("HealBot##FontStatus", ImGuiWindowFlags.AlwaysAutoResize))
+            {
+                fontStatusDecorations.Paint();
+                MaterialText.TextWrapped(UiText.T(loading ? "Loading UI fonts..." : "UI fonts failed to load. See the plugin log."));
+            }
+        }
+        finally
+        {
+            ImGui.End();
+            fontStatusDecorations.Paint();
+            fontStatusFold.PostDraw();
+            ApplyWindowOpacity("HealBot##FontStatus");
+        }
+    }
+
+    private void ApplyAppearance()
+    {
+        var language = UiText.Languages.Any(l => l.Code == Configuration.UiLanguage) ? Configuration.UiLanguage : "en";
+        if (language != appliedLanguage)
+        {
+            uiFonts?.Dispose(); uiText?.Dispose();
+            uiText = new(language, role => uiFonts!.Push(role));
+            uiFonts = new(PluginInterface.UiBuilder.FontAtlas, uiText.GlyphRanges(), language) { ShapedText=shapedText.Renderer };
+            languageOptions = new(UiText.Languages.Select(l => new MaterialOption<string>(l.Code, l.Code, l.Name)).ToArray());
+            appliedLanguage = language; checkedFontGeneration = -1; fontIssueLogged = false;
+        }
+        if (uiTheme is null || appliedAccent != (Configuration.UiAccentRgb & 0xFFFFFF))
+        {
+            appliedAccent = Configuration.UiAccentRgb & 0xFFFFFF;
+            uiTheme = CoppeliaPresentation.Theme(appliedAccent);
+            var rgb = CoppeliaPresentation.Rgb(appliedAccent); accentDraft = new(rgb.X, rgb.Y, rgb.Z);
+        }
+    }
+
+    internal void DrawAppearanceSelector(bool includeAccent = true)
+    {
+        var language = appliedLanguage;
+        using var font = UiText.Font(UiFontRole.Action);
+        using var controls = MaterialControls.Push(CoppeliaPresentation.Controls(CoppeliaPresentation.ActionHeight, 18));
+        var changed = includeAccent
+            ? MaterialAppearanceSelector.Draw("appearance", ref accentDraft, ref language, languageOptions,
+                new(UiText.T("Color"), UiText.T("Language"), UiText.T("Teal"), UiText.T("Blue"), UiText.T("Pink"), UiText.T("Custom RGB")), languageWidth: 130)
+            : new MaterialAppearanceChange(false, MaterialAppearanceSelector.DrawLanguage("appearance", ref language, languageOptions, 130));
+        if (changed.AccentChanged) Configuration.UiAccentRgb = ((uint)Math.Clamp((int)MathF.Round(accentDraft.X * 255), 0, 255) << 16)
+            | ((uint)Math.Clamp((int)MathF.Round(accentDraft.Y * 255), 0, 255) << 8) | (uint)Math.Clamp((int)MathF.Round(accentDraft.Z * 255), 0, 255);
+        if (changed.LanguageChanged) Configuration.UiLanguage = language;
+        if (changed.AccentChanged || changed.LanguageChanged) Configuration.Save();
+    }
+
+    internal void DrawCompactPreference()
+    {
+        var compact = Configuration.UiCompact;
+        if (ImGui.Checkbox("C##coppelia-compact", ref compact)) { Configuration.UiCompact = compact; Configuration.Save(); }
+        if (ImGui.IsItemHovered()) UiGui.SetTooltip("Compact mode");
     }
 
     public bool SetHealbotEnabled(bool enabled, bool printStatus)
@@ -560,6 +690,8 @@ public sealed class Plugin : IDalamudPlugin
         if (!Configuration.DtrBarEnabled)
             return;
 
+        // DTR is presentation text too; keep command and log status strings in their original form.
+        using var localization = uiText?.Enter();
         var assignment = CoppeliaQstIpcService.GetAssignmentSnapshot();
         var state = assignment.Source == "QST"
             ? "QST paired"
@@ -585,13 +717,18 @@ public sealed class Plugin : IDalamudPlugin
         var modeLabel = assignment.Source == "QST"
             ? "HELP"
             : Configuration.OperatingRole.GetDtrLabel(Configuration.BotMode);
+        // The game-owned DTR cannot use the plugin's Devanagari renderer.
+        if (uiText is not null && uiText.Language != "hi") state = UiText.T(state);
         dtrEntry.Text = Configuration.DtrBarMode switch
         {
             1 => new SeString(new TextPayload($"{glyph} {modeLabel}")),
             2 => new SeString(new TextPayload(glyph)),
             _ => new SeString(new TextPayload($"{modeLabel}: {state}")),
         };
-        dtrEntry.Tooltip = new SeString(new TextPayload($"{PluginInfo.DisplayName}: {GetSelectedModeStatus()} Click to open the main window."));
+        var tooltip = uiText is null || uiText.Language == "hi"
+            ? $"{PluginInfo.DisplayName}: {GetSelectedModeStatus()} Click to open the main window."
+            : UiText.F("{0}: {1} Click to open the main window.", PluginInfo.DisplayName, GetSelectedModeStatus());
+        dtrEntry.Tooltip = new SeString(new TextPayload(tooltip));
     }
 
     private void SetupDtrBar()
@@ -836,5 +973,62 @@ public sealed class Plugin : IDalamudPlugin
             ? $" Behavior: {Configuration.BotMode.GetLabel()}."
             : string.Empty;
         return $"Role: {Configuration.OperatingRole.GetLabel()}.{behavior} State: {status.PrimaryState} Next: {status.NextAction} Identity: {status.Identity}";
+    }
+
+    private void ApplyWindowOpacity(string windowName)
+    {
+        if (!windowOpacities.TryGetValue(windowName, out var opacity))
+            windowOpacities.Add(windowName, opacity = new MaterialWindowOpacity());
+        opacity.Apply(windowName, Configuration.UiWindowOpacityPercent / 100f,
+            Configuration.UiTransparencyEnabled, Configuration.UiAutoFade,
+            Configuration.UiFadedOpacityPercent / 100f, Configuration.UiUnfocusedDelaySeconds);
+    }
+
+    internal void DrawTransparencyToggle()
+    {
+        var enabled = Configuration.UiTransparencyEnabled;
+        if (UiGui.Checkbox("Transparency##MainWindow", ref enabled))
+        { Configuration.UiTransparencyEnabled = enabled; Configuration.Save(); }
+    }
+
+    internal void PaintWindowTitle(string name,string display)
+        => UiGui.PaintWindowTitle(name,display,shapedText.Renderer);
+
+    internal void DrawWindowAppearanceSettings()
+    {
+        if (!UiGui.CollapsingHeader("Window appearance###UiWindowAppearance")) return;
+        DrawCompactPreference();
+        ImGui.SameLine();
+        MaterialText.Text(UiText.T("Compact mode"));
+        DrawAppearanceSelector();
+        var compactVisible = Configuration.UiCompactVisibleOnMainWindow;
+        if (UiGui.Checkbox("Compact visible on main window", ref compactVisible))
+        { Configuration.UiCompactVisibleOnMainWindow = compactVisible; Configuration.Save(); }
+        var languageVisible = Configuration.UiLanguageVisibleOnMainWindow;
+        if (UiGui.Checkbox("Language visible on main window", ref languageVisible))
+        { Configuration.UiLanguageVisibleOnMainWindow = languageVisible; Configuration.Save(); }
+        var enabled = Configuration.UiTransparencyEnabled;
+        if (UiGui.Checkbox("Transparency", ref enabled))
+        { Configuration.UiTransparencyEnabled = enabled; Configuration.Save(); }
+        MaterialText.Text(UiText.T("Opacity (%)"));
+        ImGui.SetNextItemWidth(MaterialLayout.FitNextItemWidth(160 * MaterialTheme.Metrics.Scale, 80 * MaterialTheme.Metrics.Scale));
+        var normalOpacity = Configuration.UiWindowOpacityPercent;
+        if (ImGui.InputInt("##UiWindowOpacityPercent", ref normalOpacity))
+        { Configuration.UiWindowOpacityPercent = normalOpacity; Configuration.Save(); }
+        var autoFade = Configuration.UiAutoFade;
+        if (UiGui.Checkbox("Auto-fade when unfocused", ref autoFade))
+        { Configuration.UiAutoFade = autoFade; Configuration.Save(); }
+        ImGui.BeginDisabled(!autoFade);
+        MaterialText.Text(UiText.T("Unfocused opacity (%)"));
+        ImGui.SetNextItemWidth(MaterialLayout.FitNextItemWidth(160 * MaterialTheme.Metrics.Scale, 80 * MaterialTheme.Metrics.Scale));
+        var fadedOpacity = Configuration.UiFadedOpacityPercent;
+        if (ImGui.InputInt("##UiFadedOpacityPercent", ref fadedOpacity))
+        { Configuration.UiFadedOpacityPercent = fadedOpacity; Configuration.Save(); }
+        MaterialText.Text(UiText.T("Unfocused delay (seconds)"));
+        ImGui.SetNextItemWidth(MaterialLayout.FitNextItemWidth(160 * MaterialTheme.Metrics.Scale, 80 * MaterialTheme.Metrics.Scale));
+        var delay = Configuration.UiUnfocusedDelaySeconds;
+        if (ImGui.InputInt("##UiUnfocusedDelaySeconds", ref delay))
+        { Configuration.UiUnfocusedDelaySeconds = delay; Configuration.Save(); }
+        ImGui.EndDisabled();
     }
 }
