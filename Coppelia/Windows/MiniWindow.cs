@@ -3,6 +3,7 @@ using System.Numerics;
 using Coppelia.Models;
 using Coppelia.Services;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface.Windowing;
 using Lumina.Excel.Sheets;
@@ -29,6 +30,24 @@ public sealed class MiniWindow : Window, IDisposable
             MinimumSize = new Vector2(380f, 440f),
             MaximumSize = new Vector2(1000f, 1200f),
         };
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.WindowMaximize, Priority = 0, IconOffset = new(2, 1),
+            Click = button => { if (button == ImGuiMouseButton.Left) plugin.OpenMainUi(); },
+            ShowTooltip = () => MaterialText.SetTooltip(UiText.T("Main")),
+        });
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.Cog, Priority = -10, IconOffset = new(2, 1),
+            Click = button => { if (button == ImGuiMouseButton.Left) plugin.OpenConfigUi(); },
+            ShowTooltip = () => MaterialText.SetTooltip(UiText.T("Settings")),
+        });
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.Eye, Priority = -20, IconOffset = new(2, 1),
+            Click = button => { if (button == ImGuiMouseButton.Left) plugin.OpenWatchUi(); },
+            ShowTooltip = () => MaterialText.SetTooltip(UiText.T("Watch")),
+        });
     }
 
     public void Dispose()
@@ -55,22 +74,22 @@ public sealed class MiniWindow : Window, IDisposable
 
     public override void PreDraw()
     {
+        UiGui.ReserveTitleSpace(this, UiText.F("{0} Mini", PluginInfo.DisplayName), 380);
         windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
     }
 
     public override void PostDraw()
-        { windowMotion.Restore(this); plugin.PaintWindowTitle(WindowName,UiText.F("{0} Mini",PluginInfo.DisplayName)); }
+        { windowMotion.Restore(this); plugin.PaintWindowTitleWithButtons(this,UiText.F("{0} Mini",PluginInfo.DisplayName)); }
 
     public override void Draw()
     {
         windowMotion.DrawChrome();
-        UiGui.Title("HealBot Mini",UiText.F("{0} Mini",PluginInfo.DisplayName));
+        UiGui.TitleWithButtons("HealBot Mini",UiText.F("{0} Mini",PluginInfo.DisplayName), this);
         using var typography = UiText.FontScale(1.25f);
         uiRoot = ImGuiP.GetCurrentWindow().ID;
         CoppeliaUi.Brand("Mini");
         var scale = MaterialTheme.Metrics.Scale;
-        var footerHeight = CoppeliaPresentation.ActionHeight * scale + ImGui.GetStyle().ItemSpacing.Y;
-        CoppeliaUi.Panel("##HealBotMiniBody", uiRoot, new Vector2(0, Math.Max(240 * scale, ImGui.GetContentRegionAvail().Y - footerHeight)), () =>
+        CoppeliaUi.Panel("##HealBotMiniBody", uiRoot, new Vector2(0, Math.Max(240 * scale, ImGui.GetContentRegionAvail().Y)), () =>
         {
             ImGui.PushStyleVar(ImGuiStyleVar.CellPadding, new Vector2(4, 2) * scale);
             var roleWidth = RoleTileWidth() * 2 + ImGui.GetStyle().CellPadding.X * 4;
@@ -127,13 +146,6 @@ public sealed class MiniWindow : Window, IDisposable
                 }
             }
         }, padding: CoppeliaPresentation.Compact ? 10 : 12);
-        var width = Math.Max(0, (ImGui.GetContentRegionAvail().X - ImGui.GetStyle().ItemSpacing.X * 2) / 3);
-        var size = new Vector2(width, CoppeliaPresentation.ActionHeight * scale);
-        if (CoppeliaUi.PrimaryButton("Settings##Mini", size)) plugin.OpenConfigUi();
-        ImGui.SameLine();
-        if (UiGui.Button("Watch##Mini", size)) plugin.OpenWatchUi();
-        ImGui.SameLine();
-        if (UiGui.Button("Main##Mini", size)) plugin.OpenMainUi();
     }
     private void DrawKrangleToggle()
     {

@@ -5,6 +5,7 @@ using System.Reflection;
 using Coppelia.Models;
 using Coppelia.Services;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 
 namespace Coppelia.Windows;
@@ -33,6 +34,42 @@ public sealed class MainWindow : Window, IDisposable
         };
         Size = new Vector2(980f, 920f);
         SizeCondition = ImGuiCond.FirstUseEver;
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.Cog, Priority = 0, IconOffset = new(2, 1),
+            Click = button => { if (button == ImGuiMouseButton.Left) plugin.ToggleConfigUi(); },
+            ShowTooltip = () => MaterialText.SetTooltip(UiText.T("Settings")),
+        });
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.WindowMinimize, Priority = -10, IconOffset = new(2, 1),
+            Click = button => { if (button == ImGuiMouseButton.Left) plugin.ToggleMiniUi(); },
+            ShowTooltip = () => MaterialText.SetTooltip(UiText.T("Mini")),
+        });
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.PowerOff, Priority = -20, IconOffset = new(2, 1),
+            Click = button => { if (button == ImGuiMouseButton.Left) plugin.SetOperatingRole(OperatingRole.Off, printStatus: true); },
+            ShowTooltip = () => ShowRoleTitleTooltip(OperatingRole.Off),
+        });
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.User, Priority = -30, IconOffset = new(2, 1),
+            Click = button => { if (button == ImGuiMouseButton.Left) plugin.SetOperatingRole(OperatingRole.StandAlone, printStatus: true); },
+            ShowTooltip = () => ShowRoleTitleTooltip(OperatingRole.StandAlone),
+        });
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.HandsHelping, Priority = -40, IconOffset = new(2, 1),
+            Click = button => { if (button == ImGuiMouseButton.Left) plugin.SetOperatingRole(OperatingRole.Helper, printStatus: true); },
+            ShowTooltip = () => ShowRoleTitleTooltip(OperatingRole.Helper),
+        });
+        TitleBarButtons.Add(new()
+        {
+            Icon = FontAwesomeIcon.UserPlus, Priority = -50, IconOffset = new(2, 1),
+            Click = button => { if (button == ImGuiMouseButton.Left) plugin.SetOperatingRole(OperatingRole.Newb, printStatus: true); },
+            ShowTooltip = () => ShowRoleTitleTooltip(OperatingRole.Newb),
+        });
     }
 
     public void Dispose()
@@ -48,6 +85,7 @@ public sealed class MainWindow : Window, IDisposable
             pendingSavedPositionApply = true;
             pendingWindowPosition = null;
         }
+        UiGui.ReserveTitleSpace(this, PluginInfo.DisplayName + " " + typeof(Plugin).Assembly.GetName().Version, 650);
         windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
     }
 
@@ -57,7 +95,7 @@ public sealed class MainWindow : Window, IDisposable
     public override void Draw()
     {
         windowMotion.DrawChrome();
-        UiGui.Title(PluginInfo.DisplayName, PluginInfo.DisplayName+" "+typeof(Plugin).Assembly.GetName().Version);
+        UiGui.TitleWithButtons(PluginInfo.DisplayName, PluginInfo.DisplayName+" "+typeof(Plugin).Assembly.GetName().Version, this);
         using var typography = UiText.FontScale(1.25f);
         var root = ImGuiP.GetCurrentWindow().ID;
         var scale = MaterialTheme.Metrics.Scale;
@@ -127,6 +165,15 @@ public sealed class MainWindow : Window, IDisposable
 
         pendingWindowPosition = targetPosition;
         plugin.SaveCurrentWindowPosition(settingsWindow: false, targetPosition);
+    }
+
+    private void ShowRoleTitleTooltip(OperatingRole role)
+    {
+        var selected = plugin.Configuration.OperatingRole == role;
+        var tooltip = UiText.T(role.GetLabel());
+        if (selected)
+            tooltip += "\n" + UiText.T("Selected") + (string.IsNullOrWhiteSpace(plugin.LastAutomationBlocker) ? "" : "\n" + UiText.F(plugin.LastAutomationBlocker));
+        MaterialText.SetTooltip(tooltip);
     }
 
     private void DrawHeader()

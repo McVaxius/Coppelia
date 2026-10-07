@@ -5,6 +5,7 @@ using System.IO;
 using System.Numerics;
 using AethertekUI;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Windowing;
 
 namespace Coppelia.Windows;
 
@@ -247,6 +248,32 @@ internal static class UiGui
         var open=ImGui.BeginPopupModal(original,flags);if(open) Title(original.Split("##",2)[0]);return open;
     }
     internal static void Title(string original,string? display=null)
+        => TitleWithButtons(original, display, null);
+
+    internal static void ReserveTitleSpace(Window owner, string visible, float minimumWidth)
+    {
+        var style = ImGui.GetStyle();
+        var fontSize = ImGui.GetFontSize();
+        var collapse = (owner.Flags & (ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.Modal)) == 0
+            && style.WindowMenuButtonPosition != ImGuiDir.None;
+        var controls = AdditionalTitleButtonWidth(owner, fontSize)
+            + ((owner.ShowCloseButton ? 1 : 0) + (collapse ? 1 : 0)) * (fontSize + style.ItemInnerSpacing.X);
+        var required = (MaterialText.Measure(visible).X + controls + style.FramePadding.X * 2 + style.ItemInnerSpacing.X)
+            / ImGui.GetIO().FontGlobalScale;
+        var bounds = owner.SizeConstraints ?? new WindowSizeConstraints();
+        bounds.MinimumSize = new(Math.Max(minimumWidth, required), bounds.MinimumSize.Y);
+        owner.SizeConstraints = bounds;
+    }
+
+    private static float AdditionalTitleButtonWidth(Window? owner, float fontSize)
+    {
+        if (owner is null) return 0;
+        var count = owner.TitleBarButtons.Count(button => !owner.IsClickthrough || button.AvailableClickthrough);
+        if (owner.AllowPinning || owner.AllowClickthrough || owner.AllowBackgroundBlur) count++;
+        return count * (fontSize + ImGui.GetStyle().ItemInnerSpacing.X);
+    }
+
+    internal static void TitleWithButtons(string original,string? display, Window? owner)
     {
         var translated=display ?? UiText.T(original);if (translated==original) return;
         if(MaterialText.RequiresShaping(translated))return; // Painted after native End, including collapsed owners.
@@ -254,7 +281,11 @@ internal static class UiGui
         var flags=ImGuiP.GetCurrentWindow().Flags;
         var collapseLeft=(flags & (ImGuiWindowFlags.NoCollapse|ImGuiWindowFlags.Modal))==0 && style.WindowMenuButtonPosition==ImGuiDir.Left;
         var p=ImGui.GetWindowPos()+new Vector2(style.FramePadding.X+(collapseLeft?fontSize+style.ItemInnerSpacing.X:0),style.FramePadding.Y);
-        var dl=ImGui.GetWindowDrawList();dl.PushClipRect(ImGui.GetWindowPos(),ImGui.GetWindowPos()+new Vector2(ImGui.GetWindowSize().X-2*height,height),false);
+        var reserved = owner is null ? 2 * height
+            : style.FramePadding.X * 2 + (owner.ShowCloseButton ? fontSize : 0) + AdditionalTitleButtonWidth(owner, fontSize);
+        if (owner is not null && (flags & ImGuiWindowFlags.NoCollapse) == 0 && style.WindowMenuButtonPosition == ImGuiDir.Right)
+            reserved += fontSize + style.ItemInnerSpacing.X;
+        var dl=ImGui.GetWindowDrawList();dl.PushClipRect(owner is null ? ImGui.GetWindowPos() : p,ImGui.GetWindowPos()+new Vector2(Math.Max(0,ImGui.GetWindowSize().X-reserved),height),false);
         var background=style.Colors[(int)(ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows)?ImGuiCol.TitleBgActive:ImGuiCol.TitleBg)];
         dl.AddRectFilled(p,p+new Vector2(Math.Max(ImGui.CalcTextSize(original).X,MaterialText.Measure(translated).X),height-style.FramePadding.Y),ImGui.ColorConvertFloat4ToU32(background));
         MaterialText.AddText(dl,p,ImGui.GetColorU32(ImGuiCol.Text),translated);dl.PopClipRect();
@@ -280,6 +311,9 @@ internal static class UiGui
         if(MaterialText.Measure(translated).X>width && ImGui.IsItemHovered()) SetTooltip(translated);
     }
     internal static unsafe void PaintWindowTitle(string name,string display,MaterialTextRenderer renderer)
+        => PaintWindowTitleWithButtons(name, display, renderer, null);
+
+    internal static unsafe void PaintWindowTitleWithButtons(string name,string display,MaterialTextRenderer renderer, Window? owner)
     {
         var text=display; var original=name.Split("##",2)[0];
         if (!MaterialText.RequiresShaping(text)) return;
@@ -307,6 +341,7 @@ internal static class UiGui
         var collapse=(window.Flags&(ImGuiWindowFlags.NoCollapse|ImGuiWindowFlags.Modal))==0;
         var left=style.FramePadding.X+(collapse&&style.WindowMenuButtonPosition==ImGuiDir.Left?fontSize+style.ItemInnerSpacing.X:0);
         var right=style.FramePadding.X+(window.HasCloseButton?fontSize+style.ItemInnerSpacing.X:0)+(collapse&&style.WindowMenuButtonPosition==ImGuiDir.Right?fontSize+style.ItemInnerSpacing.X:0);
+        right += AdditionalTitleButtonWidth(owner, fontSize);
         var p=min+new Vector2(left+Math.Max(0,window.Size.X-left-right-measured.X)*style.WindowTitleAlign.X-Math.Min(0,layout.Rasterize().Offset.X),(height-measured.Y)*.5f);
         list.PushClipRect(Vector2.Max(min+new Vector2(left,0),window.OuterRectClipped.Min),Vector2.Min(max-new Vector2(right,0),window.OuterRectClipped.Max),false);
         try { MaterialText.AddText(list,font,fontSize,p,ImGui.GetColorU32(ImGuiCol.Text),text); }

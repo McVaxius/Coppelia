@@ -994,6 +994,9 @@ public sealed class Plugin : IDalamudPlugin
     internal void PaintWindowTitle(string name,string display)
         => UiGui.PaintWindowTitle(name,display,shapedText.Renderer);
 
+    internal void PaintWindowTitleWithButtons(Dalamud.Interface.Windowing.Window owner, string display)
+        => UiGui.PaintWindowTitleWithButtons(owner.WindowName, display, shapedText.Renderer, owner);
+
     internal void DrawWindowAppearanceSettings()
     {
         if (!UiGui.CollapsingHeader("Window appearance###UiWindowAppearance")) return;
