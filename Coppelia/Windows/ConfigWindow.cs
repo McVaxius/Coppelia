@@ -246,7 +246,7 @@ public sealed class ConfigWindow : Window, IDisposable
             "Stand-alone runs HealBot, JOAT, or PowerlevelBot without networking. Helper listens for and remotely activates JOAT for one authenticated Newb. Newb connects asynchronously and performs no local healing or attacking.");
         ImGui.Spacing();
 
-        if (CoppeliaUi.PrimaryButton("Set up Stand-alone", new Vector2(220f * MaterialTheme.Metrics.Scale, CoppeliaPresentation.ActionHeight * MaterialTheme.Metrics.Scale)))
+        if (CoppeliaUi.PrimaryButton("Set up Stand-alone", new Vector2(220f * MaterialTheme.Metrics.Scale, 0)))
         {
             setupDraft!.Role = OperatingRole.StandAlone;
             if (setupDraft.Mode == BotMode.Newb)
@@ -257,7 +257,7 @@ public sealed class ConfigWindow : Window, IDisposable
         CoppeliaUi.Tooltip("Configure the selected HealBot, JOAT, or PowerlevelBot behavior without networking.");
 
         CoppeliaUi.SameLineFor("Set up Helper", 80);
-        if (CoppeliaUi.PrimaryButton("Set up Helper", new Vector2(220f * MaterialTheme.Metrics.Scale, CoppeliaPresentation.ActionHeight * MaterialTheme.Metrics.Scale)))
+        if (CoppeliaUi.PrimaryButton("Set up Helper", new Vector2(220f * MaterialTheme.Metrics.Scale, 0)))
         {
             setupDraft!.Role = OperatingRole.Helper;
             setupStep = QuickSetupStep.Configure;
@@ -266,7 +266,7 @@ public sealed class ConfigWindow : Window, IDisposable
         CoppeliaUi.Tooltip("Configure the authenticated listener port and visible shared secret.");
 
         CoppeliaUi.SameLineFor("Set up Newb", 80);
-        if (CoppeliaUi.PrimaryButton("Set up Newb", new Vector2(220f * MaterialTheme.Metrics.Scale, CoppeliaPresentation.ActionHeight * MaterialTheme.Metrics.Scale)))
+        if (CoppeliaUi.PrimaryButton("Set up Newb", new Vector2(220f * MaterialTheme.Metrics.Scale, 0)))
         {
             setupDraft!.Role = OperatingRole.Newb;
             setupStep = QuickSetupStep.Configure;

@@ -30,9 +30,12 @@ internal static class UiGui
     internal static bool Button(string original,Vector2 size=default,string? display=null)
     {
         var translated=display ?? Visible(original);
+        using var controls = ImGui.GetStyle().FramePadding.Y == 0 || MaterialControls.Context == MaterialControlContext.Dense
+            ? default(MaterialControls.ControlScope) : MaterialControls.Push(MaterialControlContext.Toolbar);
         using var height=MaterialText.PushLineHeight(translated);
         var natural=MaterialText.Measure(translated).X+ImGui.GetStyle().FramePadding.X*2;
         size.X=MaterialLayout.FitNextItemWidth(size.X,Math.Max(size.X,natural));
+        size.Y=Math.Max(size.Y,ImGui.GetFrameHeight());
         ImGui.PushStyleColor(ImGuiCol.Text,Vector4.Zero);
         var clicked=ImGui.Button(original,size);ImGui.PopStyleColor();
         var min=ImGui.GetItemRectMin();var max=ImGui.GetItemRectMax();

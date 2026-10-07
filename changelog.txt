@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased - Button sizing
+
+- Use local Toolbar metrics for ordinary buttons and natural heights for the setup actions, growing for the active font while retaining requested widths and font roles.
+- Current Debug/x64 compilation passes. The primary-action native route passes 449 checks across sixteen scenes and sixteen pointer activations, exit 0. The ordinary-wrapper route executes 9,329 checks and 96 pointer activations but retains four Hindi SmallButton/zero-padding caption-visibility failures on the inherited item-clip path. Height, ID, activation and restoration checks pass; preserve the failed native exit and leave further visual correction to user feedback after the three-round source freeze.
+
 ## Unreleased - Managed CJK font atlas
 
 - Merge one bundled CJK face per font role, selecting the active language's regional forms. Set both managed atlas dimensions to 4096 on every rebuild; preserve font heights, required glyph ranges, symbol merges and host-language coverage.
