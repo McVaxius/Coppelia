@@ -79,12 +79,11 @@ public sealed class MiniWindow : Window, IDisposable
     }
 
     public override void PostDraw()
-        { windowMotion.Restore(this); plugin.PaintWindowTitleWithButtons(this,UiText.F("{0} Mini",PluginInfo.DisplayName)); }
+        { windowMotion.Restore(this); UiGui.PaintTitleWithImage(this,UiText.F("{0} Mini",PluginInfo.DisplayName)); }
 
     public override void Draw()
     {
         windowMotion.DrawChrome();
-        UiGui.TitleWithButtons("HealBot Mini",UiText.F("{0} Mini",PluginInfo.DisplayName), this);
         using var typography = UiText.FontScale(1.25f);
         uiRoot = ImGuiP.GetCurrentWindow().ID;
         CoppeliaUi.Brand("Mini");

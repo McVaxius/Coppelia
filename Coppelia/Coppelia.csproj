@@ -6,9 +6,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>3.0.0.2</Version>
-    <FileVersion>3.0.0.2</FileVersion>
-    <AssemblyVersion>3.0.0.2</AssemblyVersion>
+    <Version>3.0.0.3</Version>
+    <FileVersion>3.0.0.3</FileVersion>
+    <AssemblyVersion>3.0.0.3</AssemblyVersion>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
     <IsPackable>false</IsPackable>
     <RootNamespace>Coppelia</RootNamespace>
@@ -30,5 +30,6 @@
   <ItemGroup>
     <None Include="Coppelia.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="images\icon.png" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="images\icon.png" LogicalName="Coppelia.images.icon.png" />
   </ItemGroup>
 </Project>

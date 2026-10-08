@@ -53,11 +53,16 @@ internal static class CoppeliaUi
         var ink = ImGui.GetColorU32(ImGuiCol.Text);
         var colors = MaterialTheme.Current.Colors;
         var mark = suffix == "Settings" ? 38 : suffix.Length == 0 && !CoppeliaPresentation.Compact ? 50 : 42;
-        var center = min + new Vector2(mark * .5f) * scale;
-        dl.AddRectFilled(min, min + new Vector2(mark) * scale, MaterialCanvas.Color(colors.PrimaryContainer), 4 * scale);
-        dl.AddRect(min, min + new Vector2(mark) * scale, MaterialCanvas.Color(colors.Primary), 4 * scale);
-        dl.AddRectFilled(center + new Vector2(-4, -12) * scale, center + new Vector2(4, 12) * scale, ink);
-        dl.AddRectFilled(center + new Vector2(-12, -4) * scale, center + new Vector2(12, 4) * scale, ink);
+        if (suffix.Length == 0)
+            CoppeliaPresentation.DrawPluginIcon(dl, min, min + new Vector2(mark * scale));
+        else
+        {
+            var center = min + new Vector2(mark * .5f) * scale;
+            dl.AddRectFilled(min, min + new Vector2(mark) * scale, MaterialCanvas.Color(colors.PrimaryContainer), 4 * scale);
+            dl.AddRect(min, min + new Vector2(mark) * scale, MaterialCanvas.Color(colors.Primary), 4 * scale);
+            dl.AddRectFilled(center + new Vector2(-4, -12) * scale, center + new Vector2(4, 12) * scale, ink);
+            dl.AddRectFilled(center + new Vector2(-12, -4) * scale, center + new Vector2(12, 4) * scale, ink);
+        }
         ImGui.Dummy(new Vector2(mark * scale));
         ImGui.SameLine();
         ImGui.BeginGroup();

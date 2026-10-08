@@ -90,12 +90,14 @@ public sealed class MainWindow : Window, IDisposable
     }
 
     public override void PostDraw()
-        => windowMotion.Restore(this);
+    {
+        windowMotion.Restore(this);
+        UiGui.PaintTitleWithImage(this, PluginInfo.DisplayName + " " + typeof(Plugin).Assembly.GetName().Version);
+    }
 
     public override void Draw()
     {
         windowMotion.DrawChrome();
-        UiGui.TitleWithButtons(PluginInfo.DisplayName, PluginInfo.DisplayName+" "+typeof(Plugin).Assembly.GetName().Version, this);
         using var typography = UiText.FontScale(1.25f);
         var root = ImGuiP.GetCurrentWindow().ID;
         var scale = MaterialTheme.Metrics.Scale;

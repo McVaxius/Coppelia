@@ -10,6 +10,10 @@ HealBot has four top-level operating roles: **Off**, **Stand-alone**, **Helper**
 
 ## Quick Setup
 
+Hindi uses installed shaping fonts. The source now leaves other languages usable when the Hindi menu caption is unavailable, showing a disabled ASCII `Hindi (unavailable)` option. Required text for a selected Hindi UI still requires full validation; on failure, the readable status offers **Use English**, saving English only after an explicit press. Native verification and Linux/Wine acceptance remain pending for this change.
+
+Settings owns shared colour, UI language, compact spacing and window transparency/fade; optional Main selectors change the same saved preferences. The packaged HealBot icon appears in Main branding and Main/Mini titles, including collapsed windows. Quick Setup and the existing role controls still select Stand-alone, Helper or Newb and their automation; appearance choices retain those role and provider settings.
+
 Open Main and choose **Quick Setup**, or open Settings and select its permanent **Quick Setup** tab.
 
 - Choose Stand-alone, Helper, or Newb; Stand-alone then chooses HealBot, JOAT, or PowerlevelBot.

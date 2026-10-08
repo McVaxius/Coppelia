@@ -230,6 +230,13 @@ public sealed class Plugin : IDalamudPlugin
             {
                 var generation = uiFonts.Generation;
                 uiFonts.CheckGlyphs(uiText.RequiredText);
+                var hindiLabel = UiText.Languages.Single(l => l.Code == "hi").Name;
+                var hindiAvailable = true;
+                foreach (var size in Enum.GetValues<UiFontRole>())
+                    hindiAvailable &= shapedText.Renderer.TryCheckGlyphs([hindiLabel], CoppeliaPresentation.AtlasHeight(size) * ImGuiHelpers.GlobalScale, out _);
+                languageOptions.Replace(UiText.Languages.Select(l => new MaterialOption<string>(l.Code, l.Code,
+                    l.Code == "hi" && !hindiAvailable ? "Hindi (unavailable)" : l.Name,
+                    l.Code == "hi" && !hindiAvailable)).ToArray());
                 checkedFontGeneration = generation;
             }
             catch (Exception error)
@@ -268,7 +275,13 @@ public sealed class Plugin : IDalamudPlugin
             if (ImGui.Begin("HealBot##FontStatus", ImGuiWindowFlags.AlwaysAutoResize))
             {
                 fontStatusDecorations.Paint();
-                MaterialText.TextWrapped(UiText.T(loading ? "Loading UI fonts..." : "UI fonts failed to load. See the plugin log."));
+                ImGui.TextWrapped(appliedLanguage == "hi" && !loading ? "Hindi UI fonts are unavailable. Use English to continue."
+                    : loading ? "Loading UI fonts..." : "UI fonts failed to load. See the plugin log.");
+                if (appliedLanguage == "hi" && !loading && ImGui.Button("Use English"))
+                {
+                    Configuration.UiLanguage = "en";
+                    Configuration.Save();
+                }
             }
         }
         finally

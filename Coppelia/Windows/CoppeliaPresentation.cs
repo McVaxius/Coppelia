@@ -12,6 +12,17 @@ internal enum UiFontRole { Body, BodyStrong, Title, Caption, Small, Heading, Act
 
 internal static class CoppeliaPresentation
 {
+    // Dalamud owns the shared texture through render submission; callers borrow its wrapper.
+    internal static Dalamud.Interface.Textures.TextureWraps.IDalamudTextureWrap? OriginalIcon
+        => Plugin.TextureProvider.GetFromManifestResource(typeof(Plugin).Assembly, "Coppelia.images.icon.png").GetWrapOrDefault();
+
+    internal static void DrawPluginIcon(ImDrawListPtr drawList, Vector2 min, Vector2 max)
+    {
+        var texture = OriginalIcon;
+        if (texture is not null)
+            MaterialCanvas.DrawImage(drawList, texture.Handle, new Vector2(texture.Width, texture.Height), min, max);
+    }
+
     // Approved HealBot-review-v3 / HealBot-compact-review-v1, logical pixels; retain native chrome.
     internal static bool Compact { get; set; }
     internal static float HeaderHeight => Compact ? 58 : 76;

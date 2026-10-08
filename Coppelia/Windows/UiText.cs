@@ -38,7 +38,7 @@ internal sealed class UiText : IDisposable
         Resources=manager.GetResourceSet(CultureInfo.InvariantCulture,true,false) ?? throw new MissingManifestResourceException(Language);
         englishManager=new ResourceManager("Coppelia.Localization.Strings_en",typeof(UiText).Assembly);
         var english=englishManager.GetResourceSet(CultureInfo.InvariantCulture,true,false) ?? throw new MissingManifestResourceException("en");
-        RequiredText=Values(Resources).Concat(Values(english)).Concat(Languages.Select(l=>l.Name)).Distinct().ToArray();
+        RequiredText=Values(Resources).Concat(Values(english)).Concat(Languages.Where(l => l.Code != "hi").Select(l=>l.Name)).Distinct().ToArray();
         labels=english.Cast<DictionaryEntry>().ToDictionary(entry=>(string)entry.Value!,entry=>(string)entry.Key,StringComparer.OrdinalIgnoreCase);
         if (labels.Count!=Resources.Cast<DictionaryEntry>().Count() || labels.Values.Any(key=>string.IsNullOrWhiteSpace(Resources.GetString(key,false))))
             throw new MissingManifestResourceException("Incomplete HealBot UI translations for "+Language);
