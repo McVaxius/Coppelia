@@ -132,7 +132,6 @@ public sealed class ConfigWindow : Window, IDisposable
     {
         UiGui.Title("HealBot Settings",UiText.F("{0} Settings",PluginInfo.DisplayName));
         CoppeliaUi.Brand("Settings");
-        plugin.DrawWindowAppearanceSettings();
         CoppeliaUi.SameLineFor("Ko-fi");
         if (UiGui.SmallButton("Ko-fi##CoppeliaConfig"))
             Process.Start(new ProcessStartInfo { FileName = PluginInfo.SupportUrl, UseShellExecute = true });
@@ -155,7 +154,8 @@ public sealed class ConfigWindow : Window, IDisposable
         selectQuickSetupTab = false;
         selectGeneralTab = false;
 
-        if (!UiGui.BeginTabBar("CoppeliaSettingsTabs",["Quick Setup","General","HealBot Actions","Requirements / Help"]))
+        var appearanceRoot = ImGui.GetID("");
+        if (!UiGui.BeginTabBar("CoppeliaSettingsTabs",["Quick Setup","General","HealBot Actions","Window appearance","Requirements / Help"]))
             return;
 
         if (UiGui.BeginTabItem("Quick Setup", quickSetupFlags))
@@ -182,6 +182,12 @@ public sealed class ConfigWindow : Window, IDisposable
             ImGui.EndTabItem();
         }
 
+        if (UiGui.BeginTabItem("Window appearance", ImGuiTabItemFlags.NoPushId))
+        {
+            ImGuiP.PushOverrideID(appearanceRoot);
+            try { plugin.DrawWindowAppearanceSettings(); }
+            finally { ImGui.PopID(); ImGui.EndTabItem(); }
+        }
         if (UiGui.BeginTabItem("Requirements / Help"))
         {
             CoppeliaUi.SectionHeader("Requirements and help");
