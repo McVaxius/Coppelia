@@ -190,8 +190,11 @@ public sealed class MainWindow : Window, IDisposable
             CoppeliaUi.SameLineFor("C", 12);
             plugin.DrawCompactPreference();
         }
-        CoppeliaUi.SameLineFor("Transparency", 20);
-        plugin.DrawTransparencyToggle();
+        if (plugin.Configuration.UiTransparencyVisibleOnMainWindow)
+        {
+            CoppeliaUi.SameLineFor("Transparency", 20);
+            plugin.DrawTransparencyToggle();
+        }
         if (plugin.Configuration.UiLanguageVisibleOnMainWindow)
         {
             CoppeliaUi.SameLineFor("Language", 230);

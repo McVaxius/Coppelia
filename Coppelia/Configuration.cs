@@ -17,9 +17,22 @@ public sealed class Configuration : IPluginConfiguration
     public int Version { get; set; } = CurrentConfigurationVersion;
     public string UiLanguage { get; set; } = "en";
     public uint UiAccentRgb { get; set; } = 0x28E8B4;
-    public bool UiCompact { get; set; }
-    public bool UiCompactVisibleOnMainWindow { get; set; } = true;
+    public bool UiCompact { get; set; } = true;
+    public bool UiCompactVisibleOnMainWindow { get; set; }
+    public bool UiTransparencyVisibleOnMainWindow { get; set; }
+    public bool UiCompactDefaultsApplied { get; set; }
     public bool UiLanguageVisibleOnMainWindow { get; set; } = true;
+    [Newtonsoft.Json.JsonExtensionData]
+    public Dictionary<string, Newtonsoft.Json.Linq.JToken>? AdditionalSettings { get; set; }
+
+    internal bool ApplyCompactDefaults()
+    {
+        if (UiCompactDefaultsApplied) return false;
+        UiCompact = true;
+        UiCompactVisibleOnMainWindow = UiTransparencyVisibleOnMainWindow = false;
+        UiCompactDefaultsApplied = true;
+        return true;
+    }
     public bool UiTransparencyEnabled { get; set; } = true;
     private int uiWindowOpacityPercent = 100;
     public int UiWindowOpacityPercent { get => uiWindowOpacityPercent; set => uiWindowOpacityPercent = System.Math.Clamp(value, 10, 100); }

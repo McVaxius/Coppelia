@@ -64,7 +64,9 @@ public sealed class Plugin : IDalamudPlugin
     {
         shapedText = new(TextureProvider);
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-        if (Configuration.MigrateIfNeeded())
+        var configurationChanged = Configuration.MigrateIfNeeded();
+        configurationChanged |= Configuration.ApplyCompactDefaults();
+        if (configurationChanged)
             Configuration.Save();
 
         DependencyService = new DependencyService();
@@ -1020,6 +1022,9 @@ public sealed class Plugin : IDalamudPlugin
         var compactVisible = Configuration.UiCompactVisibleOnMainWindow;
         if (UiGui.Checkbox("Compact visible on main window", ref compactVisible))
         { Configuration.UiCompactVisibleOnMainWindow = compactVisible; Configuration.Save(); }
+        var transparencyVisible = Configuration.UiTransparencyVisibleOnMainWindow;
+        if (UiGui.Checkbox("Transparency visible on main window", ref transparencyVisible))
+        { Configuration.UiTransparencyVisibleOnMainWindow = transparencyVisible; Configuration.Save(); }
         var languageVisible = Configuration.UiLanguageVisibleOnMainWindow;
         if (UiGui.Checkbox("Language visible on main window", ref languageVisible))
         { Configuration.UiLanguageVisibleOnMainWindow = languageVisible; Configuration.Save(); }
