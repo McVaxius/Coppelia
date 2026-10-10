@@ -1,5 +1,6 @@
 2026-10-09 - Tight compact rule and target grids (I503/I509)
 
+
 - Use the approved adjacent-row table style in compact action rules and live/retained watch targets. Preserve editor sizes, native identities, target selection and horizontal/vertical scrolling.
 
 2026-10-09 - Separate XA Slave log-tools shortcut (I512)
