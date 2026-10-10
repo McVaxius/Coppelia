@@ -11,6 +11,7 @@ namespace Coppelia.Windows;
 
 public sealed class ConfigWindow : Window, IDisposable
 {
+    private readonly AethertekUI.Dalamud.MaterialSupportLog supportLog = new();
     private readonly AethertekUI.Dalamud.MaterialWindowMotion windowMotion = new();
     private static readonly string[] DtrModes = { "Text only", "Icon + text", "Icon only" };
     private static readonly HealbotTriggerKind[] TriggerKinds = Enum.GetValues<HealbotTriggerKind>();
@@ -983,6 +984,7 @@ public sealed class ConfigWindow : Window, IDisposable
         if (definitions.Length == 0)
             return;
 
+        using var tightRows = CoppeliaPresentation.Compact ? MaterialTable.PushTightRows() : default;
         var scale=MaterialTheme.Metrics.Scale;
         var priorityWidth=UiGui.NumberMinimum(false)+12*scale;
         var percentWidth=UiGui.NumberMinimum(false)+12*scale;
@@ -1097,6 +1099,8 @@ public sealed class ConfigWindow : Window, IDisposable
 
     private void DrawRequirements()
     {
+        supportLog.Draw(Plugin.PluginInterface, key => UiText.T(key),
+            path => System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = path, UseShellExecute = true }), ex => Plugin.Log.Error(ex, "Dalamud log export failed."), Plugin.CommandManager);
         CoppeliaUi.SectionHeader("Stand-alone HealBot requirements");
         foreach (var requirement in PluginInfo.RequiredPlugins)
             UiGui.BulletText(requirement);

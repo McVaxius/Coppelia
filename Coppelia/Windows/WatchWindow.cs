@@ -312,6 +312,7 @@ public sealed class WatchWindow : Window, IDisposable
 
     private void DrawRetainedTargets(ResolvedWatchTarget[] retainedTargets, float tableHeight)
     {
+        using var tightRows = CoppeliaPresentation.Compact ? MaterialTable.PushTightRows() : default;
         var widths = MeasureWatchColumns(retainedTargets.Select(target => new[]
         {
             string.Empty, plugin.FormatDisplayName(target.Name), UiText.T(target.CategoryLabel), target.JobLabel,
@@ -379,6 +380,7 @@ public sealed class WatchWindow : Window, IDisposable
 
     private void DrawWatchTable(float height)
     {
+        using var tightRows = CoppeliaPresentation.Compact ? MaterialTable.PushTightRows() : default;
         var targets = FilteredTargets().ToArray();
         var widths = MeasureWatchColumns(targets.Select(target => new[]
         {
