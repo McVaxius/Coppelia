@@ -76,7 +76,7 @@ public sealed class ConfigWindow : Window, IDisposable
     }
 
     public override void PostDraw()
-        { windowMotion.Restore(this); plugin.PaintWindowTitle(WindowName,UiText.F("{0} Settings",PluginInfo.DisplayName)); }
+        { windowMotion.Restore(this); plugin.PaintWindowTitleWithButtons(this,UiText.F("{0} Settings",PluginInfo.DisplayName)); }
 
     public override void Draw()
     {
@@ -131,7 +131,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
     private void DrawHeader()
     {
-        UiGui.Title("HealBot Settings",UiText.F("{0} Settings",PluginInfo.DisplayName));
+        UiGui.TitleWithButtons("HealBot Settings",UiText.F("{0} Settings",PluginInfo.DisplayName), this);
         CoppeliaUi.Brand("Settings");
         CoppeliaUi.SameLineFor("Ko-fi");
         if (UiGui.SmallButton("Ko-fi##CoppeliaConfig"))

@@ -54,7 +54,7 @@ public sealed class WatchWindow : Window, IDisposable
     }
 
     public override void PostDraw()
-        { windowMotion.Restore(this); plugin.PaintWindowTitle(WindowName,UiText.F("{0} Watch",PluginInfo.DisplayName)); }
+        { windowMotion.Restore(this); plugin.PaintWindowTitleWithButtons(this,UiText.F("{0} Watch",PluginInfo.DisplayName)); }
 
     public override void Draw()
     {
@@ -62,7 +62,7 @@ public sealed class WatchWindow : Window, IDisposable
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemSpacing);
         try
         {
-            UiGui.Title("HealBot Watch",UiText.F("{0} Watch",PluginInfo.DisplayName));
+            UiGui.TitleWithButtons("HealBot Watch",UiText.F("{0} Watch",PluginInfo.DisplayName), this);
             using var typography = UiText.FontScale(1.25f);
             var retainedTargets = plugin.WatchTargetService.RetainedTargets.ToArray();
 

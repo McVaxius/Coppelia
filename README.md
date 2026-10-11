@@ -14,7 +14,7 @@ HealBot has four top-level operating roles: **Off**, **Stand-alone**, **Helper**
 
 Hindi uses installed shaping fonts. The source now leaves other languages usable when the Hindi menu caption is unavailable, showing a disabled ASCII `Hindi (unavailable)` option. Required text for a selected Hindi UI still requires full validation; on failure, the readable status offers **Use English**, saving English only after an explicit press. Native verification and Linux/Wine acceptance remain pending for this change.
 
-Settings owns shared colour, UI language, compact spacing and window transparency/fade; optional Main selectors change the same saved preferences. The packaged HealBot icon appears in Main branding and Main/Mini titles, including collapsed windows. Quick Setup and the existing role controls still select Stand-alone, Helper or Newb and their automation; appearance choices retain those role and provider settings.
+Settings owns shared colour, UI language, compact spacing and window transparency/fade; titlebar appearance actions change the same saved preferences. The packaged HealBot icon appears in Main branding and Main/Mini titles, including collapsed windows. Quick Setup and the existing role controls still select Stand-alone, Helper or Newb and their automation; appearance choices retain those role and provider settings.
 
 Open Main and choose **Quick Setup**, or open Settings and select its permanent **Quick Setup** tab.
 
@@ -95,7 +95,7 @@ HealBot provides four windows:
 - **Watch** manages the shared HealBot/JOAT filters, persistence, retained targets, and the live eligible-target table.
 - **Mini** provides the four operational role controls, Stand-alone behavior selection, JOAT attack-mode radios when applicable, summon controls, a read-only watched-target summary, and Settings, Watch, and Main navigation. QST ownership disables the local controls it owns and shows the effective paired mode.
 
-Main and Settings share a **C** compact-mode checkbox, a colour selector with teal, blue, pink, and custom RGB choices, and a language selector. These preferences apply to all four windows and Quick Setup through the existing configuration save path. Ready, pending, and blocked status colours retain their meanings across accent choices.
+Native titlebars expose language, compact spacing, transparency and colour shortcuts, including while collapsed. Settings retains the full editors and saved main-control visibility choices. These preferences apply to all four windows and Quick Setup through the existing configuration save path. Ready, pending, and blocked status colours retain their meanings across accent choices.
 
 The interface supports English, German, French, Spanish, Italian, Russian, Japanese, Korean, Simplified Chinese, Vietnamese, Brazilian Portuguese, Indonesian, Polish, Turkish, and Hindi using embedded resources and host-managed fonts. Hindi uses the consumer-owned Windows text renderer for shaping; game-owned DTR text remains English for that selection. Plugin names, commands, player identities, and game catalog names retain their original text. The layouts follow the approved HealBot dashboard and compact references; Settings and Quick Setup retain their original editing flow. The current Debug/x64 build and offline Hindi catalog, appearance/save, Watch and Main/Mini/Settings checks pass. The window matrix covers both densities, 100%/150% scales, reference/minimum sizes and a non-default caller font scale. Managed-host, game, GPU and IME acceptance remain pending.
 

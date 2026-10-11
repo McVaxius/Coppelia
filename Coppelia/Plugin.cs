@@ -45,6 +45,7 @@ public sealed class Plugin : IDalamudPlugin
     private UiText uiText = null!;
     private readonly AethertekUI.Dalamud.MaterialTextHost shapedText;
     private MaterialTheme uiTheme = null!;
+    private readonly Dictionary<Dalamud.Interface.Windowing.Window, AethertekUI.Dalamud.MaterialAppearanceTitleBar> appearanceTitleBars = new();
     private readonly MaterialWindowFold fontStatusFold = new();
     private readonly MaterialWindowDecorations fontStatusDecorations = new();
     private readonly Dictionary<string, MaterialWindowOpacity> windowOpacities = new();
@@ -260,7 +261,9 @@ public sealed class Plugin : IDalamudPlugin
         geometry.Style(ImGuiStyleVar.FrameBorderSize, scale);
         using var font = uiFonts.Push(UiFontRole.Body);
         using var chrome = MaterialWindowChrome.Push();
+        PrepareAppearanceTitleBars(WindowSystem);
         WindowSystem.Draw();
+        foreach (var titlebar in appearanceTitleBars.Values) titlebar.DrawPopups();
         foreach (var window in WindowSystem.Windows)
             if (window.IsOpen) ApplyWindowOpacity(window.WindowName);
     }
@@ -1028,6 +1031,40 @@ public sealed class Plugin : IDalamudPlugin
         var languageVisible = Configuration.UiLanguageVisibleOnMainWindow;
         if (UiGui.Checkbox("Language visible on main window", ref languageVisible))
         { Configuration.UiLanguageVisibleOnMainWindow = languageVisible; Configuration.Save(); }
+        DrawTransparencySettings();
+    }
+
+    private void PrepareAppearanceTitleBars(Dalamud.Interface.Windowing.WindowSystem windows)
+    {
+        foreach (var window in windows.Windows.OfType<Dalamud.Interface.Windowing.Window>())
+        {
+            if ((window.Flags & ImGuiWindowFlags.NoTitleBar) != 0) continue;
+            if (!appearanceTitleBars.ContainsKey(window))
+                appearanceTitleBars.Add(window, AethertekUI.Dalamud.MaterialAppearanceTitleBar.Register(window,
+                    () => new(UiText.T("Language"), UiText.T("Compact mode"), UiText.T("Transparency"), UiText.T("Color")),
+                    () => DrawAppearanceSelector(false),
+                    () => { Configuration.UiCompact = !Configuration.UiCompact; Configuration.Save(); },
+                    DrawTransparencySettings, DrawTitleBarColour,
+                    () => window is global::Coppelia.Windows.MainWindow
+                        ? new(Configuration.UiLanguageVisibleOnMainWindow, Configuration.UiCompactVisibleOnMainWindow,
+                            Configuration.UiTransparencyVisibleOnMainWindow, true)
+                        : new(true, true, true, true)));
+            appearanceTitleBars[window].RefreshVisibility();
+        }
+    }
+
+    private void DrawTitleBarColour()
+    {
+        if (!MaterialAppearanceSelector.DrawPalette("appearance", ref accentDraft,
+                new(UiText.T("Color"), UiText.T("Language"), UiText.T("Teal"), UiText.T("Blue"), UiText.T("Pink"), UiText.T("Custom RGB")))) return;
+        Configuration.UiAccentRgb = ((uint)Math.Clamp((int)MathF.Round(accentDraft.X * 255), 0, 255) << 16)
+            | ((uint)Math.Clamp((int)MathF.Round(accentDraft.Y * 255), 0, 255) << 8)
+            | (uint)Math.Clamp((int)MathF.Round(accentDraft.Z * 255), 0, 255);
+        Configuration.Save();
+    }
+
+    private void DrawTransparencySettings()
+    {
         var enabled = Configuration.UiTransparencyEnabled;
         if (UiGui.Checkbox("Transparency", ref enabled))
         { Configuration.UiTransparencyEnabled = enabled; Configuration.Save(); }

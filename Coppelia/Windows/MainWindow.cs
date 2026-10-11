@@ -185,21 +185,6 @@ public sealed class MainWindow : Window, IDisposable
         headerSpacing.Style(ImGuiStyleVar.ItemSpacing, new Vector2(CoppeliaPresentation.Compact ? 6 : 5, ImGui.GetStyle().ItemSpacing.Y / scale) * scale);
         var start = ImGui.GetCursorPosY();
         CoppeliaUi.Brand();
-        if (plugin.Configuration.UiCompactVisibleOnMainWindow)
-        {
-            CoppeliaUi.SameLineFor("C", 12);
-            plugin.DrawCompactPreference();
-        }
-        if (plugin.Configuration.UiTransparencyVisibleOnMainWindow)
-        {
-            CoppeliaUi.SameLineFor("Transparency", 20);
-            plugin.DrawTransparencyToggle();
-        }
-        if (plugin.Configuration.UiLanguageVisibleOnMainWindow)
-        {
-            CoppeliaUi.SameLineFor("Language", 230);
-            plugin.DrawAppearanceSelector(false);
-        }
         CoppeliaUi.SameLineFor("Quick Setup");
         if (CoppeliaUi.PrimaryButton("Quick Setup##CoppeliaMain")) plugin.OpenQuickSetupUi();
         CoppeliaUi.Tooltip("Run guided Stand-alone, Helper, or Newb setup without changing anything until Finish.");
