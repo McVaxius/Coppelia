@@ -79,7 +79,7 @@ public sealed class MiniWindow : Window, IDisposable
     }
 
     public override void PostDraw()
-        { windowMotion.Restore(this); UiGui.PaintTitleWithImage(this,UiText.F("{0} Mini",PluginInfo.DisplayName)); }
+        { windowMotion.Restore(this); UiGui.PaintTitleWithImageAndStatus(this,UiText.F("{0} Mini",PluginInfo.DisplayName), status: plugin.TitlebarStatus); }
 
     public override void Draw()
     {

@@ -18,6 +18,8 @@ public sealed class Configuration : IPluginConfiguration
     public string UiLanguage { get; set; } = "en";
     public uint UiAccentRgb { get; set; } = 0x28E8B4;
     public bool UiCompact { get; set; } = true;
+    public bool UiShowTitlebarStatus { get; set; } = true;
+    public bool UiDetailedTitlebarStatus { get; set; } = true;
     public bool UiCompactVisibleOnMainWindow { get; set; }
     public bool UiTransparencyVisibleOnMainWindow { get; set; }
     public bool UiCompactDefaultsApplied { get; set; }

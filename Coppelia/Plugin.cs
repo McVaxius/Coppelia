@@ -101,6 +101,22 @@ public sealed class Plugin : IDalamudPlugin
         RegisterCallbacks();
     }
 
+    internal AethertekUI.MaterialTitlebarStatus? TitlebarStatus
+    {
+        get
+        {
+            if (!Configuration.UiShowTitlebarStatus) return null;
+            var operational = GetOperationalStatus();
+            var state = UiText.Status(operational.PrimaryState);
+            var role = UiText.T(CoppeliaQstIpcService.GetAssignmentSnapshot().Source == "QST" ? "Helper" : Configuration.OperatingRole.GetLabel());
+            var details = role + " \u00b7 " + state + " \u00b7 " + UiText.Status(operational.NextAction);
+            var blocked = operational.PrimaryState.Contains("Blocked", StringComparison.OrdinalIgnoreCase) || !string.IsNullOrWhiteSpace(LastAutomationBlocker);
+            if (!string.IsNullOrWhiteSpace(LastAutomationBlocker)) details += " \u00b7 " + UiText.Status(LastAutomationBlocker);
+            return new(Configuration.UiDetailedTitlebarStatus ? details : state, state, details,
+                blocked ? AethertekUI.MaterialTheme.Current.Colors.Error : AethertekUI.MaterialTheme.Current.Colors.OnSurfaceVariant);
+        }
+    }
+
     public Configuration Configuration { get; }
     public WindowSystem WindowSystem { get; } = new(PluginInfo.InternalName);
     internal DependencyService DependencyService { get; }
@@ -1013,11 +1029,17 @@ public sealed class Plugin : IDalamudPlugin
         => UiGui.PaintWindowTitle(name,display,shapedText.Renderer);
 
     internal void PaintWindowTitleWithButtons(Dalamud.Interface.Windowing.Window owner, string display)
-        => UiGui.PaintWindowTitleWithButtons(owner.WindowName, display, shapedText.Renderer, owner);
+        => UiGui.PaintTitleWithImageAndStatus(owner, display, TitlebarStatus);
 
     internal void DrawWindowAppearanceSettings()
     {
         if (!UiGui.CollapsingHeader("Window appearance###UiWindowAppearance")) return;
+        var showTitlebarStatus = Configuration.UiShowTitlebarStatus;
+        if (UiGui.Checkbox(UiText.T("Show titlebar status") + "###UiShowTitlebarStatus", ref showTitlebarStatus))
+        { Configuration.UiShowTitlebarStatus = showTitlebarStatus; Configuration.Save(); }
+        var detailedTitlebarStatus = Configuration.UiDetailedTitlebarStatus;
+        if (UiGui.Checkbox(UiText.T("Detailed titlebar status") + "###UiDetailedTitlebarStatus", ref detailedTitlebarStatus))
+        { Configuration.UiDetailedTitlebarStatus = detailedTitlebarStatus; Configuration.Save(); }
         DrawCompactPreference();
         ImGui.SameLine();
         MaterialText.Text(UiText.T("Compact mode"));

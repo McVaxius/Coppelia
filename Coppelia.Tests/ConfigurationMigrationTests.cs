@@ -1,9 +1,33 @@
+using Newtonsoft.Json;
 using Coppelia.Models;
 
 namespace Coppelia.Tests;
 
 public sealed class ConfigurationMigrationTests
 {
+    [Fact]
+    public void TitlebarStatusDefaultsAndSavedChoicesPreserveUnrelatedConfiguration()
+    {
+        var configuration = JsonConvert.DeserializeObject<Configuration>("""{"Version":9,"AutomationEnabled":true,"UiLanguage":"fr","UiAccentRgb":265,"WatchPlayers":false,"SavedTargetScanRangeYalms":87,"FutureSettings":{"Keep":true}}""")!;
+        Assert.True(configuration.UiShowTitlebarStatus);
+        Assert.True(configuration.UiDetailedTitlebarStatus);
+
+        configuration.UiShowTitlebarStatus = false;
+        configuration.UiDetailedTitlebarStatus = false;
+        var restored = JsonConvert.DeserializeObject<Configuration>(JsonConvert.SerializeObject(configuration))!;
+        restored.MigrateIfNeeded();
+
+        Assert.False(restored.UiShowTitlebarStatus);
+        Assert.False(restored.UiDetailedTitlebarStatus);
+        Assert.Equal(9, restored.Version);
+        Assert.True(restored.AutomationEnabled);
+        Assert.Equal("fr", restored.UiLanguage);
+        Assert.Equal(265u, restored.UiAccentRgb);
+        Assert.False(restored.WatchPlayers);
+        Assert.Equal(87, restored.SavedTargetScanRangeYalms);
+        Assert.True((bool)restored.AdditionalSettings!["FutureSettings"]["Keep"]!);
+    }
+
     [Fact]
     public void LegacyEnabledHealbotMigratesToHealBotAutomation()
     {

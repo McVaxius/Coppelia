@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="e0277287-6cf7-4a07-8cf8-5e302134ab13" name="david@XEP 2026-10-11 14:50:08" runUser="XEP\david" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-11T14:50:08.7109074-04:00" queuing="2026-10-11T14:50:08.7109084-04:00" start="2026-10-11T14:49:49.6826211-04:00" finish="2026-10-11T14:50:09.3234549-04:00" />
+  <TestSettings name="default" id="85abae6f-0631-4783-9a21-48f599412df5">
+    <Deployment runDeploymentRoot="david_XEP_2026-10-11_14_50_08" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="273e728e-f8d4-4295-af75-09ac8932dc3a" testId="f2f1331c-2ece-f4c9-4eca-a5c8effeccf5" testName="Coppelia.Tests.ConfigurationMigrationTests.TerritoryForwardProbeDefaultsToFiveSecondsAndNormalizesToSupportedRange" computerName="XEP" duration="00:00:00.0015136" startTime="2026-10-11T14:50:09.0175545-04:00" endTime="2026-10-11T14:50:09.0181020-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="273e728e-f8d4-4295-af75-09ac8932dc3a" />
+    <UnitTestResult executionId="c7409ec6-f0d7-47cf-8b7f-79dc082b799d" testId="93f7de7e-7210-e269-ef32-04cfed0bc813" testName="Coppelia.Tests.ConfigurationMigrationTests.QuickSetupDraftDoesNotMutateConfigurationUntilApplied" computerName="XEP" duration="00:00:00.0117652" startTime="2026-10-11T14:50:09.0050505-04:00" endTime="2026-10-11T14:50:09.0165254-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c7409ec6-f0d7-47cf-8b7f-79dc082b799d" />
+    <UnitTestResult executionId="f081a431-4d61-4266-8156-d6a0f8199845" testId="1c70a3c3-eac8-a022-fcd7-cc521b502ee7" testName="Coppelia.Tests.ConfigurationMigrationTests.CompletedSetupRemainsCompletedAtCurrentSchema" computerName="XEP" duration="00:00:00.0136815" startTime="2026-10-11T14:50:08.9518894-04:00" endTime="2026-10-11T14:50:08.9616355-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f081a431-4d61-4266-8156-d6a0f8199845" />
+    <UnitTestResult executionId="744e7f0c-fae5-42da-b5c9-610037cbff83" testId="5410c0e3-f215-f3f3-1cf3-80c5fe20e1d6" testName="Coppelia.Tests.ConfigurationMigrationTests.NewInstallRemainsIncompleteAndAutoOpensSetup" computerName="XEP" duration="00:00:00.0026782" startTime="2026-10-11T14:50:08.9624418-04:00" endTime="2026-10-11T14:50:08.9649545-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="744e7f0c-fae5-42da-b5c9-610037cbff83" />
+    <UnitTestResult executionId="2564d9cd-3631-4602-a1e6-1ac35c0a84db" testId="7010ef28-0ebd-0285-44a0-ad538d3bdeab" testName="Coppelia.Tests.ConfigurationMigrationTests.LegacyEnabledHealbotMigratesToHealBotAutomation" computerName="XEP" duration="00:00:02.7077770" startTime="2026-10-11T14:50:05.9747518-04:00" endTime="2026-10-11T14:50:08.5747502-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2564d9cd-3631-4602-a1e6-1ac35c0a84db" />
+    <UnitTestResult executionId="0b24f70f-1a58-490b-ad5a-fe163af409ea" testId="799f6110-bd91-b88f-aa76-867bfbd21f25" testName="Coppelia.Tests.ConfigurationMigrationTests.TitlebarStatusDefaultsAndSavedChoicesPreserveUnrelatedConfiguration" computerName="XEP" duration="00:00:00.3683208" startTime="2026-10-11T14:50:08.6551556-04:00" endTime="2026-10-11T14:50:08.9466897-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0b24f70f-1a58-490b-ad5a-fe163af409ea" />
+    <UnitTestResult executionId="51a74e44-42ad-4829-a07d-a63a5f41eac6" testId="8788084e-240d-6fbf-7461-a66e2af3a0f1" testName="Coppelia.Tests.ConfigurationMigrationTests.ModePolicyKeepsOnlyHealBotLegacyFlagEnabled" computerName="XEP" duration="00:00:00.0013102" startTime="2026-10-11T14:50:08.9500961-04:00" endTime="2026-10-11T14:50:08.9502988-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="51a74e44-42ad-4829-a07d-a63a5f41eac6" />
+    <UnitTestResult executionId="24d1bd6b-a5ae-46fa-acaa-47745e56b77c" testId="9d7bf39d-7b71-1840-494e-a129112cd98d" testName="Coppelia.Tests.ConfigurationMigrationTests.VersionFiveMigrationSuppressesSetupAndPreservesConfiguration" computerName="XEP" duration="00:00:00.0372414" startTime="2026-10-11T14:50:08.9809986-04:00" endTime="2026-10-11T14:50:09.0043863-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="24d1bd6b-a5ae-46fa-acaa-47745e56b77c" />
+    <UnitTestResult executionId="10a7c477-d0ec-405b-8a5e-36c0a1800b0a" testId="f8ef925d-aa3c-58a9-d26b-781c5d37d709" testName="Coppelia.Tests.ConfigurationMigrationTests.VersionSixMigrationEnablesLootGoblinTravelDefaults" computerName="XEP" duration="00:00:00.0008736" startTime="2026-10-11T14:50:08.9660103-04:00" endTime="2026-10-11T14:50:08.9668669-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="10a7c477-d0ec-405b-8a5e-36c0a1800b0a" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Coppelia.Tests.ConfigurationMigrationTests.VersionFiveMigrationSuppressesSetupAndPreservesConfiguration" storage="z:\coppelia\coppelia.tests\bin\x64\debug\net10.0-windows\coppelia.tests.dll" id="9d7bf39d-7b71-1840-494e-a129112cd98d">
+      <Execution id="24d1bd6b-a5ae-46fa-acaa-47745e56b77c" />
+      <TestMethod codeBase="Z:\Coppelia\Coppelia.Tests\bin\x64\Debug\net10.0-windows\Coppelia.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Coppelia.Tests.ConfigurationMigrationTests" name="VersionFiveMigrationSuppressesSetupAndPreservesConfiguration" />
+    </UnitTest>
+    <UnitTest name="Coppelia.Tests.ConfigurationMigrationTests.TitlebarStatusDefaultsAndSavedChoicesPreserveUnrelatedConfiguration" storage="z:\coppelia\coppelia.tests\bin\x64\debug\net10.0-windows\coppelia.tests.dll" id="799f6110-bd91-b88f-aa76-867bfbd21f25">
+      <Execution id="0b24f70f-1a58-490b-ad5a-fe163af409ea" />
+      <TestMethod codeBase="Z:\Coppelia\Coppelia.Tests\bin\x64\Debug\net10.0-windows\Coppelia.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Coppelia.Tests.ConfigurationMigrationTests" name="TitlebarStatusDefaultsAndSavedChoicesPreserveUnrelatedConfiguration" />
+    </UnitTest>
+    <UnitTest name="Coppelia.Tests.ConfigurationMigrationTests.TerritoryForwardProbeDefaultsToFiveSecondsAndNormalizesToSupportedRange" storage="z:\coppelia\coppelia.tests\bin\x64\debug\net10.0-windows\coppelia.tests.dll" id="f2f1331c-2ece-f4c9-4eca-a5c8effeccf5">
+      <Execution id="273e728e-f8d4-4295-af75-09ac8932dc3a" />
+      <TestMethod codeBase="Z:\Coppelia\Coppelia.Tests\bin\x64\Debug\net10.0-windows\Coppelia.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Coppelia.Tests.ConfigurationMigrationTests" name="TerritoryForwardProbeDefaultsToFiveSecondsAndNormalizesToSupportedRange" />
+    </UnitTest>
+    <UnitTest name="Coppelia.Tests.ConfigurationMigrationTests.ModePolicyKeepsOnlyHealBotLegacyFlagEnabled" storage="z:\coppelia\coppelia.tests\bin\x64\debug\net10.0-windows\coppelia.tests.dll" id="8788084e-240d-6fbf-7461-a66e2af3a0f1">
+      <Execution id="51a74e44-42ad-4829-a07d-a63a5f41eac6" />
+      <TestMethod codeBase="Z:\Coppelia\Coppelia.Tests\bin\x64\Debug\net10.0-windows\Coppelia.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Coppelia.Tests.ConfigurationMigrationTests" name="ModePolicyKeepsOnlyHealBotLegacyFlagEnabled" />
+    </UnitTest>
+    <UnitTest name="Coppelia.Tests.ConfigurationMigrationTests.QuickSetupDraftDoesNotMutateConfigurationUntilApplied" storage="z:\coppelia\coppelia.tests\bin\x64\debug\net10.0-windows\coppelia.tests.dll" id="93f7de7e-7210-e269-ef32-04cfed0bc813">
+      <Execution id="c7409ec6-f0d7-47cf-8b7f-79dc082b799d" />
+      <TestMethod codeBase="Z:\Coppelia\Coppelia.Tests\bin\x64\Debug\net10.0-windows\Coppelia.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Coppelia.Tests.ConfigurationMigrationTests" name="QuickSetupDraftDoesNotMutateConfigurationUntilApplied" />
+    </UnitTest>
+    <UnitTest name="Coppelia.Tests.ConfigurationMigrationTests.NewInstallRemainsIncompleteAndAutoOpensSetup" storage="z:\coppelia\coppelia.tests\bin\x64\debug\net10.0-windows\coppelia.tests.dll" id="5410c0e3-f215-f3f3-1cf3-80c5fe20e1d6">
+      <Execution id="744e7f0c-fae5-42da-b5c9-610037cbff83" />
+      <TestMethod codeBase="Z:\Coppelia\Coppelia.Tests\bin\x64\Debug\net10.0-windows\Coppelia.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Coppelia.Tests.ConfigurationMigrationTests" name="NewInstallRemainsIncompleteAndAutoOpensSetup" />
+    </UnitTest>
+    <UnitTest name="Coppelia.Tests.ConfigurationMigrationTests.LegacyEnabledHealbotMigratesToHealBotAutomation" storage="z:\coppelia\coppelia.tests\bin\x64\debug\net10.0-windows\coppelia.tests.dll" id="7010ef28-0ebd-0285-44a0-ad538d3bdeab">
+      <Execution id="2564d9cd-3631-4602-a1e6-1ac35c0a84db" />
+      <TestMethod codeBase="Z:\Coppelia\Coppelia.Tests\bin\x64\Debug\net10.0-windows\Coppelia.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Coppelia.Tests.ConfigurationMigrationTests" name="LegacyEnabledHealbotMigratesToHealBotAutomation" />
+    </UnitTest>
+    <UnitTest name="Coppelia.Tests.ConfigurationMigrationTests.VersionSixMigrationEnablesLootGoblinTravelDefaults" storage="z:\coppelia\coppelia.tests\bin\x64\debug\net10.0-windows\coppelia.tests.dll" id="f8ef925d-aa3c-58a9-d26b-781c5d37d709">
+      <Execution id="10a7c477-d0ec-405b-8a5e-36c0a1800b0a" />
+      <TestMethod codeBase="Z:\Coppelia\Coppelia.Tests\bin\x64\Debug\net10.0-windows\Coppelia.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Coppelia.Tests.ConfigurationMigrationTests" name="VersionSixMigrationEnablesLootGoblinTravelDefaults" />
+    </UnitTest>
+    <UnitTest name="Coppelia.Tests.ConfigurationMigrationTests.CompletedSetupRemainsCompletedAtCurrentSchema" storage="z:\coppelia\coppelia.tests\bin\x64\debug\net10.0-windows\coppelia.tests.dll" id="1c70a3c3-eac8-a022-fcd7-cc521b502ee7">
+      <Execution id="f081a431-4d61-4266-8156-d6a0f8199845" />
+      <TestMethod codeBase="Z:\Coppelia\Coppelia.Tests\bin\x64\Debug\net10.0-windows\Coppelia.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Coppelia.Tests.ConfigurationMigrationTests" name="CompletedSetupRemainsCompletedAtCurrentSchema" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="f2f1331c-2ece-f4c9-4eca-a5c8effeccf5" executionId="273e728e-f8d4-4295-af75-09ac8932dc3a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="93f7de7e-7210-e269-ef32-04cfed0bc813" executionId="c7409ec6-f0d7-47cf-8b7f-79dc082b799d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1c70a3c3-eac8-a022-fcd7-cc521b502ee7" executionId="f081a431-4d61-4266-8156-d6a0f8199845" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5410c0e3-f215-f3f3-1cf3-80c5fe20e1d6" executionId="744e7f0c-fae5-42da-b5c9-610037cbff83" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7010ef28-0ebd-0285-44a0-ad538d3bdeab" executionId="2564d9cd-3631-4602-a1e6-1ac35c0a84db" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="799f6110-bd91-b88f-aa76-867bfbd21f25" executionId="0b24f70f-1a58-490b-ad5a-fe163af409ea" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8788084e-240d-6fbf-7461-a66e2af3a0f1" executionId="51a74e44-42ad-4829-a07d-a63a5f41eac6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9d7bf39d-7b71-1840-494e-a129112cd98d" executionId="24d1bd6b-a5ae-46fa-acaa-47745e56b77c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f8ef925d-aa3c-58a9-d26b-781c5d37d709" executionId="10a7c477-d0ec-405b-8a5e-36c0a1800b0a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="9" executed="9" passed="9" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.11] xUnit.net VSTest Adapter v3.1.1+bf6400fd51 (64-bit .NET 10.0.5)&#xD;
+[xUnit.net 00:00:02.91]   Discovering: Coppelia.Tests&#xD;
+[xUnit.net 00:00:03.82]   Discovered:  Coppelia.Tests&#xD;
+[xUnit.net 00:00:04.04]   Starting:    Coppelia.Tests&#xD;
+[xUnit.net 00:00:07.40]   Finished:    Coppelia.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>
