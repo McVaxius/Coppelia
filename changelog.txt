@@ -1,3 +1,7 @@
+2026-10-11 - Culture-safe RSR setting commands (I538)
+
+- Format numeric RSR Settings values for its current-culture parser at the IPC boundary, preserving the intended healing thresholds on comma-decimal systems during setup and restoration. Keep stored values and display localization unchanged.
+
 2026-10-11 - Native titlebar status (I536)
 
 - Show the current operational role, state, next action and blockers in native main, mini, settings and watch titles. Keep concise state and available numeric progress when detailed wording is off; hover retains full details.

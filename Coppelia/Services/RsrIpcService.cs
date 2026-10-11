@@ -166,6 +166,9 @@ internal sealed class RsrIpcService
     {
         try
         {
+            // RSR's Settings command uses Convert.ChangeType with the calling thread's culture.
+            if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var numericValue))
+                value = numericValue.ToString("R", CultureInfo.CurrentCulture);
             Plugin.PluginInterface
                 .GetIpcSubscriber<RsrOtherCommandType, string, object>($"{IpcPrefix}.OtherCommand")
                 .InvokeAction(RsrOtherCommandType.Settings, $"{settingName} {value}");
