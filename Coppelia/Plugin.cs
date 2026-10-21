@@ -53,6 +53,10 @@ public sealed class Plugin : IDalamudPlugin
     private string appliedLanguage = string.Empty;
     private uint appliedAccent;
     private Vector3 accentDraft;
+    private MaterialColorSettings appliedColors = new();
+    private MaterialColorSettings colorDraft = new();
+    private MaterialColorSettings? appliedSavedColors;
+    private uint appliedSavedAccent;
     private int checkedFontGeneration = -1;
     private bool fontIssueLogged;
     private IDtrBarEntry? dtrEntry;
@@ -325,11 +329,20 @@ public sealed class Plugin : IDalamudPlugin
             languageOptions = new(UiText.Languages.Select(l => new MaterialOption<string>(l.Code, l.Code, l.Name)).ToArray());
             appliedLanguage = language; checkedFontGeneration = -1; fontIssueLogged = false;
         }
-        if (uiTheme is null || appliedAccent != (Configuration.UiAccentRgb & 0xFFFFFF))
+        if (uiTheme is null || appliedSavedColors != Configuration.UiColors)
         {
-            appliedAccent = Configuration.UiAccentRgb & 0xFFFFFF;
-            uiTheme = CoppeliaPresentation.Theme(appliedAccent);
-            var rgb = CoppeliaPresentation.Rgb(appliedAccent); accentDraft = new(rgb.X, rgb.Y, rgb.Z);
+            appliedSavedColors = colorDraft = Configuration.UiColors;
+        }
+        if (uiTheme is null || appliedSavedAccent != (Configuration.UiAccentRgb & 0xFFFFFF))
+        {
+            appliedSavedAccent = Configuration.UiAccentRgb & 0xFFFFFF;
+            accentDraft = MaterialColorSettings.Rgb(appliedSavedAccent);
+        }
+        if (uiTheme is null || appliedAccent != MaterialColorSettings.ToRgb(accentDraft) || appliedColors != colorDraft)
+        {
+            appliedAccent = MaterialColorSettings.ToRgb(accentDraft);
+            appliedColors = colorDraft;
+            uiTheme = CoppeliaPresentation.Theme(appliedAccent, colorDraft);
         }
     }
 
@@ -338,14 +351,10 @@ public sealed class Plugin : IDalamudPlugin
         var language = appliedLanguage;
         using var font = UiText.Font(UiFontRole.Action);
         using var controls = MaterialControls.Push(CoppeliaPresentation.Controls(CoppeliaPresentation.ActionHeight, 18));
-        var changed = includeAccent
-            ? MaterialAppearanceSelector.Draw("appearance", ref accentDraft, ref language, languageOptions,
-                new(UiText.T("Color"), UiText.T("Language"), UiText.T("Teal"), UiText.T("Blue"), UiText.T("Pink"), UiText.T("Custom RGB")), languageWidth: 130)
-            : new MaterialAppearanceChange(false, MaterialAppearanceSelector.DrawLanguage("appearance", ref language, languageOptions, 130));
-        if (changed.AccentChanged) Configuration.UiAccentRgb = ((uint)Math.Clamp((int)MathF.Round(accentDraft.X * 255), 0, 255) << 16)
-            | ((uint)Math.Clamp((int)MathF.Round(accentDraft.Y * 255), 0, 255) << 8) | (uint)Math.Clamp((int)MathF.Round(accentDraft.Z * 255), 0, 255);
-        if (changed.LanguageChanged) Configuration.UiLanguage = language;
-        if (changed.AccentChanged || changed.LanguageChanged) Configuration.Save();
+        var colorsChanged = includeAccent && DrawColourEditor();
+        var languageChanged = MaterialAppearanceSelector.DrawLanguage("appearance", ref language, languageOptions, 130);
+        if (languageChanged) Configuration.UiLanguage = language;
+        if (colorsChanged || languageChanged) Configuration.Save();
     }
 
     internal void DrawCompactPreference()
@@ -1077,12 +1086,23 @@ public sealed class Plugin : IDalamudPlugin
 
     private void DrawTitleBarColour()
     {
-        if (!MaterialAppearanceSelector.DrawPalette("appearance", ref accentDraft,
-                new(UiText.T("Color"), UiText.T("Language"), UiText.T("Teal"), UiText.T("Blue"), UiText.T("Pink"), UiText.T("Custom RGB")))) return;
-        Configuration.UiAccentRgb = ((uint)Math.Clamp((int)MathF.Round(accentDraft.X * 255), 0, 255) << 16)
-            | ((uint)Math.Clamp((int)MathF.Round(accentDraft.Y * 255), 0, 255) << 8)
-            | (uint)Math.Clamp((int)MathF.Round(accentDraft.Z * 255), 0, 255);
+        using var controls = MaterialControls.Push(CoppeliaPresentation.Controls(CoppeliaPresentation.ActionHeight, 18));
+        if (!DrawColourEditor()) return;
         Configuration.Save();
+    }
+
+    private bool DrawColourEditor()
+    {
+        var changed = MaterialAppearanceSelector.DrawColors("appearance", ref colorDraft, ref accentDraft,
+            new(UiText.T("Color"), UiText.T("Language"), UiText.T("Teal"), UiText.T("Blue"), UiText.T("Pink"), UiText.T("Custom RGB")),
+            new(UiText.T("Auto"), UiText.T("Picker"), UiText.T("Default"), UiText.T("Background, controls and text follow your theme."),
+                UiText.T("Theme colour"), UiText.T("Choose each colour independently."), UiText.T("Background"), UiText.T("Controls"),
+                UiText.T("Text"), UiText.T("Aa  Preview text"), UiText.T("Control"),
+                UiText.T("Switch to Picker to set each colour yourself."), UiText.T("Switch back to Auto to use the automatic theme.")));
+        if (!changed) return false;
+        Configuration.UiColors = colorDraft;
+        Configuration.UiAccentRgb = MaterialColorSettings.ToRgb(accentDraft);
+        return true;
     }
 
     private void DrawTransparencySettings()

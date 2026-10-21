@@ -1,4 +1,8 @@
 using System.Numerics;
+using AethertekUI;
+using Coppelia.Windows;
+using Dalamud.Bindings.ImGui;
+using JsonConvert = Newtonsoft.Json.JsonConvert;
 using System.Text.Json;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -20,6 +24,129 @@ namespace Coppelia.Tests;
 
 public sealed class HealRiderTransportTests
 {
+    [Theory]
+    [InlineData(false, 1f, false)]
+    [InlineData(true, 1.5f, false)]
+    [InlineData(false, 1.5f, true)]
+    [InlineData(true, 1f, true)]
+    public unsafe void NativeColourEditorsSaveEachRoleAndRetainPickerChoicesInAuto(bool compact, float scale, bool settings)
+    {
+        var interfaceProperty = typeof(Plugin).GetProperty("PluginInterface", BindingFlags.Static | BindingFlags.NonPublic)!;
+        var previousInterface = interfaceProperty.GetValue(null);
+        var previousCompact = CoppeliaPresentation.Compact;
+        CoppeliaPresentation.Compact = compact;
+        var previousContext = ImGui.GetCurrentContext();
+        var context = ImGui.CreateContext();
+        var saves = new List<string>();
+        try
+        {
+            interfaceProperty.SetValue(null, Proxy<IDalamudPluginInterface>((method, args) =>
+            {
+                if (method.Name == "SavePluginConfig") saves.Add(JsonConvert.SerializeObject(args![0]));
+                return null;
+            }));
+            using var text = new UiText("en", _ => null!);
+            using var textScope = text.Enter();
+            var config = new Configuration { UiCompact = compact, WatchPlayers = false };
+            var plugin = (Plugin)System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(typeof(Plugin));
+            typeof(Plugin).GetField("<Configuration>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(plugin, config);
+            typeof(Plugin).GetField("colorDraft", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(plugin, config.UiColors);
+            typeof(Plugin).GetField("accentDraft", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(plugin, MaterialColorSettings.Rgb(config.UiAccentRgb));
+            typeof(Plugin).GetField("appliedLanguage", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(plugin, "en");
+            typeof(Plugin).GetField("languageOptions", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(plugin,
+                new MaterialOptions<string>([new MaterialOption<string>("en", "en", "English")]));
+            var draw = typeof(Plugin).GetMethod(settings ? "DrawAppearanceSelector" : "DrawTitleBarColour", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            var parameters = settings ? new object[] { true } : null;
+            var apply = typeof(Plugin).GetMethod("ApplyAppearance", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            var themeField = typeof(Plugin).GetField("uiTheme", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            var io = ImGui.GetIO(); io.IniFilename = null; io.LogFilename = null;
+            io.DisplaySize = new(1200 * scale, 900 * scale); io.DeltaTime = 1f / 60; io.FontGlobalScale = scale;
+            io.Fonts.AddFontDefault();
+            byte* pixels = null; int width = 0, height = 0;
+            io.Fonts.GetTexDataAsRGBA32(0, &pixels, &width, &height);
+            io.Fonts.SetTexID(0, new ImTextureID((nint)1));
+            ImDrawListPtr list = default;
+            var glyphColors = new List<uint>();
+            void Frame()
+            {
+                ImGui.NewFrame();
+                apply.Invoke(plugin, null);
+                using var theme = MaterialTheme.Push((MaterialTheme)themeField.GetValue(plugin)!, scale, MaterialStyleMode.ColorsOnly);
+                ImGui.SetNextWindowPos(new(20, 20)); ImGui.SetNextWindowSize(new(600 * scale, 800 * scale));
+                ImGui.Begin("Coppelia Colour callback", ImGuiWindowFlags.NoSavedSettings);
+                draw.Invoke(plugin, parameters);
+                list = ImGui.GetWindowDrawList();
+                var firstGlyph = list.VtxBuffer.Size;
+                UiGui.TextUnformatted("ColourProbe");
+                glyphColors.Clear();
+                for (var vertex = firstGlyph; vertex < list.VtxBuffer.Size; vertex++) glyphColors.Add(list.VtxBuffer[vertex].Col);
+                ImGui.End(); ImGui.Render();
+            }
+            Vector2 Center(string caption)
+            {
+                for (var index = 0; index + caption.Length * 4 <= list.VtxBuffer.Size; index++)
+                {
+                    var matched = true;
+                    for (var character = 0; character < caption.Length; character++)
+                    {
+                        var glyph = ImGui.FindGlyphNoFallback(ImGui.GetFont(), caption[character]);
+                        if (list.VtxBuffer[index + character * 4].Uv != new Vector2(glyph.Handle->U0, glyph.Handle->V0)
+                            || list.VtxBuffer[index + character * 4 + 2].Uv != new Vector2(glyph.Handle->U1, glyph.Handle->V1))
+                        { matched = false; break; }
+                    }
+                    if (matched) return (list.VtxBuffer[index].Pos + list.VtxBuffer[index + caption.Length * 4 - 2].Pos) / 2;
+                }
+                throw new InvalidOperationException("Colour callback did not show " + caption);
+            }
+            void Click(string caption)
+            {
+                var point = Center(caption);
+                io.AddMousePosEvent(point.X, point.Y); Frame();
+                io.AddMouseButtonEvent(0, true); Frame();
+                io.AddMouseButtonEvent(0, false); Frame();
+            }
+            Frame(); Frame(); Click("Picker");
+            Assert.Single(saves);
+            var restored = JsonConvert.DeserializeObject<Configuration>(saves[^1])!;
+            Assert.Equal(MaterialColorMode.Picker, restored.UiColors.Mode);
+            var original = new[] { config.UiColors.BackgroundRgb, config.UiColors.ControlsRgb, config.UiColors.TextRgb };
+            var replacements = new[] { "#193149", "#3579BD", "#E51A73" };
+            for (var field = 0; field < 3; field++)
+            {
+                var before = config.UiColors;
+                Click("#" + original[field].ToString("X6"));
+                io.AddKeyEvent(ImGuiKey.ModCtrl, true); io.AddKeyEvent(ImGuiKey.A, true); Frame();
+                io.AddKeyEvent(ImGuiKey.A, false); io.AddKeyEvent(ImGuiKey.ModCtrl, false); Frame();
+                foreach (var character in replacements[field]) io.AddInputCharacter(character);
+                Frame();
+                Assert.Equal(1 + field, saves.Count);
+                io.AddKeyEvent(ImGuiKey.Enter, true); Frame();
+                io.AddKeyEvent(ImGuiKey.Enter, false); Frame();
+                Assert.Equal(2 + field, saves.Count);
+                restored = JsonConvert.DeserializeObject<Configuration>(saves[^1])!;
+                var expected = Convert.ToUInt32(replacements[field][1..], 16);
+                Assert.Equal(field == 0 ? expected : before.BackgroundRgb, restored.UiColors.BackgroundRgb);
+                Assert.Equal(field == 1 ? expected : before.ControlsRgb, restored.UiColors.ControlsRgb);
+                Assert.Equal(field == 2 ? expected : before.TextRgb, restored.UiColors.TextRgb);
+                Assert.False(restored.WatchPlayers);
+                Assert.NotEmpty(glyphColors);
+                var textInk = ImGui.ColorConvertFloat4ToU32(new Vector4(MaterialColorSettings.Rgb(restored.UiColors.TextRgb), 1));
+                Assert.All(glyphColors, actual => Assert.Equal(textInk, actual));
+            }
+            var manual = config.UiColors;
+            Click("Auto");
+            Assert.Equal(5, saves.Count);
+            restored = JsonConvert.DeserializeObject<Configuration>(saves[^1])!;
+            Assert.Equal(manual with { Mode = MaterialColorMode.Auto }, restored.UiColors);
+        }
+        finally
+        {
+            interfaceProperty.SetValue(null, previousInterface);
+            CoppeliaPresentation.Compact = previousCompact;
+            ImGui.DestroyContext(context); ImGui.SetCurrentContext(previousContext);
+        }
+    }
+
     private static readonly DateTime Started = new(2026, 9, 7, 0, 0, 0, DateTimeKind.Utc);
 
     [Fact]

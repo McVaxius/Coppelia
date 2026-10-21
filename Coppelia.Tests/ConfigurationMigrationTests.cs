@@ -1,10 +1,64 @@
 using Newtonsoft.Json;
 using Coppelia.Models;
+using Coppelia.Windows;
+using AethertekUI;
 
 namespace Coppelia.Tests;
 
 public sealed class ConfigurationMigrationTests
 {
+    [Fact]
+    public void IndependentColourChoicesKeepTheLegacyPaletteAndRoundTripThroughGlobalConfiguration()
+    {
+        var configuration = JsonConvert.DeserializeObject<Configuration>("""{"Version":9,"AutomationEnabled":true,"UiLanguage":"fr","UiAccentRgb":265,"WatchPlayers":false,"FutureSettings":{"Keep":true}}""")!;
+        Assert.Equal(MaterialColorMode.Auto, configuration.UiColors.Mode);
+        var automatic = CoppeliaPresentation.Theme(CoppeliaPresentation.ReferenceAccent).Colors;
+        Assert.Equal(CoppeliaPresentation.Rgb(0x0D2023), automatic.Background);
+        Assert.Equal(CoppeliaPresentation.Rgb(0xECF4F6), automatic.OnSurface);
+        Assert.Equal(CoppeliaPresentation.Rgb(0x28E8B4), automatic.Primary);
+        configuration.UiColors = new() { Mode = MaterialColorMode.Picker,
+            BackgroundRgb = 0x010203, ControlsRgb = 0x040506, TextRgb = 0x070809 };
+        var restored = JsonConvert.DeserializeObject<Configuration>(JsonConvert.SerializeObject(configuration))!;
+        Assert.Equal(configuration.UiColors, restored.UiColors);
+        Assert.Equal(9, restored.Version);
+        Assert.True(restored.AutomationEnabled);
+        Assert.Equal("fr", restored.UiLanguage);
+        Assert.Equal(265u, restored.UiAccentRgb);
+        Assert.False(restored.WatchPlayers);
+        Assert.True((bool)restored.AdditionalSettings!["FutureSettings"]["Keep"]!);
+        var manual = CoppeliaPresentation.Theme(CoppeliaPresentation.ReferenceAccent, restored.UiColors).Colors;
+        Assert.Equal(CoppeliaPresentation.Rgb(0x010203), manual.Background);
+        Assert.Equal(CoppeliaPresentation.Rgb(0x040506), manual.Primary);
+        Assert.Equal(CoppeliaPresentation.Rgb(0x070809), manual.OnSurface);
+        Assert.Equal(automatic.Error, manual.Error);
+        Assert.Equal(automatic.OnError, manual.OnError);
+        restored.UiColors = restored.UiColors with { Mode = MaterialColorMode.Auto };
+        var returned = CoppeliaPresentation.Theme(CoppeliaPresentation.ReferenceAccent, restored.UiColors).Colors;
+        Assert.Equal(automatic.Background, returned.Background);
+        Assert.Equal(automatic.Primary, returned.Primary);
+        Assert.Equal(automatic.OnSurface, returned.OnSurface);
+        Assert.Equal(0x010203u, restored.UiColors.BackgroundRgb);
+        Assert.Equal(0x040506u, restored.UiColors.ControlsRgb);
+        Assert.Equal(0x070809u, restored.UiColors.TextRgb);
+    }
+
+    [Fact]
+    public void EveryAdvertisedLocaleContainsTheColourEditorLabels()
+    {
+        string[] labels = ["Auto", "Picker", "Default", "Background, controls and text follow your theme.", "Theme colour",
+            "Choose each colour independently.", "Background", "Controls", "Text", "Aa  Preview text", "Control",
+            "Switch to Picker to set each colour yourself.", "Switch back to Auto to use the automatic theme."];
+        using var english = new UiText("en", _ => null!);
+        var keys = english.Resources.Cast<System.Collections.DictionaryEntry>()
+            .ToDictionary(entry => (string)entry.Value!, entry => (string)entry.Key, StringComparer.OrdinalIgnoreCase);
+        foreach (var language in UiText.Languages)
+        {
+            using var text = new UiText(language.Code, _ => null!);
+            foreach (var label in labels)
+                Assert.False(string.IsNullOrWhiteSpace(text.Resources.GetString(keys[label], false)), language.Code + ": " + label);
+        }
+    }
+
     [Fact]
     public void TitlebarStatusDefaultsAndSavedChoicesPreserveUnrelatedConfiguration()
     {

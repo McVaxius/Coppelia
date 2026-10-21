@@ -43,7 +43,7 @@ internal static class CoppeliaPresentation
         return new() { Height = height * s, Padding = new(12 * s, Math.Max(0, (height * s - ImGui.GetTextLineHeight()) * .5f)),
             Gap = 8 * s, IconSize = icon * s, Rounding = 4 * s, ItemSpacing = new(10 * s, 4 * s), CellPadding = new(16 * s, 8 * s) };
     }
-    internal static MaterialTheme Theme(uint accent)
+    internal static MaterialTheme Theme(uint accent, MaterialColorSettings? choices = null)
     {
         accent &= 0xFFFFFF;
         var reference = MaterialColor.LabToLch(MaterialColor.SrgbToOklab(new Vector3(Rgb(ReferenceAccent).X, Rgb(ReferenceAccent).Y, Rgb(ReferenceAccent).Z)));
@@ -75,7 +75,7 @@ internal static class CoppeliaPresentation
             Tertiary = Relative(0xA4D8E7), OnTertiary = background, TertiaryContainer = Relative(0x203941), OnTertiaryContainer = foreground,
             InverseSurface = foreground, InverseOnSurface = background, InversePrimary = Relative(0x147C61),
         };
-        return new(colors) { SurfaceOpacity = 1 };
+        return new((choices ?? new()).Apply(colors)) { SurfaceOpacity = 1 };
     }
     internal static void Surface(Vector2 min, Vector2 max, bool raised = false)
     {

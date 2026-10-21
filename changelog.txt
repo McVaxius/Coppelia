@@ -1,3 +1,8 @@
+2026-10-20 - Independent appearance colours
+
+- Add Auto (default) and Picker to Settings and native-titlebar colour popups. Picker saves independent Background, Controls and Text RGB choices through the existing global configuration and keeps them when returning to Auto.
+- Retain the automatic palette, native control identities and semantic status colours; translate the editor in every supported language.
+
 2026-10-11 - Culture-safe RSR setting commands (I538)
 
 - Format numeric RSR Settings values for its current-culture parser at the IPC boundary, preserving the intended healing thresholds on comma-decimal systems during setup and restoration. Keep stored values and display localization unchanged.
