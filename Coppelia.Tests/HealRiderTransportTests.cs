@@ -38,6 +38,7 @@ public sealed class HealRiderTransportTests
         var previousContext = ImGui.GetCurrentContext();
         var context = ImGui.CreateContext();
         var saves = new List<string>();
+        var feedback = new List<MaterialUiSoundCue>();
         try
         {
             interfaceProperty.SetValue(null, Proxy<IDalamudPluginInterface>((method, args) =>
@@ -48,6 +49,7 @@ public sealed class HealRiderTransportTests
             using var text = new UiText("en", _ => null!);
             using var textScope = text.Enter();
             var config = new Configuration { UiCompact = compact, WatchPlayers = false };
+            Assert.True(config.UiLcarsSoundsMuted);
             var plugin = (Plugin)System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(typeof(Plugin));
             typeof(Plugin).GetField("<Configuration>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(plugin, config);
             typeof(Plugin).GetField("colorDraft", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(plugin, config.UiColors);
@@ -59,6 +61,8 @@ public sealed class HealRiderTransportTests
             var parameters = settings ? new object[] { true } : null;
             var apply = typeof(Plugin).GetMethod("ApplyAppearance", BindingFlags.Instance | BindingFlags.NonPublic)!;
             var themeField = typeof(Plugin).GetField("uiTheme", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            var soundSettings = typeof(Plugin).GetMethod("DrawLcarsSounds", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            var setSounds = typeof(Plugin).GetMethod("SetLcarsSounds", BindingFlags.Instance | BindingFlags.NonPublic)!;
             var io = ImGui.GetIO(); io.IniFilename = null; io.LogFilename = null;
             io.DisplaySize = new(1200 * scale, 900 * scale); io.DeltaTime = 1f / 60; io.FontGlobalScale = scale;
             io.Fonts.AddFontDefault();
@@ -67,14 +71,22 @@ public sealed class HealRiderTransportTests
             io.Fonts.SetTexID(0, new ImTextureID((nint)1));
             ImDrawListPtr list = default;
             var glyphColors = new List<uint>();
+            var quickPreferences = false;
             void Frame()
             {
                 ImGui.NewFrame();
                 apply.Invoke(plugin, null);
-                using var theme = MaterialTheme.Push((MaterialTheme)themeField.GetValue(plugin)!, scale, MaterialStyleMode.ColorsOnly);
+                var currentTheme = (MaterialTheme)themeField.GetValue(plugin)!;
+                currentTheme.Feedback = feedback.Add;
+                using var theme = MaterialTheme.Push(currentTheme, scale, MaterialStyleMode.ColorsOnly);
                 ImGui.SetNextWindowPos(new(20, 20)); ImGui.SetNextWindowSize(new(600 * scale, 800 * scale));
                 ImGui.Begin("Coppelia Colour callback", ImGuiWindowFlags.NoSavedSettings);
-                draw.Invoke(plugin, parameters);
+                if (quickPreferences) plugin.DrawLcarsQuickPreferences();
+                else
+                {
+                    draw.Invoke(plugin, parameters);
+                    if (currentTheme.IsLcars) soundSettings.Invoke(plugin, null);
+                }
                 list = ImGui.GetWindowDrawList();
                 var firstGlyph = list.VtxBuffer.Size;
                 UiGui.TextUnformatted("ColourProbe");
@@ -84,17 +96,18 @@ public sealed class HealRiderTransportTests
             }
             Vector2 Center(string caption)
             {
-                for (var index = 0; index + caption.Length * 4 <= list.VtxBuffer.Size; index++)
+                var ink = caption.Replace(" ", "");
+                for (var index = 0; index + ink.Length * 4 <= list.VtxBuffer.Size; index++)
                 {
                     var matched = true;
-                    for (var character = 0; character < caption.Length; character++)
+                    for (var character = 0; character < ink.Length; character++)
                     {
-                        var glyph = ImGui.FindGlyphNoFallback(ImGui.GetFont(), caption[character]);
+                        var glyph = ImGui.FindGlyphNoFallback(ImGui.GetFont(), ink[character]);
                         if (list.VtxBuffer[index + character * 4].Uv != new Vector2(glyph.Handle->U0, glyph.Handle->V0)
                             || list.VtxBuffer[index + character * 4 + 2].Uv != new Vector2(glyph.Handle->U1, glyph.Handle->V1))
                         { matched = false; break; }
                     }
-                    if (matched) return (list.VtxBuffer[index].Pos + list.VtxBuffer[index + caption.Length * 4 - 2].Pos) / 2;
+                    if (matched) return (list.VtxBuffer[index].Pos + list.VtxBuffer[index + ink.Length * 4 - 2].Pos) / 2;
                 }
                 throw new InvalidOperationException("Colour callback did not show " + caption);
             }
@@ -138,6 +151,56 @@ public sealed class HealRiderTransportTests
             Assert.Equal(5, saves.Count);
             restored = JsonConvert.DeserializeObject<Configuration>(saves[^1])!;
             Assert.Equal(manual with { Mode = MaterialColorMode.Auto }, restored.UiColors);
+            Click("LCARS"); Frame();
+            Assert.Equal(6, saves.Count);
+            restored = JsonConvert.DeserializeObject<Configuration>(saves[^1])!;
+            Assert.Equal(manual with { Mode = MaterialColorMode.Lcars }, restored.UiColors);
+            Assert.True(((MaterialTheme)themeField.GetValue(plugin)!).IsLcars);
+            Assert.True(restored.UiLcarsSoundsMuted);
+            setSounds.Invoke(plugin, [true]); Frame();
+            Assert.Equal(7, saves.Count);
+            restored = JsonConvert.DeserializeObject<Configuration>(saves[^1])!;
+            Assert.False(restored.UiLcarsSoundsMuted);
+            Assert.False(restored.WatchPlayers);
+            Assert.Equal(manual with { Mode = MaterialColorMode.Lcars }, restored.UiColors);
+            feedback.Clear(); Click("Preview sound");
+            Assert.Equal(new[] { MaterialUiSoundCue.Preview }, feedback);
+            setSounds.Invoke(plugin, [false]); Frame();
+            Assert.Equal(8, saves.Count);
+            Assert.True(JsonConvert.DeserializeObject<Configuration>(saves[^1])!.UiLcarsSoundsMuted);
+            Assert.Null(typeof(Plugin).GetField("uiSoundPlayer", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(plugin));
+            foreach (var fieldName in new[] { "appearanceTitleBars", "soundTitleButtons" })
+            {
+                var field = typeof(Plugin).GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic)!;
+                field.SetValue(plugin, Activator.CreateInstance(field.FieldType));
+            }
+            var windows = new Dalamud.Interface.Windowing.WindowSystem("Coppelia appearance test");
+            var owner = new AppearanceTestWindow();
+            windows.AddWindow(owner);
+            var prepare = typeof(Plugin).GetMethod("PrepareAppearanceTitleBars", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            prepare.Invoke(plugin, [windows]);
+            var speakers = (System.Collections.IDictionary)typeof(Plugin).GetField("soundTitleButtons", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(plugin)!;
+            var speaker = speakers[owner]!;
+            Assert.Contains(speaker, owner.TitleBarButtons.Cast<object>());
+            var speakerClick = (Delegate)(speaker.GetType().GetProperty("Click")?.GetValue(speaker)
+                ?? speaker.GetType().GetField("Click")!.GetValue(speaker))!;
+            speakerClick.DynamicInvoke(ImGuiMouseButton.Left);
+            Assert.Equal(9, saves.Count);
+            Assert.False(JsonConvert.DeserializeObject<Configuration>(saves[^1])!.UiLcarsSoundsMuted);
+            var actionCount = owner.TitleBarButtons.Count;
+            prepare.Invoke(plugin, [windows]);
+            Assert.Equal(actionCount, owner.TitleBarButtons.Count);
+            quickPreferences = true; Frame();
+            Click("UI sounds");
+            Assert.Equal(10, saves.Count);
+            Assert.True(JsonConvert.DeserializeObject<Configuration>(saves[^1])!.UiLcarsSoundsMuted);
+            Click("Auto"); Frame();
+            Assert.Equal(11, saves.Count);
+            restored = JsonConvert.DeserializeObject<Configuration>(saves[^1])!;
+            Assert.Equal(manual with { Mode = MaterialColorMode.Auto }, restored.UiColors);
+            Assert.False(restored.WatchPlayers);
+            prepare.Invoke(plugin, [windows]);
+            Assert.DoesNotContain(speaker, owner.TitleBarButtons.Cast<object>());
         }
         finally
         {
@@ -145,6 +208,12 @@ public sealed class HealRiderTransportTests
             CoppeliaPresentation.Compact = previousCompact;
             ImGui.DestroyContext(context); ImGui.SetCurrentContext(previousContext);
         }
+    }
+
+    private sealed class AppearanceTestWindow : Dalamud.Interface.Windowing.Window
+    {
+        public AppearanceTestWindow() : base("Coppelia appearance fixture") { }
+        public override void Draw() { }
     }
 
     private static readonly DateTime Started = new(2026, 9, 7, 0, 0, 0, DateTimeKind.Utc);

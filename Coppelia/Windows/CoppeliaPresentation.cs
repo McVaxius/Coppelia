@@ -28,7 +28,7 @@ internal static class CoppeliaPresentation
     internal static float HeaderHeight => Compact ? 58 : 76;
     internal static float DashboardHeight => Compact ? 370 : 480;
     internal static float FooterHeight => Compact ? 220 : 266;
-    internal static float PanelPadding => Compact ? 12 : 18;
+    internal static float PanelPadding => MaterialTheme.Current.IsLcars ? 18 : Compact ? 12 : 18;
     internal static float ActionHeight => Compact ? 30 : 36;
     internal static float Gap => Compact ? 12 : 16;
     internal const uint ReferenceAccent = 0x28E8B4;
@@ -79,6 +79,11 @@ internal static class CoppeliaPresentation
     }
     internal static void Surface(Vector2 min, Vector2 max, bool raised = false)
     {
+        if (MaterialTheme.Current.IsLcars)
+        {
+            MaterialLcars.PanelFrame(min, max, raised ? 2 : 1);
+            return;
+        }
         var c = MaterialTheme.Current.Colors;
         MaterialCanvas.Surface(min, max, raised ? c.SurfaceContainerHigh : c.Surface, c.Background, 4 * MaterialTheme.Metrics.Scale);
         Dalamud.Bindings.ImGui.ImGui.GetWindowDrawList().AddRect(min, max, MaterialCanvas.Color(c.OutlineVariant), 4 * MaterialTheme.Metrics.Scale);

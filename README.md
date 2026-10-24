@@ -16,6 +16,8 @@ Hindi uses installed shaping fonts. The source now leaves other languages usable
 
 Settings owns shared colour, UI language, compact spacing and window transparency/fade; titlebar appearance actions change the same saved preferences. The packaged HealBot icon appears in Main branding and Main/Mini titles, including collapsed windows. Quick Setup and the existing role controls still select Stand-alone, Helper or Newb and their automation; appearance choices retain those role and provider settings.
 
+Colour offers Auto, Picker and LCARS. LCARS uses segmented headers, framed panels, outlined controls and blue role selections across Main, Mini, Settings/Quick Setup and Watch. Picker colours remain saved when changing modes. UI sounds start muted; the titlebar speaker and Window appearance share one saved preference and Preview sound plays one sample when enabled. Muting, leaving LCARS or unloading stops only this UI player.
+
 Open Main and choose **Quick Setup**, or open Settings and select its permanent **Quick Setup** tab.
 
 - Choose Stand-alone, Helper, or Newb; Stand-alone then chooses HealBot, JOAT, or PowerlevelBot.

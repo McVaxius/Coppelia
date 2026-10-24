@@ -1,3 +1,9 @@
+2026-10-23 - LCARS appearance (unreleased)
+
+- Add LCARS after Auto and Picker, with segmented headers, framed panels, outlined native actions and blue role controls across Main, Mini, Settings/Quick Setup and Watch. Retain existing role, behavior, companion, healing and operational controls.
+- Add default-muted UI tones shared by Window appearance and the native titlebar speaker, plus the existing Krangle preference shortcut. Preserve saved Picker values and all provider/automation choices; translate new controls in all fifteen catalogs.
+- Pin the consumer workflow to the published AethertekUI baseline. Keep the current plugin version unchanged.
+
 2026-10-20 - Independent appearance colours
 
 - Add Auto (default) and Picker to Settings and native-titlebar colour popups. Picker saves independent Background, Controls and Text RGB choices through the existing global configuration and keeps them when returning to Auto.

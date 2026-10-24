@@ -102,7 +102,8 @@ public sealed class MainWindow : Window, IDisposable
         var root = ImGuiP.GetCurrentWindow().ID;
         var scale = MaterialTheme.Metrics.Scale;
         DrawHeader();
-        CoppeliaUi.Panel("##HealBotDashboard", root, new Vector2(0, CoppeliaPresentation.DashboardHeight * scale), () =>
+        if (MaterialTheme.Current.IsLcars) DrawLcarsDashboard(root, scale);
+        else CoppeliaUi.Panel("##HealBotDashboard", root, new Vector2(0, CoppeliaPresentation.DashboardHeight * scale), () =>
         {
             CoppeliaUi.Heading("Status dashboard", MaterialIcon.Chart);
             DrawStateControls(root);
@@ -314,6 +315,11 @@ public sealed class MainWindow : Window, IDisposable
             });
             ImGui.EndTable();
         }
+        DrawDiagnostics(configuration);
+    }
+
+    private void DrawDiagnostics(Configuration configuration)
+    {
         if (UiGui.CollapsingHeader("Details##MainDiagnostics"))
         {
             CoppeliaUi.WrappedHelp("Stand-alone runs HealBot, JOAT, or PowerlevelBot without networking. Helper listens for one authenticated Newb. Newb connects asynchronously and performs no local healing or attacking.");
@@ -334,10 +340,85 @@ public sealed class MainWindow : Window, IDisposable
             }
         }
     }
+    private void DrawLcarsDashboard(uint root, float scale)
+    {
+        var configuration = plugin.Configuration;
+        var columns = ImGui.GetContentRegionAvail().X >= 720 * scale ? 2 : 1;
+        if (!ImGui.BeginTable("##LcarsRolePanels", columns, ImGuiTableFlags.SizingStretchSame)) return;
+        try
+        {
+            var roleHeight = (CoppeliaPresentation.Compact ? 180 : 210) * scale;
+            ImGui.TableNextColumn();
+            CoppeliaUi.Panel("##LcarsOperatingRole", root, new Vector2(0, roleHeight), () =>
+            {
+                CoppeliaUi.Heading("Operating role", MaterialIcon.Group);
+                DrawRoleRadio("Off##MainRole", OperatingRole.Off);
+                CoppeliaUi.SameLineFor("Stand-alone");
+                DrawRoleRadio("Stand-alone##MainRole", OperatingRole.StandAlone);
+                CoppeliaUi.SameLineFor("Helper");
+                DrawRoleRadio("Helper##MainRole", OperatingRole.Helper);
+                CoppeliaUi.SameLineFor("Newb");
+                DrawRoleRadio("Newb##MainRole", OperatingRole.Newb);
+            });
+            if (configuration.OperatingRole == OperatingRole.StandAlone)
+            {
+                ImGui.TableNextColumn();
+                CoppeliaUi.Panel("##LcarsStandaloneBehavior", root, new Vector2(0, roleHeight), () => DrawModeControls(configuration));
+            }
+        }
+        finally { ImGui.EndTable(); }
+        if (!ImGui.BeginTable("##LcarsStatusAppearance", columns, ImGuiTableFlags.SizingStretchSame)) return;
+        try
+        {
+            var statusHeight = (CoppeliaPresentation.Compact ? 190 : 220) * scale;
+            ImGui.TableNextColumn();
+            CoppeliaUi.Panel("##LcarsOperationalStatus", root, new Vector2(0, statusHeight), () =>
+            {
+                CoppeliaUi.Heading("Operational status", MaterialIcon.Heart);
+                var status = plugin.GetOperationalStatus();
+                UiGui.TextUnformatted("Primary state");
+                CoppeliaUi.OperationalState(status.PrimaryState, configuration.OperatingRole, plugin.LastAutomationBlocker);
+                UiGui.TextUnformatted("Next action"); UiGui.TextWrapped(status.NextAction);
+                UiGui.TextUnformatted("Active / paired identity");
+                if (status.Identity == "None") UiGui.TextUnformatted("None");
+                else MaterialText.TextWrapped(status.Identity);
+                var powerlevel = configuration.BotMode == BotMode.PowerlevelBot;
+                UiGui.TextUnformatted("Last action");
+                MaterialText.TextWrapped(UiText.Action(powerlevel ? plugin.PowerlevelRuntimeService.LastIssuedAction : plugin.HealbotRuntimeService.LastIssuedAction));
+                UiGui.TextUnformatted("Last rule");
+                UiGui.TextWrapped(UiText.Status(powerlevel ? plugin.PowerlevelRuntimeService.LastMatchedRule : plugin.HealbotRuntimeService.LastMatchedRule));
+                DrawDiagnostics(configuration);
+            });
+            ImGui.TableNextColumn();
+            CoppeliaUi.Panel("##LcarsInterface", root, new Vector2(0, statusHeight), () =>
+            {
+                CoppeliaUi.Heading("Window appearance", MaterialIcon.Settings);
+                plugin.DrawLcarsQuickPreferences();
+                var krangle = configuration.KrangleNames;
+                if (UiGui.Checkbox("Krangle", ref krangle, "Krangle names"))
+                {
+                    configuration.KrangleNames = krangle;
+                    configuration.Save();
+                    if (!krangle) KrangleService.ClearCache();
+                }
+                CoppeliaUi.SameLineFor("DTR bar");
+                var dtr = configuration.DtrBarEnabled;
+                if (UiGui.Checkbox("DTR bar", ref dtr))
+                {
+                    configuration.DtrBarEnabled = dtr;
+                    configuration.Save();
+                    plugin.UpdateDtrBar();
+                }
+            });
+        }
+        finally { ImGui.EndTable(); }
+    }
+
     private void DrawModeControls(Configuration configuration)
     {
         ImGui.Spacing();
-        UiGui.TextUnformatted("Stand-alone behavior");
+        if (MaterialTheme.Current.IsLcars) CoppeliaUi.Heading("Stand-alone behavior", MaterialIcon.Settings);
+        else UiGui.TextUnformatted("Stand-alone behavior");
 
         var healSelected = configuration.BotMode == BotMode.HealBot;
         if (UiGui.RadioTile("HealBot##MainModeHeal", healSelected, height: CoppeliaPresentation.Compact ? 36 : 44))

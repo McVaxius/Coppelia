@@ -33,6 +33,7 @@ internal static class UiGui
         using var controls = ImGui.GetStyle().FramePadding.Y == 0 || MaterialControls.Context == MaterialControlContext.Dense
             ? default(MaterialControls.ControlScope) : MaterialControls.Push(MaterialControlContext.Toolbar);
         using var height=MaterialText.PushLineHeight(translated);
+        using var nativeButtons = MaterialLcars.NativeButtonStyle();
         var natural=MaterialText.Measure(translated).X+ImGui.GetStyle().FramePadding.X*2;
         size.X=MaterialLayout.FitNextItemWidth(size.X,Math.Max(size.X,natural));
         size.Y=Math.Max(size.Y,ImGui.GetFrameHeight());
@@ -41,6 +42,7 @@ internal static class UiGui
         var min=ImGui.GetItemRectMin();var max=ImGui.GetItemRectMax();
         Ink(translated,min+(max-min-MaterialText.Measure(translated))*.5f,min,max);
         if (MaterialText.Measure(translated).X>max.X-min.X-ImGui.GetStyle().FramePadding.X*2 && ImGui.IsItemHovered()) SetTooltip(translated);
+        MaterialLcars.Feedback(clicked);
         return clicked;
     }
     internal static bool SmallButton(string label)
@@ -57,6 +59,7 @@ internal static class UiGui
         var min=ImGui.GetItemRectMin();var max=ImGui.GetItemRectMax();
         var p=min+new Vector2(ImGui.GetFrameHeight()+gap.X,padding.Y);
         var dl=ImGui.GetWindowDrawList();MaterialText.AddText(dl,p,ImGui.GetColorU32(ImGuiCol.Text),translated);
+        MaterialLcars.Feedback(changed, MaterialUiSoundCue.Toggle);
         return changed;
     }
     internal static bool RadioButton(string label,bool selected,string? display=null)
@@ -72,12 +75,14 @@ internal static class UiGui
         var changed=ImGui.RadioButton(label,selected);ImGui.PopStyleColor(6);ImGui.PopStyleVar();
         var min=ImGui.GetItemRectMin();var p=min+new Vector2(height+gap.X,(ImGui.GetItemRectSize().Y-MaterialText.Measure(translated).Y)*.5f);
         var scale=MaterialTheme.Metrics.Scale;var center=min+new Vector2(height*.5f);var colors=MaterialTheme.Current.Colors;
-        var circle=selected?colors.Primary:colors.OnSurface;circle.W*=ImGui.GetStyle().Alpha;
+        var circle=selected ? MaterialTheme.Current.IsLcars ? MaterialLcars.ControlBlue : colors.Primary : colors.OnSurface;circle.W*=ImGui.GetStyle().Alpha;
         ImGui.GetWindowDrawList().AddCircle(center,8*scale,MaterialCanvas.Color(circle),24,1.5f*scale);
         if(selected)ImGui.GetWindowDrawList().AddCircleFilled(center,4*scale,MaterialCanvas.Color(circle),24);
         // Native radio captions use the window clip: shaped glyph ink can extend
         // past its logical advance without changing the original hit rectangle.
-        MaterialText.AddText(ImGui.GetWindowDrawList(),p,ImGui.GetColorU32(ImGuiCol.Text),translated);return changed;
+        MaterialText.AddText(ImGui.GetWindowDrawList(),p,ImGui.GetColorU32(ImGuiCol.Text),translated);
+        MaterialLcars.Feedback(changed, MaterialUiSoundCue.Toggle);
+        return changed;
     }
     internal static bool RadioTile(string label,bool selected,float width=0,string? display=null,float height=0)
     {
@@ -91,8 +96,8 @@ internal static class UiGui
         var min=ImGui.GetCursorScreenPos();
         var colors=MaterialTheme.Current.Colors;
         var dl=ImGui.GetWindowDrawList();
-        dl.AddRectFilled(min,min+new Vector2(width,height),MaterialCanvas.Color(selected?colors.PrimaryContainer:colors.SurfaceContainer),4*scale);
-        dl.AddRect(min,min+new Vector2(width,height),MaterialCanvas.Color(selected?colors.Primary:colors.OutlineVariant),4*scale);
+        dl.AddRectFilled(min,min+new Vector2(width,height),MaterialCanvas.Color(MaterialTheme.Current.IsLcars ? MaterialLcars.Background : selected?colors.PrimaryContainer:colors.SurfaceContainer),4*scale);
+        dl.AddRect(min,min+new Vector2(width,height),MaterialCanvas.Color(MaterialTheme.Current.IsLcars ? MaterialLcars.Periwinkle : selected?colors.Primary:colors.OutlineVariant),4*scale);
         var raw=label.Split("##",2)[0];
         var gap=ImGui.GetStyle().ItemInnerSpacing;
         ImGui.PushStyleVar(ImGuiStyleVar.FramePadding,new Vector2(6*scale,Math.Max(0,(height-ImGui.GetTextLineHeight())*.5f)));
@@ -106,9 +111,11 @@ internal static class UiGui
         var changed=ImGui.RadioButton(label,selected);
         ImGui.PopStyleColor(6);ImGui.PopStyleVar(2);
         var center=min+new Vector2(height*.5f,height*.5f);
-        dl.AddCircle(center,8*scale,MaterialCanvas.Color(selected?colors.Primary:colors.OnSurface),24,1.5f*scale);
-        if(selected)dl.AddCircleFilled(center,4*scale,MaterialCanvas.Color(colors.Primary),24);
+        var selectedInk = MaterialTheme.Current.IsLcars ? MaterialLcars.ControlBlue : colors.Primary;
+        dl.AddCircle(center,8*scale,MaterialCanvas.Color(selected?selectedInk:colors.OnSurface),24,1.5f*scale);
+        if(selected)dl.AddCircleFilled(center,4*scale,MaterialCanvas.Color(selectedInk),24);
         Ink(text,min+new Vector2(height,(height-ImGui.GetTextLineHeight())*.5f),min,min+new Vector2(width,height));
+        MaterialLcars.Feedback(changed, MaterialUiSoundCue.Toggle);
         return changed;
     }
     internal static bool CollapsingHeader(string label,ImGuiTreeNodeFlags flags=ImGuiTreeNodeFlags.None)
@@ -179,7 +186,9 @@ internal static class UiGui
         size=Vector2.Max(size,MaterialText.Measure(Visible(label)));
         ImGui.PushStyleColor(ImGuiCol.Text,Vector4.Zero);var changed=ImGui.Selectable(label,selected,flags,size);ImGui.PopStyleColor();
         var min=ImGui.GetItemRectMin();var max=ImGui.GetItemRectMax();Ink(Visible(label),origin,min,max);
-        if (MaterialText.Measure(Visible(label)).X>max.X-min.X && ImGui.IsItemHovered()) SetTooltip(Visible(label));return changed;
+        if (MaterialText.Measure(Visible(label)).X>max.X-min.X && ImGui.IsItemHovered()) SetTooltip(Visible(label));
+        MaterialLcars.Feedback(changed);
+        return changed;
     }
     private static (Vector2 Min,Vector2 PreviousMax,float Width,string Label,ImGuiWindowPtr Window,ImDrawListPtr Drawing) FitField(string label,float minimum,bool showLabel=true,float? preferred=null)
     {

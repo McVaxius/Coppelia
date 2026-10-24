@@ -19,7 +19,9 @@ internal static class CoppeliaUi
         var min = ImGui.GetCursorScreenPos();
         var extent = new Vector2(size.X <= 0 ? ImGui.GetContentRegionAvail().X : size.X, size.Y);
         CoppeliaPresentation.Surface(min, min + extent, raised);
-        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2((padding ?? CoppeliaPresentation.PanelPadding) * scale));
+        var inset = padding ?? CoppeliaPresentation.PanelPadding;
+        if (MaterialTheme.Current.IsLcars) inset = Math.Max(18, inset);
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(inset * scale));
         ImGui.PushStyleColor(ImGuiCol.ChildBg, Vector4.Zero);
         if (ImGui.BeginChild(id, size, false, ImGuiWindowFlags.AlwaysUseWindowPadding | ImGuiWindowFlags.HorizontalScrollbar))
         {
@@ -36,6 +38,11 @@ internal static class CoppeliaUi
     {
         using var font = UiText.Font(UiFontRole.Heading);
         using var typography = UiText.FontScale(16f / 15);
+        if (MaterialTheme.Current.IsLcars)
+        {
+            MaterialLcars.PanelHeading(UiText.T(title), 1);
+            return;
+        }
         var scale = MaterialTheme.Metrics.Scale;
         var min = ImGui.GetCursorScreenPos();
         MaterialIcons.Draw(icon, min, 22 * scale, Accent);
@@ -47,6 +54,11 @@ internal static class CoppeliaUi
 
     internal static void Brand(string suffix = "")
     {
+        if (MaterialTheme.Current.IsLcars)
+        {
+            MaterialLcars.Header(suffix.Length == 0 ? UiText.T("HealBot") : UiText.F("HealBot {0}", UiText.T(suffix)));
+            return;
+        }
         var scale = MaterialTheme.Metrics.Scale;
         var min = ImGui.GetCursorScreenPos();
         var dl = ImGui.GetWindowDrawList();
@@ -119,7 +131,8 @@ internal static class CoppeliaUi
     {
         ImGui.Spacing();
         using var font = UiText.Font(UiFontRole.BodyStrong);
-        UiGui.TextColored(Accent, title);
+        if (MaterialTheme.Current.IsLcars) MaterialLcars.PanelHeading(UiText.T(title), 1);
+        else UiGui.TextColored(Accent, title);
         ImGui.Separator();
         if (!string.IsNullOrWhiteSpace(help))
             WrappedHelp(help);
