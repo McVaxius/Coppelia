@@ -13,6 +13,7 @@ namespace Coppelia.Windows;
 public sealed class MainWindow : Window, IDisposable
 {
     private readonly AethertekUI.Dalamud.MaterialWindowMotion windowMotion = new();
+    private bool materialBackdropPending;
     private readonly Plugin plugin;
     private DateTimeOffset nextWindowPositionSaveUtc = DateTimeOffset.MinValue;
     private Vector2? pendingWindowPosition;
@@ -87,16 +88,24 @@ public sealed class MainWindow : Window, IDisposable
         }
         UiGui.ReserveTitleSpace(this, PluginInfo.DisplayName + " " + typeof(Plugin).Assembly.GetName().Version, 650);
         windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
+        if (CoppeliaPresentation.IsMaterial)
+        {
+            ImGui.PushStyleColor(ImGuiCol.WindowBg, Vector4.Zero);
+            materialBackdropPending = true;
+        }
     }
 
     public override void PostDraw()
     {
+        if (materialBackdropPending) { ImGui.PopStyleColor(); materialBackdropPending = false; }
         windowMotion.Restore(this);
         UiGui.PaintTitleWithImageAndStatus(this, PluginInfo.DisplayName + " " + typeof(Plugin).Assembly.GetName().Version, status: plugin.TitlebarStatus);
     }
 
     public override void Draw()
     {
+        if (materialBackdropPending) { ImGui.PopStyleColor(); materialBackdropPending = false; }
+        MaterialSkin.Backdrop();
         windowMotion.DrawChrome();
         using var typography = UiText.FontScale(1.25f);
         var root = ImGuiP.GetCurrentWindow().ID;

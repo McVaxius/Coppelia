@@ -11,6 +11,7 @@ namespace Coppelia.Windows;
 public sealed class WatchWindow : Window, IDisposable
 {
     private readonly AethertekUI.Dalamud.MaterialWindowMotion windowMotion = new();
+    private bool materialBackdropPending;
     private const float MinWatchTableHeight = 260f;
     private const float MaxRetainedTableShare = 0.35f;
     private const int MaxVisibleRetainedRows = 6;
@@ -51,13 +52,24 @@ public sealed class WatchWindow : Window, IDisposable
             pendingWindowPosition = null;
         }
         windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
+        if (CoppeliaPresentation.IsMaterial)
+        {
+            ImGui.PushStyleColor(ImGuiCol.WindowBg, Vector4.Zero);
+            materialBackdropPending = true;
+        }
     }
 
     public override void PostDraw()
-        { windowMotion.Restore(this); plugin.PaintWindowTitleWithButtons(this,UiText.F("{0} Watch",PluginInfo.DisplayName)); }
+    {
+        if (materialBackdropPending) { ImGui.PopStyleColor(); materialBackdropPending = false; }
+        windowMotion.Restore(this);
+        plugin.PaintWindowTitleWithButtons(this,UiText.F("{0} Watch",PluginInfo.DisplayName));
+    }
 
     public override void Draw()
     {
+        if (materialBackdropPending) { ImGui.PopStyleColor(); materialBackdropPending = false; }
+        MaterialSkin.Backdrop();
         windowMotion.DrawChrome();
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemSpacing);
         try

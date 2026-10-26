@@ -16,7 +16,9 @@ Hindi uses installed shaping fonts. The source now leaves other languages usable
 
 Settings owns shared colour, UI language, compact spacing and window transparency/fade; titlebar appearance actions change the same saved preferences. The packaged HealBot icon appears in Main branding and Main/Mini titles, including collapsed windows. Quick Setup and the existing role controls still select Stand-alone, Helper or Newb and their automation; appearance choices retain those role and provider settings.
 
-Colour offers Auto, Picker and LCARS. LCARS uses segmented headers, framed panels, outlined controls and blue role selections across Main, Mini, Settings/Quick Setup and Watch. Picker colours remain saved when changing modes. UI sounds start muted; the titlebar speaker and Window appearance share one saved preference and Preview sound plays one sample when enabled. Muting, leaving LCARS or unloading stops only this UI player.
+Colour offers Auto, Picker, LCARS, Glassmorphism, Spatial and Cyberpunk across Main, Mini, Settings/Quick Setup and Watch. Each new material retains an independent Background, Controls and Text palette; LCARS exposes Background and three bar colours. Individual and current-palette resets preserve other palettes. Optional LCARS sounds remain muted by default and share their existing preference.
+
+Glass animation starts enabled, with speed from 0.1 to 10x (default 1x), three editable wave colours and a separate wave reset. Pausing motion keeps the wave editors available. Palette resets retain the waves, while wave resets retain the palette. Existing role, healing, target and provider choices stay in their original configuration paths.
 
 Open Main and choose **Quick Setup**, or open Settings and select its permanent **Quick Setup** tab.
 

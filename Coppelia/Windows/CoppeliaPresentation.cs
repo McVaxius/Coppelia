@@ -25,6 +25,7 @@ internal static class CoppeliaPresentation
 
     // Approved HealBot-review-v3 / HealBot-compact-review-v1, logical pixels; retain native chrome.
     internal static bool Compact { get; set; }
+    internal static bool IsMaterial => MaterialTheme.Current.IsGlassmorphism || MaterialTheme.Current.IsSpatial || MaterialTheme.Current.IsCyberpunk;
     internal static float HeaderHeight => Compact ? 58 : 76;
     internal static float DashboardHeight => Compact ? 370 : 480;
     internal static float FooterHeight => Compact ? 220 : 266;
@@ -79,6 +80,11 @@ internal static class CoppeliaPresentation
     }
     internal static void Surface(Vector2 min, Vector2 max, bool raised = false)
     {
+        if (IsMaterial)
+        {
+            MaterialSkin.PanelFrame(min, max, raised ? 2 : 1, inset: raised);
+            return;
+        }
         if (MaterialTheme.Current.IsLcars)
         {
             MaterialLcars.PanelFrame(min, max, raised ? 2 : 1);

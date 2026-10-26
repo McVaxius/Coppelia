@@ -1,3 +1,10 @@
+2026-10-26 - 3.0.0.13 - Approved material styles and colour controls
+
+- Add Glassmorphism, Spatial and Cyberpunk across the existing Main, Mini, Settings/Quick Setup, Watch and supporting surfaces, retaining Auto, Picker and LCARS.
+- Add independent palettes and resets, LCARS Background/three-bar colours, and Glass animation, speed and separately resettable wave colours through the existing configuration. Translate the controls in all fifteen catalogs.
+- Preserve native actions, IDs, fonts, density, opacity and every healing, target, Watch and temporary-override gate. Update the existing CI library pin to the published revision used by the integration.
+- Correct the manifest's install/update URLs to match the versioned release links in repo.json.
+
 2026-10-23 - LCARS appearance (unreleased)
 
 - Add LCARS after Auto and Picker, with segmented headers, framed panels, outlined native actions and blue role controls across Main, Mini, Settings/Quick Setup and Watch. Retain existing role, behavior, companion, healing and operational controls.

@@ -33,13 +33,17 @@ internal static class UiGui
         using var controls = ImGui.GetStyle().FramePadding.Y == 0 || MaterialControls.Context == MaterialControlContext.Dense
             ? default(MaterialControls.ControlScope) : MaterialControls.Push(MaterialControlContext.Toolbar);
         using var height=MaterialText.PushLineHeight(translated);
-        using var nativeButtons = MaterialLcars.NativeButtonStyle();
+        using var nativeButtons = MaterialSkin.NativeButtonStyle();
         var natural=MaterialText.Measure(translated).X+ImGui.GetStyle().FramePadding.X*2;
         size.X=MaterialLayout.FitNextItemWidth(size.X,Math.Max(size.X,natural));
         size.Y=Math.Max(size.Y,ImGui.GetFrameHeight());
         ImGui.PushStyleColor(ImGuiCol.Text,Vector4.Zero);
-        var clicked=ImGui.Button(original,size);ImGui.PopStyleColor();
+        bool clicked;
+        using (var face = CoppeliaPresentation.IsMaterial ? MaterialSkin.TransparentButtonFace() : default(MaterialStyleScope))
+            clicked=ImGui.Button(original,size);
+        ImGui.PopStyleColor();
         var min=ImGui.GetItemRectMin();var max=ImGui.GetItemRectMax();
+        if (CoppeliaPresentation.IsMaterial) MaterialSkin.PaintButton(min,max);
         Ink(translated,min+(max-min-MaterialText.Measure(translated))*.5f,min,max);
         if (MaterialText.Measure(translated).X>max.X-min.X-ImGui.GetStyle().FramePadding.X*2 && ImGui.IsItemHovered()) SetTooltip(translated);
         MaterialLcars.Feedback(clicked);
@@ -96,8 +100,11 @@ internal static class UiGui
         var min=ImGui.GetCursorScreenPos();
         var colors=MaterialTheme.Current.Colors;
         var dl=ImGui.GetWindowDrawList();
-        dl.AddRectFilled(min,min+new Vector2(width,height),MaterialCanvas.Color(MaterialTheme.Current.IsLcars ? MaterialLcars.Background : selected?colors.PrimaryContainer:colors.SurfaceContainer),4*scale);
-        dl.AddRect(min,min+new Vector2(width,height),MaterialCanvas.Color(MaterialTheme.Current.IsLcars ? MaterialLcars.Periwinkle : selected?colors.Primary:colors.OutlineVariant),4*scale);
+        if (!CoppeliaPresentation.IsMaterial)
+        {
+            dl.AddRectFilled(min,min+new Vector2(width,height),MaterialCanvas.Color(MaterialTheme.Current.IsLcars ? MaterialLcars.Background : selected?colors.PrimaryContainer:colors.SurfaceContainer),4*scale);
+            dl.AddRect(min,min+new Vector2(width,height),MaterialCanvas.Color(MaterialTheme.Current.IsLcars ? MaterialLcars.Periwinkle : selected?colors.Primary:colors.OutlineVariant),4*scale);
+        }
         var raw=label.Split("##",2)[0];
         var gap=ImGui.GetStyle().ItemInnerSpacing;
         ImGui.PushStyleVar(ImGuiStyleVar.FramePadding,new Vector2(6*scale,Math.Max(0,(height-ImGui.GetTextLineHeight())*.5f)));
@@ -110,8 +117,19 @@ internal static class UiGui
         ImGui.PushStyleColor(ImGuiCol.Border,Vector4.Zero);
         var changed=ImGui.RadioButton(label,selected);
         ImGui.PopStyleColor(6);ImGui.PopStyleVar(2);
+        using var material = new MaterialStyleScope();
+        if (CoppeliaPresentation.IsMaterial)
+        {
+            var fill = selected ? colors.Primary : colors.SurfaceContainer;
+            material.Color(ImGuiCol.Button,fill);
+            material.Color(ImGuiCol.ButtonHovered,MaterialColor.Layer(fill,colors.OnSurface,.08f));
+            material.Color(ImGuiCol.ButtonActive,MaterialColor.Layer(fill,colors.OnSurface,.14f));
+            material.Color(ImGuiCol.Text,selected ? colors.OnPrimary : colors.OnSurface);
+            MaterialSkin.PaintButton(min,min+new Vector2(width,height));
+        }
         var center=min+new Vector2(height*.5f,height*.5f);
-        var selectedInk = MaterialTheme.Current.IsLcars ? MaterialLcars.ControlBlue : colors.Primary;
+        var selectedInk = MaterialTheme.Current.IsLcars ? MaterialLcars.ControlBlue
+            : selected && CoppeliaPresentation.IsMaterial ? colors.OnPrimary : colors.Primary;
         dl.AddCircle(center,8*scale,MaterialCanvas.Color(selected?selectedInk:colors.OnSurface),24,1.5f*scale);
         if(selected)dl.AddCircleFilled(center,4*scale,MaterialCanvas.Color(selectedInk),24);
         Ink(text,min+new Vector2(height,(height-ImGui.GetTextLineHeight())*.5f),min,min+new Vector2(width,height));
@@ -121,8 +139,21 @@ internal static class UiGui
     internal static bool CollapsingHeader(string label,ImGuiTreeNodeFlags flags=ImGuiTreeNodeFlags.None)
     {
         using var height=MaterialText.PushLineHeight(Visible(label));
+        using var skin = CoppeliaPresentation.IsMaterial ? MaterialSkin.NativeButtonStyle() : default(MaterialStyleScope);
+        using var material = new MaterialStyleScope();
+        if (CoppeliaPresentation.IsMaterial)
+        {
+            var colors = ImGui.GetStyle().Colors;
+            material.Color(ImGuiCol.Button,colors[(int)ImGuiCol.Header]);
+            material.Color(ImGuiCol.ButtonHovered,colors[(int)ImGuiCol.HeaderHovered]);
+            material.Color(ImGuiCol.ButtonActive,colors[(int)ImGuiCol.HeaderActive]);
+            material.Color(ImGuiCol.Header,Vector4.Zero);
+            material.Color(ImGuiCol.HeaderHovered,Vector4.Zero);
+            material.Color(ImGuiCol.HeaderActive,Vector4.Zero);
+        }
         ImGui.PushStyleColor(ImGuiCol.Text,Vector4.Zero);var open=ImGui.CollapsingHeader(label,flags);ImGui.PopStyleColor();
         var min=ImGui.GetItemRectMin();var max=ImGui.GetItemRectMax();var padding=ImGui.GetStyle().FramePadding;
+        if (CoppeliaPresentation.IsMaterial) MaterialSkin.PaintButton(min,max);
         MaterialIcons.Draw(open?MaterialIcon.ChevronDown:MaterialIcon.ArrowRight,min+padding,ImGui.GetFontSize(),MaterialTheme.Current.Colors.OnSurface,ImGui.GetStyle().Alpha);
         Ink(Visible(label),min+new Vector2(ImGui.GetFontSize()+padding.X*2,padding.Y),min,max);return open;
     }
@@ -142,22 +173,84 @@ internal static class UiGui
         var owner=ImGui.GetCurrentContext().CurrentTabBar;
         using var barMetrics=new MaterialStyleScope();
         if(!owner.IsNull)barMetrics.Style(ImGuiStyleVar.FramePadding,owner.FramePadding);
+        using var material=new MaterialStyleScope();
+        if (CoppeliaPresentation.IsMaterial)
+        {
+            material.Color(ImGuiCol.Tab,Vector4.Zero);
+            material.Color(ImGuiCol.TabHovered,Vector4.Zero);
+            material.Color(ImGuiCol.TabActive,Vector4.Zero);
+            material.Color(ImGuiCol.TabUnfocused,Vector4.Zero);
+            material.Color(ImGuiCol.TabUnfocusedActive,Vector4.Zero);
+        }
         ImGui.SetNextItemWidth(MaterialText.Measure(translated).X+ImGui.GetStyle().FramePadding.X*2+12*MaterialTheme.Metrics.Scale);
         ImGui.PushStyleColor(ImGuiCol.Text,Vector4.Zero);var open=ImGui.BeginTabItem(label,flags);ImGui.PopStyleColor();
-        var min=ImGui.GetItemRectMin();var max=ImGui.GetItemRectMax();Ink(translated,min+(max-min-MaterialText.Measure(translated))*.5f,min,max);return open;
+        var min=ImGui.GetItemRectMin();var max=ImGui.GetItemRectMax();
+        var clipMin=new Vector2(Math.Max(min.X,owner.ScrollingRectMinX),min.Y);
+        var clipMax=new Vector2(Math.Min(max.X,owner.ScrollingRectMaxX),max.Y);
+        if (clipMax.X>clipMin.X && clipMax.Y>clipMin.Y)
+        {
+            var dl=ImGui.GetWindowDrawList();dl.PushClipRect(clipMin,clipMax,true);
+            try
+            {
+                if (CoppeliaPresentation.IsMaterial)
+                {
+                    var colors=MaterialTheme.Current.Colors;
+                    var fill=open?colors.Primary:colors.SurfaceContainerHigh;
+                    material.Color(ImGuiCol.Button,fill);
+                    material.Color(ImGuiCol.ButtonHovered,MaterialColor.Layer(fill,colors.OnSurface,.08f));
+                    material.Color(ImGuiCol.ButtonActive,MaterialColor.Layer(fill,colors.OnSurface,.14f));
+                    material.Color(ImGuiCol.Text,open?colors.OnPrimary:colors.OnSurface);
+                    MaterialSkin.PaintButton(min,max);
+                }
+                Ink(translated,min+(max-min-MaterialText.Measure(translated))*.5f,min,max);
+            }
+            finally { dl.PopClipRect(); }
+        }
+        return open;
     }
     internal static bool BeginPrimaryTabItem(string label,ImGuiTabItemFlags flags,MaterialIcon icon,float width)
     {
         var scale=MaterialTheme.Metrics.Scale;using var font=UiText.Font(UiFontRole.BodyStrong);
+        using var material=new MaterialStyleScope();
+        if (CoppeliaPresentation.IsMaterial)
+        {
+            material.Color(ImGuiCol.Tab,Vector4.Zero);
+            material.Color(ImGuiCol.TabHovered,Vector4.Zero);
+            material.Color(ImGuiCol.TabActive,Vector4.Zero);
+            material.Color(ImGuiCol.TabUnfocused,Vector4.Zero);
+            material.Color(ImGuiCol.TabUnfocusedActive,Vector4.Zero);
+        }
         var height=(CoppeliaPresentation.Compact?40:44)*scale;
         ImGui.PushStyleVar(ImGuiStyleVar.FramePadding,new Vector2(12*scale,Math.Max(0,(height-ImGui.GetTextLineHeight())*.5f)));
         ImGui.SetNextItemWidth(width);
         ImGui.PushStyleColor(ImGuiCol.Text,Vector4.Zero);var open=ImGui.BeginTabItem(label,flags);ImGui.PopStyleColor();ImGui.PopStyleVar();
         var min=ImGui.GetItemRectMin();var max=ImGui.GetItemRectMax();var text=Visible(label);var textSize=MaterialText.Measure(text);
         var p=min+new Vector2(Math.Max(4*scale,(max.X-min.X-textSize.X-30*scale)*.5f),(max.Y-min.Y-24*scale)*.5f);
-        var color=MaterialTheme.Current.Colors.OnSurface;
-        var dl=ImGui.GetWindowDrawList();dl.PushClipRect(min,max,true);MaterialIcons.Draw(icon,p,24*scale,color);
-        MaterialText.AddText(dl,p+new Vector2(32*scale,(24*scale-textSize.Y)*.5f),ImGui.GetColorU32(ImGuiCol.Text),text);dl.PopClipRect();
+        var colors=MaterialTheme.Current.Colors;
+        var color=colors.OnSurface;
+        var bar=ImGui.GetCurrentContext().CurrentTabBar;
+        var clipMin=new Vector2(Math.Max(min.X,bar.ScrollingRectMinX),min.Y);
+        var clipMax=new Vector2(Math.Min(max.X,bar.ScrollingRectMaxX),max.Y);
+        if (clipMax.X>clipMin.X && clipMax.Y>clipMin.Y)
+        {
+            var dl=ImGui.GetWindowDrawList();dl.PushClipRect(clipMin,clipMax,true);
+            try
+            {
+                if (CoppeliaPresentation.IsMaterial)
+                {
+                    var fill=open?colors.Primary:colors.SurfaceContainerHigh;
+                    material.Color(ImGuiCol.Button,fill);
+                    material.Color(ImGuiCol.ButtonHovered,MaterialColor.Layer(fill,colors.OnSurface,.08f));
+                    material.Color(ImGuiCol.ButtonActive,MaterialColor.Layer(fill,colors.OnSurface,.14f));
+                    color=open?colors.OnPrimary:colors.OnSurface;
+                    material.Color(ImGuiCol.Text,color);
+                    MaterialSkin.PaintButton(min,max);
+                }
+                MaterialIcons.Draw(icon,p,24*scale,color);
+                MaterialText.AddText(dl,p+new Vector2(32*scale,(24*scale-textSize.Y)*.5f),ImGui.GetColorU32(ImGuiCol.Text),text);
+            }
+            finally { dl.PopClipRect(); }
+        }
         if (textSize.X+30*scale>max.X-min.X && ImGui.IsItemHovered()) SetTooltip(text);
         return open;
     }
@@ -173,10 +266,44 @@ internal static class UiGui
     private static bool BeginComboCore(string label,string preview,ImGuiComboFlags flags,bool translatePreview,float minimum)
     {
         var shown=translatePreview?UiText.T(preview):preview;
-        using var height=MaterialText.PushLineHeight(shown,Visible(label));
-        minimum=Math.Max(minimum,Math.Max(80*MaterialTheme.Metrics.Scale,MaterialText.Measure(shown).X+ImGui.GetFrameHeight()+2*ImGui.GetStyle().FramePadding.X));
-        var field=FitField(label,minimum);var open=MaterialText.BeginCombo(label,shown,flags);FieldLabel(field);
-        if(!open && MaterialText.Measure(shown).X>field.Width-ImGui.GetFrameHeight() && ImGui.IsItemHovered()) SetTooltip(shown);
+        var style=ImGui.GetStyle();
+        var framePadding=style.FramePadding;
+        var prepaintPadding=framePadding;
+        var nativePadding=framePadding;
+        var visiblePreview=(flags&ImGuiComboFlags.NoPreview)==0?shown.Split("##",2)[0]:"";
+        using (var height=MaterialText.PushLineHeight(label.Split("##",2)[0],visiblePreview))
+            nativePadding=style.FramePadding;
+        float frameHeight;
+        (Vector2 Min,Vector2 PreviousMax,float Width,string Label,ImGuiWindowPtr Window,ImDrawListPtr Drawing) field;
+        using (var height=MaterialText.PushLineHeight(label.Split("##",2)[0],visiblePreview,Visible(label)))
+        {
+            prepaintPadding=style.FramePadding;
+            frameHeight=ImGui.GetFrameHeight();
+            minimum=Math.Max(minimum,Math.Max(80*MaterialTheme.Metrics.Scale,MaterialText.Measure(shown).X+frameHeight+2*style.FramePadding.X));
+            field=FitField(label,minimum);
+        }
+        bool open;
+        using (var backdrop=MaterialSkin.BackdropStyle(popup:true))
+        {
+            MaterialStyleScope skin;
+            try
+            {
+                style.FramePadding=prepaintPadding;
+                skin=MaterialSkin.NativeFieldStyle();
+            }
+            finally { style.FramePadding=framePadding; }
+            using (skin)
+            using (var labelHeight=new MaterialStyleScope())
+            {
+                // Reserve only the external label's extra height; BeginCombo reserves its preview once.
+                if (prepaintPadding.Y>nativePadding.Y)
+                    labelHeight.Style(ImGuiStyleVar.FramePadding,new Vector2(framePadding.X,framePadding.Y+prepaintPadding.Y-nativePadding.Y));
+                open=MaterialText.BeginCombo(label,shown,flags);
+            }
+        }
+        if(open) MaterialSkin.Backdrop();
+        FieldLabel(field,frameHeight);
+        if(!open && MaterialText.Measure(shown).X>field.Width-frameHeight && ImGui.IsItemHovered()) SetTooltip(shown);
         return open;
     }
     internal static bool Selectable(string label,bool selected=false,ImGuiSelectableFlags flags=ImGuiSelectableFlags.None,Vector2 size=default)
@@ -211,12 +338,12 @@ internal static class UiGui
         drawing.PushClipRect(new Vector2(min.X,window.Y),new Vector2(min.X+width,window.Y+ImGui.GetWindowSize().Y),true);
         return (min,previousMax,width,translated,parent,drawing);
     }
-    private static void FieldLabel((Vector2 Min,Vector2 PreviousMax,float Width,string Label,ImGuiWindowPtr Window,ImDrawListPtr Drawing) field)
+    private static void FieldLabel((Vector2 Min,Vector2 PreviousMax,float Width,string Label,ImGuiWindowPtr Window,ImDrawListPtr Drawing) field,float? frameHeight=null)
     {
         field.Drawing.PopClipRect();var right=field.Min.X+field.Width;
         if(field.Label.Length>0)
         {
-            var p=new Vector2(right+ImGui.GetStyle().ItemInnerSpacing.X,field.Min.Y+(ImGui.GetFrameHeight()-MaterialText.Measure(field.Label).Y)*.5f);
+            var p=new Vector2(right+ImGui.GetStyle().ItemInnerSpacing.X,field.Min.Y+((frameHeight??ImGui.GetFrameHeight())-MaterialText.Measure(field.Label).Y)*.5f);
             MaterialText.AddText(field.Drawing,p,ImGui.GetColorU32(ImGuiCol.Text),field.Label);right=p.X+MaterialText.Measure(field.Label).X;
         }
         field.Window.DC.CursorMaxPos=new Vector2(Math.Max(field.PreviousMax.X,right),field.Window.DC.CursorMaxPos.Y);
@@ -226,24 +353,26 @@ internal static class UiGui
     {
         using var height=MaterialText.PushLineHeight(value,showLabel?Visible(label):"");
         var field=FitField(label,TextMinimum(),showLabel);
+        using var skin=MaterialSkin.NativeFieldStyle();
         var changed=MaterialShapedInput.SingleLine(label,"",ref value,length,flags);FieldLabel(field);
         return changed;
     }
     internal static bool InputTextWithHint(string label,string hint,ref string value,int length,ImGuiInputTextFlags flags=ImGuiInputTextFlags.None)
-    { using var height=MaterialText.PushLineHeight(value,UiText.T(hint),Visible(label));var field=FitField(label,TextMinimum());var changed=MaterialShapedInput.SingleLine(label,UiText.T(hint),ref value,length,flags);FieldLabel(field);return changed; }
+    { using var height=MaterialText.PushLineHeight(value,UiText.T(hint),Visible(label));var field=FitField(label,TextMinimum());using var skin=MaterialSkin.NativeFieldStyle();var changed=MaterialShapedInput.SingleLine(label,UiText.T(hint),ref value,length,flags);FieldLabel(field);return changed; }
     internal static bool InputTextMultiline(string label,ref string value,int length,Vector2 size,ImGuiInputTextFlags flags=ImGuiInputTextFlags.None)
     { using var height=MaterialText.PushLineHeight(value,Visible(label));var field=FitField(label,TextMinimum(),preferred:size.X>0?size.X:ImGui.CalcItemWidth());size.X=field.Width;var changed=MaterialShapedInput.Multiline(label,ref value,length,size,flags);FieldLabel(field);return changed; }
     internal static bool InputInt(string label,ref int value,int step=0,int fastStep=0,ImGuiInputTextFlags flags=ImGuiInputTextFlags.None)
-    { using var height=MaterialText.PushLineHeight(Visible(label));var field=FitField(label,NumberMinimum(step>0));var changed=ImGui.InputInt(label,ref value,step,fastStep,"%d",flags);FieldLabel(field);return changed; }
+    { using var height=MaterialText.PushLineHeight(Visible(label));var field=FitField(label,NumberMinimum(step>0));using var skin=MaterialSkin.NativeFieldStyle();var changed=ImGui.InputInt(label,ref value,step,fastStep,"%d",flags);FieldLabel(field);return changed; }
     internal static bool SliderInt(string label,ref int value,int min,int max,string format="%d",ImGuiSliderFlags flags=ImGuiSliderFlags.None)
-    { using var height=MaterialText.PushLineHeight(Visible(label));var field=FitField(label,NumberMinimum(false));var changed=ImGui.SliderInt(label,ref value,min,max,UiText.T(format),flags);FieldLabel(field);return changed; }
+    { using var height=MaterialText.PushLineHeight(Visible(label));var field=FitField(label,NumberMinimum(false));using var skin=MaterialSkin.NativeFieldStyle();var changed=ImGui.SliderInt(label,ref value,min,max,UiText.T(format),flags);FieldLabel(field);return changed; }
     private static float TextMinimum() => Math.Max(80*MaterialTheme.Metrics.Scale,MaterialText.Measure("0000000000").X+2*ImGui.GetStyle().FramePadding.X);
     internal static float NumberMinimum(bool steps) => MathF.Ceiling(Math.Max(80*MaterialTheme.Metrics.Scale,MaterialText.Measure("-000000").X+2*ImGui.GetStyle().FramePadding.X))+(steps?2*(ImGui.GetFrameHeight()+ImGui.GetStyle().ItemInnerSpacing.X):0);
     internal static bool Combo(string label,ref int value,string[] options,int count)
     {
-        using var height=MaterialText.PushLineHeight(options.Take(count).Select(UiText.T).Append(Visible(label)).ToArray());
         var changed=false;
-        var minimum=options.Take(count).Select(option=>MaterialText.Measure(UiText.T(option)).X).DefaultIfEmpty(0).Max()+ImGui.GetFrameHeight()+2*ImGui.GetStyle().FramePadding.X;
+        float minimum;
+        using (var height=MaterialText.PushLineHeight(options.Take(count).Select(UiText.T).Append(Visible(label)).ToArray()))
+            minimum=options.Take(count).Select(option=>MaterialText.Measure(UiText.T(option)).X).DefaultIfEmpty(0).Max()+ImGui.GetFrameHeight()+2*ImGui.GetStyle().FramePadding.X;
         if (BeginComboCore(label,value>=0 && value<count?options[value]:string.Empty,ImGuiComboFlags.None,true,minimum))
         {
             for(var index=0;index<count;index++)
@@ -257,7 +386,11 @@ internal static class UiGui
     internal static bool BeginPopupModal(string original,ImGuiWindowFlags flags)
     {
         ImGui.SetNextWindowSize(new Vector2(520*MaterialTheme.Metrics.Scale,0),ImGuiCond.Always);
-        var open=ImGui.BeginPopupModal(original,flags);if(open) Title(original.Split("##",2)[0]);return open;
+        bool open;
+        using (var backdrop=MaterialSkin.BackdropStyle(popup:true))
+            open=ImGui.BeginPopupModal(original,flags);
+        if(open) { MaterialSkin.Backdrop();Title(original.Split("##",2)[0]); }
+        return open;
     }
     internal static void Title(string original,string? display=null)
         => TitleWithButtons(original, display, null);

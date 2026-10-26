@@ -284,6 +284,7 @@ public sealed class Plugin : IDalamudPlugin
         geometry.Style(ImGuiStyleVar.FrameRounding, 4 * scale);
         geometry.Style(ImGuiStyleVar.ChildRounding, 4 * scale);
         geometry.Style(ImGuiStyleVar.FrameBorderSize, scale);
+        if (CoppeliaPresentation.IsMaterial) geometry.Color(ImGuiCol.ChildBg, Vector4.Zero);
         using var font = uiFonts.Push(UiFontRole.Body);
         using var chrome = MaterialWindowChrome.Push();
         using var nativeButtons = MaterialLcars.NativeButtonStyle();
@@ -303,8 +304,12 @@ public sealed class Plugin : IDalamudPlugin
             prepareDecorations: fontStatusDecorations.Prepare);
         try
         {
-            if (ImGui.Begin("HealBot##FontStatus", ImGuiWindowFlags.AlwaysAutoResize))
+            bool visible;
+            using (var backdrop = MaterialSkin.BackdropStyle())
+                visible = ImGui.Begin("HealBot##FontStatus", ImGuiWindowFlags.AlwaysAutoResize);
+            if (visible)
             {
+                MaterialSkin.Backdrop();
                 fontStatusDecorations.Paint();
                 ImGui.TextWrapped(appliedLanguage == "hi" && !loading ? "Hindi UI fonts are unavailable. Use English to continue."
                     : loading ? "Loading UI fonts..." : "UI fonts failed to load. See the plugin log.");
@@ -1136,7 +1141,16 @@ public sealed class Plugin : IDalamudPlugin
                 UiText.T("Theme colour"), UiText.T("Choose each colour independently."), UiText.T("Background"), UiText.T("Controls"),
                 UiText.T("Text"), UiText.T("Aa  Preview text"), UiText.T("Control"),
                 UiText.T("Switch to Picker to set each colour yourself."), UiText.T("Switch back to Auto to use the automatic theme."))
-            { Lcars = UiText.T("LCARS"), LcarsHelp = UiText.T("LCARS panels, bars and controls") });
+            {
+                Lcars = UiText.T("LCARS"), LcarsHelp = UiText.T("LCARS panels, bars and controls"),
+                Glassmorphism = UiText.T("Glassmorphism"), Spatial = UiText.T("Spatial"), Cyberpunk = UiText.T("Cyberpunk"),
+                LcarsBar1 = UiText.T("LCARS bar 1"), LcarsBar2 = UiText.T("LCARS bar 2"), LcarsBar3 = UiText.T("LCARS bar 3"),
+                Reset = UiText.T("Reset"), ResetColors = UiText.T("Reset colours"),
+                Animation = UiText.T("Animation"), AnimationSpeed = UiText.T("Animation speed (0.1–10x; default 1x)"),
+                WaveColors = UiText.T("Wave colours"), GlassWave1 = UiText.T("Wave colour 1"),
+                GlassWave2 = UiText.T("Wave colour 2"), GlassWave3 = UiText.T("Wave colour 3"),
+                ResetWaveColors = UiText.T("Reset wave colours"),
+            }, new MaterialColorSettings(), MaterialColorSettings.Rgb(CoppeliaPresentation.ReferenceAccent));
         if (!changed) return false;
         Configuration.UiColors = colorDraft;
         Configuration.UiAccentRgb = MaterialColorSettings.ToRgb(accentDraft);
@@ -1187,7 +1201,8 @@ public sealed class Plugin : IDalamudPlugin
 
     internal void DrawLcarsQuickPreferences()
     {
-        foreach (var mode in new[] { MaterialColorMode.Auto, MaterialColorMode.Picker, MaterialColorMode.Lcars })
+        foreach (var mode in new[] { MaterialColorMode.Auto, MaterialColorMode.Picker, MaterialColorMode.Lcars,
+                     MaterialColorMode.Glassmorphism, MaterialColorMode.Spatial, MaterialColorMode.Cyberpunk })
         {
             var caption = mode == MaterialColorMode.Lcars ? "LCARS" : mode.ToString();
             if (mode != MaterialColorMode.Auto) CoppeliaUi.SameLineFor(caption);
@@ -1212,8 +1227,11 @@ public sealed class Plugin : IDalamudPlugin
         MaterialText.Text(UiText.T("Opacity (%)"));
         ImGui.SetNextItemWidth(MaterialLayout.FitNextItemWidth(160 * MaterialTheme.Metrics.Scale, 80 * MaterialTheme.Metrics.Scale));
         var normalOpacity = Configuration.UiWindowOpacityPercent;
-        if (ImGui.InputInt("##UiWindowOpacityPercent", ref normalOpacity))
-        { Configuration.UiWindowOpacityPercent = normalOpacity; Configuration.Save(); }
+        using (var field = MaterialSkin.NativeFieldStyle())
+        {
+            if (ImGui.InputInt("##UiWindowOpacityPercent", ref normalOpacity))
+            { Configuration.UiWindowOpacityPercent = normalOpacity; Configuration.Save(); }
+        }
         var autoFade = Configuration.UiAutoFade;
         if (UiGui.Checkbox("Auto-fade when unfocused", ref autoFade))
         { Configuration.UiAutoFade = autoFade; Configuration.Save(); }
@@ -1221,13 +1239,19 @@ public sealed class Plugin : IDalamudPlugin
         MaterialText.Text(UiText.T("Unfocused opacity (%)"));
         ImGui.SetNextItemWidth(MaterialLayout.FitNextItemWidth(160 * MaterialTheme.Metrics.Scale, 80 * MaterialTheme.Metrics.Scale));
         var fadedOpacity = Configuration.UiFadedOpacityPercent;
-        if (ImGui.InputInt("##UiFadedOpacityPercent", ref fadedOpacity))
-        { Configuration.UiFadedOpacityPercent = fadedOpacity; Configuration.Save(); }
+        using (var field = MaterialSkin.NativeFieldStyle())
+        {
+            if (ImGui.InputInt("##UiFadedOpacityPercent", ref fadedOpacity))
+            { Configuration.UiFadedOpacityPercent = fadedOpacity; Configuration.Save(); }
+        }
         MaterialText.Text(UiText.T("Unfocused delay (seconds)"));
         ImGui.SetNextItemWidth(MaterialLayout.FitNextItemWidth(160 * MaterialTheme.Metrics.Scale, 80 * MaterialTheme.Metrics.Scale));
         var delay = Configuration.UiUnfocusedDelaySeconds;
-        if (ImGui.InputInt("##UiUnfocusedDelaySeconds", ref delay))
-        { Configuration.UiUnfocusedDelaySeconds = delay; Configuration.Save(); }
+        using (var field = MaterialSkin.NativeFieldStyle())
+        {
+            if (ImGui.InputInt("##UiUnfocusedDelaySeconds", ref delay))
+            { Configuration.UiUnfocusedDelaySeconds = delay; Configuration.Save(); }
+        }
         ImGui.EndDisabled();
     }
 }

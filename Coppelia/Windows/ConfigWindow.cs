@@ -13,6 +13,7 @@ public sealed class ConfigWindow : Window, IDisposable
 {
     private readonly AethertekUI.Dalamud.MaterialSupportLog supportLog = new();
     private readonly AethertekUI.Dalamud.MaterialWindowMotion windowMotion = new();
+    private bool materialBackdropPending;
     private static readonly string[] DtrModes = { "Text only", "Icon + text", "Icon only" };
     private static readonly HealbotTriggerKind[] TriggerKinds = Enum.GetValues<HealbotTriggerKind>();
     private static readonly (uint JobId, string Label)[] JobTabs =
@@ -73,13 +74,24 @@ public sealed class ConfigWindow : Window, IDisposable
             pendingWindowPosition = null;
         }
         windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
+        if (CoppeliaPresentation.IsMaterial)
+        {
+            ImGui.PushStyleColor(ImGuiCol.WindowBg, Vector4.Zero);
+            materialBackdropPending = true;
+        }
     }
 
     public override void PostDraw()
-        { windowMotion.Restore(this); plugin.PaintWindowTitleWithButtons(this,UiText.F("{0} Settings",PluginInfo.DisplayName)); }
+    {
+        if (materialBackdropPending) { ImGui.PopStyleColor(); materialBackdropPending = false; }
+        windowMotion.Restore(this);
+        plugin.PaintWindowTitleWithButtons(this,UiText.F("{0} Settings",PluginInfo.DisplayName));
+    }
 
     public override void Draw()
     {
+        if (materialBackdropPending) { ImGui.PopStyleColor(); materialBackdropPending = false; }
+        MaterialSkin.Backdrop();
         windowMotion.DrawChrome();
         var configuration = plugin.Configuration;
         var changed = false;

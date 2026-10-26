@@ -43,6 +43,11 @@ internal static class CoppeliaUi
             MaterialLcars.PanelHeading(UiText.T(title), 1);
             return;
         }
+        if (MaterialTheme.Current.IsCyberpunk)
+        {
+            MaterialSkin.Heading(UiText.T(title), title == "Status dashboard" ? 0 : 1);
+            return;
+        }
         var scale = MaterialTheme.Metrics.Scale;
         var min = ImGui.GetCursorScreenPos();
         MaterialIcons.Draw(icon, min, 22 * scale, Accent);
@@ -132,8 +137,9 @@ internal static class CoppeliaUi
         ImGui.Spacing();
         using var font = UiText.Font(UiFontRole.BodyStrong);
         if (MaterialTheme.Current.IsLcars) MaterialLcars.PanelHeading(UiText.T(title), 1);
+        else if (MaterialTheme.Current.IsCyberpunk) MaterialSkin.Heading(UiText.T(title), 1);
         else UiGui.TextColored(Accent, title);
-        ImGui.Separator();
+        if (!MaterialTheme.Current.IsCyberpunk) ImGui.Separator();
         if (!string.IsNullOrWhiteSpace(help))
             WrappedHelp(help);
     }
