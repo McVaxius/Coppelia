@@ -1,5 +1,6 @@
 2026-10-30 - 3.0.0.14 - Shared background and window controls
 
+- Keep titlebar popup glass at its own window opacity, including collapsed and reopened windows, without applying foreground opacity twice.
 - Add saved styled/native UI and movement/resize locks through Settings, native titlebar controls and /healbot style [on|off], lock and unlock.
 - Adopt shared Glasswork for Background surfaces only, with per-style Frost (Glassmorphism on at 75% by default), Waves, three independently coloured Lights effects, cover-cropped images and Browse. Preserve foreground fills and independent tint.
 - Add explicit screenshot pause to Colour and Transparency, initially off. Preserve fonts, native IDs, owned motion, complete-window opacity and saved preferences; localize the new controls in all fifteen catalogs.

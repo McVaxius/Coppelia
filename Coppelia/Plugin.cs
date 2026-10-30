@@ -300,7 +300,11 @@ public sealed partial class Plugin : IDalamudPlugin
         using var nativeButtons = MaterialLcars.NativeButtonStyle();
         PrepareAppearanceTitleBars(WindowSystem);
         WindowSystem.Draw();
-        foreach (var titlebar in appearanceTitleBars.Values) titlebar.DrawPopups();
+        foreach (var (owner, titlebar) in appearanceTitleBars)
+        {
+            PrepareWindowBackground(owner.WindowName);
+            titlebar.DrawPopups();
+        }
         foreach (var window in WindowSystem.Windows)
             if (window.IsOpen) ApplyWindowOpacity(window.WindowName);
     }

@@ -45,8 +45,9 @@ public sealed partial class Plugin
 
     internal void PrepareWindowBackground(string name)
     {
+        var owner = ImGuiP.FindWindowByName(name);
         if (backgroundGlass != null) backgroundGlass.Opacity = Configuration.UiTransparencyEnabled
-            ? ImGui.IsWindowAppearing() ? Configuration.UiWindowOpacityPercent / 100f
+            ? owner.IsNull || owner.Appearing ? Configuration.UiWindowOpacityPercent / 100f
                 : windowOpacities.TryGetValue(name, out var opacity) ? opacity.CurrentOpacity : Configuration.UiWindowOpacityPercent / 100f
             : 1;
     }
