@@ -8,6 +8,22 @@ namespace Coppelia.Tests;
 public sealed class ConfigurationMigrationTests
 {
     [Fact]
+    public void BackgroundAndWindowControlsKeepDefaultsAndRoundTripThroughTheExistingSerializer()
+    {
+        var legacy = JsonConvert.DeserializeObject<Configuration>("{}")!;
+        Assert.True(legacy.UiStylingEnabled); Assert.False(legacy.UiWindowsLocked);
+        Assert.True(legacy.UiColors.GlassBackgroundBlur); Assert.Equal(75, legacy.UiColors.BackgroundBlurPercent);
+        foreach (var mode in new[] { MaterialColorMode.Auto, MaterialColorMode.Picker, MaterialColorMode.Lcars, MaterialColorMode.Spatial, MaterialColorMode.Cyberpunk })
+            Assert.False(legacy.UiColors.HasBackgroundBlur(mode));
+        legacy.UiStylingEnabled = false; legacy.UiWindowsLocked = true;
+        legacy.UiColors = legacy.UiColors with { Mode = MaterialColorMode.Glassmorphism, GlassBackground = MaterialGlassBackground.Image,
+            GlassLights = MaterialGlassLights.SweepingBeams, GlassImagePath = "C:/fixture/background.png",
+            GlassLight1Rgb = 0x112233, GlassLight2Rgb = 0x445566, GlassLight3Rgb = 0x778899, BackgroundBlurPercent = 64 };
+        var restored = JsonConvert.DeserializeObject<Configuration>(JsonConvert.SerializeObject(legacy))!;
+        Assert.False(restored.UiStylingEnabled); Assert.True(restored.UiWindowsLocked); Assert.Equal(legacy.UiColors, restored.UiColors);
+    }
+
+    [Fact]
     public void IndependentColourChoicesKeepTheLegacyPaletteAndRoundTripThroughGlobalConfiguration()
     {
         var configuration = JsonConvert.DeserializeObject<Configuration>("""{"Version":9,"AutomationEnabled":true,"UiLanguage":"fr","UiAccentRgb":265,"WatchPlayers":false,"FutureSettings":{"Keep":true}}""")!;
@@ -47,7 +63,12 @@ public sealed class ConfigurationMigrationTests
     {
         string[] labels = ["Auto", "Picker", "Default", "Background, controls and text follow your theme.", "Theme colour",
             "Choose each colour independently.", "Background", "Controls", "Text", "Aa  Preview text", "Control",
-            "Switch to Picker to set each colour yourself.", "Switch back to Auto to use the automatic theme."];
+            "Switch to Picker to set each colour yourself.", "Switch back to Auto to use the automatic theme.",
+            "UI styling", "Lock window movement and resizing", "Use native UI", "Use styled UI", "Lock windows", "Unlock windows",
+            "Background blur", "Blur (%)", "Pause backdrop for screenshots", "Background mode", "Waves", "Lights", "Image",
+            "Light effect", "Ambient glows", "Sweeping beams", "Mouse-following glow", "Image file", "Browse...", "Choose background image",
+            "Images", "Load image", "The image fills the window. Blur (%) applies to the image.", "Light colours", "Reset light colours",
+            "Light colour 1", "Light colour 2", "Light colour 3"];
         using var english = new UiText("en", _ => null!);
         var keys = english.Resources.Cast<System.Collections.DictionaryEntry>()
             .ToDictionary(entry => (string)entry.Value!, entry => (string)entry.Key, StringComparer.OrdinalIgnoreCase);

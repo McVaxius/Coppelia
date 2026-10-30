@@ -87,11 +87,11 @@ internal static class CoppeliaPresentation
         }
         if (MaterialTheme.Current.IsLcars)
         {
-            MaterialLcars.PanelFrame(min, max, raised ? 2 : 1);
+            MaterialSkin.PanelFrame(min, max, raised ? 2 : 1);
             return;
         }
         var c = MaterialTheme.Current.Colors;
-        MaterialCanvas.Surface(min, max, raised ? c.SurfaceContainerHigh : c.Surface, c.Background, 4 * MaterialTheme.Metrics.Scale);
+        MaterialCanvas.Surface(min, max, MaterialSkin.BackgroundFill(raised ? c.SurfaceContainerHigh : c.Surface), MaterialSkin.BackgroundFill(c.Background), 4 * MaterialTheme.Metrics.Scale);
         Dalamud.Bindings.ImGui.ImGui.GetWindowDrawList().AddRect(min, max, MaterialCanvas.Color(c.OutlineVariant), 4 * MaterialTheme.Metrics.Scale);
     }
 }

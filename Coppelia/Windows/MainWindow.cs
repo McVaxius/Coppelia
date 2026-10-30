@@ -13,6 +13,7 @@ namespace Coppelia.Windows;
 public sealed class MainWindow : Window, IDisposable
 {
     private readonly AethertekUI.Dalamud.MaterialWindowMotion windowMotion = new();
+    private readonly AethertekUI.Dalamud.MaterialWindowLock movementLock = new();
     private bool materialBackdropPending;
     private readonly Plugin plugin;
     private DateTimeOffset nextWindowPositionSaveUtc = DateTimeOffset.MinValue;
@@ -87,8 +88,9 @@ public sealed class MainWindow : Window, IDisposable
             pendingWindowPosition = null;
         }
         UiGui.ReserveTitleSpace(this, PluginInfo.DisplayName + " " + typeof(Plugin).Assembly.GetName().Version, 650);
-        windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
-        if (CoppeliaPresentation.IsMaterial)
+        if (plugin.Configuration.UiStylingEnabled) windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
+        movementLock.Apply(this, plugin.Configuration.UiWindowsLocked);
+        if (CoppeliaPresentation.IsMaterial || plugin.BackgroundRequested)
         {
             ImGui.PushStyleColor(ImGuiCol.WindowBg, Vector4.Zero);
             materialBackdropPending = true;
@@ -97,6 +99,7 @@ public sealed class MainWindow : Window, IDisposable
 
     public override void PostDraw()
     {
+        movementLock.Restore(this);
         if (materialBackdropPending) { ImGui.PopStyleColor(); materialBackdropPending = false; }
         windowMotion.Restore(this);
         UiGui.PaintTitleWithImageAndStatus(this, PluginInfo.DisplayName + " " + typeof(Plugin).Assembly.GetName().Version, status: plugin.TitlebarStatus);
@@ -105,7 +108,9 @@ public sealed class MainWindow : Window, IDisposable
     public override void Draw()
     {
         if (materialBackdropPending) { ImGui.PopStyleColor(); materialBackdropPending = false; }
+        plugin.PrepareWindowBackground(WindowName);
         MaterialSkin.Backdrop();
+        using var structure = MaterialSkin.StructuralBackgroundStyle();
         windowMotion.DrawChrome();
         using var typography = UiText.FontScale(1.25f);
         var root = ImGuiP.GetCurrentWindow().ID;

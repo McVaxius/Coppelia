@@ -13,6 +13,7 @@ public sealed class ConfigWindow : Window, IDisposable
 {
     private readonly AethertekUI.Dalamud.MaterialSupportLog supportLog = new();
     private readonly AethertekUI.Dalamud.MaterialWindowMotion windowMotion = new();
+    private readonly AethertekUI.Dalamud.MaterialWindowLock movementLock = new();
     private bool materialBackdropPending;
     private static readonly string[] DtrModes = { "Text only", "Icon + text", "Icon only" };
     private static readonly HealbotTriggerKind[] TriggerKinds = Enum.GetValues<HealbotTriggerKind>();
@@ -73,8 +74,9 @@ public sealed class ConfigWindow : Window, IDisposable
             pendingSavedPositionApply = true;
             pendingWindowPosition = null;
         }
-        windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
-        if (CoppeliaPresentation.IsMaterial)
+        if (plugin.Configuration.UiStylingEnabled) windowMotion.Prepare(this, reducedMotion: false, roundedCorners: true);
+        movementLock.Apply(this, plugin.Configuration.UiWindowsLocked);
+        if (CoppeliaPresentation.IsMaterial || plugin.BackgroundRequested)
         {
             ImGui.PushStyleColor(ImGuiCol.WindowBg, Vector4.Zero);
             materialBackdropPending = true;
@@ -83,6 +85,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
     public override void PostDraw()
     {
+        movementLock.Restore(this);
         if (materialBackdropPending) { ImGui.PopStyleColor(); materialBackdropPending = false; }
         windowMotion.Restore(this);
         plugin.PaintWindowTitleWithButtons(this,UiText.F("{0} Settings",PluginInfo.DisplayName));
@@ -91,7 +94,9 @@ public sealed class ConfigWindow : Window, IDisposable
     public override void Draw()
     {
         if (materialBackdropPending) { ImGui.PopStyleColor(); materialBackdropPending = false; }
+        plugin.PrepareWindowBackground(WindowName);
         MaterialSkin.Backdrop();
+        using var structure = MaterialSkin.StructuralBackgroundStyle();
         windowMotion.DrawChrome();
         var configuration = plugin.Configuration;
         var changed = false;

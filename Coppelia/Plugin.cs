@@ -18,7 +18,7 @@ using Dalamud.Plugin.Services;
 
 namespace Coppelia;
 
-public sealed class Plugin : IDalamudPlugin
+public sealed partial class Plugin : IDalamudPlugin
 {
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
@@ -178,6 +178,7 @@ public sealed class Plugin : IDalamudPlugin
                 throw new InvalidOperationException($"Could not register {PluginInfo.LegacyAliasCommand}.");
 
             PluginInterface.UiBuilder.Draw += DrawUi;
+            PluginInterface.UiBuilder.ResizeBuffers += ReleaseGlassResources;
             drawRegistered = true;
             PluginInterface.UiBuilder.OpenConfigUi += OpenConfigUi;
             openConfigRegistered = true;
@@ -201,7 +202,10 @@ public sealed class Plugin : IDalamudPlugin
             if (openConfigRegistered)
                 PluginInterface.UiBuilder.OpenConfigUi -= OpenConfigUi;
             if (drawRegistered)
+            {
                 PluginInterface.UiBuilder.Draw -= DrawUi;
+                PluginInterface.UiBuilder.ResizeBuffers -= ReleaseGlassResources;
+            }
             if (legacyAliasRegistered)
                 CommandManager.RemoveHandler(PluginInfo.LegacyAliasCommand);
             if (shortAliasRegistered)
@@ -214,6 +218,9 @@ public sealed class Plugin : IDalamudPlugin
 
     public void Dispose()
     {
+        PluginInterface.UiBuilder.ResizeBuffers -= ReleaseGlassResources;
+        backgroundGlass?.Dispose();
+        glassImagePicker.Reset();
         uiSoundPlayer?.Dispose();
         ClientState.Login -= OnLogin;
         HealBotPairingService.Dispose();
@@ -240,7 +247,7 @@ public sealed class Plugin : IDalamudPlugin
         Log.Information("[Coppelia] HealBot plugin unloaded.");
     }
 
-    private void DrawUi()
+    private void DrawUiContent()
     {
         using var shaping=shapedText.Push();
         ApplyAppearance();
@@ -274,9 +281,11 @@ public sealed class Plugin : IDalamudPlugin
             }
         }
         CoppeliaPresentation.Compact = Configuration.UiCompact;
-        using var theme = MaterialTheme.Push(uiTheme, ImGuiHelpers.GlobalScale, MaterialStyleMode.ColorsOnly);
+        using var theme = MaterialTheme.Push(uiTheme, ImGuiHelpers.GlobalScale, Configuration.UiStylingEnabled ? MaterialStyleMode.ColorsOnly : MaterialStyleMode.Native);
         using var geometry = new MaterialStyleScope();
         var scale = ImGuiHelpers.GlobalScale;
+        if (Configuration.UiStylingEnabled)
+        {
         geometry.Style(ImGuiStyleVar.WindowPadding, new Vector2(Configuration.UiCompact ? 10 : 14) * scale);
         geometry.Style(ImGuiStyleVar.FramePadding, new Vector2(Configuration.UiCompact ? 6 : 8, Configuration.UiCompact ? 3 : 5) * scale);
         geometry.Style(ImGuiStyleVar.ItemSpacing, new Vector2(Configuration.UiCompact ? 6 : 10, Configuration.UiCompact ? 4 : 6) * scale);
@@ -285,6 +294,7 @@ public sealed class Plugin : IDalamudPlugin
         geometry.Style(ImGuiStyleVar.ChildRounding, 4 * scale);
         geometry.Style(ImGuiStyleVar.FrameBorderSize, scale);
         if (CoppeliaPresentation.IsMaterial) geometry.Color(ImGuiCol.ChildBg, Vector4.Zero);
+        }
         using var font = uiFonts.Push(UiFontRole.Body);
         using var chrome = MaterialWindowChrome.Push();
         using var nativeButtons = MaterialLcars.NativeButtonStyle();
@@ -297,20 +307,23 @@ public sealed class Plugin : IDalamudPlugin
 
     private void DrawFontStatus(bool loading)
     {
-        using var statusPalette = MaterialTheme.Push(uiTheme, ImGuiHelpers.GlobalScale, MaterialStyleMode.ColorsOnly);
+        using var background = MaterialSkin.PushBackgroundRenderer(null, false, 0);
+        using var statusPalette = MaterialTheme.Push(uiTheme, ImGuiHelpers.GlobalScale, Configuration.UiStylingEnabled ? MaterialStyleMode.ColorsOnly : MaterialStyleMode.Native);
         using var statusChrome = MaterialWindowChrome.Push();
         ImGui.SetNextWindowSize(new Vector2(460 * ImGuiHelpers.GlobalScale, 0), ImGuiCond.Always);
-        fontStatusFold.PreDraw("HealBot##FontStatus", null, null, reducedMotion: false,
-            prepareDecorations: fontStatusDecorations.Prepare);
+        fontStatusFold.PreDraw("HealBot##FontStatus", null, null, reducedMotion: !Configuration.UiStylingEnabled,
+            prepareDecorations: Configuration.UiStylingEnabled ? fontStatusDecorations.Prepare : null);
         try
         {
             bool visible;
+            var statusFlags = ImGuiWindowFlags.AlwaysAutoResize;
+            if (Configuration.UiWindowsLocked) statusFlags |= ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize;
             using (var backdrop = MaterialSkin.BackdropStyle())
-                visible = ImGui.Begin("HealBot##FontStatus", ImGuiWindowFlags.AlwaysAutoResize);
+                visible = ImGui.Begin("HealBot##FontStatus", statusFlags);
             if (visible)
             {
                 MaterialSkin.Backdrop();
-                fontStatusDecorations.Paint();
+                if (Configuration.UiStylingEnabled) fontStatusDecorations.Paint();
                 ImGui.TextWrapped(appliedLanguage == "hi" && !loading ? "Hindi UI fonts are unavailable. Use English to continue."
                     : loading ? "Loading UI fonts..." : "UI fonts failed to load. See the plugin log.");
                 if (appliedLanguage == "hi" && !loading && ImGui.Button("Use English"))
@@ -323,7 +336,7 @@ public sealed class Plugin : IDalamudPlugin
         finally
         {
             ImGui.End();
-            fontStatusDecorations.Paint();
+            if (Configuration.UiStylingEnabled) fontStatusDecorations.Paint();
             fontStatusFold.PostDraw();
             ApplyWindowOpacity("HealBot##FontStatus");
         }
@@ -883,6 +896,12 @@ public sealed class Plugin : IDalamudPlugin
     private void OnCommand(string command, string arguments)
     {
         var trimmed = arguments.Trim();
+        if (trimmed.Equals("lock", StringComparison.OrdinalIgnoreCase) || trimmed.Equals("unlock", StringComparison.OrdinalIgnoreCase))
+        { Configuration.UiWindowsLocked = trimmed.Equals("lock", StringComparison.OrdinalIgnoreCase); Configuration.Save(); return; }
+        if (trimmed.Equals("style on", StringComparison.OrdinalIgnoreCase) || trimmed.Equals("styling on", StringComparison.OrdinalIgnoreCase)
+            || trimmed.Equals("style off", StringComparison.OrdinalIgnoreCase) || trimmed.Equals("styling off", StringComparison.OrdinalIgnoreCase))
+        { Configuration.UiStylingEnabled = trimmed.EndsWith(" on", StringComparison.OrdinalIgnoreCase); Configuration.Save(); return; }
+        if (trimmed.Equals("style", StringComparison.OrdinalIgnoreCase) || trimmed.Equals("styling", StringComparison.OrdinalIgnoreCase)) { ToggleUiStyling(); return; }
         if (trimmed.Equals("config", StringComparison.OrdinalIgnoreCase) ||
             trimmed.Equals("settings", StringComparison.OrdinalIgnoreCase))
         {
@@ -1062,6 +1081,7 @@ public sealed class Plugin : IDalamudPlugin
     internal void DrawWindowAppearanceSettings()
     {
         if (!UiGui.CollapsingHeader("Window appearance###UiWindowAppearance")) return;
+        DrawUiWindowControls();
         var showTitlebarStatus = Configuration.UiShowTitlebarStatus;
         if (UiGui.Checkbox(UiText.T("Show titlebar status") + "###UiShowTitlebarStatus", ref showTitlebarStatus))
         { Configuration.UiShowTitlebarStatus = showTitlebarStatus; Configuration.Save(); }
@@ -1091,6 +1111,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             if ((window.Flags & ImGuiWindowFlags.NoTitleBar) != 0) continue;
             if (!appearanceTitleBars.ContainsKey(window))
+            {
                 appearanceTitleBars.Add(window, AethertekUI.Dalamud.MaterialAppearanceTitleBar.Register(window,
                     () => new(UiText.T("Language"), UiText.T("Compact mode"), UiText.T("Transparency"), UiText.T("Color")),
                     () => DrawAppearanceSelector(false),
@@ -1107,6 +1128,11 @@ public sealed class Plugin : IDalamudPlugin
                         ? new(Configuration.UiLanguageVisibleOnMainWindow, Configuration.UiCompactVisibleOnMainWindow,
                             Configuration.UiTransparencyVisibleOnMainWindow, true)
                         : new(true, true, true, true)));
+                appearanceTitleBars[window].RegisterWindowControls(ToggleUiStyling,
+                    () => UiText.T(Configuration.UiStylingEnabled ? "Use native UI" : "Use styled UI"),
+                    ToggleWindowLock, () => UiText.T(Configuration.UiWindowsLocked ? "Unlock windows" : "Lock windows"));
+            }
+            window.AllowBackgroundBlur = false;
             appearanceTitleBars[window].RefreshVisibility();
             appearanceTitleBars[window].SetLcarsIcons(uiTheme.IsLcars);
             if (!soundTitleButtons.TryGetValue(window, out var sound))
@@ -1150,14 +1176,22 @@ public sealed class Plugin : IDalamudPlugin
                 WaveColors = UiText.T("Wave colours"), GlassWave1 = UiText.T("Wave colour 1"),
                 GlassWave2 = UiText.T("Wave colour 2"), GlassWave3 = UiText.T("Wave colour 3"),
                 ResetWaveColors = UiText.T("Reset wave colours"),
-            }, new MaterialColorSettings(), MaterialColorSettings.Rgb(CoppeliaPresentation.ReferenceAccent));
+                BackgroundMode = UiText.T("Background mode"), Waves = UiText.T("Waves"), Lights = UiText.T("Lights"), Image = UiText.T("Image"),
+                LightEffect = UiText.T("Light effect"), AmbientGlows = UiText.T("Ambient glows"), SweepingBeams = UiText.T("Sweeping beams"), PointerGlow = UiText.T("Mouse-following glow"),
+                ImageFile = UiText.T("Image file"), BrowseImage = UiText.T("Browse..."), LoadImage = UiText.T("Load image"), ImageHelp = UiText.T("The image fills the window. Blur (%) applies to the image."),
+                LightColors = UiText.T("Light colours"), GlassLight1 = UiText.T("Light colour 1"), GlassLight2 = UiText.T("Light colour 2"), GlassLight3 = UiText.T("Light colour 3"), ResetLightColors = UiText.T("Reset light colours"),
+                BackgroundBlur = UiText.T("Background blur"), BlurPercent = UiText.T("Blur (%)"),
+            }, new MaterialColorSettings(), MaterialColorSettings.Rgb(CoppeliaPresentation.ReferenceAccent), BrowseBackgroundImage);
+        ImGui.PushID("ColourBackdrop");
+        try { DrawGlassStatusAndScreenshots(); }
+        finally { ImGui.PopID(); }
         if (!changed) return false;
         Configuration.UiColors = colorDraft;
         Configuration.UiAccentRgb = MaterialColorSettings.ToRgb(accentDraft);
         return true;
     }
 
-    private bool LcarsActive => Configuration.UiColors?.Mode == MaterialColorMode.Lcars;
+    private bool LcarsActive => Configuration.UiStylingEnabled && Configuration.UiColors?.Mode == MaterialColorMode.Lcars;
 
     private void PlayLcarsSound(MaterialUiSoundCue cue)
     {
@@ -1221,6 +1255,7 @@ public sealed class Plugin : IDalamudPlugin
 
     private void DrawTransparencySettings()
     {
+        DrawBackgroundSettings();
         var enabled = Configuration.UiTransparencyEnabled;
         if (UiGui.Checkbox("Transparency", ref enabled))
         { Configuration.UiTransparencyEnabled = enabled; Configuration.Save(); }
