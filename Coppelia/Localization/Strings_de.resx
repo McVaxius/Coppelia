@@ -160,7 +160,7 @@
   <data name="K379" xml:space="preserve"><value>UI-Schriftarten konnten nicht geladen werden. Siehe Plugin-Protokoll.</value></data>
   <data name="K380" xml:space="preserve"><value>Nie</value></data>
   <data name="K106" xml:space="preserve"><value>Freundliche Kampf-NPCs</value></data>
-  <data name="K107" xml:space="preserve"><value>Volle RSR-Rotation</value></data>
+  <data name="K107" xml:space="preserve"><value>Volle Rotation</value></data>
   <data name="K109" xml:space="preserve"><value>64-stelliges Hex-Geheimnis erzeugen</value></data>
   <data name="K110" xml:space="preserve"><value>Geheimnis erzeugen</value></data>
   <data name="K111" xml:space="preserve"><value>Gizar-Blätter (NQ + HQ): {0}</value></data>
@@ -270,7 +270,7 @@
   <data name="K273" xml:space="preserve"><value>Prüfen und abschließen</value></data>
   <data name="K274" xml:space="preserve"><value>Rollennetzwerk</value></data>
   <data name="K275" xml:space="preserve"><value>Rolle: {0}</value></data>
-  <data name="K278" xml:space="preserve"><value>RSR-Steuerung</value></data>
+  <data name="K278" xml:space="preserve"><value>Rotationssteuerung</value></data>
   <data name="K282" xml:space="preserve"><value>Schnelleinrichtung starten</value></data>
   <data name="K285" xml:space="preserve"><value>Weiser (SGE)</value></data>
   <data name="K286" xml:space="preserve"><value>Explizit beobachtete Heilziele speichern</value></data>
@@ -368,7 +368,7 @@
   <data name="K141" xml:space="preserve"><value>Helfer benötigt HealBot/JOAT-Abhängigkeiten sowie Lifestream und vnavmesh für gekoppelte Reisen.</value></data>
   <data name="K142" xml:space="preserve"><value>Helfer verwaltet Empfangsport und Geheimnis; Anfänger zusätzlich die IPv4-Adresse des Helfers.</value></data>
   <data name="K146" xml:space="preserve"><value>Vorwärtsbewegungsdauer des Helfers bei Gebietswechsel des Anfängers/Questers ohne Teleport.</value></data>
-  <data name="K161" xml:space="preserve"><value>JOAT-Angriffsmodus: {0}; beide nutzen RSR-Manuell nur bei untätiger Heilung.</value></data>
+  <data name="K161" xml:space="preserve"><value>JOAT-Angriffsmodus: {0}; der gewählte Anbieter greift nur an, wenn die Heilung tatsächlich untätig ist.</value></data>
   <data name="K163" xml:space="preserve"><value>JOAT fügt den Fren nicht automatisch hinzu. Den zu schützenden niedrigstufigen Fren explizit in Beobachtung wählen.</value></data>
   <data name="K166" xml:space="preserve"><value>Fren für JOAT-Heilung explizit beobachten. JOAT fügt ihn nie selbst hinzu und greift nur Gegner an, die den sichtbaren Fren oder lokalen Heiler angreifen.</value></data>
   <data name="K178" xml:space="preserve"><value>LAN-Verkehr ist authentifiziert, aber unverschlüsselt; Namen und Koordinaten bleiben sichtbar. Verbindung, Authentifizierung, Zuweisung und Wiederverbindung sind asynchron.</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>Lichtfarbe 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>Lichtfarbe 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>Lichtfarbe 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>JOAT-Rotationsanbieter</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>Volles BMR nutzt native Einzelzielangriffe, Heilung und Wiederbelebung, solange Watch untätig ist. Nur DoTs erfordert RSR.</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>Volles BMR erfordert Dhog-Heilerrotationen aus God Mod Companion und die bestätigte Kampfunterdrückung durch FrenRider. Nur DoTs erfordert RSR.</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>Volles BMR wartet auf einem freundlichen Ziel; native Heilung und Wiederbelebung bleiben aktiv.</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>Kein zulässiger Gegner; Coppelias Heilregeln sind untätig.</value></data>
 </root>

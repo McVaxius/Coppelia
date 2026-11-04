@@ -17,6 +17,7 @@ internal sealed class PowerlevelRuntimeService : IDisposable
 
     private DateTimeOffset nextDecisionUtc = DateTimeOffset.MinValue;
     private bool armed;
+    private bool activationFailed;
     private ulong previousTargetGameObjectId;
 
     public PowerlevelRuntimeService(
@@ -38,13 +39,21 @@ internal sealed class PowerlevelRuntimeService : IDisposable
 
     public void Activate()
     {
+        activationFailed = false;
         if (!armed)
             CapturePreviousTarget();
 
         armed = true;
         nextDecisionUtc = DateTimeOffset.MinValue;
         targetSelector.Clear();
-        frenRiderIpcService.ResetSession();
+        if (!frenRiderIpcService.ResetSession())
+        {
+            armed = false;
+            activationFailed = true;
+            StatusText = $"Blocked: the prior FrenRider lease release is not acknowledged. {frenRiderIpcService.LastFailure}";
+            LastIssuedAction = "Blocked";
+            return;
+        }
         LastIssuedAction = "Idle";
         LastMatchedRule = "No target selected.";
         StatusText = "PowerlevelBot arming.";
@@ -52,16 +61,17 @@ internal sealed class PowerlevelRuntimeService : IDisposable
 
     public void Deactivate(string reason)
     {
-        frenRiderIpcService.Release(reason);
+        var released = frenRiderIpcService.Release(reason);
         if (armed)
             RestorePreviousTarget();
 
         armed = false;
+        activationFailed = !released;
         targetSelector.Clear();
         previousTargetGameObjectId = 0;
         LastIssuedAction = "Idle";
         LastMatchedRule = "No target selected.";
-        StatusText = reason;
+        StatusText = released ? reason : $"Blocked: the FrenRider lease release is not acknowledged. {frenRiderIpcService.LastFailure}";
     }
 
     public bool TryValidateActivation(out string reason)
@@ -113,21 +123,26 @@ internal sealed class PowerlevelRuntimeService : IDisposable
     {
         if (!plugin.Configuration.PluginEnabled)
         {
-            Deactivate("Plugin disabled.");
+            if (armed)
+                Deactivate("Plugin disabled.");
             return;
         }
 
         if (!plugin.Configuration.AutomationEnabled || plugin.Configuration.BotMode != BotMode.PowerlevelBot)
         {
-            if (armed || frenRiderIpcService.LeaseAcquired)
+            if (armed)
                 Deactivate("PowerlevelBot mode is off.");
+            else if (frenRiderIpcService.LeaseAcquired)
+                StatusText = $"Blocked: the FrenRider lease release is not acknowledged. {frenRiderIpcService.LastFailure}";
             else
                 StatusText = "PowerlevelBot mode is off.";
             return;
         }
 
-        if (!armed)
+        if (!armed && !activationFailed)
             Activate();
+        if (!armed)
+            return;
 
         if (ShouldPause(out var pauseReason))
         {

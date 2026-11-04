@@ -160,7 +160,7 @@
   <data name="K379" xml:space="preserve"><value>Не удалось загрузить шрифты интерфейса. См. журнал плагина.</value></data>
   <data name="K380" xml:space="preserve"><value>Никогда</value></data>
   <data name="K106" xml:space="preserve"><value>Дружественные боевые NPC</value></data>
-  <data name="K107" xml:space="preserve"><value>Полная ротация RSR</value></data>
+  <data name="K107" xml:space="preserve"><value>Полная ротация</value></data>
   <data name="K109" xml:space="preserve"><value>Создать 64-значный шестнадцатеричный секрет</value></data>
   <data name="K110" xml:space="preserve"><value>Создать секрет</value></data>
   <data name="K111" xml:space="preserve"><value>Зелень гисал (NQ + HQ): {0}</value></data>
@@ -270,7 +270,7 @@
   <data name="K273" xml:space="preserve"><value>Проверить и завершить</value></data>
   <data name="K274" xml:space="preserve"><value>Сеть для роли</value></data>
   <data name="K275" xml:space="preserve"><value>Роль: {0}</value></data>
-  <data name="K278" xml:space="preserve"><value>Управление RSR</value></data>
+  <data name="K278" xml:space="preserve"><value>Управление ротацией</value></data>
   <data name="K282" xml:space="preserve"><value>Запустить быструю настройку</value></data>
   <data name="K285" xml:space="preserve"><value>Мудрец (SGE)</value></data>
   <data name="K286" xml:space="preserve"><value>Сохранять отмеченные цели лечения</value></data>
@@ -368,7 +368,7 @@
   <data name="K141" xml:space="preserve"><value>Помощнику нужны зависимости HealBot/JOAT, а для совместного перемещения — Lifestream и vnavmesh.</value></data>
   <data name="K142" xml:space="preserve"><value>Помощник задаёт порт и секрет; новичок дополнительно задаёт IPv4 помощника.</value></data>
   <data name="K146" xml:space="preserve"><value>Время движения помощника вперёд при переходе новичка/квестера в другую зону без телепорта.</value></data>
-  <data name="K161" xml:space="preserve"><value>Режим атаки JOAT: {0}; оба используют RSR Manual только без нужды в лечении.</value></data>
+  <data name="K161" xml:space="preserve"><value>Режим атаки JOAT: {0}; выбранный провайдер атакует только в циклах, когда лечение действительно не требуется.</value></data>
   <data name="K163" xml:space="preserve"><value>JOAT не добавляет Fren автоматически. Отметьте его в наблюдении, если это защищаемая низкоуровневая цель.</value></data>
   <data name="K166" xml:space="preserve"><value>Отметьте Fren для лечения JOAT: он не добавляется автоматически. Атакуются только враги, уже бьющие видимого Fren или локального целителя.</value></data>
   <data name="K178" xml:space="preserve"><value>Трафик LAN подтверждается, но не шифруется; имена и координаты видны. Подключение, подтверждение, назначение и переподключение асинхронны.</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>Цвет света 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>Цвет света 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>Цвет света 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>Провайдер ротации JOAT</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>Полный BMR использует штатный урон по одной цели, лечение и воскрешение, пока Watch бездействует. Для режима только DoT нужен RSR.</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>Полный BMR требует ротации лекарей Dhog из God Mod Companion и подтверждённого подавления боя FrenRider. Для режима только DoT нужен RSR.</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>Полный BMR ожидает на дружественной цели; штатное лечение и воскрешение остаются включены.</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>Нет подходящего врага; правила лечения Coppelia бездействуют.</value></data>
 </root>

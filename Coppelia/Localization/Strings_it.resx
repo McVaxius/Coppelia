@@ -160,7 +160,7 @@
   <data name="K379" xml:space="preserve"><value>Caricamento dei caratteri dell’interfaccia non riuscito. Consulta il log del plugin.</value></data>
   <data name="K380" xml:space="preserve"><value>Mai</value></data>
   <data name="K106" xml:space="preserve"><value>PNG combattenti alleati</value></data>
-  <data name="K107" xml:space="preserve"><value>Rotazione RSR completa</value></data>
+  <data name="K107" xml:space="preserve"><value>Rotazione completa</value></data>
   <data name="K109" xml:space="preserve"><value>Genera segreto esadecimale di 64 caratteri</value></data>
   <data name="K110" xml:space="preserve"><value>Genera segreto</value></data>
   <data name="K111" xml:space="preserve"><value>Erbe Gysahl (NQ + HQ): {0}</value></data>
@@ -270,7 +270,7 @@
   <data name="K273" xml:space="preserve"><value>Verifica e completa</value></data>
   <data name="K274" xml:space="preserve"><value>Rete del ruolo</value></data>
   <data name="K275" xml:space="preserve"><value>Ruolo: {0}</value></data>
-  <data name="K278" xml:space="preserve"><value>Controllo RSR</value></data>
+  <data name="K278" xml:space="preserve"><value>Controllo della rotazione</value></data>
   <data name="K282" xml:space="preserve"><value>Avvia configurazione rapida</value></data>
   <data name="K285" xml:space="preserve"><value>Saggio (SGE)</value></data>
   <data name="K286" xml:space="preserve"><value>Salva bersagli di cura selezionati</value></data>
@@ -368,7 +368,7 @@
   <data name="K141" xml:space="preserve"><value>Assistente richiede dipendenze HealBot/JOAT più Lifestream e vnavmesh per viaggi in coppia.</value></data>
   <data name="K142" xml:space="preserve"><value>Assistente gestisce porta e segreto; Principiante gestisce anche l'IPv4 dell'assistente.</value></data>
   <data name="K146" xml:space="preserve"><value>Durata avanzamento assistente quando principiante/quester cambia zona senza teletrasporto.</value></data>
-  <data name="K161" xml:space="preserve"><value>Modalità attacco JOAT: {0}; entrambi usano RSR Manuale solo quando le cure sono inattive.</value></data>
+  <data name="K161" xml:space="preserve"><value>Modalità di attacco JOAT: {0}; il fornitore selezionato attacca solo durante cicli di cura realmente inattivi.</value></data>
   <data name="K163" xml:space="preserve"><value>JOAT non aggiunge automaticamente il Fren. Selezionalo in Osservazione se è il bersaglio di basso livello da proteggere.</value></data>
   <data name="K166" xml:space="preserve"><value>Seleziona il Fren per le cure JOAT; non viene mai aggiunto automaticamente. Gli attacchi restano su nemici che attaccano il Fren visibile o il guaritore locale.</value></data>
   <data name="K178" xml:space="preserve"><value>La LAN è autenticata ma non cifrata; nomi e coordinate sono visibili. Connessione, autenticazione, assegnazione e riconnessione sono asincrone.</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>Colore luce 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>Colore luce 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>Colore luce 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>Fornitore di rotazione JOAT</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>BMR completo usa danni a bersaglio singolo, cure e resurrezioni native mentre Watch è inattivo. Solo DoT richiede RSR.</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>BMR completo richiede le rotazioni Dhog per guaritori di God Mod Companion e la conferma della sospensione del combattimento di FrenRider. Solo DoT richiede RSR.</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>BMR completo attende su un bersaglio alleato; cure e resurrezioni native restano attive.</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>Nessun nemico idoneo; le regole di cura di Coppelia sono inattive.</value></data>
 </root>

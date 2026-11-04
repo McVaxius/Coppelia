@@ -20,7 +20,8 @@ internal sealed record FrenRiderPowerlevelRequest(string SessionToken);
 internal sealed record FrenRiderPowerlevelResponse(
     bool Ok,
     string Reason,
-    int ContractVersion = FrenRiderPowerlevelContract.SupportedVersion);
+    int ContractVersion = FrenRiderPowerlevelContract.SupportedVersion,
+    bool CombatSuppressed = false);
 
 internal sealed record FrenRiderPowerlevelStatus(
     int ContractVersion,
@@ -32,7 +33,8 @@ internal sealed record FrenRiderPowerlevelStatus(
     ulong VisibleFrenObjectId,
     bool CompanionActive,
     string CompanionName,
-    ulong CompanionObjectId)
+    ulong CompanionObjectId,
+    bool CombatSuppressed = false)
 {
     public bool IsCompatible => ContractVersion == FrenRiderPowerlevelContract.SupportedVersion;
     public bool FrenConfigured => !string.IsNullOrWhiteSpace(ConfiguredFrenName);

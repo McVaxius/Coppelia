@@ -129,7 +129,7 @@ internal sealed class UiText : IDisposable
             "{0} target {1} is selected but remote." or "The exact {0} target is remote." or
             "QST controls the active mode ({0}); the saved local choice resumes after release." or
             "QST controls summoning ({0}); the saved local setting resumes after release." or
-            "JOAT attack mode: {0}; both use RSR Manual targeting during genuinely idle healing cycles." or
+            "JOAT attack mode: {0}; the selected provider attacks only during genuinely idle healing cycles." or
             "Attacking waits for healing readiness: {0}" or "Holding: the current cast blocks attacking. {0}" or
             "Holding: healing is blocked. {0}" or "Blocked: healing is not ready. {0}" or "RSR Manual ({0}) on {1} at {2:P0} HP." or
             "RSR Manual ({0}) waiting; no engaged hostile is eligible within the paired range." or

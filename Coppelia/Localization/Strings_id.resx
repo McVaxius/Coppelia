@@ -111,7 +111,7 @@
   <data name="K104" xml:space="preserve"><value>Sumber serangan FrenRider</value></data>
   <data name="K105" xml:space="preserve"><value>IPC FrenRider</value></data>
   <data name="K106" xml:space="preserve"><value>NPC pertempuran ramah</value></data>
-  <data name="K107" xml:space="preserve"><value>Rotasi RSR penuh</value></data>
+  <data name="K107" xml:space="preserve"><value>Rotasi penuh</value></data>
   <data name="K108" xml:space="preserve"><value>Umum</value></data>
   <data name="K109" xml:space="preserve"><value>Buat rahasia heksadesimal 64 karakter</value></data>
   <data name="K110" xml:space="preserve"><value>Buat rahasia</value></data>
@@ -165,7 +165,7 @@
   <data name="K158" xml:space="preserve"><value>Persyaratan Jacqueline of All Trades (JOAT)</value></data>
   <data name="K159" xml:space="preserve"><value>JOAT</value></data>
   <data name="K160" xml:space="preserve"><value>Mode serangan JOAT</value></data>
-  <data name="K161" xml:space="preserve"><value>Mode serangan JOAT: {0}; keduanya memakai penargetan RSR Manual saat siklus penyembuhan benar-benar menganggur.</value></data>
+  <data name="K161" xml:space="preserve"><value>Mode serangan JOAT: {0}; penyedia yang dipilih hanya menyerang saat siklus penyembuhan benar-benar menganggur.</value></data>
   <data name="K162" xml:space="preserve"><value>Kesiapan serangan JOAT</value></data>
   <data name="K163" xml:space="preserve"><value>JOAT tidak otomatis menambahkan Fren dari FrenRider. Pilih Fren tersebut secara eksplisit di Pantauan saat ia menjadi target level rendah yang harus dilindungi dengan penyembuhan.</value></data>
   <data name="K164" xml:space="preserve"><value>Matriks penyembuhan JOAT</value></data>
@@ -282,7 +282,7 @@
   <data name="K275" xml:space="preserve"><value>Peran: {0}</value></data>
   <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
   <data name="K277" xml:space="preserve"><value>RSR</value></data>
-  <data name="K278" xml:space="preserve"><value>Kontrol RSR</value></data>
+  <data name="K278" xml:space="preserve"><value>Kontrol rotasi</value></data>
   <data name="K279" xml:space="preserve"><value>RSR wajib dan secara eksklusif menjalankan kerusakan JOAT. Coppelia tetap menjalankan penyembuhan Pantauan langsung dan mengelola penghentian RSR serta pelanjutan saat menganggur.</value></data>
   <data name="K280" xml:space="preserve"><value>Isolasi RSR dan pemulihan sesi yang tepat dipakai saat RSR dimuat; penyembuhan HealBot tetap langsung.</value></data>
   <data name="K281" xml:space="preserve"><value>Jalankan pengaturan terpandu Mandiri, Pembantu, atau Newb tanpa mengubah apa pun hingga Selesai.</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>Warna cahaya 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>Warna cahaya 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>Warna cahaya 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>Penyedia rotasi JOAT</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>BMR penuh menggunakan kerusakan target tunggal, penyembuhan, dan kebangkitan bawaan saat Watch menganggur. Mode hanya DoT memerlukan RSR.</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>BMR penuh memerlukan rotasi penyembuh Dhog dari God Mod Companion dan konfirmasi penangguhan pertempuran FrenRider. Mode hanya DoT memerlukan RSR.</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>BMR penuh menunggu dengan target sekutu; penyembuhan dan kebangkitan bawaan tetap aktif.</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>Tidak ada musuh yang memenuhi syarat; aturan penyembuhan Coppelia sedang menganggur.</value></data>
 </root>

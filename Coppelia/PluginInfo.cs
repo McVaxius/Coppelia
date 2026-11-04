@@ -23,7 +23,7 @@ internal static class PluginInfo
 
     public static readonly string[] RecommendedPlugins =
     {
-        "Rotation Solver Reborn (RSR) - optional isolation/restore helper",
+        "Rotation Solver Reborn (RSR) - optional JOAT rotation provider",
     };
 
     public static readonly string[] SupportedJobs =

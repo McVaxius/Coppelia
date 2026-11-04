@@ -111,7 +111,7 @@
   <data name="K104" xml:space="preserve"><value>Fonte de ataque do FrenRider</value></data>
   <data name="K105" xml:space="preserve"><value>IPC FrenRider</value></data>
   <data name="K106" xml:space="preserve"><value>NPCs de batalha aliados</value></data>
-  <data name="K107" xml:space="preserve"><value>Rotação RSR completa</value></data>
+  <data name="K107" xml:space="preserve"><value>Rotação completa</value></data>
   <data name="K108" xml:space="preserve"><value>Geral</value></data>
   <data name="K109" xml:space="preserve"><value>Gerar segredo hexadecimal de 64 caracteres</value></data>
   <data name="K110" xml:space="preserve"><value>Gerar segredo</value></data>
@@ -165,7 +165,7 @@
   <data name="K158" xml:space="preserve"><value>Requisitos de Jacqueline of All Trades (JOAT)</value></data>
   <data name="K159" xml:space="preserve"><value>JOAT</value></data>
   <data name="K160" xml:space="preserve"><value>Modo de ataque JOAT</value></data>
-  <data name="K161" xml:space="preserve"><value>Modo de ataque JOAT: {0}; ambos usam seleção RSR Manual quando a cura está realmente ociosa.</value></data>
+  <data name="K161" xml:space="preserve"><value>Modo de ataque JOAT: {0}; o provedor selecionado só ataca em ciclos realmente ociosos de cura.</value></data>
   <data name="K162" xml:space="preserve"><value>Prontidão de ataque JOAT</value></data>
   <data name="K163" xml:space="preserve"><value>JOAT não adiciona automaticamente o Fren do FrenRider. Marque-o em Monitoramento quando for o alvo de nível baixo que precisa de cura.</value></data>
   <data name="K164" xml:space="preserve"><value>Matriz de cura JOAT</value></data>
@@ -282,7 +282,7 @@
   <data name="K275" xml:space="preserve"><value>Função: {0}</value></data>
   <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
   <data name="K277" xml:space="preserve"><value>RSR</value></data>
-  <data name="K278" xml:space="preserve"><value>Controle RSR</value></data>
+  <data name="K278" xml:space="preserve"><value>Controle de rotação</value></data>
   <data name="K279" xml:space="preserve"><value>RSR é obrigatório e executa exclusivamente o dano JOAT. Coppelia continua a cura direta do Monitoramento e controla a passagem entre RSR desligado e retomada ociosa.</value></data>
   <data name="K280" xml:space="preserve"><value>O isolamento RSR e a restauração exata da sessão são usados quando RSR está carregado; HealBot continua curando diretamente.</value></data>
   <data name="K281" xml:space="preserve"><value>Execute a configuração guiada de Independente, Auxiliar ou Newb sem alterar nada até Concluir.</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>Cor da luz 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>Cor da luz 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>Cor da luz 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>Provedor de rotação JOAT</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>BMR completo usa dano nativo de alvo único, cura e ressurreição enquanto Watch está ocioso. Somente DoTs exige RSR.</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>BMR completo exige as rotações Dhog de curandeiro do God Mod Companion e a confirmação da suspensão de combate do FrenRider. Somente DoTs exige RSR.</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>BMR completo aguarda com um alvo aliado; cura e ressurreição nativas continuam ativas.</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>Nenhum inimigo elegível; as regras de cura da Coppelia estão ociosas.</value></data>
 </root>

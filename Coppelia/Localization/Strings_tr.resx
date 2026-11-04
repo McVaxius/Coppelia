@@ -111,7 +111,7 @@
   <data name="K104" xml:space="preserve"><value>FrenRider saldırı kaynağı</value></data>
   <data name="K105" xml:space="preserve"><value>FrenRider IPC</value></data>
   <data name="K106" xml:space="preserve"><value>Dost savaş NPC'leri</value></data>
-  <data name="K107" xml:space="preserve"><value>Tam RSR rotasyonu</value></data>
+  <data name="K107" xml:space="preserve"><value>Tam rotasyon</value></data>
   <data name="K108" xml:space="preserve"><value>Genel</value></data>
   <data name="K109" xml:space="preserve"><value>64 karakterli onaltılık sır üret</value></data>
   <data name="K110" xml:space="preserve"><value>Sır üret</value></data>
@@ -165,7 +165,7 @@
   <data name="K158" xml:space="preserve"><value>Jacqueline of All Trades (JOAT) gereksinimleri</value></data>
   <data name="K159" xml:space="preserve"><value>JOAT</value></data>
   <data name="K160" xml:space="preserve"><value>JOAT saldırı modu</value></data>
-  <data name="K161" xml:space="preserve"><value>JOAT saldırı modu: {0}; her ikisi de iyileştirme döngüleri gerçekten boşta olduğunda RSR Manual hedeflemesini kullanır.</value></data>
+  <data name="K161" xml:space="preserve"><value>JOAT saldırı modu: {0}; seçili sağlayıcı yalnızca iyileştirme gerçekten boşta olduğunda saldırır.</value></data>
   <data name="K162" xml:space="preserve"><value>JOAT saldırı hazırlığı</value></data>
   <data name="K163" xml:space="preserve"><value>JOAT, FrenRider'ın Fren'ini otomatik eklemez. İyileştirmeyle korunması gereken düşük seviyeli hedefse İzleme'de bu Fren'i açıkça seçin.</value></data>
   <data name="K164" xml:space="preserve"><value>JOAT iyileştirme matrisi</value></data>
@@ -282,7 +282,7 @@
   <data name="K275" xml:space="preserve"><value>Rol: {0}</value></data>
   <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
   <data name="K277" xml:space="preserve"><value>RSR</value></data>
-  <data name="K278" xml:space="preserve"><value>RSR denetimi</value></data>
+  <data name="K278" xml:space="preserve"><value>Rotasyon kontrolü</value></data>
   <data name="K279" xml:space="preserve"><value>RSR zorunludur ve JOAT hasarını yalnızca o uygular. Coppelia doğrudan İzleme iyileştirmesini sürdürür ve RSR'yi kapatma/boşta sürdürme geçişini yönetir.</value></data>
   <data name="K280" xml:space="preserve"><value>RSR yüklüyken RSR yalıtımı ve tam oturum geri yüklemesi kullanılır; HealBot iyileştirmesi doğrudan uygulanmaya devam eder.</value></data>
   <data name="K281" xml:space="preserve"><value>Bitir'e kadar hiçbir şeyi değiştirmeden Bağımsız, Yardımcı veya Newb kurulum rehberini çalıştırın.</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>Işık rengi 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>Işık rengi 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>Işık rengi 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>JOAT rotasyon sağlayıcısı</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>Tam BMR, Watch boştayken yerleşik tek hedef hasarı, iyileştirme ve diriltme kullanır. Yalnızca DoT modu RSR gerektirir.</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>Tam BMR, God Mod Companion Dhog şifacı rotasyonlarını ve FrenRider savaş durdurma onayını gerektirir. Yalnızca DoT modu RSR gerektirir.</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>Tam BMR dost hedef üzerinde bekliyor; yerleşik iyileştirme ve diriltme etkin kalır.</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>Uygun düşman yok; Coppelia iyileştirme kuralları boşta.</value></data>
 </root>

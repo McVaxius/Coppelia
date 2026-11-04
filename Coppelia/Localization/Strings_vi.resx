@@ -111,7 +111,7 @@
   <data name="K104" xml:space="preserve"><value>Nguồn tấn công FrenRider</value></data>
   <data name="K105" xml:space="preserve"><value>IPC FrenRider</value></data>
   <data name="K106" xml:space="preserve"><value>NPC chiến đấu thân thiện</value></data>
-  <data name="K107" xml:space="preserve"><value>Vòng xoay RSR đầy đủ</value></data>
+  <data name="K107" xml:space="preserve"><value>Vòng xoay đầy đủ</value></data>
   <data name="K108" xml:space="preserve"><value>Chung</value></data>
   <data name="K109" xml:space="preserve"><value>Tạo bí mật hex 64 ký tự</value></data>
   <data name="K110" xml:space="preserve"><value>Tạo bí mật</value></data>
@@ -165,7 +165,7 @@
   <data name="K158" xml:space="preserve"><value>Yêu cầu Jacqueline of All Trades (JOAT)</value></data>
   <data name="K159" xml:space="preserve"><value>JOAT</value></data>
   <data name="K160" xml:space="preserve"><value>Chế độ tấn công JOAT</value></data>
-  <data name="K161" xml:space="preserve"><value>Chế độ tấn công JOAT: {0}; cả hai dùng chọn mục tiêu RSR Manual khi chu kỳ hồi máu thực sự nhàn rỗi.</value></data>
+  <data name="K161" xml:space="preserve"><value>Chế độ tấn công JOAT: {0}; bộ cung cấp đã chọn chỉ tấn công trong chu kỳ thực sự không cần hồi máu.</value></data>
   <data name="K162" xml:space="preserve"><value>Sẵn sàng tấn công JOAT</value></data>
   <data name="K163" xml:space="preserve"><value>JOAT không tự thêm Fren của FrenRider. Hãy chọn Fren đó trong Theo dõi khi đó là mục tiêu cấp thấp cần bảo vệ bằng hồi máu.</value></data>
   <data name="K164" xml:space="preserve"><value>Ma trận hồi máu JOAT</value></data>
@@ -282,7 +282,7 @@
   <data name="K275" xml:space="preserve"><value>Vai trò: {0}</value></data>
   <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
   <data name="K277" xml:space="preserve"><value>RSR</value></data>
-  <data name="K278" xml:space="preserve"><value>Điều khiển RSR</value></data>
+  <data name="K278" xml:space="preserve"><value>Điều khiển vòng xoay</value></data>
   <data name="K279" xml:space="preserve"><value>RSR bắt buộc và chỉ RSR thực hiện sát thương JOAT. Coppelia tiếp tục hồi máu Theo dõi trực tiếp và quản lý việc tắt RSR/tiếp tục khi nhàn rỗi.</value></data>
   <data name="K280" xml:space="preserve"><value>Cách ly RSR và khôi phục chính xác phiên được dùng khi RSR đã tải; hồi máu HealBot vẫn thực hiện trực tiếp.</value></data>
   <data name="K281" xml:space="preserve"><value>Chạy thiết lập có hướng dẫn cho Độc lập, Trợ giúp hoặc Newb, không thay đổi gì đến khi Hoàn tất.</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>Màu ánh sáng 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>Màu ánh sáng 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>Màu ánh sáng 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>Bộ cung cấp vòng xoay JOAT</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>BMR đầy đủ dùng sát thương đơn mục tiêu, hồi máu và hồi sinh gốc khi Watch nhàn rỗi. Chế độ chỉ DoT cần RSR.</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>BMR đầy đủ cần vòng xoay hồi máu Dhog của God Mod Companion và xác nhận tạm dừng chiến đấu từ FrenRider. Chế độ chỉ DoT cần RSR.</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>BMR đầy đủ đang chờ với mục tiêu đồng minh; hồi máu và hồi sinh gốc vẫn bật.</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>Không có kẻ địch hợp lệ; quy tắc hồi máu của Coppelia đang nhàn rỗi.</value></data>
 </root>

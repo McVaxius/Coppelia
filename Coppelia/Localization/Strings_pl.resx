@@ -111,7 +111,7 @@
   <data name="K104" xml:space="preserve"><value>Źródło ataku FrenRider</value></data>
   <data name="K105" xml:space="preserve"><value>IPC FrenRider</value></data>
   <data name="K106" xml:space="preserve"><value>Przyjazne bojowe NPC</value></data>
-  <data name="K107" xml:space="preserve"><value>Pełna rotacja RSR</value></data>
+  <data name="K107" xml:space="preserve"><value>Pełna rotacja</value></data>
   <data name="K108" xml:space="preserve"><value>Ogólne</value></data>
   <data name="K109" xml:space="preserve"><value>Generuj 64-znakowy sekret szesnastkowy</value></data>
   <data name="K110" xml:space="preserve"><value>Generuj sekret</value></data>
@@ -165,7 +165,7 @@
   <data name="K158" xml:space="preserve"><value>Wymagania Jacqueline of All Trades (JOAT)</value></data>
   <data name="K159" xml:space="preserve"><value>JOAT</value></data>
   <data name="K160" xml:space="preserve"><value>Tryb ataku JOAT</value></data>
-  <data name="K161" xml:space="preserve"><value>Tryb ataku JOAT: {0}; oba używają RSR Manual w rzeczywiście bezczynnych cyklach leczenia.</value></data>
+  <data name="K161" xml:space="preserve"><value>Tryb ataku JOAT: {0}; wybrany dostawca atakuje tylko w cyklach, gdy leczenie faktycznie nie jest potrzebne.</value></data>
   <data name="K162" xml:space="preserve"><value>Gotowość ataku JOAT</value></data>
   <data name="K163" xml:space="preserve"><value>JOAT nie dodaje automatycznie Frena z FrenRider. Wybierz go jawnie w Obserwacji, gdy jest niskopoziomowym celem wymagającym ochrony leczeniem.</value></data>
   <data name="K164" xml:space="preserve"><value>Macierz leczenia JOAT</value></data>
@@ -282,7 +282,7 @@
   <data name="K275" xml:space="preserve"><value>Rola: {0}</value></data>
   <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
   <data name="K277" xml:space="preserve"><value>RSR</value></data>
-  <data name="K278" xml:space="preserve"><value>Sterowanie RSR</value></data>
+  <data name="K278" xml:space="preserve"><value>Sterowanie rotacją</value></data>
   <data name="K279" xml:space="preserve"><value>RSR jest wymagany i wyłącznie wykonuje obrażenia JOAT. Coppelia nadal leczy bezpośrednio z Obserwacji i zarządza wyłączaniem RSR oraz wznowieniem przy bezczynności.</value></data>
   <data name="K280" xml:space="preserve"><value>Izolacja RSR i dokładne przywrócenie sesji są używane przy załadowanym RSR; leczenie HealBot nadal odbywa się bezpośrednio.</value></data>
   <data name="K281" xml:space="preserve"><value>Uruchom konfigurację z przewodnikiem dla trybu Samodzielnego, Pomocnika lub Newb bez zmian do Zakończ.</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>Kolor światła 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>Kolor światła 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>Kolor światła 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>Dostawca rotacji JOAT</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>Pełny BMR używa natywnych ataków na jeden cel, leczenia i wskrzeszania, gdy Watch jest bezczynny. Tryb tylko DoT wymaga RSR.</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>Pełny BMR wymaga rotacji uzdrowicieli Dhog z God Mod Companion i potwierdzonego wstrzymania walki przez FrenRider. Tryb tylko DoT wymaga RSR.</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>Pełny BMR czeka z przyjaznym celem; natywne leczenie i wskrzeszanie pozostają aktywne.</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>Brak odpowiedniego wroga; reguły leczenia Coppelii są bezczynne.</value></data>
 </root>

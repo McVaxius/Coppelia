@@ -334,7 +334,7 @@
     <value>मित्रवत बैटल NPC</value>
   </data>
   <data name="K107" xml:space="preserve">
-    <value>पूरा RSR रोटेशन</value>
+    <value>पूर्ण रोटेशन</value>
   </data>
   <data name="K108" xml:space="preserve">
     <value>सामान्य</value>
@@ -496,7 +496,7 @@
     <value>JOAT अटैक मोड</value>
   </data>
   <data name="K161" xml:space="preserve">
-    <value>JOAT अटैक मोड: {0}; दोनों वास्तव में निष्क्रिय हीलिंग चक्रों के दौरान RSR Manual टार्गेटिंग इस्तेमाल करते हैं।</value>
+    <value>JOAT आक्रमण मोड: {0}; चुना गया प्रदाता केवल वास्तव में निष्क्रिय उपचार चक्रों में आक्रमण करता है।</value>
   </data>
   <data name="K162" xml:space="preserve">
     <value>JOAT अटैक की तैयारी</value>
@@ -847,7 +847,7 @@
     <value>RSR</value>
   </data>
   <data name="K278" xml:space="preserve">
-    <value>RSR नियंत्रण</value>
+    <value>रोटेशन नियंत्रण</value>
   </data>
   <data name="K279" xml:space="preserve">
     <value>RSR आवश्यक है और केवल वही JOAT की क्षति लागू करता है। Coppelia निगरानी की हीलिंग सीधे करता रहता है और RSR को बंद करने/निष्क्रिय होने पर बहाल करने के हस्तांतरण का स्वामी है।</value>
@@ -2704,4 +2704,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>रोशनी का रंग 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>रोशनी का रंग 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>रोशनी का रंग 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>JOAT रोटेशन प्रदाता</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>पूर्ण BMR, Watch निष्क्रिय होने पर मूल एकल-लक्ष्य क्षति, उपचार और पुनर्जीवन का उपयोग करता है। केवल DoT मोड के लिए RSR आवश्यक है।</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>पूर्ण BMR के लिए God Mod Companion के Dhog उपचारक रोटेशन और FrenRider से युद्ध रोकने की पुष्टि आवश्यक है। केवल DoT मोड के लिए RSR आवश्यक है।</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>पूर्ण BMR मित्र लक्ष्य पर निष्क्रिय है; मूल उपचार और पुनर्जीवन सक्रिय रहते हैं।</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>कोई योग्य शत्रु नहीं; Coppelia के उपचार नियम निष्क्रिय हैं।</value></data>
 </root>

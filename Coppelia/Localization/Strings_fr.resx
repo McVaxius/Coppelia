@@ -481,7 +481,7 @@
     <value>PNJ combattants alliés</value>
   </data>
   <data name="K107" xml:space="preserve">
-    <value>Rotation RSR complète</value>
+    <value>Rotation complète</value>
   </data>
   <data name="K109" xml:space="preserve">
     <value>Générer un secret hexadécimal de 64 caractères</value>
@@ -811,7 +811,7 @@
     <value>Rôle : {0}</value>
   </data>
   <data name="K278" xml:space="preserve">
-    <value>Contrôle RSR</value>
+    <value>Contrôle de rotation</value>
   </data>
   <data name="K282" xml:space="preserve">
     <value>Lancer la configuration rapide</value>
@@ -1105,7 +1105,7 @@
     <value>Durée d'avancée de l'assistant quand le novice/quêteur change de zone sans téléportation.</value>
   </data>
   <data name="K161" xml:space="preserve">
-    <value>Mode d'attaque JOAT : {0} ; RSR Manuel s'utilise seulement quand les soins sont inactifs.</value>
+    <value>Mode d’attaque JOAT : {0} ; le fournisseur choisi attaque uniquement lorsque les soins sont réellement inactifs.</value>
   </data>
   <data name="K163" xml:space="preserve">
     <value>JOAT n'ajoute pas automatiquement le Fren. Cochez-le dans Suivi s'il est la cible de bas niveau à protéger.</value>
@@ -2442,4 +2442,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>Couleur de lumière 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>Couleur de lumière 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>Couleur de lumière 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>Fournisseur de rotation JOAT</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>BMR complet utilise les dégâts monocibles, soins et résurrections natifs lorsque Watch est inactif. Le mode DoTs seuls exige RSR.</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>BMR complet exige les rotations de soigneur Dhog de God Mod Companion et la confirmation de suspension du combat par FrenRider. Le mode DoTs seuls exige RSR.</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>BMR complet attend sur une cible alliée ; les soins et résurrections natifs restent actifs.</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>Aucun ennemi admissible ; les règles de soin de Coppelia sont inactives.</value></data>
 </root>

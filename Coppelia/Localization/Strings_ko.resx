@@ -160,7 +160,7 @@
   <data name="K379" xml:space="preserve"><value>UI 글꼴을 불러오지 못했습니다. 플러그인 로그를 확인하세요.</value></data>
   <data name="K380" xml:space="preserve"><value>없음</value></data>
   <data name="K106" xml:space="preserve"><value>우호 전투 NPC</value></data>
-  <data name="K107" xml:space="preserve"><value>RSR 전체 로테이션</value></data>
+  <data name="K107" xml:space="preserve"><value>전체 로테이션</value></data>
   <data name="K109" xml:space="preserve"><value>64자리 16진수 공유 비밀 생성</value></data>
   <data name="K110" xml:space="preserve"><value>공유 비밀 생성</value></data>
   <data name="K111" xml:space="preserve"><value>기살의 야채 (NQ + HQ): {0}</value></data>
@@ -270,7 +270,7 @@
   <data name="K273" xml:space="preserve"><value>검토 및 완료</value></data>
   <data name="K274" xml:space="preserve"><value>역할 네트워크</value></data>
   <data name="K275" xml:space="preserve"><value>역할: {0}</value></data>
-  <data name="K278" xml:space="preserve"><value>RSR 제어</value></data>
+  <data name="K278" xml:space="preserve"><value>로테이션 제어</value></data>
   <data name="K282" xml:space="preserve"><value>빠른 설정 실행</value></data>
   <data name="K285" xml:space="preserve"><value>현자 (SGE)</value></data>
   <data name="K286" xml:space="preserve"><value>직접 선택한 치유 대상 저장</value></data>
@@ -368,7 +368,7 @@
   <data name="K141" xml:space="preserve"><value>도우미에는 HealBot/JOAT 구성 요소와 연결 이동용 Lifestream 및 vnavmesh가 필요합니다.</value></data>
   <data name="K142" xml:space="preserve"><value>도우미는 수신 포트와 공유 비밀을 설정하며 초보자는 도우미 IPv4 주소도 설정합니다.</value></data>
   <data name="K146" xml:space="preserve"><value>초보자/퀘스터가 순간이동 없이 지역을 바꿀 때 도우미가 전진하는 시간입니다.</value></data>
-  <data name="K161" xml:space="preserve"><value>JOAT 공격 모드: {0}. 둘 다 치유가 완전히 대기 중일 때만 RSR 수동 대상을 사용합니다.</value></data>
+  <data name="K161" xml:space="preserve"><value>JOAT 공격 모드: {0}. 선택한 제공자는 치유가 실제로 필요 없는 판단 주기에만 공격합니다.</value></data>
   <data name="K163" xml:space="preserve"><value>JOAT은 Fren을 자동 추가하지 않습니다. 보호할 저레벨 대상이면 감시에서 직접 Fren을 선택하세요.</value></data>
   <data name="K166" xml:space="preserve"><value>치유로 보호할 Fren을 감시에서 직접 선택하세요. JOAT은 자동 추가하지 않으며 표시된 Fren 또는 로컬 힐러를 공격하는 적만 공격합니다.</value></data>
   <data name="K178" xml:space="preserve"><value>LAN은 인증되지만 암호화되지 않아 이름과 좌표가 보입니다. 연결, 인증, 배정 및 재연결은 비동기입니다.</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>조명 색상 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>조명 색상 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>조명 색상 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>JOAT 로테이션 제공자</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>전체 BMR은 Watch가 대기 중일 때 기본 단일 대상 공격, 치유 및 부활을 사용합니다. 지속 피해만 모드에는 RSR이 필요합니다.</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>전체 BMR에는 God Mod Companion의 Dhog 힐러 로테이션과 FrenRider의 전투 억제 확인이 필요합니다. 지속 피해만 모드에는 RSR이 필요합니다.</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>전체 BMR이 아군을 대상으로 대기 중입니다. 기본 치유 및 부활은 계속 활성화됩니다.</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>적합한 적이 없습니다. Coppelia의 치유 규칙이 대기 중입니다.</value></data>
 </root>

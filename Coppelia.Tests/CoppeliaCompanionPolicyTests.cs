@@ -261,7 +261,7 @@ public sealed class CoppeliaCompanionPolicyTests
     {
         var source = ReadSource("Coppelia", "Windows", "MiniWindow.cs");
 
-        Assert.Equal(1, Count(source, "ImGui.Checkbox(companionLabel"));
+        Assert.Equal(1, Count(source, "UiGui.Checkbox(companionLabel"));
         Assert.Contains("configuration.SummonCompanionChocobo = summonCompanion;", source, StringComparison.Ordinal);
         Assert.Contains("GetGysahlGreensCount()", source, StringComparison.Ordinal);
         Assert.Contains("Gysahl Greens: {greensCount.Value}", source, StringComparison.Ordinal);

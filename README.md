@@ -38,7 +38,7 @@ Stand-alone performs no networking. Its HealBot and JOAT behaviors use the Watch
 - Supports healing, raises, buffs, and pre-buffs according to the configured job rules.
 - Can discover players, companion chocobos, NPC party members, and friendly battle NPCs through independent filters.
 - Can optionally save explicitly watched targets. The saved-target scan range only allows a saved target to rejoin after it returns; it never discovers or selects a new target.
-- Requires FrenRider, vnavmesh, and either BossMod Reborn (BMR) or VBM. JOAT additionally requires loaded, working Rotation Solver Reborn (RSR) for damage.
+- Requires FrenRider, vnavmesh, and either BossMod Reborn (BMR) or VBM. JOAT uses selected BossMod Reborn (BMR) with God Mod Companion Dhog healer rotations, or optional Rotation Solver Reborn (RSR).
 - HealBot uses optional RSR isolation when available. Coppelia restores the captured RSR session settings when it releases ownership.
 
 Use the separate Watch window to add or remove targets. Unticking a target also removes its saved copy. Hold Ctrl while clearing the full set or removing an absent retained target.
@@ -62,15 +62,15 @@ Protocol v2 reports provider, JOAT, and travel readiness separately. Older peers
 
 ## Jacqueline of All Trades (JOAT)
 
-JOAT shares HealBot's dependencies, watch list, per-healer action matrix, and 900-ms decision cycle. Loaded, working Rotation Solver Reborn is required and exclusively executes JOAT damage. Healing always wins: before a matching Watch heal, buff, or raise rule executes, Coppelia switches RSR off; it stays off while healing is queued, blocked, or casting and returns to Auto only after the next genuinely idle healing decision and an eligible enemy selection.
+JOAT shares HealBot's dependencies, watch list, per-healer action matrix, and 900-ms decision cycle. BMR is the default rotation provider; existing configurations migrate once, then retain later provider choices. Optional RSR remains selectable. Watch healing always wins: Coppelia pauses its owned rotation before evaluating or issuing its own heal, buff or raise, and holds it while healing is queued, blocked or casting.
 
-- Requires an equipped WHM, SCH, AST, or SGE with that healer's action matrix enabled and at least one active watched target.
-- Uses the existing FrenRider lease and restricted enemy selector, but ignores the BRD/MCH Powerlevel job selection.
-- Considers only living, damaged, targetable enemies already targeting FrenRider's configured visible Fren or the local healer. Untouched enemies and enemies fighting anyone else are excluded.
-- Defaults to **DoTs only**, which temporarily enables WHM Aero/Aero II/Dia, SCH Bio/Bio II/Biolysis, AST Combust variants, or SGE Eukrasian Dosis variants while disabling the equipped healer's other RSR offensive actions.
-- **Full RSR rotation** reuses the offensive-action states, AoE mode, and hostile-target mode captured when Coppelia took ownership. Switching modes or releasing ownership restores captured values instead of enabling every action.
-- Issues no JOAT damage through Coppelia's direct action executor; RSR Auto owns the attack after Coppelia selects the eligible enemy.
-- Never auto-adds the Fren to Watch. When the Fren is the low-level character, select it explicitly so JOAT healing protects it.
+- Requires an equipped WHM, SCH, AST or SGE, that healer's enabled action matrix, and at least one active watched target.
+- **Full BMR** requires the matching registered Dhog healer rotation from God Mod Companion. It uses manual targeting and forced single-target damage, with native healing and raising enabled during genuinely idle Watch cycles, including for an assigned Quester. With no eligible enemy, a friendly target keeps native healing available. Missing rotations report an explicit God Mod Companion warning.
+- **DoTs only** currently requires explicitly selected RSR. Saved attack-mode choices remain intact; BMR reports unsupported DoTs-only rather than substituting Full. Choose Full rotation for BMR, or RSR to retain DoTs-only.
+- RSR retains its existing DoT action controls and captured full offensive-action/AoE settings. Coppelia restores the selected provider's owned session state instead of rewriting custom presets or enabling every action.
+- Uses the existing FrenRider lease and restricted enemy selector, ignoring the BRD/MCH Powerlevel job selection. FrenRider 4.1.0.8 or newer must acknowledge native BMR suppression before Coppelia captures state. Coppelia restores and reads back provider state before releasing the lease. Expired ownership retains a combat hold until cleanup/release or manual FrenRider Off.
+- Selects only living, eligible enemies already engaging the protected Fren/Quester or healer. Ordinary standalone attacks still require a damaged enemy. Coppelia's direct action executor supplies Watch healing; the selected provider supplies JOAT attacks.
+- Never auto-adds the Fren to Watch. Select it explicitly when it is the low-level heal target.
 
 ### QST-owned Helper provider
 
@@ -82,7 +82,7 @@ Native Mount Roulette mirrors a mounted Quester and still mounts for on-foot cat
 
 The QST High-Level Helper setting **Summon companion chocobo** is on by default. QST must successfully apply that preference and its default-DoTs-only JOAT attack preference through separate local-only IPC endpoints before Helper activation is ready. While companion summoning is owned and enabled, HealBot checks at most every 15 seconds and uses Gysahl Greens only below 900 seconds of buddy time while logged in, on foot, outside combat/duties/sanctuaries, and free of casting or occupied states. It pauses only HealBot-owned navigation for the item action and does not control companion stance. QST's attack-mode ownership is temporary; assignment release, deactivation, role/provider loss, and unload restore Coppelia's saved local radio choice.
 
-HealBot exclusively owns prebuffing, healing, raising, action selection, and cast holds for the assigned Quester; JOAT attacks enemies targeting that exact visible Quester only after HealBot yields. Both remain held while the paired Helper is mounted or mounting, so after landing HealBot resumes first and keeps priority. Optional DAF duties require ADS and FrenRider. Quester-owned entry waits for stable duty entry before configuring FrenRider with the exact Quester and starting ADS. The retained `Coppelia`-owned entry additionally requires DAD, keeps the helper as party leader, and asks DAD for a Regular + Unsynced run. Assignment release restores temporary FrenRider, target, and movement state while keeping QST-owned activation across connection churn; changing the Helper role/provider or unloading QST restores the prior HealBot activation state.
+HealBot owns Watch prebuffing, healing, raising, action selection and cast holds for the assigned Quester. Approved Full BMR can additionally heal and raise while those rules are idle; optional RSR retains its prior healing isolation. JOAT selects eligible enemies engaging the exact visible Quester or healer only after HealBot yields. Both remain held while the paired Helper is mounted or mounting, so after landing HealBot resumes first and keeps priority. Optional DAF duties require ADS and FrenRider. Quester-owned entry waits for stable duty entry before configuring FrenRider with the exact Quester and starting ADS. The retained `Coppelia`-owned entry additionally requires DAD, keeps the helper as party leader, and asks DAD for a Regular + Unsynced run. Assignment release restores temporary FrenRider, target, and movement state while keeping QST-owned activation across connection churn; changing the Helper role/provider or unloading QST restores the prior HealBot activation state.
 
 ## PowerlevelBot
 

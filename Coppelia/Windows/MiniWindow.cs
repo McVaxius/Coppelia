@@ -325,8 +325,8 @@ public sealed class MiniWindow : Window, IDisposable
             configuration.JoatFullRsrRotation = false;
             configuration.Save();
         }
-        CoppeliaUi.SameLineFor("Full RSR rotation");
-        if (UiGui.RadioButton("Full RSR rotation##MiniJoatAttack", fullRsrRotation) &&
+        CoppeliaUi.SameLineFor("Full rotation");
+        if (UiGui.RadioButton("Full rotation##MiniJoatAttack", fullRsrRotation) &&
             !configuration.JoatFullRsrRotation)
         {
             configuration.JoatFullRsrRotation = true;
@@ -336,10 +336,10 @@ public sealed class MiniWindow : Window, IDisposable
 
         if (qstOwned)
         {
-            UiGui.TextDisabled(UiText.F("QST controls the active mode ({0}); the saved local choice resumes after release.", UiText.T(fullRsrRotation ? "Full RSR rotation" : "DoTs only")));
+            UiGui.TextDisabled(UiText.F("QST controls the active mode ({0}); the saved local choice resumes after release.", UiText.T(fullRsrRotation ? "Full rotation" : "DoTs only")));
         }
 
-        UiGui.TextDisabled("Both choices use RSR Manual targeting. Full RSR changes offensive actions and AoE only.");
+        UiGui.TextDisabled("Full BMR uses native single-target damage, healing and raising while Watch is idle. DoTs only requires RSR.");
     }
 
     private void DrawCompanion()

@@ -160,7 +160,7 @@
   <data name="K379" xml:space="preserve"><value>UIフォントの読み込みに失敗しました。プラグインのログを確認してください。</value></data>
   <data name="K380" xml:space="preserve"><value>未実行</value></data>
   <data name="K106" xml:space="preserve"><value>友好的なバトルNPC</value></data>
-  <data name="K107" xml:space="preserve"><value>RSRの全ローテーション</value></data>
+  <data name="K107" xml:space="preserve"><value>フルローテーション</value></data>
   <data name="K109" xml:space="preserve"><value>64桁の16進シークレットを生成</value></data>
   <data name="K110" xml:space="preserve"><value>シークレットを生成</value></data>
   <data name="K111" xml:space="preserve"><value>ギサールの野菜 (NQ + HQ): {0}</value></data>
@@ -270,7 +270,7 @@
   <data name="K273" xml:space="preserve"><value>確認して完了</value></data>
   <data name="K274" xml:space="preserve"><value>ロールのネットワーク</value></data>
   <data name="K275" xml:space="preserve"><value>ロール: {0}</value></data>
-  <data name="K278" xml:space="preserve"><value>RSR制御</value></data>
+  <data name="K278" xml:space="preserve"><value>ローテーション制御</value></data>
   <data name="K282" xml:space="preserve"><value>クイック設定を開始</value></data>
   <data name="K285" xml:space="preserve"><value>賢者 (SGE)</value></data>
   <data name="K286" xml:space="preserve"><value>明示的に選んだ回復対象を保存</value></data>
@@ -368,7 +368,7 @@
   <data name="K141" xml:space="preserve"><value>ヘルパーにはHealBot / JOATの依存関係と、接続先との移動用のLifestream・vnavmeshが必要です。</value></data>
   <data name="K142" xml:space="preserve"><value>ヘルパーは待受ポートと共有シークレットを設定し、初心者はヘルパーのIPv4も設定します。</value></data>
   <data name="K146" xml:space="preserve"><value>初心者 / クエスト担当がテレポせずにエリア移動した際、ヘルパーが前進する時間です。</value></data>
-  <data name="K161" xml:space="preserve"><value>JOAT攻撃モード: {0}。どちらも回復処理が完全に待機中のときだけRSR Manualを使います。</value></data>
+  <data name="K161" xml:space="preserve"><value>JOAT攻撃モード: {0}。選択したプロバイダーは回復が本当に不要な判断サイクルでのみ攻撃します。</value></data>
   <data name="K163" xml:space="preserve"><value>JOATはFrenを自動追加しません。回復で守る低レベル対象なら、監視でFrenを明示的に選択してください。</value></data>
   <data name="K166" xml:space="preserve"><value>回復で守るFrenを監視で選んでください。JOATは自動追加せず、表示中のFrenかローカルヒーラーを狙う敵だけを攻撃します。</value></data>
   <data name="K178" xml:space="preserve"><value>LAN通信は認証されますが暗号化されず、名前や座標は見えます。接続・認証・割り当て・再接続は非同期です。</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>ライトの色 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>ライトの色 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>ライトの色 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>JOATローテーションプロバイダー</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>フルBMRはWatchが待機中の間、ネイティブの単体攻撃・回復・蘇生を使用します。DoTのみのモードにはRSRが必要です。</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>フルBMRにはGod Mod CompanionのDhogヒーラーローテーションとFrenRiderの戦闘抑制確認が必要です。DoTのみのモードにはRSRが必要です。</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>フルBMRは味方をターゲットに待機中です。ネイティブの回復と蘇生は有効なままです。</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>対象となる敵がいません。Coppeliaの回復ルールは待機中です。</value></data>
 </root>

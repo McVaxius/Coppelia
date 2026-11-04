@@ -15,9 +15,11 @@ internal sealed class HealbotRuntimeService : IDisposable
 
     private DateTimeOffset nextDecisionUtc = DateTimeOffset.MinValue;
     private bool profileArmed;
-    private bool rsrIsolationApplied;
+    private bool rotationIsolationApplied;
     private string appliedSignature = string.Empty;
     private ulong previousTargetGameObjectId;
+    private ulong? ownedTargetGameObjectId;
+    private bool targetSnapshotCaptured;
 
     public HealbotRuntimeService(
         Plugin plugin,
@@ -39,8 +41,19 @@ internal sealed class HealbotRuntimeService : IDisposable
     public string CurrentWatchedTargetName { get; private set; } = string.Empty;
     public string CurrentWatchedTargetHpText { get; private set; } = "HP unavailable";
     public string CurrentTargetLineOfSightState { get; private set; } = "Target not visible";
-    public bool IsRsrControlReady
-        => dependencyService.Current.RotationSolverLoaded && rsrIsolationApplied;
+    public string RotationProviderName => GetRotationProviderName(plugin.Configuration.JoatRotationProvider);
+    public bool IsRotationProviderLoaded => IsRotationProviderLoadedFor(plugin.Configuration.JoatRotationProvider);
+    internal static string GetRotationProviderName(JoatRotationProvider provider)
+        => provider == JoatRotationProvider.Bmr ? "BossMod Reborn" : "Rotation Solver Reborn";
+    internal bool IsRotationProviderLoadedFor(JoatRotationProvider provider)
+        => provider == JoatRotationProvider.Bmr
+            ? dependencyService.Current.BossModRebornLoaded : dependencyService.Current.RotationSolverLoaded;
+    public bool IsRotationControlReady => IsRotationProviderLoaded && rotationIsolationApplied
+        && ownedProvider == plugin.Configuration.JoatRotationProvider
+        && (plugin.Configuration.JoatRotationProvider == JoatRotationProvider.Rsr
+            || bmrDamageReady && plugin.JotRuntimeService.IsBmrHandoffReady);
+    private bool bmrDamageReady;
+    private JoatRotationProvider? ownedProvider;
 
     public void Dispose()
     {
@@ -64,9 +77,13 @@ internal sealed class HealbotRuntimeService : IDisposable
 
     public void Activate()
     {
+        if (profileArmed)
+            Deactivate("Reactivating the healing provider.");
         nextDecisionUtc = DateTimeOffset.MinValue;
         profileArmed = false;
-        rsrIsolationApplied = false;
+        rotationIsolationApplied = false;
+        bmrDamageReady = false;
+        plugin.BmrIpcService.ResetOwnership();
         appliedSignature = string.Empty;
         LastIssuedAction = "Idle";
         LastMatchedRule = "No rule matched.";
@@ -75,20 +92,36 @@ internal sealed class HealbotRuntimeService : IDisposable
     public void Deactivate(string reason)
     {
         plugin.CoppeliaTravelService.ClearLineOfSightRescue();
-        if (rsrIpcService.HasSessionSnapshot)
-            rsrIpcService.RestoreSessionSnapshot();
+        if (!RestoreRotationOwnership())
+            Plugin.Log.Warning($"[Coppelia] {plugin.BmrIpcService.LastFailure}");
 
         if (profileArmed)
             RestorePreviousTarget();
 
         profileArmed = false;
-        rsrIsolationApplied = false;
+        rotationIsolationApplied = false;
+        bmrDamageReady = false;
+        ownedProvider = null;
         appliedSignature = string.Empty;
         LastIssuedAction = "Idle";
         LastMatchedRule = "No rule matched.";
         StatusText = reason;
         previousTargetGameObjectId = 0;
+        ownedTargetGameObjectId = null;
+        targetSnapshotCaptured = false;
         ClearCurrentTargetContext();
+    }
+
+    internal bool RestoreRotationOwnership()
+    {
+        if (!plugin.BmrIpcService.RestoreSessionSnapshot())
+            return false;
+        if (rsrIpcService.HasSessionSnapshot)
+            rsrIpcService.RestoreSessionSnapshot();
+        rotationIsolationApplied = bmrDamageReady = false;
+        ownedProvider = null;
+        appliedSignature = string.Empty;
+        return true;
     }
 
     public HealbotDecisionOutcome Update()
@@ -114,14 +147,15 @@ internal sealed class HealbotRuntimeService : IDisposable
 
         if (!plugin.Configuration.PluginEnabled)
         {
-            Deactivate("Plugin disabled.");
+            if (profileArmed || rotationIsolationApplied)
+                Deactivate("Plugin disabled.");
             return HealbotDecisionOutcome.Unavailable;
         }
 
         if (!plugin.Configuration.AutomationEnabled ||
             plugin.Configuration.BotMode is not (BotMode.HealBot or BotMode.Jot))
         {
-            if (profileArmed || rsrIsolationApplied)
+            if (profileArmed || rotationIsolationApplied)
                 Deactivate("Healbot mode is off.");
             else
                 StatusText = "Healbot mode is off.";
@@ -148,10 +182,11 @@ internal sealed class HealbotRuntimeService : IDisposable
         }
 
         var jobConfig = plugin.Configuration.GetJobConfigForJob(profile!.JobId);
-        var rsrLoaded = dependencyService.Current.RotationSolverLoaded;
-        var signature = BuildSignature(profile, jobConfig, rsrLoaded);
+        var providerLoaded = plugin.Configuration.BotMode == BotMode.Jot
+            ? IsRotationProviderLoaded : dependencyService.Current.RotationSolverLoaded;
+        var signature = BuildSignature(profile, jobConfig, providerLoaded);
         if (!profileArmed || !string.Equals(signature, appliedSignature, StringComparison.Ordinal))
-            ApplyProfile(profile, signature, rsrLoaded);
+            ApplyProfile(profile, signature, providerLoaded);
 
         if (CoppeliaPairedActionPolicy.ShouldHold(
                 watchTargetService.HasEphemeralQstTarget,
@@ -185,37 +220,125 @@ internal sealed class HealbotRuntimeService : IDisposable
         return EvaluateSelectedTarget(profile, jobConfig);
     }
 
-    internal bool TryApplyRsrProfileNow()
+    internal bool TryApplyRotationProfileNow()
     {
         dependencyService.Refresh(force: true);
-        if (!dependencyService.Current.RotationSolverLoaded ||
+        if (!IsRotationProviderLoaded ||
             !IsSupportedLocalJob(out var profile, out _))
         {
             return false;
         }
 
         var jobConfig = plugin.Configuration.GetJobConfigForJob(profile!.JobId);
-        var signature = BuildSignature(profile, jobConfig, rsrLoaded: true);
-        ApplyProfile(profile, signature, rsrLoaded: true);
-        return rsrIsolationApplied;
+        var signature = BuildSignature(profile, jobConfig, providerLoaded: true);
+        plugin.JotRuntimeService.PrepareHealingCycle();
+        ApplyProfile(profile, signature, providerLoaded: true);
+        return IsRotationControlReady;
     }
 
-    private void ApplyProfile(HealbotJobProfile profile, string signature, bool rsrLoaded)
+    internal bool HasRotationDamageCapability(HealbotJobProfile profile, bool fullRotation, out string blocker,
+        JoatRotationProvider? providerOverride = null)
+    {
+        var provider = providerOverride ?? plugin.Configuration.JoatRotationProvider;
+        if (!IsRotationProviderLoadedFor(provider))
+        {
+            blocker = $"{GetRotationProviderName(provider)} must be loaded for JOAT attacking.";
+            return false;
+        }
+        if (provider == JoatRotationProvider.Rsr)
+        {
+            blocker = string.Empty;
+            return true;
+        }
+
+        return plugin.BmrIpcService.HasDamageCapability(profile.JobId, fullRotation, out blocker);
+    }
+
+    internal bool HoldRotationDamage()
+    {
+        var success = true;
+        if (plugin.BmrIpcService.HasSessionSnapshot || ownedProvider == JoatRotationProvider.Bmr)
+            success &= !dependencyService.Current.BossModRebornLoaded
+                || (plugin.BmrIpcService.HasSessionSnapshot && plugin.BmrIpcService.Hold());
+        if (rsrIpcService.HasSessionSnapshot)
+            success &= rsrIpcService.TrySetMode(RsrIpcService.RsrStateCommandType.Off);
+        if (!success)
+        {
+            rotationIsolationApplied = bmrDamageReady = false;
+            appliedSignature = string.Empty;
+        }
+        return success;
+    }
+
+    internal bool ResumeRotationDamage()
+    {
+        if (!IsRotationControlReady) return false;
+        var success = plugin.Configuration.JoatRotationProvider == JoatRotationProvider.Bmr
+            ? plugin.BmrIpcService.Resume()
+            : rsrIpcService.TrySetMode(RsrIpcService.RsrStateCommandType.Manual);
+        if (!success)
+        {
+            rotationIsolationApplied = bmrDamageReady = false;
+            appliedSignature = string.Empty;
+        }
+        return success;
+    }
+
+    private void ApplyProfile(HealbotJobProfile profile, string signature, bool providerLoaded)
     {
         var joatMode = plugin.Configuration.BotMode == BotMode.Jot;
         if (!profileArmed)
             CapturePreviousTarget();
 
-        if (rsrIpcService.HasSessionSnapshot && !rsrLoaded)
+        // HealBot remains the direct healer with its existing optional RSR
+        // isolation. The selectable BMR provider belongs to JOAT only.
+        var requestedProvider = joatMode ? plugin.Configuration.JoatRotationProvider : JoatRotationProvider.Rsr;
+        if (ownedProvider != requestedProvider)
         {
-            rsrIpcService.RestoreSessionSnapshot();
-            rsrIsolationApplied = false;
+            if (!plugin.BmrIpcService.RestoreSessionSnapshot())
+            {
+                rotationIsolationApplied = bmrDamageReady = false;
+                StatusText = plugin.BmrIpcService.LastFailure;
+                return;
+            }
+            if (rsrIpcService.HasSessionSnapshot)
+                rsrIpcService.RestoreSessionSnapshot();
+            ownedProvider = requestedProvider;
+            rotationIsolationApplied = bmrDamageReady = false;
         }
 
-        if (!rsrLoaded)
+        if (requestedProvider == JoatRotationProvider.Bmr)
         {
             profileArmed = true;
-            rsrIsolationApplied = false;
+            bmrDamageReady = false;
+            if (!plugin.JotRuntimeService.IsBmrHandoffReady)
+            {
+                rotationIsolationApplied = false;
+                appliedSignature = string.Empty;
+                StatusText = $"Blocked before BMR capture: {plugin.JotRuntimeService.BmrHandoffBlocker}";
+                return;
+            }
+            rotationIsolationApplied = providerLoaded && plugin.BmrIpcService.Prepare();
+            if (rotationIsolationApplied && joatMode)
+                bmrDamageReady = plugin.BmrIpcService.PrepareDamage(profile.JobId,
+                    plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation);
+            appliedSignature = signature;
+            StatusText = !rotationIsolationApplied || joatMode && !bmrDamageReady
+                ? $"Healbot action matrix armed for {profile.JobDisplayName}. {plugin.BmrIpcService.LastFailure}"
+                : $"Healbot action matrix armed for {profile.JobDisplayName}. BMR is paused for direct healing{(joatMode ? "; the verified Dhog damage preset resumes only when healing is idle" : string.Empty)}.";
+            return;
+        }
+
+        if (rsrIpcService.HasSessionSnapshot && !providerLoaded)
+        {
+            rsrIpcService.RestoreSessionSnapshot();
+            rotationIsolationApplied = false;
+        }
+
+        if (!providerLoaded)
+        {
+            profileArmed = true;
+            rotationIsolationApplied = false;
             appliedSignature = signature;
             StatusText = joatMode
                 ? $"Healbot action matrix armed for {profile.JobDisplayName}. RSR is required before JOAT can attack."
@@ -230,7 +353,7 @@ internal sealed class HealbotRuntimeService : IDisposable
                 plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation))
         {
             profileArmed = true;
-            rsrIsolationApplied = true;
+            rotationIsolationApplied = true;
             appliedSignature = signature;
             StatusText = joatMode
                 ? $"Healbot action matrix armed for {profile.JobDisplayName}. RSR JOAT control active."
@@ -240,7 +363,7 @@ internal sealed class HealbotRuntimeService : IDisposable
 
         rsrIpcService.RestoreSessionSnapshot();
         profileArmed = true;
-        rsrIsolationApplied = false;
+        rotationIsolationApplied = false;
         appliedSignature = signature;
         StatusText = joatMode
             ? $"Healbot action matrix armed for {profile.JobDisplayName}. RSR control failed; JOAT attacking is blocked and direct healing remains active."
@@ -249,6 +372,14 @@ internal sealed class HealbotRuntimeService : IDisposable
 
     private HealbotDecisionOutcome EvaluateSelectedTarget(HealbotJobProfile profile, HealerJobConfig jobConfig)
     {
+        if ((plugin.Configuration.BotMode == BotMode.Jot || ownedProvider == JoatRotationProvider.Bmr)
+            && !HoldRotationDamage())
+        {
+            StatusText = $"Blocked: {RotationProviderName} could not be paused before evaluating healing.";
+            LastIssuedAction = "Blocked";
+            LastMatchedRule = "Rotation control unavailable.";
+            return HealbotDecisionOutcome.Blocked;
+        }
         var activeTargetCount = watchTargetService.SelectedTargetCount;
         if (activeTargetCount == 0)
         {
@@ -333,7 +464,7 @@ internal sealed class HealbotRuntimeService : IDisposable
 
             plugin.CoppeliaTravelService.ClearLineOfSightRescue();
 
-            Plugin.TargetManager.Target = selectedCharacter;
+            SetOwnedTarget(selectedCharacter);
 
             var evaluationOrder = candidate.Snapshot.IsDead
                 ? HealbotActionCatalog.DeadTargetEvaluationOrder
@@ -423,12 +554,12 @@ internal sealed class HealbotRuntimeService : IDisposable
                 matchingRuleFound = true;
                 matchedRule = BuildRuleLabel(definition, rule);
 
-                if (plugin.Configuration.BotMode == BotMode.Jot &&
-                    rsrIsolationApplied &&
-                    !rsrIpcService.TrySetMode(RsrIpcService.RsrStateCommandType.Off))
+                if ((plugin.Configuration.BotMode == BotMode.Jot || ownedProvider == JoatRotationProvider.Bmr)
+                    && !HoldRotationDamage())
                 {
-                    rsrIsolationApplied = false;
-                    appliedSignature = string.Empty;
+                    statusText = $"{RotationProviderName} could not be paused before healing.";
+                    executedAction = "Blocked";
+                    return false;
                 }
 
                 if (actionExecutionService.TryExecute(definition, selectedSnapshot.GameObjectId, rule.MinimumMpPercent, out var failureReason))
@@ -526,6 +657,7 @@ internal sealed class HealbotRuntimeService : IDisposable
 
     private void CapturePreviousTarget()
     {
+        targetSnapshotCaptured = true;
         var currentTarget = Plugin.TargetManager.Target;
         if (currentTarget == null)
         {
@@ -538,8 +670,15 @@ internal sealed class HealbotRuntimeService : IDisposable
 
     private void RestorePreviousTarget()
     {
-        if (previousTargetGameObjectId == 0)
+        if (!targetSnapshotCaptured || ownedTargetGameObjectId == null
+            || (Plugin.TargetManager.Target?.GameObjectId ?? 0) != ownedTargetGameObjectId)
             return;
+
+        if (previousTargetGameObjectId == 0)
+        {
+            Plugin.TargetManager.Target = null;
+            return;
+        }
 
         foreach (var obj in Plugin.ObjectTable)
         {
@@ -551,7 +690,15 @@ internal sealed class HealbotRuntimeService : IDisposable
         }
     }
 
-    private string BuildSignature(HealbotJobProfile profile, HealerJobConfig jobConfig, bool rsrLoaded)
+    internal void SetOwnedTarget(IGameObject target)
+    {
+        if (!targetSnapshotCaptured)
+            CapturePreviousTarget();
+        Plugin.TargetManager.Target = target;
+        ownedTargetGameObjectId = target.GameObjectId;
+    }
+
+    private string BuildSignature(HealbotJobProfile profile, HealerJobConfig jobConfig, bool providerLoaded)
         => string.Join("|",
             profile.JobId,
             jobConfig.BuildSignature(),
@@ -559,7 +706,8 @@ internal sealed class HealbotRuntimeService : IDisposable
             plugin.Configuration.WatchCompanionChocobos,
             plugin.Configuration.WatchFriendlyBattleNpcs,
             plugin.CoppeliaQstIpcService.EffectiveJoatFullRsrRotation,
-            rsrLoaded);
+            plugin.Configuration.JoatRotationProvider,
+            providerLoaded);
 }
 
 internal enum HealbotDecisionOutcome

@@ -160,7 +160,7 @@
   <data name="K379" xml:space="preserve"><value>界面字体加载失败，请查看插件日志。</value></data>
   <data name="K380" xml:space="preserve"><value>从未</value></data>
   <data name="K106" xml:space="preserve"><value>友方战斗NPC</value></data>
-  <data name="K107" xml:space="preserve"><value>RSR完整循环</value></data>
+  <data name="K107" xml:space="preserve"><value>完整循环</value></data>
   <data name="K109" xml:space="preserve"><value>生成64位十六进制密钥</value></data>
   <data name="K110" xml:space="preserve"><value>生成密钥</value></data>
   <data name="K111" xml:space="preserve"><value>基萨尔野菜（普通+优质）：{0}</value></data>
@@ -270,7 +270,7 @@
   <data name="K273" xml:space="preserve"><value>检查并完成</value></data>
   <data name="K274" xml:space="preserve"><value>角色网络</value></data>
   <data name="K275" xml:space="preserve"><value>角色：{0}</value></data>
-  <data name="K278" xml:space="preserve"><value>RSR控制</value></data>
+  <data name="K278" xml:space="preserve"><value>循环控制</value></data>
   <data name="K282" xml:space="preserve"><value>运行快速设置</value></data>
   <data name="K285" xml:space="preserve"><value>贤者 (SGE)</value></data>
   <data name="K286" xml:space="preserve"><value>保存明确勾选的治疗目标</value></data>
@@ -368,7 +368,7 @@
   <data name="K141" xml:space="preserve"><value>助手需要HealBot/JOAT依赖，以及用于配对移动的Lifestream和vnavmesh。</value></data>
   <data name="K142" xml:space="preserve"><value>助手设置监听端口和共享密钥；新手另需设置助手IPv4地址。</value></data>
   <data name="K146" xml:space="preserve"><value>新手/任务角色不经传送切换区域时，助手向前移动的时长。</value></data>
-  <data name="K161" xml:space="preserve"><value>JOAT攻击模式：{0}；两者均仅在治疗完全空闲时使用RSR手动选敌。</value></data>
+  <data name="K161" xml:space="preserve"><value>JOAT攻击模式：{0}；所选提供方仅在确实不需要治疗的决策周期内攻击。</value></data>
   <data name="K163" xml:space="preserve"><value>JOAT不会自动加入Fren。如果Fren是需要治疗保护的低级目标，请在监视中明确勾选。</value></data>
   <data name="K166" xml:space="preserve"><value>请在监视中明确选择需要治疗的Fren，JOAT不会自动加入。攻击仅限正在攻击可见Fren或本地治疗者的敌人。</value></data>
   <data name="K178" xml:space="preserve"><value>局域网通信经过认证但未加密，名称和坐标仍可见。连接、认证、分配和重连均异步进行。</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>灯光颜色 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>灯光颜色 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>灯光颜色 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>JOAT循环提供方</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>完整BMR在Watch空闲时使用原生单体攻击、治疗与复活。仅DoT模式需要RSR。</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>完整BMR需要God Mod Companion的Dhog治疗职业循环，以及FrenRider确认已暂停战斗控制。仅DoT模式需要RSR。</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>完整BMR以友方为目标待机；原生治疗与复活仍然启用。</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>没有符合条件的敌人；Coppelia的治疗规则处于空闲状态。</value></data>
 </root>

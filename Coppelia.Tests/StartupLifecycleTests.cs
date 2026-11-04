@@ -56,6 +56,7 @@ public sealed class StartupLifecycleTests
             "HealBotPairingService.Update();",
             "DependencyService.Refresh();",
             "WatchTargetService.Update(",
+            "JotRuntimeService.PrepareHealingCycle();",
             "HealbotRuntimeService.Update();",
             "JotRuntimeService.Update(healingDecision);",
             "PowerlevelRuntimeService.Update();",
@@ -114,7 +115,11 @@ public sealed class StartupLifecycleTests
         Assert.Contains("RegisterCallbacks();", constructor, StringComparison.Ordinal);
         Assert.Contains("catch", registration, StringComparison.Ordinal);
         Assert.Contains("Framework.Update -= OnFrameworkUpdate;", registration, StringComparison.Ordinal);
-        Assert.Contains("PluginInterface.UiBuilder.Draw -= WindowSystem.Draw;", registration, StringComparison.Ordinal);
+        var drawSubscription = Assert.Single(registration.Split('\n'),
+            line => line.Contains("PluginInterface.UiBuilder.Draw +=", StringComparison.Ordinal));
+        var drawHandler = drawSubscription[(drawSubscription.IndexOf("+=", StringComparison.Ordinal) + 2)..].Trim().TrimEnd(';');
+        Assert.NotEmpty(drawHandler);
+        Assert.Contains($"PluginInterface.UiBuilder.Draw -= {drawHandler};", registration, StringComparison.Ordinal);
         Assert.Contains("CommandManager.RemoveHandler(PluginInfo.Command);", registration, StringComparison.Ordinal);
         Assert.True(frameworkRegistration > registration.IndexOf("ClientState.Login += OnLogin;", StringComparison.Ordinal));
         Assert.True(frameworkRegistration > registration.IndexOf("PluginInterface.UiBuilder.OpenMainUi += OpenMainUi;", StringComparison.Ordinal));

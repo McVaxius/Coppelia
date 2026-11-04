@@ -111,7 +111,7 @@
   <data name="K104" xml:space="preserve"><value>FrenRider attack source</value></data>
   <data name="K105" xml:space="preserve"><value>FrenRider IPC</value></data>
   <data name="K106" xml:space="preserve"><value>Friendly battle NPCs</value></data>
-  <data name="K107" xml:space="preserve"><value>Full RSR rotation</value></data>
+  <data name="K107" xml:space="preserve"><value>Full rotation</value></data>
   <data name="K108" xml:space="preserve"><value>General</value></data>
   <data name="K109" xml:space="preserve"><value>Generate 64-character hex secret</value></data>
   <data name="K110" xml:space="preserve"><value>Generate secret</value></data>
@@ -165,7 +165,7 @@
   <data name="K158" xml:space="preserve"><value>Jacqueline of All Trades (JOAT) requirements</value></data>
   <data name="K159" xml:space="preserve"><value>JOAT</value></data>
   <data name="K160" xml:space="preserve"><value>JOAT attack mode</value></data>
-  <data name="K161" xml:space="preserve"><value>JOAT attack mode: {0}; both use RSR Manual targeting during genuinely idle healing cycles.</value></data>
+  <data name="K161" xml:space="preserve"><value>JOAT attack mode: {0}; the selected provider attacks only during genuinely idle healing cycles.</value></data>
   <data name="K162" xml:space="preserve"><value>JOAT attacking readiness</value></data>
   <data name="K163" xml:space="preserve"><value>JOAT does not auto-add FrenRider's Fren. Select that Fren explicitly in Watch when it is the low-level target that healing must protect.</value></data>
   <data name="K164" xml:space="preserve"><value>JOAT healer action matrix</value></data>
@@ -282,7 +282,7 @@
   <data name="K275" xml:space="preserve"><value>Role: {0}</value></data>
   <data name="K276" xml:space="preserve"><value>Rotation Solver Reborn</value></data>
   <data name="K277" xml:space="preserve"><value>RSR</value></data>
-  <data name="K278" xml:space="preserve"><value>RSR control</value></data>
+  <data name="K278" xml:space="preserve"><value>Rotation control</value></data>
   <data name="K279" xml:space="preserve"><value>RSR is required and exclusively executes JOAT damage. Coppelia continues to execute Watch healing directly and owns the RSR off/idle-resume handoff.</value></data>
   <data name="K280" xml:space="preserve"><value>RSR isolation and exact session restoration are used when RSR is loaded; HealBot healing still executes directly.</value></data>
   <data name="K281" xml:space="preserve"><value>Run guided Stand-alone, Helper, or Newb setup without changing anything until Finish.</value></data>
@@ -982,4 +982,9 @@
   <data name="Light colour 1" xml:space="preserve"><value>Light colour 1</value></data>
   <data name="Light colour 2" xml:space="preserve"><value>Light colour 2</value></data>
   <data name="Light colour 3" xml:space="preserve"><value>Light colour 3</value></data>
+  <data name="JoatProvider" xml:space="preserve"><value>JOAT rotation provider</value></data>
+  <data name="JoatFullHelp" xml:space="preserve"><value>Full BMR uses native single-target damage, healing and raising while Watch is idle. DoTs only requires RSR.</value></data>
+  <data name="JoatBmrRequirements" xml:space="preserve"><value>Full BMR requires God Mod Companion Dhog healer rotations and FrenRider suppression acknowledgement. DoTs only requires RSR.</value></data>
+  <data name="JoatBmrIdle" xml:space="preserve"><value>Full BMR is idle on a friendly target; native healing and raising remain enabled.</value></data>
+  <data name="JoatBmrIdleReason" xml:space="preserve"><value>No eligible hostile; Coppelia&apos;s healing rules are idle.</value></data>
 </root>

@@ -90,11 +90,12 @@ public sealed partial class Plugin : IDalamudPlugin
         CoppeliaQstIpcService = new CoppeliaQstIpcService(this, CoppeliaTravelService, CoppeliaCompanionService);
         HealBotPairingService = new HealBotPairingService(this);
         RsrIpcService = new RsrIpcService();
+        BmrIpcService = new BmrIpcService();
         FrenRiderPowerlevelIpcService = new FrenRiderPowerlevelIpcService();
         var jotFrenRiderIpcService = new FrenRiderPowerlevelIpcService();
         HealbotRuntimeService = new HealbotRuntimeService(this, DependencyService, WatchTargetService, RsrIpcService, ActionExecutionService);
         PowerlevelRuntimeService = new PowerlevelRuntimeService(this, FrenRiderPowerlevelIpcService, ActionExecutionService);
-        JotRuntimeService = new JotRuntimeService(this, jotFrenRiderIpcService, RsrIpcService);
+        JotRuntimeService = new JotRuntimeService(this, jotFrenRiderIpcService);
 
         mainWindow = new MainWindow(this);
         configWindow = new ConfigWindow(this);
@@ -134,6 +135,7 @@ public sealed partial class Plugin : IDalamudPlugin
     internal CoppeliaCompanionService CoppeliaCompanionService { get; }
     internal HealBotPairingService HealBotPairingService { get; }
     internal RsrIpcService RsrIpcService { get; }
+    internal BmrIpcService BmrIpcService { get; }
     internal ActionExecutionService ActionExecutionService { get; }
     internal AetherytePositionDatabase AetherytePositionDatabase { get; }
     internal MapLocationDatabase MapLocationDatabase { get; }
@@ -225,9 +227,9 @@ public sealed partial class Plugin : IDalamudPlugin
         ClientState.Login -= OnLogin;
         HealBotPairingService.Dispose();
         CoppeliaQstIpcService.Dispose();
+        HealbotRuntimeService.Dispose();
         JotRuntimeService.Dispose();
         PowerlevelRuntimeService.Dispose();
-        HealbotRuntimeService.Dispose();
         Framework.Update -= OnFrameworkUpdate;
         PluginInterface.UiBuilder.Draw -= DrawUi;
         uiFonts?.Dispose();
@@ -451,7 +453,8 @@ public sealed partial class Plugin : IDalamudPlugin
             case OperatingRole.Off:
                 ApplyProviderState(pluginEnabled: false, automationEnabled: false, Configuration.BotMode);
                 // Loading an already-Off role is not an explicit Off request.
-                if (runtimeStarted)
+                if (runtimeStarted && (Configuration.BotMode != BotMode.Jot
+                                       || Configuration.JoatRotationProvider == JoatRotationProvider.Rsr))
                     RsrIpcService.RestoreHealingAfterOff();
                 LastAutomationBlocker = string.Empty;
                 started = true;
@@ -497,10 +500,11 @@ public sealed partial class Plugin : IDalamudPlugin
             DependencyService.Refresh(force: true);
             if (!DependencyService.Current.IsHealbotReady)
                 blocker = DependencyService.BuildMissingDependencyMessage();
-            else if (mode == BotMode.Jot && !DependencyService.Current.RotationSolverLoaded)
-                blocker = "Jacqueline of All Trades requires Rotation Solver Reborn for attacking.";
-            else if (!HealbotRuntimeService.IsSupportedLocalJob(out _, out var jobBlocker))
+            else if (!HealbotRuntimeService.IsSupportedLocalJob(out var profile, out var jobBlocker))
                 blocker = jobBlocker;
+            else if (mode == BotMode.Jot && !HealbotRuntimeService.HasRotationDamageCapability(
+                         profile!, CoppeliaQstIpcService.EffectiveJoatFullRsrRotation, out var rotationBlocker))
+                blocker = rotationBlocker;
         }
         else if (mode == BotMode.PowerlevelBot &&
                  !PowerlevelRuntimeService.TryValidateActivation(out var powerlevelBlocker))
@@ -840,6 +844,7 @@ public sealed partial class Plugin : IDalamudPlugin
         DependencyService.Refresh();
         WatchTargetService.Update(Configuration, force: pendingInitialWatchRefresh);
         pendingInitialWatchRefresh = false;
+        JotRuntimeService.PrepareHealingCycle();
         var healingDecision = HealbotRuntimeService.Update();
         JotRuntimeService.Update(healingDecision);
         PowerlevelRuntimeService.Update();

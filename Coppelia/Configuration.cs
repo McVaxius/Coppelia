@@ -54,6 +54,8 @@ public sealed class Configuration : IPluginConfiguration
     public OperatingRole LastNonOffRole { get; set; } = OperatingRole.StandAlone;
     public BotMode BotMode { get; set; } = BotMode.HealBot;
     public PowerlevelJob PowerlevelJob { get; set; } = PowerlevelJob.None;
+    public JoatRotationProvider JoatRotationProvider { get; set; } = JoatRotationProvider.Bmr;
+    public bool BmrProviderMigrationApplied { get; set; }
     public bool JoatFullRsrRotation { get; set; }
 
     // Legacy v4 runtime flag kept for migration only.
@@ -117,6 +119,18 @@ public sealed class Configuration : IPluginConfiguration
     {
         var changed = false;
         var sourceVersion = Version;
+
+        if (!BmrProviderMigrationApplied)
+        {
+            JoatRotationProvider = JoatRotationProvider.Bmr;
+            BmrProviderMigrationApplied = true;
+            changed = true;
+        }
+        if (!Enum.IsDefined(JoatRotationProvider))
+        {
+            JoatRotationProvider = JoatRotationProvider.Bmr;
+            changed = true;
+        }
 
         changed |= HealbotActionCatalog.EnsureConfigCoverage(WhiteMageConfig, 24, sourceVersion < 5 ? WhiteMage : null);
         changed |= HealbotActionCatalog.EnsureConfigCoverage(ScholarConfig, 28, sourceVersion < 5 ? Scholar : null);

@@ -601,12 +601,12 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             var wasOwned = qstJoatAttackModeOwned;
             var previousMode = qstFullRsrRotation;
             plugin.DependencyService.Refresh(force: true);
-            if (wasOwned && previousMode == enabled && plugin.HealbotRuntimeService.IsRsrControlReady)
+            if (wasOwned && previousMode == enabled && plugin.HealbotRuntimeService.IsRotationControlReady)
                 return true;
 
             qstJoatAttackModeOwned = true;
             qstFullRsrRotation = enabled;
-            if (plugin.HealbotRuntimeService.TryApplyRsrProfileNow())
+            if (plugin.HealbotRuntimeService.TryApplyRotationProfileNow())
                 return true;
 
             if (wasOwned && previousMode == enabled)
@@ -614,7 +614,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
 
             qstJoatAttackModeOwned = wasOwned;
             qstFullRsrRotation = previousMode;
-            _ = plugin.HealbotRuntimeService.TryApplyRsrProfileNow();
+            _ = plugin.HealbotRuntimeService.TryApplyRotationProfileNow();
             return false;
         }
     }
@@ -959,12 +959,12 @@ internal sealed class CoppeliaQstIpcService : IDisposable
         plugin.DependencyService.Refresh(force: true);
         if (!plugin.DependencyService.Current.IsHealbotReady)
             return (false, plugin.DependencyService.BuildMissingDependencyMessage());
-        if (!plugin.DependencyService.Current.RotationSolverLoaded)
-            return (false, "Rotation Solver Reborn is required for JOAT attacking.");
-        if (!plugin.HealbotRuntimeService.IsRsrControlReady)
-            return (false, "Coppelia could not acquire working Rotation Solver Reborn control.");
-        if (!plugin.HealbotRuntimeService.IsSupportedLocalJob(out _, out var jobFailure))
+        if (!plugin.HealbotRuntimeService.IsSupportedLocalJob(out var profile, out var jobFailure))
             return (false, jobFailure);
+        if (!plugin.HealbotRuntimeService.HasRotationDamageCapability(profile!, EffectiveJoatFullRsrRotation, out var rotationFailure))
+            return (false, rotationFailure);
+        if (!plugin.HealbotRuntimeService.IsRotationControlReady)
+            return (false, $"Coppelia could not acquire working {plugin.HealbotRuntimeService.RotationProviderName} control.");
 
         return (true, string.Empty);
     }
@@ -980,7 +980,7 @@ internal sealed class CoppeliaQstIpcService : IDisposable
             plugin.Configuration.PluginEnabled &&
             plugin.Configuration.AutomationEnabled &&
             plugin.Configuration.BotMode == BotMode.Jot &&
-            !plugin.HealbotRuntimeService.TryApplyRsrProfileNow())
+            !plugin.HealbotRuntimeService.TryApplyRotationProfileNow())
         {
             Plugin.Log.Warning("[Coppelia][QST] Failed to restore the saved local JOAT attack mode.");
         }

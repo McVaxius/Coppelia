@@ -8,6 +8,31 @@ namespace Coppelia.Tests;
 public sealed class ConfigurationMigrationTests
 {
     [Fact]
+    public void BmrProviderMigrationRunsOnceAndPreservesSubsequentRsrChoice()
+    {
+        var configuration = JsonConvert.DeserializeObject<Configuration>(
+            """{"Version":9,"JoatFullRsrRotation":true,"UiLanguage":"fr","FutureSettings":{"Keep":true}}""")!;
+
+        Assert.True(configuration.MigrateIfNeeded());
+        Assert.Equal(JoatRotationProvider.Bmr, configuration.JoatRotationProvider);
+        Assert.True(configuration.BmrProviderMigrationApplied);
+        Assert.True(configuration.JoatFullRsrRotation);
+
+        configuration.JoatRotationProvider = JoatRotationProvider.Rsr;
+        var restored = JsonConvert.DeserializeObject<Configuration>(JsonConvert.SerializeObject(configuration))!;
+        restored.MigrateIfNeeded();
+
+        Assert.Equal(JoatRotationProvider.Rsr, restored.JoatRotationProvider);
+        Assert.True(restored.JoatFullRsrRotation);
+        Assert.Equal("fr", restored.UiLanguage);
+        Assert.True((bool)restored.AdditionalSettings!["FutureSettings"]["Keep"]!);
+        var draft = QuickSetupDraft.FromConfiguration(restored);
+        draft.ApplyTo(restored);
+        Assert.Equal(JoatRotationProvider.Rsr, restored.JoatRotationProvider);
+        Assert.Equal(JoatRotationProvider.Bmr, new Configuration().JoatRotationProvider);
+    }
+
+    [Fact]
     public void BackgroundAndWindowControlsKeepDefaultsAndRoundTripThroughTheExistingSerializer()
     {
         var legacy = JsonConvert.DeserializeObject<Configuration>("{}")!;

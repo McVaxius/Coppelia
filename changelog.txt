@@ -1,3 +1,11 @@
+2026-11-04 - 3.0.0.15 - BMR/God Mod Companion JOAT integration (I726/I745)
+
+- Default JOAT to BMR with a one-time provider migration, preserving later choices and optional RSR. Retain saved attack modes and public QST endpoints; BMR DoTs-only reports unsupported instead of silently using Full.
+- Full BMR uses registered Dhog WHM, SCH, AST and SGE modules with manual single-target damage and native healing/raising during idle Watch cycles, including the assigned Quester. Friendly idle targets keep healing available without selecting an unengaged enemy. Watch healing, queued actions and cast holds retain priority.
+- Require native FrenRider suppression acknowledgement before BMR capture, and confirm provider restoration/preset cleanup before lease release. Preserve session tokens and heartbeat ownership during failed or uncertain acquisition/restoration. Require FrenRider 4.1.0.8 or newer for this handoff.
+- Validate registered module options and exact native preset readback; warn explicitly when God Mod Companion rotations are missing. Preserve custom presets, optional provider state and external changes.
+- Translate provider/full-mode controls, help and idle status in all fifteen existing catalogs. Correct stale source assertions for the actual UI wrapper and registered draw handler while retaining their control/cleanup checks.
+
 2026-10-30 - 3.0.0.14 - Shared background and window controls
 
 - Keep titlebar popup glass at its own window opacity, including collapsed and reopened windows, without applying foreground opacity twice.

@@ -12,19 +12,32 @@ internal sealed class FrenRiderPowerlevelIpcService
 
     private DateTimeOffset nextHeartbeatUtc = DateTimeOffset.MinValue;
     private string sessionToken = Guid.NewGuid().ToString("N");
+    private readonly Func<string, string, string> invokeEndpoint;
+    private bool heartbeatHealthy;
+    private bool combatSuppressed;
+    private bool acquireUncertain;
+
+    public FrenRiderPowerlevelIpcService(Func<string, string, string>? invokeEndpoint = null)
+        => this.invokeEndpoint = invokeEndpoint ?? ((endpoint, json) => Plugin.PluginInterface
+            .GetIpcSubscriber<string, string>(endpoint).InvokeFunc(json));
 
     public bool LeaseAcquired { get; private set; }
+    public bool CombatSuppressed => LeaseAcquired && heartbeatHealthy && combatSuppressed;
     public FrenRiderPowerlevelStatus? LastStatus { get; private set; }
     public string LastFailure { get; private set; } = "FrenRider Powerlevel IPC has not been queried yet.";
 
-    public void ResetSession()
+    public bool ResetSession()
     {
-        if (LeaseAcquired)
-            Release("session reset");
+        if ((LeaseAcquired || acquireUncertain) && !Release("session reset"))
+            return false;
 
         sessionToken = Guid.NewGuid().ToString("N");
         nextHeartbeatUtc = DateTimeOffset.MinValue;
         LeaseAcquired = false;
+        heartbeatHealthy = false;
+        combatSuppressed = false;
+        acquireUncertain = false;
+        return true;
     }
 
     public bool TryGetStatus(out FrenRiderPowerlevelStatus status)
@@ -39,7 +52,10 @@ internal sealed class FrenRiderPowerlevelIpcService
                          FrenRiderPowerlevelContract.JsonOptions) ??
                      BuildUnavailableStatus("Empty FrenRider Powerlevel status.");
             LastStatus = status;
-            LastFailure = status.IsCompatible ? string.Empty : "Incompatible FrenRider Powerlevel status.";
+            if (!status.IsCompatible)
+                LastFailure = "Incompatible FrenRider Powerlevel status.";
+            else if (!LeaseAcquired || heartbeatHealthy)
+                LastFailure = string.Empty;
             return status.IsCompatible;
         }
         catch (Exception ex)
@@ -57,11 +73,19 @@ internal sealed class FrenRiderPowerlevelIpcService
         if (response?.Ok == true)
         {
             LeaseAcquired = true;
+            heartbeatHealthy = true;
+            combatSuppressed = response.CombatSuppressed;
+            acquireUncertain = false;
             nextHeartbeatUtc = DateTimeOffset.UtcNow.AddSeconds(1);
             return true;
         }
 
+        // The provider may have accepted Acquire before the transport failed.
+        // Keep this token eligible for explicit cleanup even without an ack.
+        acquireUncertain |= response == null;
         LeaseAcquired = false;
+        heartbeatHealthy = false;
+        combatSuppressed = false;
         return false;
     }
 
@@ -72,28 +96,42 @@ internal sealed class FrenRiderPowerlevelIpcService
             return true;
 
         if (DateTimeOffset.UtcNow < nextHeartbeatUtc)
-            return true;
+        {
+            failureReason = heartbeatHealthy ? string.Empty : LastFailure;
+            return heartbeatHealthy;
+        }
 
         var response = InvokeSessionEndpoint(HeartbeatEndpoint, out failureReason);
+        nextHeartbeatUtc = DateTimeOffset.UtcNow.AddSeconds(1);
         if (response?.Ok == true)
         {
-            nextHeartbeatUtc = DateTimeOffset.UtcNow.AddSeconds(1);
+            heartbeatHealthy = true;
+            combatSuppressed = response.CombatSuppressed;
             return true;
         }
 
-        LeaseAcquired = false;
+        // Keep the token for acknowledged cleanup; a failed transport call does not
+        // prove the provider released its lease. Damage stays blocked meanwhile.
+        heartbeatHealthy = false;
+        combatSuppressed = false;
         return false;
     }
 
-    public void Release(string reason)
+    public bool Release(string reason)
     {
-        if (!LeaseAcquired)
-            return;
+        if (!LeaseAcquired && !acquireUncertain)
+            return true;
 
-        InvokeSessionEndpoint(ReleaseEndpoint, out _);
+        var response = InvokeSessionEndpoint(ReleaseEndpoint, out _);
+        if (response?.Ok != true)
+            return false;
         LeaseAcquired = false;
+        heartbeatHealthy = false;
+        combatSuppressed = false;
+        acquireUncertain = false;
         nextHeartbeatUtc = DateTimeOffset.MinValue;
         LastFailure = reason;
+        return true;
     }
 
     private FrenRiderPowerlevelResponse? InvokeSessionEndpoint(string endpoint, out string failureReason)
@@ -104,14 +142,14 @@ internal sealed class FrenRiderPowerlevelIpcService
             var request = JsonSerializer.Serialize(
                 new FrenRiderPowerlevelRequest(sessionToken),
                 FrenRiderPowerlevelContract.JsonOptions);
-            var json = Plugin.PluginInterface
-                .GetIpcSubscriber<string, string>(endpoint)
-                .InvokeFunc(request);
+            var json = invokeEndpoint(endpoint, request);
             var response = JsonSerializer.Deserialize<FrenRiderPowerlevelResponse>(
                 json,
                 FrenRiderPowerlevelContract.JsonOptions);
+            if (response != null && response.ContractVersion != FrenRiderPowerlevelContract.SupportedVersion)
+                response = response with { Ok = false, CombatSuppressed = false, Reason = "Incompatible FrenRider Powerlevel response." };
             failureReason = response?.Reason ?? "FrenRider returned an empty response.";
-            LastFailure = failureReason;
+            LastFailure = response?.Ok == true ? string.Empty : failureReason;
             return response;
         }
         catch (Exception ex)
