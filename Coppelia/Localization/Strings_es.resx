@@ -987,4 +987,6 @@
   <data name="JoatBmrRequirements" xml:space="preserve"><value>BMR completo requiere las rotaciones Dhog de sanador de God Mod Companion y la confirmación de suspensión del combate de FrenRider. Solo DoTs requiere RSR.</value></data>
   <data name="JoatBmrIdle" xml:space="preserve"><value>BMR completo espera con un objetivo aliado; la curación y resurrección nativas siguen activas.</value></data>
   <data name="JoatBmrIdleReason" xml:space="preserve"><value>No hay enemigos válidos; las reglas de curación de Coppelia están inactivas.</value></data>
+  <data name="Highlight contrast" xml:space="preserve"><value>Contraste de resaltado</value></data>
+  <data name="Makes controls and selection states more distinct." xml:space="preserve"><value>Hace que los controles y los estados de selección se distingan mejor.</value></data>
 </root>

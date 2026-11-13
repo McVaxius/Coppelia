@@ -987,4 +987,6 @@
   <data name="JoatBmrRequirements" xml:space="preserve"><value>BMR đầy đủ cần vòng xoay hồi máu Dhog của God Mod Companion và xác nhận tạm dừng chiến đấu từ FrenRider. Chế độ chỉ DoT cần RSR.</value></data>
   <data name="JoatBmrIdle" xml:space="preserve"><value>BMR đầy đủ đang chờ với mục tiêu đồng minh; hồi máu và hồi sinh gốc vẫn bật.</value></data>
   <data name="JoatBmrIdleReason" xml:space="preserve"><value>Không có kẻ địch hợp lệ; quy tắc hồi máu của Coppelia đang nhàn rỗi.</value></data>
+  <data name="Highlight contrast" xml:space="preserve"><value>Độ tương phản khi làm nổi bật</value></data>
+  <data name="Makes controls and selection states more distinct." xml:space="preserve"><value>Làm cho các thành phần điều khiển và trạng thái chọn dễ phân biệt hơn.</value></data>
 </root>

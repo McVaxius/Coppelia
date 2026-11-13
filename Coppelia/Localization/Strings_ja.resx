@@ -987,4 +987,6 @@
   <data name="JoatBmrRequirements" xml:space="preserve"><value>フルBMRにはGod Mod CompanionのDhogヒーラーローテーションとFrenRiderの戦闘抑制確認が必要です。DoTのみのモードにはRSRが必要です。</value></data>
   <data name="JoatBmrIdle" xml:space="preserve"><value>フルBMRは味方をターゲットに待機中です。ネイティブの回復と蘇生は有効なままです。</value></data>
   <data name="JoatBmrIdleReason" xml:space="preserve"><value>対象となる敵がいません。Coppeliaの回復ルールは待機中です。</value></data>
+  <data name="Highlight contrast" xml:space="preserve"><value>ハイライトのコントラスト</value></data>
+  <data name="Makes controls and selection states more distinct." xml:space="preserve"><value>コントロールや選択状態をより見分けやすくします。</value></data>
 </root>

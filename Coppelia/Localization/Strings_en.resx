@@ -987,4 +987,6 @@
   <data name="JoatBmrRequirements" xml:space="preserve"><value>Full BMR requires God Mod Companion Dhog healer rotations and FrenRider suppression acknowledgement. DoTs only requires RSR.</value></data>
   <data name="JoatBmrIdle" xml:space="preserve"><value>Full BMR is idle on a friendly target; native healing and raising remain enabled.</value></data>
   <data name="JoatBmrIdleReason" xml:space="preserve"><value>No eligible hostile; Coppelia&apos;s healing rules are idle.</value></data>
+  <data name="Highlight contrast" xml:space="preserve"><value>Highlight contrast</value></data>
+  <data name="Makes controls and selection states more distinct." xml:space="preserve"><value>Makes controls and selection states more distinct.</value></data>
 </root>

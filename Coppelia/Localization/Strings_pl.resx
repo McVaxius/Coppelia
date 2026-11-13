@@ -987,4 +987,6 @@
   <data name="JoatBmrRequirements" xml:space="preserve"><value>Pełny BMR wymaga rotacji uzdrowicieli Dhog z God Mod Companion i potwierdzonego wstrzymania walki przez FrenRider. Tryb tylko DoT wymaga RSR.</value></data>
   <data name="JoatBmrIdle" xml:space="preserve"><value>Pełny BMR czeka z przyjaznym celem; natywne leczenie i wskrzeszanie pozostają aktywne.</value></data>
   <data name="JoatBmrIdleReason" xml:space="preserve"><value>Brak odpowiedniego wroga; reguły leczenia Coppelii są bezczynne.</value></data>
+  <data name="Highlight contrast" xml:space="preserve"><value>Kontrast wyróżnienia</value></data>
+  <data name="Makes controls and selection states more distinct." xml:space="preserve"><value>Ułatwia rozróżnianie elementów sterujących i stanów zaznaczenia.</value></data>
 </root>

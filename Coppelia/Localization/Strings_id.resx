@@ -987,4 +987,6 @@
   <data name="JoatBmrRequirements" xml:space="preserve"><value>BMR penuh memerlukan rotasi penyembuh Dhog dari God Mod Companion dan konfirmasi penangguhan pertempuran FrenRider. Mode hanya DoT memerlukan RSR.</value></data>
   <data name="JoatBmrIdle" xml:space="preserve"><value>BMR penuh menunggu dengan target sekutu; penyembuhan dan kebangkitan bawaan tetap aktif.</value></data>
   <data name="JoatBmrIdleReason" xml:space="preserve"><value>Tidak ada musuh yang memenuhi syarat; aturan penyembuhan Coppelia sedang menganggur.</value></data>
+  <data name="Highlight contrast" xml:space="preserve"><value>Kontras sorotan</value></data>
+  <data name="Makes controls and selection states more distinct." xml:space="preserve"><value>Membuat kontrol dan status pilihan lebih mudah dibedakan.</value></data>
 </root>

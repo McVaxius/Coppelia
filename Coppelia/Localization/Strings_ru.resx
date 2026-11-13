@@ -987,4 +987,6 @@
   <data name="JoatBmrRequirements" xml:space="preserve"><value>Полный BMR требует ротации лекарей Dhog из God Mod Companion и подтверждённого подавления боя FrenRider. Для режима только DoT нужен RSR.</value></data>
   <data name="JoatBmrIdle" xml:space="preserve"><value>Полный BMR ожидает на дружественной цели; штатное лечение и воскрешение остаются включены.</value></data>
   <data name="JoatBmrIdleReason" xml:space="preserve"><value>Нет подходящего врага; правила лечения Coppelia бездействуют.</value></data>
+  <data name="Highlight contrast" xml:space="preserve"><value>Контраст выделения</value></data>
+  <data name="Makes controls and selection states more distinct." xml:space="preserve"><value>Делает элементы управления и состояния выделения более заметными.</value></data>
 </root>

@@ -987,4 +987,6 @@
   <data name="JoatBmrRequirements" xml:space="preserve"><value>Tam BMR, God Mod Companion Dhog şifacı rotasyonlarını ve FrenRider savaş durdurma onayını gerektirir. Yalnızca DoT modu RSR gerektirir.</value></data>
   <data name="JoatBmrIdle" xml:space="preserve"><value>Tam BMR dost hedef üzerinde bekliyor; yerleşik iyileştirme ve diriltme etkin kalır.</value></data>
   <data name="JoatBmrIdleReason" xml:space="preserve"><value>Uygun düşman yok; Coppelia iyileştirme kuralları boşta.</value></data>
+  <data name="Highlight contrast" xml:space="preserve"><value>Vurgu kontrastı</value></data>
+  <data name="Makes controls and selection states more distinct." xml:space="preserve"><value>Denetimlerin ve seçim durumlarının daha belirgin görünmesini sağlar.</value></data>
 </root>

@@ -987,4 +987,6 @@
   <data name="JoatBmrRequirements" xml:space="preserve"><value>完整BMR需要God Mod Companion的Dhog治疗职业循环，以及FrenRider确认已暂停战斗控制。仅DoT模式需要RSR。</value></data>
   <data name="JoatBmrIdle" xml:space="preserve"><value>完整BMR以友方为目标待机；原生治疗与复活仍然启用。</value></data>
   <data name="JoatBmrIdleReason" xml:space="preserve"><value>没有符合条件的敌人；Coppelia的治疗规则处于空闲状态。</value></data>
+  <data name="Highlight contrast" xml:space="preserve"><value>高亮对比度</value></data>
+  <data name="Makes controls and selection states more distinct." xml:space="preserve"><value>使控件和选中状态更易于区分。</value></data>
 </root>

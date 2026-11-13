@@ -2709,4 +2709,6 @@
   <data name="JoatBmrRequirements" xml:space="preserve"><value>पूर्ण BMR के लिए God Mod Companion के Dhog उपचारक रोटेशन और FrenRider से युद्ध रोकने की पुष्टि आवश्यक है। केवल DoT मोड के लिए RSR आवश्यक है।</value></data>
   <data name="JoatBmrIdle" xml:space="preserve"><value>पूर्ण BMR मित्र लक्ष्य पर निष्क्रिय है; मूल उपचार और पुनर्जीवन सक्रिय रहते हैं।</value></data>
   <data name="JoatBmrIdleReason" xml:space="preserve"><value>कोई योग्य शत्रु नहीं; Coppelia के उपचार नियम निष्क्रिय हैं।</value></data>
+  <data name="Highlight contrast" xml:space="preserve"><value>हाइलाइट का कंट्रास्ट</value></data>
+  <data name="Makes controls and selection states more distinct." xml:space="preserve"><value>नियंत्रणों और चयन की स्थितियों को अधिक स्पष्ट बनाता है।</value></data>
 </root>
