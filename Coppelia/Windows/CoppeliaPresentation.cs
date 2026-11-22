@@ -4,6 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Numerics;
 using AethertekUI;
+using AethertekUI.Dalamud;
 using Dalamud.Bindings.ImGui;
 
 namespace Coppelia.Windows;
@@ -34,7 +35,16 @@ internal static class CoppeliaPresentation
     internal static float Gap => Compact ? 12 : 16;
     internal const uint ReferenceAccent = 0x28E8B4;
     internal static readonly float[] FontSizes = [11, 12, 26, 10, 9, 16, 11];
-    internal static readonly string[] FontFiles = ["segoeui.ttf", "seguisb.ttf", "segoeuib.ttf", "segoeui.ttf", "segoeui.ttf", "seguisb.ttf", "seguisb.ttf"];
+    internal static readonly MaterialFontWeight[] FontWeights =
+    [
+        MaterialFontWeight.Regular,
+        MaterialFontWeight.Semibold,
+        MaterialFontWeight.Bold,
+        MaterialFontWeight.Regular,
+        MaterialFontWeight.Regular,
+        MaterialFontWeight.Semibold,
+        MaterialFontWeight.Semibold,
+    ];
     internal static float AtlasHeight(UiFontRole role) => FontSizes[(int)role] * 4 / 3;
     internal static Vector4 Rgb(uint rgb) => new(((rgb >> 16) & 255) / 255f, ((rgb >> 8) & 255) / 255f, (rgb & 255) / 255f, 1);
     internal static readonly Vector4 Ready = Rgb(0x4AF5BB), Pending = Rgb(0xE8B86C), Error = Rgb(0xEE7788);
