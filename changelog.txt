@@ -1,3 +1,8 @@
+2026-11-28 - 3.0.0.19 - On-demand interface resources
+
+- HealBot loads window fonts and supported backdrop resources when a window needs them and releases them when the last window closes.
+- Status bar translations stay available while the windows are closed.
+
 2026-11-22 - 3.0.0.18 - Portable interface fonts
 
 - Updated interface fonts. Dalamud loads bundled fonts on Windows and Wine.

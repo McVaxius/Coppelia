@@ -1,6 +1,7 @@
 using System.Numerics;
 using AethertekUI;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility;
 using Coppelia.Models;
 using Coppelia.Services;
@@ -44,7 +45,7 @@ public sealed partial class Plugin : IDalamudPlugin
     private readonly MiniWindow miniWindow;
     private CoppeliaFonts uiFonts = null!;
     private UiText uiText = null!;
-    private readonly AethertekUI.Dalamud.MaterialTextHost shapedText;
+    private AethertekUI.Dalamud.MaterialTextHost shapedText = null!;
     private MaterialTheme uiTheme = null!;
     private readonly Dictionary<Dalamud.Interface.Windowing.Window, AethertekUI.Dalamud.MaterialAppearanceTitleBar> appearanceTitleBars = new();
     private readonly MaterialWindowFold fontStatusFold = new();
@@ -71,12 +72,12 @@ public sealed partial class Plugin : IDalamudPlugin
 
     public Plugin()
     {
-        shapedText = new(TextureProvider);
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         var configurationChanged = Configuration.MigrateIfNeeded();
         configurationChanged |= Configuration.ApplyCompactDefaults();
         if (configurationChanged)
             Configuration.Save();
+        ApplyLocalization();
 
         DependencyService = new DependencyService();
         WatchTargetService = new WatchTargetService();
@@ -221,7 +222,7 @@ public sealed partial class Plugin : IDalamudPlugin
     public void Dispose()
     {
         PluginInterface.UiBuilder.ResizeBuffers -= ReleaseGlassResources;
-        backgroundGlass?.Dispose();
+        DisposeBackgroundGlass();
         glassImagePicker.Reset();
         uiSoundPlayer?.Dispose();
         ClientState.Login -= OnLogin;
@@ -232,9 +233,8 @@ public sealed partial class Plugin : IDalamudPlugin
         PowerlevelRuntimeService.Dispose();
         Framework.Update -= OnFrameworkUpdate;
         PluginInterface.UiBuilder.Draw -= DrawUi;
-        uiFonts?.Dispose();
+        ReleaseWindowFonts();
         uiText?.Dispose();
-        shapedText.Dispose();
         PluginInterface.UiBuilder.OpenConfigUi -= OpenConfigUi;
         PluginInterface.UiBuilder.OpenMainUi -= OpenMainUi;
         CommandManager.RemoveHandler(PluginInfo.Command);
@@ -251,11 +251,11 @@ public sealed partial class Plugin : IDalamudPlugin
 
     private void DrawUiContent()
     {
-        using var shaping=shapedText.Push();
-        ApplyAppearance();
+        using var shaping = shapedText.Push();
         using var text = uiText.Enter();
         if (!uiFonts.Ready)
         {
+            DisposeBackgroundGlass();
             if (!fontIssueLogged && uiFonts.LoadException is { } error)
             { Log.Error(error, "[Coppelia] Required UI fonts failed to load."); fontIssueLogged = true; }
             DrawFontStatus(uiFonts.LoadException is null);
@@ -269,7 +269,7 @@ public sealed partial class Plugin : IDalamudPlugin
                 uiFonts.CheckGlyphs(uiText.RequiredText);
                 var hindiLabel = UiText.Languages.Single(l => l.Code == "hi").Name;
                 var hindiAvailable = true;
-                foreach (var size in Enum.GetValues<UiFontRole>())
+                foreach (var size in uiFonts.Roles)
                     hindiAvailable &= shapedText.Renderer.TryCheckGlyphs([hindiLabel], CoppeliaPresentation.AtlasHeight(size) * ImGuiHelpers.GlobalScale, out _);
                 languageOptions.Replace(UiText.Languages.Select(l => new MaterialOption<string>(l.Code, l.Code,
                     l.Code == "hi" && !hindiAvailable ? "Hindi (unavailable)" : l.Name,
@@ -279,9 +279,16 @@ public sealed partial class Plugin : IDalamudPlugin
             catch (Exception error)
             {
                 if (!fontIssueLogged) { Log.Error(error, "[Coppelia] Required UI glyph coverage failed."); fontIssueLogged = true; }
+                DisposeBackgroundGlass();
                 DrawFontStatus(false); return;
             }
         }
+        var choices = Configuration.UiColors ?? new();
+        var blur = Configuration.UiStylingEnabled && choices.HasBackgroundBlur(choices.Mode);
+        var image = Configuration.UiStylingEnabled && choices.Mode == MaterialColorMode.Glassmorphism
+            && choices.GlassBackground == MaterialGlassBackground.Image;
+        PrepareBackgroundFrame(blur, image, choices.GlassImagePath);
+        using var background = MaterialSkin.PushBackgroundRenderer(backgroundGlass, blur, choices.BackgroundBlurPercent / 100f);
         CoppeliaPresentation.Compact = Configuration.UiCompact;
         using var theme = MaterialTheme.Push(uiTheme, ImGuiHelpers.GlobalScale, Configuration.UiStylingEnabled ? MaterialStyleMode.ColorsOnly : MaterialStyleMode.Native);
         using var geometry = new MaterialStyleScope();
@@ -348,17 +355,44 @@ public sealed partial class Plugin : IDalamudPlugin
         }
     }
 
-    private void ApplyAppearance()
+    private void ApplyLocalization()
     {
         var language = UiText.Languages.Any(l => l.Code == Configuration.UiLanguage) ? Configuration.UiLanguage : "en";
-        if (language != appliedLanguage)
+        if (language == appliedLanguage) return;
+
+        ReleaseWindowFonts();
+        uiText?.Dispose();
+        uiText = new(language, role => uiFonts.Push(role));
+        languageOptions = new(UiText.Languages.Select(l => new MaterialOption<string>(l.Code, l.Code, l.Name)).ToArray());
+        appliedLanguage = language;
+    }
+
+    private void EnsureWindowFonts()
+    {
+        if (uiFonts is not null) return;
+
+        shapedText ??= new(TextureProvider);
+        var ranges = uiText.GlyphRanges();
+        var atlas = PluginInterface.UiBuilder.CreateFontAtlas(FontAtlasAutoRebuildMode.OnNewFrame, true, "Coppelia UI");
+        uiFonts = new(atlas, ranges, appliedLanguage, PluginInterface.AssemblyLocation.DirectoryName!)
         {
-            uiFonts?.Dispose(); uiText?.Dispose();
-            uiText = new(language, role => uiFonts!.Push(role));
-            uiFonts = new(PluginInterface.UiBuilder.FontAtlas, uiText.GlyphRanges(), language, PluginInterface.AssemblyLocation.DirectoryName!) { ShapedText=shapedText.Renderer };
-            languageOptions = new(UiText.Languages.Select(l => new MaterialOption<string>(l.Code, l.Code, l.Name)).ToArray());
-            appliedLanguage = language; checkedFontGeneration = -1; fontIssueLogged = false;
-        }
+            ShapedText = shapedText.Renderer,
+        };
+    }
+
+    private void ReleaseWindowFonts()
+    {
+        uiFonts?.Dispose();
+        uiFonts = null!;
+        shapedText?.Dispose();
+        shapedText = null!;
+        checkedFontGeneration = -1;
+        fontIssueLogged = false;
+    }
+
+    private void ApplyAppearance()
+    {
+        ApplyLocalization();
         if (uiTheme is null || appliedSavedColors != Configuration.UiColors)
         {
             appliedSavedColors = colorDraft = Configuration.UiColors;

@@ -18,25 +18,43 @@ public sealed partial class Plugin
 
     private void DrawUi()
     {
-        var active = false;
+        ApplyAppearance();
+        using (MaterialTheme.Push(uiTheme, ImGuiHelpers.GlobalScale, Configuration.UiStylingEnabled ? MaterialStyleMode.ColorsOnly : MaterialStyleMode.Native))
+            glassImagePicker.Draw();
+        if (!WindowSystem.Windows.Any(window => window.IsOpen))
+        {
+            ReleaseWindowFonts();
+            DisposeBackgroundGlass();
+            return;
+        }
+
+        EnsureWindowFonts();
         var completed = false;
         try
         {
-            ApplyAppearance();
-            using (MaterialTheme.Push(uiTheme, ImGuiHelpers.GlobalScale, Configuration.UiStylingEnabled ? MaterialStyleMode.ColorsOnly : MaterialStyleMode.Native))
-                glassImagePicker.Draw();
-            var choices = Configuration.UiColors ?? new();
-            var blur = Configuration.UiStylingEnabled && choices.HasBackgroundBlur(choices.Mode);
-            var image = Configuration.UiStylingEnabled && choices.Mode == MaterialColorMode.Glassmorphism && choices.GlassBackground == MaterialGlassBackground.Image;
-            active = blur || image;
-            if (active) backgroundGlass ??= new(PluginInterface, Log);
-            backgroundGlass?.ConfigureImage(TextureProvider, image, choices.GlassImagePath);
-            backgroundGlass?.BeginFrame();
-            using var background = MaterialSkin.PushBackgroundRenderer(Configuration.UiStylingEnabled ? backgroundGlass : null, blur, choices.BackgroundBlurPercent / 100f);
             DrawUiContent();
             completed = true;
         }
-        finally { backgroundGlass?.EndFrame(active && completed); }
+        finally { backgroundGlass?.EndFrame(completed); }
+    }
+
+    private void PrepareBackgroundFrame(bool blur, bool image, string? path)
+    {
+        if (!blur && !image)
+        {
+            DisposeBackgroundGlass();
+            return;
+        }
+
+        backgroundGlass ??= new(PluginInterface, Log);
+        backgroundGlass.BeginFrame(blur, image);
+        backgroundGlass.ConfigureImage(TextureProvider, image, path);
+    }
+
+    private void DisposeBackgroundGlass()
+    {
+        backgroundGlass?.Dispose();
+        backgroundGlass = null;
     }
 
     private void ReleaseGlassResources() => backgroundGlass?.ReleaseResources();

@@ -6,9 +6,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>3.0.0.18</Version>
-    <FileVersion>3.0.0.18</FileVersion>
-    <AssemblyVersion>3.0.0.18</AssemblyVersion>
+    <Version>3.0.0.19</Version>
+    <FileVersion>3.0.0.19</FileVersion>
+    <AssemblyVersion>3.0.0.19</AssemblyVersion>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
     <IsPackable>false</IsPackable>
     <RootNamespace>Coppelia</RootNamespace>
